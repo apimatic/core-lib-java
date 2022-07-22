@@ -1,4 +1,4 @@
-package apimatic.core_lib;
+package io.apimatic.core_lib;
 
 /**
  * Hello world!
