@@ -17,7 +17,7 @@ public class ErrorCase {
 	/**
 	 * @return the excpetion
 	 */
-	public ApiException getExcpetion() {
+	public ApiException getException() {
 		return exception;
 	}
 

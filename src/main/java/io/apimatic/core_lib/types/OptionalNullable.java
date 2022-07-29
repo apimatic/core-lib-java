@@ -4,7 +4,7 @@ package io.apimatic.core_lib.types;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import io.apimatic.core_lib.utilities.DateTimeHelper;
+import io.apimatic.core_lib.utilities.LocalDateTimeHelper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -79,12 +79,12 @@ public class OptionalNullable<T> {
                 SerializerProvider provider) throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(
-                        DateTimeHelper.toUnixTimestampLong((List<LocalDateTime>) object.value));
+                        LocalDateTimeHelper.toUnixTimestampLong((List<LocalDateTime>) object.value));
             } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(DateTimeHelper
+                jgen.writeObject(LocalDateTimeHelper
                         .toUnixTimestampLong((Map<String, LocalDateTime>) object.value));
             } else {
-                jgen.writeObject(DateTimeHelper.toUnixTimestampLong((LocalDateTime) object.value));
+                jgen.writeObject(LocalDateTimeHelper.toUnixTimestampLong((LocalDateTime) object.value));
             }
         }
     }
@@ -100,12 +100,12 @@ public class OptionalNullable<T> {
                 SerializerProvider provider) throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(
-                        DateTimeHelper.toRfc1123DateTime((List<LocalDateTime>) object.value));
+                        LocalDateTimeHelper.toRfc1123DateTime((List<LocalDateTime>) object.value));
             } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(DateTimeHelper
+                jgen.writeObject(LocalDateTimeHelper
                         .toRfc1123DateTime((Map<String, LocalDateTime>) object.value));
             } else {
-                jgen.writeString(DateTimeHelper.toRfc1123DateTime((LocalDateTime) object.value));
+                jgen.writeString(LocalDateTimeHelper.toRfc1123DateTime((LocalDateTime) object.value));
             }
         }
     }
@@ -121,12 +121,12 @@ public class OptionalNullable<T> {
                 SerializerProvider provider) throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(
-                        DateTimeHelper.toRfc8601DateTime((List<LocalDateTime>) object.value));
+                        LocalDateTimeHelper.toRfc8601DateTime((List<LocalDateTime>) object.value));
             } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(DateTimeHelper
+                jgen.writeObject(LocalDateTimeHelper
                         .toRfc8601DateTime((Map<String, LocalDateTime>) object.value));
             } else {
-                jgen.writeString(DateTimeHelper.toRfc8601DateTime((LocalDateTime) object.value));
+                jgen.writeString(LocalDateTimeHelper.toRfc8601DateTime((LocalDateTime) object.value));
             }
         }
     }
@@ -140,12 +140,12 @@ public class OptionalNullable<T> {
         public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
                 SerializerProvider provider) throws IOException {
             if (object.value instanceof List<?>) {
-                jgen.writeObject(DateTimeHelper.toSimpleDate((List<LocalDate>) object.value));
+                jgen.writeObject(LocalDateTimeHelper.toSimpleDate((List<LocalDate>) object.value));
             } else if (object.value instanceof Map<?, ?>) {
                 jgen.writeObject(
-                        DateTimeHelper.toSimpleDate((Map<String, LocalDate>) object.value));
+                        LocalDateTimeHelper.toSimpleDate((Map<String, LocalDate>) object.value));
             } else {
-                jgen.writeString(DateTimeHelper.toSimpleDate((LocalDate) object.value));
+                jgen.writeString(LocalDateTimeHelper.toSimpleDate((LocalDate) object.value));
             }
         }
     }

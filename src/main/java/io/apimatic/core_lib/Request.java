@@ -3,11 +3,17 @@ package io.apimatic.core_lib;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.HttpMethod;
 import io.apimatic.core_interfaces.http.request.HttpRequest;
 import io.apimatic.core_interfaces.type.functional.Serializer;
+import io.apimatic.core_lib.utilities.ApiHelper;
 
 public class Request {
 	private String server;
@@ -47,17 +53,13 @@ public class Request {
 		this.body = body;
 		this.bodySerializer = bodySerializer;
 	}
-	
-	
-	
+
 	/**
 	 * @return the server
 	 */
 	public String getServer() {
 		return server;
 	}
-
-
 
 	/**
 	 * @return the path
@@ -66,16 +68,12 @@ public class Request {
 		return Path;
 	}
 
-
-
 	/**
 	 * @return the httpMethod
 	 */
 	public HttpMethod getHttpMethod() {
 		return httpMethod;
 	}
-
-
 
 	/**
 	 * @return the requiresAuth
@@ -84,16 +82,12 @@ public class Request {
 		return requiresAuth;
 	}
 
-
-
 	/**
 	 * @return the queryParams
 	 */
 	public Map<String, Object> getQueryParams() {
 		return queryParams;
 	}
-
-
 
 	/**
 	 * @return the templateParams
@@ -102,8 +96,6 @@ public class Request {
 		return templateParams;
 	}
 
-
-
 	/**
 	 * @return the headerParams
 	 */
@@ -111,16 +103,12 @@ public class Request {
 		return headerParams;
 	}
 
-
-
 	/**
 	 * @return the formParams
 	 */
 	public Map<String, Object> getFormParams() {
 		return formParams;
 	}
-
-
 
 	/**
 	 * @return the body
@@ -136,28 +124,26 @@ public class Request {
 		return bodySerializer;
 	}
 
-	
-	
 	public static class Builder {
 		private String server;
 		private String path;
 		private HttpMethod httpMethod;
 		private boolean requiresAuth;
 		private Map<String, Object> queryParams = new HashMap<String, Object>();
-		private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<String, SimpleEntry<Object,Boolean>>();
+		private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<String, SimpleEntry<Object, Boolean>>();
 		private HttpHeaders headerParams;
 		private Map<String, Object> formParams = new HashMap<String, Object>();
 		private Object body;
 		private Serializer bodySerializer;
-		
+
 		public Builder(String server, String path) {
 			this.server = server;
 			this.path = path;
 		}
-		
-		
+
 		/**
 		 * Setter for httpMethod
+		 * 
 		 * @param httpMethod HttpMethod value for httpMethod
 		 * @return Builder
 		 */
@@ -165,9 +151,10 @@ public class Request {
 			this.httpMethod = httpMethod;
 			return this;
 		}
-		
+
 		/**
 		 * Setter for requiresAuth
+		 * 
 		 * @param requiresAuth boolean value for requiresAuth
 		 * @return Builder
 		 */
@@ -175,10 +162,11 @@ public class Request {
 			this.requiresAuth = requiresAuth;
 			return this;
 		}
-		
+
 		/**
 		 * Key value pair for queryParams
-		 * @param key String value for key
+		 * 
+		 * @param key   String value for key
 		 * @param param Object value for param
 		 * @return Builder
 		 */
@@ -189,10 +177,11 @@ public class Request {
 			this.queryParams.put(key, param);
 			return this;
 		}
-		
+
 		/**
 		 * Key value pair for templateParams
-		 * @param key String value for key
+		 * 
+		 * @param key   String value for key
 		 * @param param SimpleEntry<Object, Boolean> value for param
 		 * @return Builder
 		 */
@@ -203,9 +192,10 @@ public class Request {
 			this.templateParams.put(key, param);
 			return this;
 		}
-		
+
 		/**
 		 * Setter for httpHeaders
+		 * 
 		 * @param headerParams HttpHeaders for headerParams
 		 * @return Builder
 		 */
@@ -213,10 +203,11 @@ public class Request {
 			this.headerParams = headerParams;
 			return this;
 		}
-		
+
 		/**
 		 * Key value pair for formParams
-		 * @param key String value for key
+		 * 
+		 * @param key   String value for key
 		 * @param param Object value for param
 		 * @return Builder
 		 */
@@ -227,9 +218,10 @@ public class Request {
 			this.formParams.put(key, param);
 			return this;
 		}
-		
+
 		/**
 		 * Setter for body
+		 * 
 		 * @param body Object value for body
 		 * @return Builder
 		 */
@@ -237,26 +229,55 @@ public class Request {
 			this.body = body;
 			return this;
 		}
-		
+
 		/**
 		 * Setter for bodySerializer
+		 * 
 		 * @param bodySerializer Function value for bodySerializer
 		 * @return Builder
 		 */
+
 		public Builder bodySerializer(Serializer bodySerializer) {
 			this.bodySerializer = bodySerializer;
 			return this;
 		}
-		
+
 		public HttpRequest build(CoreConfig coreConfig) throws IOException {
-		    if(bodySerializer != null) {
-		        System.out.println(bodySerializer.apply(body));
-		    }
-			// 
-			//return coreConfig.getCompatibilityFactory().createHttpRequest(httpMethod, server, headerParams, queryParams, formParams);
-			return null;
+			CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
+			final StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+			if (!templateParams.isEmpty()) {
+				ApiHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+			}
+
+			if (coreConfig.getGlobalHeaders() != null) {
+				headerParams.addAll(coreConfig.getGlobalHeaders());
+			}
+			
+			if (body != null) {
+				String serializedBody = null;
+				if (bodySerializer != null) {
+					serializedBody = bodySerializer.apply(body);
+				} else {
+					serializedBody = ApiHelper.serialize(body);
+				}
+
+				return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+						formParams, serializedBody);
+
+			} else {
+				List<SimpleEntry<String, Object>> formFields = null;
+
+				if (!formParams.isEmpty()) {
+					formFields = ApiHelper.prepareFormFields(formParams);
+
+				}
+				return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+						queryParams, formFields);
+
+			}
+
 		}
 		
 	}
-	
+
 }

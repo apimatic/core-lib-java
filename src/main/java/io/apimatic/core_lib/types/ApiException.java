@@ -58,7 +58,7 @@ public class ApiException extends Exception {
      * The HTTP response code from the API request.
      * @return   Returns the response code for ApiException
      */
-    public int getResponseCode() {
+	public int getResponseCode() {
         return (httpContext != null) ? httpContext.getResponse().getStatusCode() : -1;
     }
 
@@ -66,7 +66,7 @@ public class ApiException extends Exception {
      * The HTTP response body from the API request.
      * @return   Returns the object of HttpContext for ApiException
      */
-    public HttpContext getHttpContext() {
+	public HttpContext getHttpContext() {
         return httpContext;
     }
 }
