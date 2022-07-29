@@ -5,7 +5,7 @@ import io.apimatic.core_lib.types.ApiException;
 public class ErrorCase {
 
 	private int statusCode;
-	private ApiException excpetion;
+	private ApiException exception;
 	
 	/**
 	 * @return the statusCode
@@ -18,12 +18,12 @@ public class ErrorCase {
 	 * @return the excpetion
 	 */
 	public ApiException getExcpetion() {
-		return excpetion;
+		return exception;
 	}
 
 	private ErrorCase(int statusCode, ApiException exception) {
 		this.statusCode = statusCode;
-		this.excpetion = exception;
+		this.exception = exception;
 	}
 	
 	public Builder toBuilder(int statusCode, ApiException exception) {

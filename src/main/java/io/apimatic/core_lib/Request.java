@@ -1,13 +1,13 @@
 package io.apimatic.core_lib;
 
+import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.HttpMethod;
 import io.apimatic.core_interfaces.http.request.HttpRequest;
+import io.apimatic.core_interfaces.type.functional.Serializer;
 
 public class Request {
 	private String server;
@@ -19,7 +19,7 @@ public class Request {
 	private HttpHeaders headerParams;
 	private Map<String, Object> formParams;
 	private Object body;
-	private Function bodySerializer;
+	private Serializer bodySerializer;
 	
 	/**
 	 * @param server
@@ -35,7 +35,7 @@ public class Request {
 	 */
 	private Request(String server, String path, HttpMethod httpMethod, boolean requiresAuth,
 			Map<String, Object> queryParams, Map<String, SimpleEntry<Object, Boolean>> templateParams,
-			HttpHeaders headerParams, Map<String, Object> formParams, Object body, Function bodySerializer) {
+			HttpHeaders headerParams, Map<String, Object> formParams, Object body, Serializer bodySerializer) {
 		this.server = server;
 		Path = path;
 		this.httpMethod = httpMethod;
@@ -132,7 +132,7 @@ public class Request {
 	/**
 	 * @return the bodySerializer
 	 */
-	public Function getBodySerializer() {
+	public Serializer getBodySerializer() {
 		return bodySerializer;
 	}
 
@@ -148,7 +148,7 @@ public class Request {
 		private HttpHeaders headerParams;
 		private Map<String, Object> formParams = new HashMap<String, Object>();
 		private Object body;
-		private Function bodySerializer;
+		private Serializer bodySerializer;
 		
 		public Builder(String server, String path) {
 			this.server = server;
@@ -243,12 +243,15 @@ public class Request {
 		 * @param bodySerializer Function value for bodySerializer
 		 * @return Builder
 		 */
-		public Builder bodySerializer(Function bodySerializer) {
+		public Builder bodySerializer(Serializer bodySerializer) {
 			this.bodySerializer = bodySerializer;
 			return this;
 		}
 		
-		public HttpRequest build(CoreConfig coreConfig) {
+		public HttpRequest build(CoreConfig coreConfig) throws IOException {
+		    if(bodySerializer != null) {
+		        System.out.println(bodySerializer.apply(body));
+		    }
 			// 
 			//return coreConfig.getCompatibilityFactory().createHttpRequest(httpMethod, server, headerParams, queryParams, formParams);
 			return null;

@@ -2,57 +2,67 @@ package io.apimatic.core_lib;
 
 import java.io.IOException;
 import java.util.List;
-
 import io.apimatic.core_interfaces.http.HttpContext;
 import io.apimatic.core_interfaces.http.request.HttpRequest;
 import io.apimatic.core_interfaces.http.response.HttpResponse;
-import io.apimatic.core_lib.utilities.ApiHelper;
+import io.apimatic.core_interfaces.type.functional.Deserializer;
 
 public class ResponseHandler<T> {
 
-	private List<ErrorCase> errorCase;
-	private Class<T> deserializationClass;
-	
-	public T handle(HttpRequest request, HttpResponse response, CoreConfig coreConfig) throws IOException {
-		HttpContext httpContext = coreConfig.getCompatibilityFactory().createHttpContext(request, response);
-        //invoke the callback after response if its not null
-        if (coreConfig.getHttpCallback()!= null) {
-        	coreConfig.getHttpCallback().onAfterResponse(httpContext);
+    private List<ErrorCase> errorCase;
+    private Deserializer<T> deserializer;
+    
+    /**
+     * 
+     */
+    public ResponseHandler() {
+        
+    }
+    
+    /**
+     * @param errorCase
+     * @param deserializerType
+     */
+    public ResponseHandler(Deserializer<T> deserializer) {
+        this.deserializer = deserializer;
+    }
+
+    /**
+     * @return the errorCase
+     */
+    public List<ErrorCase> getErrorCase() {
+        return this.errorCase;
+    }
+    
+    public Deserializer<T> getDeserializer() {
+        return this.deserializer;
+    }
+
+    public T handle(HttpRequest request, HttpResponse response, CoreConfig coreConfig) throws IOException {
+        HttpContext httpContext =
+                coreConfig.getCompatibilityFactory().createHttpContext(request, response);
+        // invoke the callback after response if its not null
+        if (coreConfig.getHttpCallback() != null) {
+            coreConfig.getHttpCallback().onAfterResponse(httpContext);
         }
 
-        //Error handling using HTTP status codes
-        int responseCode = response.getStatusCode();
+        // Error handling using HTTP status codes
+        int responseCode = 200;
 
-        //return null on 404
+        // return null on 404
         if (responseCode == 404) {
             return null;
         }
-        //handle errors defined at the API level
+        // handle errors defined at the API level
         validateResponse(response, httpContext);
 
-        //extract result from the http response
-        return ApiHelper.deserialize(response.getBody(), deserializationClass);
-	}
+        // extract result from the http response
+        return deserializer.apply(response.getBody());
+    }
 
-	private void validateResponse(HttpResponse response, HttpContext httpContext) {
-		// TODO Auto-generated method stub
-		
-	}
+    private void validateResponse(HttpResponse response, HttpContext httpContext) {
+        // TODO Auto-generated method stub
 
-	/**
-	 * @return the errorCase
-	 */
-	public List<ErrorCase> getErrorCase() {
-		return errorCase;
-	}
+    }
 
-	/**
-	 * @return the deserializationClass
-	 */
-	public Class<T> getDeserializationClass() {
-		return deserializationClass;
-	}
-	
-	
-	
 }
