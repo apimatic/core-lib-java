@@ -2,13 +2,13 @@ package io.apimatic.core_lib;
 
 import java.util.Map;
 import java.util.function.Function;
-import io.apimatic.core_interface.authentication.AuthManager;
+import io.apimatic.core_interfaces.authentication.AuthManager;
 import io.apimatic.core_interfaces.compatibility.*;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 
-public class CoreConfig {
+public class CoreConfig  {
 	private CompatibilityFactory compatibilityFactory;
 	private String userAgent;
 	private Map<String, String> userAgentConfig;
@@ -17,7 +17,7 @@ public class CoreConfig {
 	private HttpClient httpClient;
 	private HttpHeaders globalHeaders;
 	private Function<String, String> baseUri;
-
+ 
 	/**
 	 * Getter for CompatibilityFactory
 	 * 

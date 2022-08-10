@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.HttpMethod;
 import io.apimatic.core_interfaces.http.request.HttpRequest;
+import io.apimatic.core_interfaces.type.FileWrapper;
 import io.apimatic.core_interfaces.type.functional.Serializer;
-import io.apimatic.core_lib.utilities.ApiHelper;
+import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
+import io.apimatic.core_lib.types.http.request.MultipartWrapper;
+import io.apimatic.core_lib.utilities.CoreHelper;
 
-public class Request {
+public class CoreRequest {
 	private String server;
 	private String Path;
 	private HttpMethod httpMethod;
@@ -26,7 +27,7 @@ public class Request {
 	private Map<String, Object> formParams;
 	private Object body;
 	private Serializer bodySerializer;
-	
+
 	/**
 	 * @param server
 	 * @param path
@@ -39,7 +40,7 @@ public class Request {
 	 * @param body
 	 * @param bodySerializer
 	 */
-	private Request(String server, String path, HttpMethod httpMethod, boolean requiresAuth,
+	private CoreRequest(String server, String path, HttpMethod httpMethod, boolean requiresAuth,
 			Map<String, Object> queryParams, Map<String, SimpleEntry<Object, Boolean>> templateParams,
 			HttpHeaders headerParams, Map<String, Object> formParams, Object body, Serializer bodySerializer) {
 		this.server = server;
@@ -135,8 +136,10 @@ public class Request {
 		private Map<String, Object> formParams = new HashMap<String, Object>();
 		private Object body;
 		private Serializer bodySerializer;
+		private Map<String, Object> bodyParameters;
 
-		public Builder(String server, String path) {
+		public Builder(String server, String path, HttpHeaders headerParams) {
+			this.headerParams = headerParams;
 			this.server = server;
 			this.path = path;
 		}
@@ -170,11 +173,21 @@ public class Request {
 		 * @param param Object value for param
 		 * @return Builder
 		 */
-		public Builder queryParams(String key, Object param) {
-			if (key == null || key.isEmpty()) {
-				throw new IllegalArgumentException("The specified key value is null or empty");
-			}
-			this.queryParams.put(key, param);
+		public Builder queryParam(Parameter queryParameter) {
+			queryParameter.validate();
+			this.queryParams.put(queryParameter.getKey(), queryParameter.getValue());
+			return this;
+		}
+
+		/**
+		 * Key value pair for queryParams
+		 * 
+		 * @param key   String value for key
+		 * @param param Object value for param
+		 * @return Builder
+		 */
+		public Builder queryParam(Map<String, Object> queryParameters) {
+			this.queryParams.putAll(queryParameters);
 			return this;
 		}
 
@@ -185,11 +198,11 @@ public class Request {
 		 * @param param SimpleEntry<Object, Boolean> value for param
 		 * @return Builder
 		 */
-		public Builder templateParams(String key, SimpleEntry<Object, Boolean> param) {
-			if (key == null || key.isEmpty()) {
-				throw new IllegalArgumentException("The specified key value is null or empty");
-			}
-			this.templateParams.put(key, param);
+		public Builder templateParam(Parameter templateParameter) {
+			templateParameter.validate();
+			SimpleEntry<Object, Boolean> templateEntry = new SimpleEntry<Object, Boolean>(templateParameter.getValue(),
+					templateParameter.isEncodeAllow());
+			this.templateParams.put(templateParameter.getKey(), templateEntry);
 			return this;
 		}
 
@@ -199,8 +212,12 @@ public class Request {
 		 * @param headerParams HttpHeaders for headerParams
 		 * @return Builder
 		 */
-		public Builder headerParams(HttpHeaders headerParams) {
-			this.headerParams = headerParams;
+		public Builder headerParam(Parameter httpHeaderParameter) {
+			httpHeaderParameter.validate();
+			if (this.headerParams != null) {
+				this.headerParams.add(httpHeaderParameter.getKey(), httpHeaderParameter.getValue().toString());
+			}
+
 			return this;
 		}
 
@@ -211,12 +228,34 @@ public class Request {
 		 * @param param Object value for param
 		 * @return Builder
 		 */
-		public Builder formParams(String key, Object param) {
-			if (key == null || key.isEmpty()) {
-				throw new IllegalArgumentException("The specified key value is null or empty");
+		public Builder formParams(Parameter formParameter) {
+			formParameter.validate();
+			MultiPartRequest multiPartRequest = formParameter.getMultiPartRequest();
+			if (multiPartRequest != null) {
+				buildMultiRequest(formParameter, multiPartRequest, formParams);
+			} else {
+				this.formParams.put(formParameter.getKey(), formParameter.getValue());
 			}
-			this.formParams.put(key, param);
 			return this;
+		}
+
+		private void buildMultiRequest(Parameter parameter, MultiPartRequest multiPartRequest,
+				Map<String, Object> params) {
+			String key  = parameter.getKey();
+			switch (multiPartRequest.getMultiPartRequestType()) {
+			case MULTI_PART_FILE:
+				MultipartFileWrapper fileWrapper = new MultipartFileWrapper((FileWrapper) parameter.getValue(),
+						multiPartRequest.getHeaders());
+				params.put(key, fileWrapper);
+				break;
+			case MULTI_PART:
+				MultipartWrapper multipartWrapper = new MultipartWrapper(parameter.getValue().toString(),
+						multiPartRequest.getHeaders());
+				params.put(key, multipartWrapper);
+				break;
+			default:
+				break;
+			}
 		}
 
 		/**
@@ -225,8 +264,17 @@ public class Request {
 		 * @param body Object value for body
 		 * @return Builder
 		 */
-		public Builder body(Object body) {
-			this.body = body;
+		public Builder body(Parameter bodyParam) {
+			bodyParam.validate();
+			if (bodyParam.getKey() != null && !bodyParam.getKey().isEmpty()) {
+				if (bodyParameters == null) {
+					bodyParameters = new HashMap<String, Object>();
+				}
+				bodyParameters.put(bodyParam.getKey(), bodyParam.getValue());
+			} else {
+				this.body = bodyParam.getValue();
+			}
+
 			return this;
 		}
 
@@ -244,40 +292,91 @@ public class Request {
 
 		public HttpRequest build(CoreConfig coreConfig) throws IOException {
 			CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
-			final StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
-			if (!templateParams.isEmpty()) {
-				ApiHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+			final StringBuilder urlBuilder = getStringBuilder(coreConfig);
+
+			processTemplateParams(urlBuilder);
+
+			addGlobalHeader(coreConfig);
+
+			HttpRequest request = buildRequest(compatibilityFactory, urlBuilder);
+
+			// Invoke the callback before request if its not null
+			if (coreConfig.getHttpCallback() != null) {
+				coreConfig.getHttpCallback().onBeforeRequest(request);
 			}
 
+			return request;
+
+		}
+
+		private HttpRequest buildRequest(CompatibilityFactory compatibilityFactory, StringBuilder urlBuilder)
+				throws IOException {
+			HttpRequest request = null;
+			if (body != null || bodyParameters != null) {
+
+				request = compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams, queryParams,
+						buildBodyString(urlBuilder));
+
+			} else {
+				List<SimpleEntry<String, Object>> formFields = generateFormFields();
+				request = compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams, queryParams,
+						formFields);
+
+			}
+
+			return request;
+		}
+
+		/**
+		 * @return
+		 */
+		private List<SimpleEntry<String, Object>> generateFormFields() {
+			List<SimpleEntry<String, Object>> formFields = null;
+
+			if (!formParams.isEmpty()) {
+				formFields = CoreHelper.prepareFormFields(formParams);
+
+			}
+			return formFields;
+		}
+
+		private StringBuilder getStringBuilder(CoreConfig coreConfig) {
+			return new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+		}
+
+		private void processTemplateParams(StringBuilder urlBuilder) {
+			if (!templateParams.isEmpty()) {
+				CoreHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+			}
+		}
+
+		private void addGlobalHeader(CoreConfig coreConfig) {
 			if (coreConfig.getGlobalHeaders() != null) {
 				headerParams.addAll(coreConfig.getGlobalHeaders());
 			}
-			
+		}
+
+		private String buildBodyString(StringBuilder urlBuilder) throws IOException {
+			String serializedBody = null;
 			if (body != null) {
-				String serializedBody = null;
 				if (bodySerializer != null) {
 					serializedBody = bodySerializer.apply(body);
 				} else {
-					serializedBody = ApiHelper.serialize(body);
+					if (body instanceof String) {
+						serializedBody = body.toString();
+					} else {
+						serializedBody = CoreHelper.serialize(body);
+					}
 				}
-
-				return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
-						formParams, serializedBody);
-
-			} else {
-				List<SimpleEntry<String, Object>> formFields = null;
-
-				if (!formParams.isEmpty()) {
-					formFields = ApiHelper.prepareFormFields(formParams);
-
-				}
-				return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
-						queryParams, formFields);
-
 			}
 
+			if (bodyParameters != null) {
+				CoreHelper.removeNullValues(bodyParameters);
+				serializedBody = CoreHelper.serialize(bodyParameters);
+			}
+			return serializedBody;
+
 		}
-		
 	}
 
 }

@@ -5,12 +5,12 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.apimatic.core_interfaces.http.HttpContext;
-import io.apimatic.core_lib.utilities.ApiHelper;
+import io.apimatic.core_lib.utilities.CoreHelper;
 
 /**
  * This is the base class for all exceptions that represent an error response from the server.
  */
-public class ApiException extends Exception {
+public class ApiException extends Exception implements io.apimatic.core_interfaces.type.ApiException {
     //UID for serialization
     private static final long serialVersionUID = 6424174253911720338L;
 
@@ -42,10 +42,10 @@ public class ApiException extends Exception {
 
         try {
             // Can throw IOException if input has invalid content type.
-            JsonNode jsonNode = ApiHelper.mapper.readTree(context.getResponse().getRawBody());
+            JsonNode jsonNode = CoreHelper.mapper.readTree(context.getResponse().getRawBody());
             if (!getClass().equals(ApiException.class)) {
                 // In case of IOException JsonNode cannot be detected.
-                ApiHelper.mapper.readerForUpdating(this).readValue(jsonNode);
+                CoreHelper.mapper.readerForUpdating(this).readValue(jsonNode);
             }
         } catch (IOException ioException) { 
             // Can throw exception while object mapper tries to:

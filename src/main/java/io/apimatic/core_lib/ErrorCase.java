@@ -1,55 +1,39 @@
 package io.apimatic.core_lib;
 
+import io.apimatic.core_interfaces.http.HttpContext;
+import io.apimatic.core_interfaces.type.functional.ExceptionCreator;
 import io.apimatic.core_lib.types.ApiException;
 
-public class ErrorCase {
+public class ErrorCase<ExceptionType extends ApiException> {
 
-	private int statusCode;
-	private ApiException exception;
-	
-	/**
-	 * @return the statusCode
-	 */
-	public int getStatusCode() {
-		return statusCode;
+	private String reason;
+	private ExceptionCreator<ExceptionType> exceptionCreator;
+
+	private ErrorCase(String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
+		this.reason = reason;
+		this.exceptionCreator = exceptionCreator;
 	}
 
 	/**
-	 * @return the excpetion
+	 * @return the reason
 	 */
-	public ApiException getException() {
-		return exception;
+	public String getReason() {
+		return reason;
 	}
 
-	private ErrorCase(int statusCode, ApiException exception) {
-		this.statusCode = statusCode;
-		this.exception = exception;
+	public ErrorCase<ExceptionType> exceptionCreator(ExceptionCreator<ExceptionType> exceptionCreator) {
+		this.exceptionCreator = exceptionCreator;
+		return this;
 	}
-	
-	public Builder toBuilder(int statusCode, ApiException exception) {
-		
-		Builder builder = new Builder()
-				.statusCode(statusCode)
-				.apiException(exception);
-		return builder;
+
+	public void throwException(HttpContext httpContext) throws ExceptionType {
+		throw exceptionCreator.apply(reason, httpContext);
 	}
-	
-	public static class Builder {
-		private int statusCode;
-		private ApiException  exception; 
-		
-		public Builder statusCode(int statusCode) {
-			this.statusCode = statusCode;
-			return this;
-		}
-		
-		public Builder apiException(ApiException apiException) {
-			this.exception = apiException;
-			return this;
-		}
-		
-		public ErrorCase build() {
-			return  new ErrorCase(statusCode, exception);
-		}
+
+	public static <ExceptionType extends ApiException> ErrorCase<ExceptionType> create(String reason,
+			ExceptionCreator<ExceptionType> exceptionCreator) {
+		ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
+		return errorCase;
 	}
+
 }

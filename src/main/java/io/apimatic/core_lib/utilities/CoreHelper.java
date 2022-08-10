@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 /**
  * This is a Helper class with commonly used utilities for the SDK.
  */
-public class ApiHelper {
+public class CoreHelper {
 
     // Deserialization of Json data
     public static ObjectMapper mapper = new ObjectMapper() {
@@ -228,7 +228,7 @@ public class ApiHelper {
             return null;
         }
         try {
-            return ApiHelper.deserialize(json, new TypeReference<Object>() {});
+            return CoreHelper.deserialize(json, new TypeReference<Object>() {});
         } catch (IOException e) {
             // Failed to deserialize when json is not representing a JSON object.
             // i.e. either its string or any primitive type.

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.response.HttpResponse;
-import io.apimatic.core_lib.utilities.ApiHelper;
+import io.apimatic.core_lib.utilities.CoreHelper;
 import io.apimatic.core_interfaces.http.response.DynamicType;
 
 /**
@@ -46,7 +46,7 @@ public class Dynamic implements DynamicType {
     @Override
 	public <T> T parse(Class<T> cls) throws ParseException {
         try {
-            return ApiHelper.deserialize(getResponseString(), cls);
+            return CoreHelper.deserialize(getResponseString(), cls);
         } catch (Exception e) {
             throw new java.text.ParseException("Could not deserialize dynamic content as given type", 0);
         }
@@ -154,7 +154,7 @@ public class Dynamic implements DynamicType {
     @Override
 	public Map<String, Object> parseAsDictionary() throws ParseException {
         try {
-            return ApiHelper.deserialize(getResponseString());
+            return CoreHelper.deserialize(getResponseString());
         } catch (IOException e) {
             throw new java.text.ParseException("Could not deserialize dynamic content as given type", 0);
         }
