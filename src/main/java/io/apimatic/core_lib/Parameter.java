@@ -1,6 +1,5 @@
 package io.apimatic.core_lib;
 
-
 public class Parameter {
 
 	private String key;
@@ -9,6 +8,10 @@ public class Parameter {
 	private boolean shouldEncode = false;
 	private MultiPartRequest multiPartRequest;
 
+	public Parameter() {
+
+	}
+	
 	/**
 	 * @return the key
 	 */
@@ -19,13 +22,14 @@ public class Parameter {
 	public boolean isEncodeAllow() {
 		return shouldEncode;
 	}
+
 	/**
 	 * @return the value
 	 */
 	public Object getValue() {
 		return value;
 	}
-	
+
 	public MultiPartRequest getMultiPartRequest() {
 		return multiPartRequest;
 	}
@@ -35,14 +39,14 @@ public class Parameter {
 		this.value = value;
 		return this;
 	}
-	
-	public Parameter keyValue(String key, Object value , MultiPartRequest multiPartRequest) {
+
+	public Parameter keyValue(String key, Object value, MultiPartRequest multiPartRequest) {
 		this.key = key;
 		this.value = value;
 		this.multiPartRequest = multiPartRequest;
 		return this;
 	}
-	
+
 	public Parameter isRequired(boolean isRequired) {
 		this.isRequired = isRequired;
 		return this;
@@ -52,12 +56,7 @@ public class Parameter {
 		this.shouldEncode = shouldEncode;
 		return this;
 	}
-	
-	public Parameter() {
 
-	}
-
-	
 	public void validate() {
 		if (isRequired) {
 			// validating required parameters

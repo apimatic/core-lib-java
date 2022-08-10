@@ -8,7 +8,7 @@ import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 
-public class CoreConfig  {
+public class CoreConfig {
 	private CompatibilityFactory compatibilityFactory;
 	private String userAgent;
 	private Map<String, String> userAgentConfig;
@@ -17,7 +17,29 @@ public class CoreConfig  {
 	private HttpClient httpClient;
 	private HttpHeaders globalHeaders;
 	private Function<String, String> baseUri;
- 
+
+	/**
+	 * private Constructor.
+	 */
+	private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent, Map<String, String> userAgentConfig,
+			Map<String, AuthManager> authManagers, HttpCallback httpCallback, HttpClient httpClient,
+			HttpHeaders globalhHeaders, Function<String, String> baseUri) {
+		this.compatibilityFactory = compatibilityFactory;
+		this.userAgent = userAgent;
+		this.userAgentConfig = userAgentConfig;
+		this.authManagers = authManagers;
+		this.httpCallback = httpCallback;
+		this.httpClient = httpClient;
+		this.globalHeaders = globalhHeaders;
+		this.baseUri = baseUri;
+		if (this.userAgent != null) {
+			updateUserAgent();
+		}
+		if (this.userAgent != null && this.globalHeaders != null) {
+			this.globalHeaders.add("user-agent", userAgent);
+		}
+	}
+	
 	/**
 	 * Getter for CompatibilityFactory
 	 * 
@@ -29,6 +51,7 @@ public class CoreConfig  {
 
 	/**
 	 * Getter for UserAgent
+	 * 
 	 * @return the UserAgent string
 	 */
 	public String getUserAgent() {
@@ -53,6 +76,7 @@ public class CoreConfig  {
 
 	/**
 	 * Getter for HttpCallback
+	 * 
 	 * @return the httpCallback instance
 	 */
 	public HttpCallback getHttpCallback() {
@@ -61,6 +85,7 @@ public class CoreConfig  {
 
 	/**
 	 * Getter for HttpClient
+	 * 
 	 * @return the httpClient instance
 	 */
 	public HttpClient getHttpClient() {
@@ -69,6 +94,7 @@ public class CoreConfig  {
 
 	/**
 	 * Getter for HttpHeaders
+	 * 
 	 * @return the HttpHeaders instance
 	 */
 	public HttpHeaders getGlobalHeaders() {
@@ -77,33 +103,11 @@ public class CoreConfig  {
 
 	/**
 	 * Getter for BaseUri
+	 * 
 	 * @return the baseUri function
 	 */
 	public Function<String, String> getBaseUri() {
 		return baseUri;
-	}
-
-	/**
-	 * private Constructor.
-	 */
-	private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
-			Map<String, String> userAgentConfig,Map<String, AuthManager> authManagers,
-			HttpCallback httpCallback, HttpClient httpClient,
-			HttpHeaders globalhHeaders, Function<String, String> baseUri) {
-		this.compatibilityFactory = compatibilityFactory;
-		this.userAgent = userAgent;
-		this.userAgentConfig = userAgentConfig;
-		this.authManagers = authManagers;
-		this.httpCallback = httpCallback;
-		this.httpClient = httpClient;
-		this.globalHeaders = globalhHeaders;
-		this.baseUri = baseUri;
-		if (this.userAgent != null) {
-			updateUserAgent();
-		}
-		if (this.userAgent != null && this.globalHeaders != null) {
-			this.globalHeaders.add("user-agent", userAgent);
-		} 
 	}
 
 	/**
@@ -129,9 +133,9 @@ public class CoreConfig  {
 		userAgent = userAgent.replace("{engine}", "JRE");
 		userAgent = userAgent.replace("{engine-version}", engineVersion != null ? engineVersion : "");
 		userAgent = userAgent.replace("{os-info}", osName != null ? osName : "");
-		
+
 		if (userAgentConfig != null) {
-			userAgentConfig.forEach((key, value)-> {
+			userAgentConfig.forEach((key, value) -> {
 				userAgent = userAgent.replace(key, value);
 			});
 		}
@@ -171,6 +175,7 @@ public class CoreConfig  {
 
 		/**
 		 * Setter for userAgentConfig
+		 * 
 		 * @param userAgentConfig Map values for userAgentConfig
 		 * @return Builder
 		 */
@@ -181,6 +186,7 @@ public class CoreConfig  {
 
 		/**
 		 * Setter for authManagers
+		 * 
 		 * @param authManagers Map values for authManagers
 		 * @return Builder
 		 */
@@ -188,9 +194,10 @@ public class CoreConfig  {
 			this.authManagers = authManagers;
 			return this;
 		}
-		
+
 		/**
 		 * Setter for HttpCallback
+		 * 
 		 * @param httpCallback value for HttpCallback
 		 * @return
 		 */
@@ -201,6 +208,7 @@ public class CoreConfig  {
 
 		/**
 		 * Setter for HttpClient
+		 * 
 		 * @param httpClient value for
 		 * @return Builder
 		 */
@@ -211,6 +219,7 @@ public class CoreConfig  {
 
 		/**
 		 * Setter for globalHeaders
+		 * 
 		 * @param headers value for HttpHeaders
 		 * @return Builder
 		 */
@@ -218,9 +227,10 @@ public class CoreConfig  {
 			this.globalHeaders = headers;
 			return this;
 		}
-		
+
 		/**
 		 * Setter for baseUri
+		 * 
 		 * @param baseUri value for BaseUri
 		 * @return Builder
 		 */
@@ -235,8 +245,8 @@ public class CoreConfig  {
 		 * @return {@link CoreConfig}
 		 */
 		public CoreConfig build() {
-			return new CoreConfig(compatibilityFactory, userAgent, userAgentConfig, authManagers, httpCallback, httpClient,
-					globalHeaders, baseUri);
+			return new CoreConfig(compatibilityFactory, userAgent, userAgentConfig, authManagers, httpCallback,
+					httpClient, globalHeaders, baseUri);
 		}
 	}
 

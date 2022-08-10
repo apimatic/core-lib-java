@@ -7,6 +7,10 @@ public class EndpointConfiguration implements io.apimatic.core_interfaces.http.r
 	private boolean hasBinary;
 	private RequestRetryConfiguration requestRetryConfiguration;
 	
+	public EndpointConfiguration(boolean hasBinaryResponse) {
+		this.hasBinary = hasBinaryResponse;
+	}
+	
 	public void requestRetryConfiguration(RequestRetryConfiguration requestRetryConfiguration) {
 		this.requestRetryConfiguration = requestRetryConfiguration;
 	}
@@ -23,7 +27,5 @@ public class EndpointConfiguration implements io.apimatic.core_interfaces.http.r
 		return hasBinary;
 	}
 	
-	public EndpointConfiguration(boolean hasBinaryResponse) {
-		this.hasBinary = hasBinaryResponse;
-	}
+	
 }

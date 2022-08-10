@@ -241,7 +241,7 @@ public class CoreRequest {
 
 		private void buildMultiRequest(Parameter parameter, MultiPartRequest multiPartRequest,
 				Map<String, Object> params) {
-			String key  = parameter.getKey();
+			String key = parameter.getKey();
 			switch (multiPartRequest.getMultiPartRequestType()) {
 			case MULTI_PART_FILE:
 				MultipartFileWrapper fileWrapper = new MultipartFileWrapper((FileWrapper) parameter.getValue(),

@@ -13,7 +13,7 @@ public class ApiCall {
 
 	private CoreConfig coreConfig;
 	private HttpRequest request;
-	private CoreResponseHandler<?,?> responseHandler;
+	private CoreResponseHandler<?, ?> responseHandler;
 	private EndpointConfiguration endpointConfiguration;
 
 	private ApiCall(CoreConfig coreConfig) {
@@ -43,7 +43,7 @@ public class ApiCall {
 	 * 
 	 * @return the ResponseHandler
 	 */
-	public CoreResponseHandler<?,?> getResponseHandler() {
+	public CoreResponseHandler<?, ?> getResponseHandler() {
 		return responseHandler;
 	}
 
@@ -70,7 +70,8 @@ public class ApiCall {
 			return this;
 		}
 
-		public Builder<ResponseType, ExceptionType> responseHandler(CoreResponseHandler<ResponseType, ExceptionType> responseHandler) {
+		public Builder<ResponseType, ExceptionType> responseHandler(
+				CoreResponseHandler<ResponseType, ExceptionType> responseHandler) {
 			this.responseHandler = responseHandler;
 			return this;
 		}
@@ -86,7 +87,7 @@ public class ApiCall {
 			return responseHandler.handle(httpRequest, httpResponse, coreConfig);
 		}
 
-		public CompletableFuture<ResponseType> executeAsync() throws IOException , ExceptionType{
+		public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
 			return new AsyncExecutor(coreConfig).makeHttpCallAsync(() -> requestBuilder.build(coreConfig),
 					request -> coreConfig.getHttpClient().executeAsync(request, endpointConfiguration), (httpRequest,
 							httpResponse, coreconfig) -> responseHandler.handle(httpRequest, httpResponse, coreConfig));
