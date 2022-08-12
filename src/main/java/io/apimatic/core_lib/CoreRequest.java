@@ -230,33 +230,10 @@ public class CoreRequest {
 		 */
 		public Builder formParams(Parameter formParameter) {
 			formParameter.validate();
-			MultiPartRequest multiPartRequest = formParameter.getMultiPartRequest();
-			if (multiPartRequest != null) {
-				buildMultiRequest(formParameter, multiPartRequest, formParams);
-			} else {
-				this.formParams.put(formParameter.getKey(), formParameter.getValue());
-			}
+			this.formParams.put(formParameter.getKey(), formParameter.getValue());
 			return this;
 		}
 
-		private void buildMultiRequest(Parameter parameter, MultiPartRequest multiPartRequest,
-				Map<String, Object> params) {
-			String key = parameter.getKey();
-			switch (multiPartRequest.getMultiPartRequestType()) {
-			case MULTI_PART_FILE:
-				MultipartFileWrapper fileWrapper = new MultipartFileWrapper((FileWrapper) parameter.getValue(),
-						multiPartRequest.getHeaders());
-				params.put(key, fileWrapper);
-				break;
-			case MULTI_PART:
-				MultipartWrapper multipartWrapper = new MultipartWrapper(parameter.getValue().toString(),
-						multiPartRequest.getHeaders());
-				params.put(key, multipartWrapper);
-				break;
-			default:
-				break;
-			}
-		}
 
 		/**
 		 * Setter for body
