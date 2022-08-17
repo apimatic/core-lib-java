@@ -4,18 +4,19 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.apimatic.core_interfaces.http.HttpContext;
+import io.apimatic.core_interfaces.http.CoreHttpContext;
+import io.apimatic.core_interfaces.type.CoreApiException;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
 /**
  * This is the base class for all exceptions that represent an error response from the server.
  */
-public class ApiException extends Exception implements io.apimatic.core_interfaces.type.ApiException {
+public class ApiException extends Exception implements CoreApiException {
     //UID for serialization
     private static final long serialVersionUID = 6424174253911720338L;
 
     //private fields
-    private HttpContext httpContext;
+    private CoreHttpContext httpContext;
 
     /**
      * Initialization constructor.
@@ -30,7 +31,7 @@ public class ApiException extends Exception implements io.apimatic.core_interfac
      * @param   reason  The reason for throwing exception
      * @param   context The http context of the API exception
      */
-    public ApiException(String reason, HttpContext context) {
+    public ApiException(String reason, CoreHttpContext context) {
         super(reason);
         this.httpContext = context;
 
@@ -66,7 +67,7 @@ public class ApiException extends Exception implements io.apimatic.core_interfac
      * The HTTP response body from the API request.
      * @return   Returns the object of HttpContext for ApiException
      */
-	public HttpContext getHttpContext() {
+	public CoreHttpContext getHttpContext() {
         return httpContext;
     }
 }

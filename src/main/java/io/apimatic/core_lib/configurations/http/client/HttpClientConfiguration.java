@@ -9,12 +9,13 @@ package io.apimatic.core_lib.configurations.http.client;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import io.apimatic.core_interfaces.http.HttpMethod;
+import io.apimatic.core_interfaces.http.CoreHttpClientConfiguration;
+import io.apimatic.core_interfaces.http.CoreHttpMethod;
 
 /**
  * Class to hold HTTP Client Configuration.
  */
-public class HttpClientConfiguration implements io.apimatic.core_interfaces.http.HttpClientConfiguration {
+public class HttpClientConfiguration implements CoreHttpClientConfiguration {
 
     /**
      * The timeout in seconds to use for making HTTP requests.
@@ -44,7 +45,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
     /**
      * Http methods to retry against.
      */
-    private final Set<HttpMethod> httpMethodsToRetry;
+    private final Set<CoreHttpMethod> httpMethodsToRetry;
 
     /**
      * The maximum wait time for overall retrying requests.
@@ -72,7 +73,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
      */
     private HttpClientConfiguration(long timeout, int numberOfRetries, int backOffFactor,
             long retryInterval, Set<Integer> httpStatusCodesToRetry,
-            Set<HttpMethod> httpMethodsToRetry, long maximumRetryWaitTime,
+            Set<CoreHttpMethod> httpMethodsToRetry, long maximumRetryWaitTime,
             boolean shouldRetryOnTimeout, okhttp3.OkHttpClient httpClientInstance,
             boolean overrideHttpClientConfigurations) {
         this.timeout = timeout;
@@ -131,7 +132,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
      * Http methods to retry against.
      * @return httpMethodsToRetry
      */
-    public Set<HttpMethod> getHttpMethodsToRetry() {
+    public Set<CoreHttpMethod> getHttpMethodsToRetry() {
         return httpMethodsToRetry;
     }
 
@@ -212,7 +213,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
         private int backOffFactor = 2;
         private long retryInterval = 1;
         private Set<Integer> httpStatusCodesToRetry = new HashSet<>();
-        private Set<HttpMethod> httpMethodsToRetry = new HashSet<>();
+        private Set<CoreHttpMethod> httpMethodsToRetry = new HashSet<>();
         private long maximumRetryWaitTime = 120;
         private boolean shouldRetryOnTimeout = true;
         private okhttp3.OkHttpClient httpClientInstance;
@@ -225,7 +226,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
             // setting default values
             httpStatusCodesToRetry.addAll(Arrays.asList(408, 413, 429, 500, 502, 503, 504, 521, 522,
                     524));
-            httpMethodsToRetry.addAll(Arrays.asList(HttpMethod.GET, HttpMethod.PUT));
+            httpMethodsToRetry.addAll(Arrays.asList(CoreHttpMethod.GET, CoreHttpMethod.PUT));
         }
 
         /**
@@ -294,7 +295,7 @@ public class HttpClientConfiguration implements io.apimatic.core_interfaces.http
          * @param httpMethodsToRetry The httpMethodsToRetry to set.
          * @return Builder
          */
-        public Builder httpMethodsToRetry(Set<HttpMethod> httpMethodsToRetry) {
+        public Builder httpMethodsToRetry(Set<CoreHttpMethod> httpMethodsToRetry) {
             this.httpMethodsToRetry.clear();
             if (httpMethodsToRetry != null) {
                 this.httpMethodsToRetry.addAll(httpMethodsToRetry);

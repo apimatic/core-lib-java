@@ -2,95 +2,108 @@ package io.apimatic.core_lib;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-
-import io.apimatic.core_interfaces.http.request.HttpRequest;
-import io.apimatic.core_interfaces.http.request.configuration.EndpointConfiguration;
-import io.apimatic.core_interfaces.http.response.HttpResponse;
+import java.util.function.Consumer;
+import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
+import io.apimatic.core_interfaces.http.request.configuration.CoreEndpointConfiguration;
+import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_lib.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core_lib.request.async.AsyncExecutor;
 import io.apimatic.core_lib.types.ApiException;
 
-public class ApiCall {
+public class ApiCall<ResponseType, ExceptionType extends ApiException> {
 
-	private CoreConfig coreConfig;
-	private HttpRequest request;
-	private CoreResponseHandler<?, ?> responseHandler;
-	private EndpointConfiguration endpointConfiguration;
+    private final CoreConfig coreConfig;
+    private final CoreHttpRequest request;
+    private final CoreResponseHandler<?, ?> responseHandler;
+    private final CoreEndpointConfiguration endpointConfiguration;
 
-	private ApiCall(CoreConfig coreConfig) {
-		this.coreConfig = coreConfig;
-	}
+    private ApiCall(CoreConfig coreConfig, CoreHttpRequest coreHttpRequest,
+            CoreResponseHandler<?, ?> coreResponseHandler,
+            CoreEndpointConfiguration coreEndpointConfiguration) {
+        this.coreConfig = coreConfig;
+        this.request = coreHttpRequest;
+        this.responseHandler = coreResponseHandler;
+        this.endpointConfiguration = coreEndpointConfiguration;
+    }
 
-	/**
-	 * Getter for the CoreConfig
-	 * 
-	 * @return the CoreConfig instance
-	 */
-	public CoreConfig getCoreConfig() {
-		return this.coreConfig;
-	}
+    /**
+     * Getter for the CoreConfig
+     * 
+     * @return the CoreConfig instance
+     */
+    public CoreConfig getCoreConfig() {
+        return this.coreConfig;
+    }
 
-	/**
-	 * Getter for the HttpRequest
-	 * 
-	 * @return the HttpRequest instance
-	 */
-	public HttpRequest getRequest() {
-		return request;
-	}
+    /**
+     * Getter for the HttpRequest
+     * 
+     * @return the HttpRequest instance
+     */
+    public CoreHttpRequest getRequest() {
+        return request;
+    }
 
-	/**
-	 * Getter for the ResponseHandler
-	 * 
-	 * @return the ResponseHandler
-	 */
-	public CoreResponseHandler<?, ?> getResponseHandler() {
-		return responseHandler;
-	}
+    /**
+     * Getter for the ResponseHandler
+     * 
+     * @return the ResponseHandler
+     */
+    public CoreResponseHandler<?, ?> getResponseHandler() {
+        return responseHandler;
+    }
 
-	/**
-	 * @return the endpointConfiguration
-	 */
-	public EndpointConfiguration getEndpointConfiguration() {
-		return endpointConfiguration;
-	}
+    /**
+     * @return the endpointConfiguration
+     */
+    public CoreEndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
+    }
 
-	public static class Builder<ResponseType, ExceptionType extends ApiException> {
-		private CoreConfig coreConfig;
-		private CoreRequest.Builder requestBuilder = null;
-		private CoreResponseHandler<ResponseType, ExceptionType> responseHandler = null;
-		private EndpointConfiguration endpointConfiguration = null;
+    public static class Builder<ResponseType, ExceptionType extends ApiException> {
+        private CoreConfig coreConfig;
+        private CoreRequest.Builder requestBuilder = null;
+        private CoreResponseHandler<ResponseType, ExceptionType> responseHandler = null;
+        private EndpointConfiguration.Builder endpointConfigurationBuilder =
+                new EndpointConfiguration.Builder();
 
-		public Builder<ResponseType, ExceptionType> coreConfig(CoreConfig coreConfig) {
-			this.coreConfig = coreConfig;
-			return this;
-		}
+        public Builder<ResponseType, ExceptionType> coreConfig(CoreConfig coreConfig) {
+            this.coreConfig = coreConfig;
+            return this;
+        }
 
-		public Builder<ResponseType, ExceptionType> requestBuilder(CoreRequest.Builder requestBuilder) {
-			this.requestBuilder = requestBuilder;
-			return this;
-		}
+        public Builder<ResponseType, ExceptionType> requestBuilder(
+                CoreRequest.Builder requestBuilder) {
+            this.requestBuilder = requestBuilder;
+            return this;
+        }
 
-		public Builder<ResponseType, ExceptionType> responseHandler(
-				CoreResponseHandler<ResponseType, ExceptionType> responseHandler) {
-			this.responseHandler = responseHandler;
-			return this;
-		}
+        public Builder<ResponseType, ExceptionType> responseHandler(
+                CoreResponseHandler<ResponseType, ExceptionType> responseHandler) {
+            this.responseHandler = responseHandler;
+            return this;
+        }
 
-		public Builder<ResponseType, ExceptionType> endpointConfiguration(EndpointConfiguration configuration) {
-			this.endpointConfiguration = configuration;
-			return this;
-		}
+        public Builder<ResponseType, ExceptionType> endpointConfiguration(
+                Consumer<EndpointConfiguration.Builder> action) {
+            action.accept(endpointConfigurationBuilder);
+            return this;
+        }
 
-		public ResponseType execute() throws IOException, ExceptionType {
-			HttpRequest httpRequest = requestBuilder.build(coreConfig);
-			HttpResponse httpResponse = coreConfig.getHttpClient().execute(httpRequest, endpointConfiguration);
-			return responseHandler.handle(httpRequest, httpResponse, coreConfig);
-		}
+        public ResponseType execute() throws IOException, ExceptionType {
+            CoreHttpRequest httpRequest = requestBuilder.build(coreConfig);
+            CoreHttpResponse httpResponse = coreConfig.getHttpClient().execute(httpRequest,
+                    endpointConfigurationBuilder.build());
+            return responseHandler.handle(httpRequest, httpResponse, coreConfig);
+        }
 
-		public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
-			return new AsyncExecutor(coreConfig).makeHttpCallAsync(() -> requestBuilder.build(coreConfig),
-					request -> coreConfig.getHttpClient().executeAsync(request, endpointConfiguration), (httpRequest,
-							httpResponse, coreconfig) -> responseHandler.handle(httpRequest, httpResponse, coreConfig));
-		}
-	}
+        public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
+            return new AsyncExecutor(coreConfig).makeHttpCallAsync(
+                    () -> requestBuilder.build(coreConfig),
+                    request -> coreConfig.getHttpClient().executeAsync(request,
+                            endpointConfigurationBuilder.build()),
+                    (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
+                            httpResponse, coreConfig));
+        }
+    }
 }

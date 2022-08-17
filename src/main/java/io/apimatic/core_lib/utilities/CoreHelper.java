@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
 import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
 import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import java.io.File;
@@ -51,22 +52,23 @@ public class CoreHelper {
         private static final long serialVersionUID = -174113593500315394L;
         {
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            configOverride(BigDecimal.class).setFormat(
-                    JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
+            configOverride(BigDecimal.class)
+                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
         }
     };
 
     /**
-     * List of classes that are wrapped directly. This information is needed when
-     * traversing object trees for reference matching.
+     * List of classes that are wrapped directly. This information is needed when traversing object
+     * trees for reference matching.
      */
-    private static final Set<Object> WRAPPER_TYPES = new HashSet<Object>(Arrays.asList(
-            Boolean.class, Character.class, Byte.class, Short.class, String.class,
-            Integer.class, Long.class, Float.class, Double.class, BigDecimal.class,
-            Void.class, File.class, MultipartWrapper.class, MultipartFileWrapper.class));
+    private static final Set<Object> WRAPPER_TYPES = new HashSet<Object>(
+            Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, String.class,
+                    Integer.class, Long.class, Float.class, Double.class, BigDecimal.class,
+                    Void.class, File.class, MultipartWrapper.class, MultipartFileWrapper.class));
 
     /**
      * Get a JsonSerializer instance from the provided annotation.
+     * 
      * @param serializerAnnotation The Annotation containing information about the serializer.
      * @return The JsonSerializer instance of the required type.
      */
@@ -80,6 +82,7 @@ public class CoreHelper {
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
+     * 
      * @param serializerAnnotation The Annotation containing information about the serializer of a
      *        collection.
      * @return The JsonSerializer instance of the required type.
@@ -94,12 +97,12 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given object.
-     * @param  obj The object to serialize into Json.
+     * 
+     * @param obj The object to serialize into Json.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
      */
-    public static String serialize(Object obj)
-            throws JsonProcessingException {
+    public static String serialize(Object obj) throws JsonProcessingException {
         if (obj == null) {
             return null;
         }
@@ -109,6 +112,7 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given object using a specified JsonSerializer.
+     * 
      * @param obj The object to serialize into Json.
      * @param serializer The instance of JsonSerializer to use.
      * @return The serialized Json string representation of the given object.
@@ -141,14 +145,15 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string using a specified JsonDerializer.
-     * @param   json The Json string to deserialize.
-     * @param   typeReference TypeReference of T1.
-     * @param   <T1> The type of the object to deserialize into.
-     * @param   <T2> The type of the custom deserializer.
-     * @param   cls The class to attach the deserializer to.
-     * @param   deserializer The deserializer to use.
-     * @return  The deserialized object.
-     * @throws  IOException Signals if any I/O exception occured.
+     * 
+     * @param json The Json string to deserialize.
+     * @param typeReference TypeReference of T1.
+     * @param <T1> The type of the object to deserialize into.
+     * @param <T2> The type of the custom deserializer.
+     * @param cls The class to attach the deserializer to.
+     * @param deserializer The deserializer to use.
+     * @return The deserialized object.
+     * @throws IOException Signals if any I/O exception occured.
      */
     public static <T1 extends Object, T2 extends Object> T1 deserialize(String json,
             final TypeReference<T1> typeReference, final Class<T2> cls,
@@ -169,14 +174,14 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * @param   <T> The type of the object to deserialize into
-     * @param   json The Json string to deserialize
-     * @param   clazz The type of the object to deserialize into
-     * @return  The deserialized object
-     * @throws  IOException Signals if any I/O exception occured.
+     * 
+     * @param <T> The type of the object to deserialize into
+     * @param json The Json string to deserialize
+     * @param clazz The type of the object to deserialize into
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occured.
      */
-    public static <T extends Object> T deserialize(String json, Class<T> clazz)
-            throws IOException {
+    public static <T extends Object> T deserialize(String json, Class<T> clazz) throws IOException {
         if (isNullOrWhiteSpace(json)) {
             return null;
         }
@@ -186,28 +191,29 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * @param   json The Json string to deserialize
-     * @return  The deserialized Json as a Map
-     * @throws  IOException Signals if any I/O exception occured.
+     * 
+     * @param json The Json string to deserialize
+     * @return The deserialized Json as a Map
+     * @throws IOException Signals if any I/O exception occured.
      */
-    public static LinkedHashMap<String, Object> deserialize(String json)
-            throws IOException {
+    public static LinkedHashMap<String, Object> deserialize(String json) throws IOException {
         if (isNullOrWhiteSpace(json)) {
             return null;
         }
 
-        TypeReference<LinkedHashMap<String, Object>> typeRef 
-            = new TypeReference<LinkedHashMap<String, Object>>(){};
+        TypeReference<LinkedHashMap<String, Object>> typeRef =
+                new TypeReference<LinkedHashMap<String, Object>>() {};
         return deserialize(json, typeRef);
     }
 
     /**
      * JSON Deserialization of the given json string.
-     * @param   json The json string to deserialize
-     * @param   typeReference TypeReference of T
-     * @param   <T>  The type of the object to deserialize into
-     * @return  The deserialized object
-     * @throws  IOException Signals if any I/O exception occured.
+     * 
+     * @param json The json string to deserialize
+     * @param typeReference TypeReference of T
+     * @param <T> The type of the object to deserialize into
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occured.
      */
     public static <T extends Object> T deserialize(String json, TypeReference<T> typeReference)
             throws IOException {
@@ -220,8 +226,9 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * @param   json The Json string to deserialize
-     * @return  The deserialized Json as an Object
+     * 
+     * @param json The Json string to deserialize
+     * @return The deserialized Json as an Object
      */
     public static Object deserializeAsObject(String json) {
         if (isNullOrWhiteSpace(json)) {
@@ -238,28 +245,30 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string.
-     * @param   <T> The type of the object to deserialize into
-     * @param   json The Json string to deserialize
-     * @param   classArray The class of the array of objects to deserialize into
-     * @return  The deserialized list of objects
-     * @throws  IOException Signals if any I/O exception occured.
+     * 
+     * @param <T> The type of the object to deserialize into
+     * @param json The Json string to deserialize
+     * @param classArray The class of the array of objects to deserialize into
+     * @return The deserialized list of objects
+     * @throws IOException Signals if any I/O exception occured.
      */
     public static <T extends Object> List<T> deserializeArray(String json, Class<T[]> classArray)
             throws IOException {
         if (isNullOrWhiteSpace(json)) {
             return null;
         }
-        
+
         return Arrays.asList(mapper.readValue(json, classArray));
     }
 
     /**
      * Replaces template parameters in the given URL.
-     * @param   queryBuilder The query string builder to replace the template parameters
-     * @param   parameters The parameters to replace in the URL
+     * 
+     * @param queryBuilder The query string builder to replace the template parameters
+     * @param parameters The parameters to replace in the URL
      */
-    public static void appendUrlWithTemplateParameters(StringBuilder queryBuilder, 
-        Map<String, SimpleEntry<Object, Boolean>> parameters) {
+    public static void appendUrlWithTemplateParameters(StringBuilder queryBuilder,
+            Map<String, SimpleEntry<Object, Boolean>> parameters) {
         // Perform parameter validation
         if (null == queryBuilder) {
             throw new IllegalArgumentException(
@@ -272,17 +281,17 @@ public class CoreHelper {
 
         // Iterate and append parameters
         for (Map.Entry<String, SimpleEntry<Object, Boolean>> pair : parameters.entrySet()) {
-        
+
             String replaceValue = "";
             Object element = pair.getValue().getKey();
             boolean shouldEncode = pair.getValue().getValue();
-            
+
             // Load element value as string
             if (null == element) {
                 replaceValue = "";
             } else if (element instanceof Collection<?>) {
-                replaceValue = flattenCollection("", (Collection<?>) element, shouldEncode,
-                        "%s%s%s", '/');
+                replaceValue =
+                        flattenCollection("", (Collection<?>) element, shouldEncode, "%s%s%s", '/');
             } else {
                 if (shouldEncode) {
                     replaceValue = tryUrlEncode(element.toString(), false);
@@ -298,11 +307,12 @@ public class CoreHelper {
 
     /**
      * Appends the given set of parameters to the given query string.
-     * @param   queryBuilder The query URL string to append the parameters.
-     * @param   parameters The parameters to append.
+     * 
+     * @param queryBuilder The query URL string to append the parameters.
+     * @param parameters The parameters to append.
      */
     public static void appendUrlWithQueryParameters(StringBuilder queryBuilder,
-            Map<String, Object> parameters) {
+            Map<String, Object> parameters, ArraySerializationFormat arraySerializationFormat) {
         // Perform parameter validation
         if (queryBuilder == null) {
             throw new IllegalArgumentException(
@@ -311,18 +321,19 @@ public class CoreHelper {
         if (parameters == null || parameters.isEmpty()) {
             return;
         }
-        
+
         // Check if query string already has parameters
         boolean hasParams = queryBuilder.indexOf("?") > 0;
         queryBuilder.append(hasParams ? '&' : '?');
 
-        encodeObjectAsQueryString("", parameters, queryBuilder);
+        encodeObjectAsQueryString("", parameters, queryBuilder, arraySerializationFormat);
     }
 
     /**
      * Validates if the string is null, empty or whitespace.
-     * @param   s The string to validate.
-     * @return  The result of validation.
+     * 
+     * @param s The string to validate.
+     * @return The result of validation.
      */
     public static boolean isNullOrWhiteSpace(String s) {
         if (s == null) {
@@ -331,8 +342,8 @@ public class CoreHelper {
 
         int length = s.length();
         if (length > 0) {
-            for (int start = 0, middle = length / 2, end = length - 1; start <= middle;
-                    start++, end--) {
+            for (int start = 0, middle = length / 2,
+                    end = length - 1; start <= middle; start++, end--) {
                 if (s.charAt(start) > ' ' || s.charAt(end) > ' ') {
                     return false;
                 }
@@ -344,14 +355,15 @@ public class CoreHelper {
 
     /**
      * Replaces all occurrences of the given string in the string builder.
-     * @param   stringBuilder The string builder to update with replaced strings.
-     * @param   toReplace The string to replace in the string builder.
-     * @param   replaceWith The string to replace with.
+     * 
+     * @param stringBuilder The string builder to update with replaced strings.
+     * @param toReplace The string to replace in the string builder.
+     * @param replaceWith The string to replace with.
      */
     public static void replaceAll(StringBuilder stringBuilder, String toReplace,
             String replaceWith) {
         int index = stringBuilder.indexOf(toReplace);
-        
+
         while (index != -1) {
             stringBuilder.replace(index, index + toReplace.length(), replaceWith);
             index += replaceWith.length(); // Move to the end of the replacement
@@ -361,6 +373,7 @@ public class CoreHelper {
 
     /**
      * Removes null values from the given map.
+     * 
      * @param map Map of values.
      */
     public static void removeNullValues(Map<String, ?> map) {
@@ -373,8 +386,9 @@ public class CoreHelper {
 
     /**
      * Validates and processes the given URL.
-     * @param    url The given URL to process.
-     * @return   Pre-process URL as string.
+     * 
+     * @param url The given URL to process.
+     * @return Pre-process URL as string.
      */
     public static String cleanUrl(StringBuilder url) {
         // Ensures that the URLs are absolute
@@ -397,32 +411,37 @@ public class CoreHelper {
 
     /**
      * Prepares Array style form fields from a given array of values.
-     * @param   value Value for the form fields.
-     * @return  Dictionary of form fields created from array elements.
+     * 
+     * @param value Value for the form fields.
+     * @param arraySerializationFormat
+     * @return Dictionary of form fields created from array elements.
      */
-    public static List<SimpleEntry<String, Object>> prepareFormFields(Map<?, ?> value) {
+    public static List<SimpleEntry<String, Object>> prepareFormFields(Map<?, ?> value,
+            ArraySerializationFormat arraySerializationFormat) {
         List<SimpleEntry<String, Object>> formFields = new ArrayList<>();
         if (value != null) {
-            objectToList("", value, formFields, new HashSet<Integer>());
+            objectToList("", value, formFields, new HashSet<Integer>(), arraySerializationFormat);
         }
         return formFields;
     }
 
     /**
      * Encodes a given object to URL encoded string.
+     * 
      * @param name Name of the object.
      * @param obj Raw object sent from caller.
      * @param objBuilder String of elements.
      */
-    private static void encodeObjectAsQueryString(String name, Object obj,
-            StringBuilder objBuilder) {
+    private static void encodeObjectAsQueryString(String name, Object obj, StringBuilder objBuilder,
+            ArraySerializationFormat arraySerializationFormat) {
         if (obj == null) {
             return;
         }
 
         List<SimpleEntry<String, Object>> objectList = new ArrayList<>();
-        objectToList(name, obj, objectList, new HashSet<Integer>());
+        objectToList(name, obj, objectList, new HashSet<Integer>(), arraySerializationFormat);
         boolean hasParam = false;
+
 
 
         for (SimpleEntry<String, Object> pair : objectList) {
@@ -433,10 +452,18 @@ public class CoreHelper {
             if (value == null) {
                 continue;
             }
-                
+
             hasParam = true;
             // Load element value as string
-            paramKeyValPair = 
+            if (arraySerializationFormat == ArraySerializationFormat.CSV
+                    || arraySerializationFormat == ArraySerializationFormat.TSV
+                    || arraySerializationFormat == ArraySerializationFormat.PSV) {
+                if (accessor.matches(".*?\\[\\d+\\]$")) {
+                    String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
+                }
+            }
+
+            paramKeyValPair =
                     String.format("%s=%s&", accessor, tryUrlEncode(value.toString(), false));
             objBuilder.append(paramKeyValPair);
 
@@ -450,10 +477,11 @@ public class CoreHelper {
 
     /**
      * Flattening a collection of objects into a string.
-     * @param   array Array of elements to flatten.
-     * @param   fmt Format string to use for array flattening.
-     * @param   separator Separator to use for string concatenation.
-     * @return  Representative string made up of array elements.
+     * 
+     * @param array Array of elements to flatten.
+     * @param fmt Format string to use for array flattening.
+     * @param separator Separator to use for string concatenation.
+     * @return Representative string made up of array elements.
      */
     private static String flattenCollection(String elemName, Collection<?> array, boolean encode,
             String fmt, char separator) {
@@ -485,6 +513,7 @@ public class CoreHelper {
 
     /**
      * Tries URL encode using UTF-8.
+     * 
      * @param value The value to URL encode.
      * @param spaceAsPercentEncoded The flag get space character as percent encoded.
      * @return Encoded url.
@@ -502,22 +531,24 @@ public class CoreHelper {
     }
 
     private static void objectToList(String objName, Collection<?> obj,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed) {
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            ArraySerializationFormat arraySerializationFormat) {
 
         Collection<?> array = obj;
         // Append all elements of the array into a string
         int index = 0;
         for (Object element : array) {
-            //load key value pair
+            // load key value pair
             String key = String.format("%s[%d]", objName, index++);
-            loadKeyValuePairForEncoding(key, element, objectList, processed);
+            loadKeyValuePairForEncoding(key, element, objectList, processed,
+                    arraySerializationFormat);
         }
-      
+
     }
 
-    private static void objectToList(String objName, Map<?, ?> obj, 
-            List<SimpleEntry<String, Object>> objectList, 
-            HashSet<Integer> processed) {
+    private static void objectToList(String objName, Map<?, ?> obj,
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            ArraySerializationFormat arraySerializationFormat) {
         // Process map
         Map<?, ?> map = obj;
         // Append all elements of the array into a string
@@ -526,19 +557,22 @@ public class CoreHelper {
             if ((objName != null) && (!objName.isEmpty())) {
                 attribName = String.format("%s[%s]", objName, attribName);
             }
-            loadKeyValuePairForEncoding(attribName, pair.getValue(), objectList, processed);
+            loadKeyValuePairForEncoding(attribName, pair.getValue(), objectList, processed,
+                    arraySerializationFormat);
         }
     }
 
     /**
      * Converts a given object to a form encoded map.
+     * 
      * @param objName Name of the object.
      * @param obj The object to convert into a map.
      * @param objectList The object list to populate.
      * @param processed List of object hashCodes that are already parsed.
      */
     private static void objectToList(String objName, Object obj,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed) {
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            ArraySerializationFormat arraySerializationFormat) {
         // Null values need not to be processed
         if (obj == null) {
             return;
@@ -556,7 +590,8 @@ public class CoreHelper {
 
         // Process arrays
         if (obj instanceof Collection<?>) {
-            objectToList(objName, (Collection<?>) obj, objectList,  processed);
+            objectToList(objName, (Collection<?>) obj, objectList, processed,
+                    arraySerializationFormat);
         } else if (obj.getClass().isArray()) {
             // Process array
 
@@ -566,10 +601,11 @@ public class CoreHelper {
             for (Object element : array) {
                 // Load key value pair
                 String key = String.format("%s[%d]", objName, index++);
-                loadKeyValuePairForEncoding(key, element, objectList, processed);
+                loadKeyValuePairForEncoding(key, element, objectList, processed,
+                        arraySerializationFormat);
             }
         } else if (obj instanceof Map) {
-            objectToList(objName, (Map<?, ?>) obj, objectList,  processed);
+            objectToList(objName, (Map<?, ?>) obj, objectList, processed, arraySerializationFormat);
         } else {
             // Process objects
             // Invoke getter methods
@@ -600,14 +636,15 @@ public class CoreHelper {
                         // Load value by invoking getter method
                         method.setAccessible(true);
                         Object value = method.invoke(obj);
-                        JsonSerialize serializerAnnotation = method
-                                .getAnnotation(JsonSerialize.class);
+                        JsonSerialize serializerAnnotation =
+                                method.getAnnotation(JsonSerialize.class);
                         // Load key value pair into objectList
                         if (serializerAnnotation != null) {
                             loadKeyValuePairForEncoding(attribName, value, objectList, processed,
-                                    serializerAnnotation);
+                                    serializerAnnotation, arraySerializationFormat);
                         } else {
-                            loadKeyValuePairForEncoding(attribName, value, objectList, processed);
+                            loadKeyValuePairForEncoding(attribName, value, objectList, processed,
+                                    arraySerializationFormat);
                         }
                     } catch (IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException e) {
@@ -633,13 +670,14 @@ public class CoreHelper {
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
      */
     private static void loadKeyValueUsingSerializer(String key, Object value,
-        List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-        JsonSerializer<?> serializer) throws JsonProcessingException {
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            JsonSerializer<?> serializer, ArraySerializationFormat arraySerializationFormat)
+            throws JsonProcessingException {
         value = serialize(value, serializer);
 
         Object obj = deserializeAsObject(value.toString());
         if (obj instanceof List<?> || obj instanceof Map<?, ?>) {
-            loadKeyValuePairForEncoding(key, obj, objectList, processed);
+            loadKeyValuePairForEncoding(key, obj, objectList, processed, arraySerializationFormat);
         } else {
             if (value.toString().startsWith("\"")) {
                 value = value.toString().substring(1, value.toString().length() - 1);
@@ -647,16 +685,18 @@ public class CoreHelper {
             objectList.add(new SimpleEntry<String, Object>(key, value));
         }
     }
-   
+
     /**
      * While processing objects to map, decides whether to perform recursion or load value.
+     * 
      * @param key The key for creating key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
      */
     private static void loadKeyValuePairForEncoding(String key, Object value,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed) {
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            ArraySerializationFormat arraySerializationFormat) {
         if (value == null) {
             return;
         }
@@ -666,12 +706,13 @@ public class CoreHelper {
             // UUIDs can be converted to string
             objectList.add(new SimpleEntry<String, Object>(key, value.toString()));
         } else {
-            objectToList(key, value, objectList, processed);
         }
+        objectToList(key, value, objectList, processed, arraySerializationFormat);
     }
 
     /**
      * While processing objects to map, loads value after serializing.
+     * 
      * @param key The key to used for creation of key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
@@ -680,7 +721,7 @@ public class CoreHelper {
      */
     private static void loadKeyValuePairForEncoding(String key, Object value,
             List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            JsonSerialize serializerAnnotation) {
+            JsonSerialize serializerAnnotation, ArraySerializationFormat arraySerializationFormat) {
         if (value == null) {
             return;
         }
@@ -691,7 +732,8 @@ public class CoreHelper {
                 serializer = getCollectionSerializer(serializerAnnotation);
             }
 
-            loadKeyValueUsingSerializer(key, value, objectList, processed, serializer);
+            loadKeyValueUsingSerializer(key, value, objectList, processed, serializer,
+                    arraySerializationFormat);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -699,11 +741,12 @@ public class CoreHelper {
 
     /**
      * Check if the given object can be wrapped directly.
+     * 
      * @param object The given object.
      * @return true if the class is an autoboxed class e.g., Integer.
      */
     private static boolean isWrapperType(Object object) {
-        return WRAPPER_TYPES.contains(object.getClass()) 
-                || object.getClass().isPrimitive() || object.getClass().isEnum();
+        return WRAPPER_TYPES.contains(object.getClass()) || object.getClass().isPrimitive()
+                || object.getClass().isEnum();
     }
 }

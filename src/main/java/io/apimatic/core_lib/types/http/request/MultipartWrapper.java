@@ -8,11 +8,12 @@ package io.apimatic.core_lib.types.http.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.apimatic.core_interfaces.http.HttpHeaders;
+import io.apimatic.core_interfaces.http.request.CoreMultipartWrapper;
 
 /**
  * Class to wrap byteArray and headers to be sent as part of a multipart request.
  */
-public class MultipartWrapper implements io.apimatic.core_interfaces.http.request.MultipartWrapper {
+public class MultipartWrapper implements CoreMultipartWrapper {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String serializedObj;
@@ -21,6 +22,7 @@ public class MultipartWrapper implements io.apimatic.core_interfaces.http.reques
 
     /**
      * Initialization constructor.
+     * 
      * @param serializedObj Serialized string of object to be wrapped.
      * @param headers Headers for wrapping
      */
@@ -31,6 +33,7 @@ public class MultipartWrapper implements io.apimatic.core_interfaces.http.reques
 
     /**
      * Getter for bytes.
+     * 
      * @return Array of bytes.
      */
     public byte[] getByteArray() {
@@ -39,6 +42,7 @@ public class MultipartWrapper implements io.apimatic.core_interfaces.http.reques
 
     /**
      * Getter for headers.
+     * 
      * @return headers
      */
     public HttpHeaders getHeaders() {
