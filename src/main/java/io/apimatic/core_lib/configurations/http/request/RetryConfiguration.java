@@ -6,12 +6,13 @@
 
 package io.apimatic.core_lib.configurations.http.request;
 
+import io.apimatic.core_interfaces.http.request.configuration.RequestRetryConfiguration;
 import io.apimatic.core_interfaces.http.request.configuration.RetryOption;
 
 /**
  * Holds configurations for a particular HTTP request.
  */
-public class RetryConfiguration {
+public class RetryConfiguration implements RequestRetryConfiguration {
     
     /**
      * The option to override HTTP method whitelist configuration for the request in retries.

@@ -14,11 +14,11 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
 
     private final CoreConfig coreConfig;
     private final CoreHttpRequest request;
-    private final CoreResponseHandler<?, ?> responseHandler;
+    private final CoreResponseHandler<ResponseType, ExceptionType> responseHandler;
     private final CoreEndpointConfiguration endpointConfiguration;
 
     private ApiCall(CoreConfig coreConfig, CoreHttpRequest coreHttpRequest,
-            CoreResponseHandler<?, ?> coreResponseHandler,
+            CoreResponseHandler<ResponseType, ExceptionType> coreResponseHandler,
             CoreEndpointConfiguration coreEndpointConfiguration) {
         this.coreConfig = coreConfig;
         this.request = coreHttpRequest;
@@ -60,10 +60,28 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
         return endpointConfiguration;
     }
 
+    public ResponseType execute() throws IOException, ExceptionType {
+        CoreHttpResponse httpResponse = coreConfig.getHttpClient().execute(request,
+                endpointConfiguration);
+        return responseHandler.handle(request, httpResponse, coreConfig);
+    }
+
+    public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
+        return new AsyncExecutor(coreConfig).makeHttpCallAsync(
+                () -> request,
+                request -> coreConfig.getHttpClient().executeAsync(request,
+                        endpointConfiguration),
+                (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
+                        httpResponse, coreConfig));
+    }
+    
     public static class Builder<ResponseType, ExceptionType extends ApiException> {
         private CoreConfig coreConfig;
-        private CoreRequest.Builder requestBuilder = null;
+        private CoreRequest.Builder requestBuilder = new CoreRequest.Builder();
         private CoreResponseHandler<ResponseType, ExceptionType> responseHandler = null;
+        private CoreResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder =
+                new CoreResponseHandler.Builder<ResponseType, ExceptionType>();
+
         private EndpointConfiguration.Builder endpointConfigurationBuilder =
                 new EndpointConfiguration.Builder();
 
@@ -73,14 +91,14 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
         }
 
         public Builder<ResponseType, ExceptionType> requestBuilder(
-                CoreRequest.Builder requestBuilder) {
-            this.requestBuilder = requestBuilder;
+                Consumer<CoreRequest.Builder> action) {
+            action.accept(requestBuilder);
             return this;
         }
 
         public Builder<ResponseType, ExceptionType> responseHandler(
-                CoreResponseHandler<ResponseType, ExceptionType> responseHandler) {
-            this.responseHandler = responseHandler;
+                Consumer<CoreResponseHandler.Builder<ResponseType, ExceptionType>> action) {
+            action.accept(responseHandlerBuilder);
             return this;
         }
 
@@ -90,20 +108,10 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
             return this;
         }
 
-        public ResponseType execute() throws IOException, ExceptionType {
-            CoreHttpRequest httpRequest = requestBuilder.build(coreConfig);
-            CoreHttpResponse httpResponse = coreConfig.getHttpClient().execute(httpRequest,
+        public ApiCall<ResponseType, ExceptionType> build() throws IOException {
+            return new ApiCall<ResponseType, ExceptionType>(coreConfig,
+                    requestBuilder.build(coreConfig), responseHandlerBuilder.build(),
                     endpointConfigurationBuilder.build());
-            return responseHandler.handle(httpRequest, httpResponse, coreConfig);
-        }
-
-        public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
-            return new AsyncExecutor(coreConfig).makeHttpCallAsync(
-                    () -> requestBuilder.build(coreConfig),
-                    request -> coreConfig.getHttpClient().executeAsync(request,
-                            endpointConfigurationBuilder.build()),
-                    (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
-                            httpResponse, coreConfig));
         }
     }
 }

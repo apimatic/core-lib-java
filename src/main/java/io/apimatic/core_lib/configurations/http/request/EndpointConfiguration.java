@@ -6,14 +6,14 @@ import io.apimatic.core_interfaces.http.request.configuration.RequestRetryConfig
 
 public class EndpointConfiguration implements CoreEndpointConfiguration {
 
-    private final boolean hasBinary;
+    private final boolean hasBinaryResponse;
     private final RequestRetryConfiguration requestRetryConfiguration;
     private final ArraySerializationFormat arraySerializationFormat;
 
     public EndpointConfiguration(boolean hasBinary,
             RequestRetryConfiguration requestRetryConfiguration,
             ArraySerializationFormat arraySerializationFormat) {
-        this.hasBinary = hasBinary;
+        this.hasBinaryResponse = hasBinary;
         this.requestRetryConfiguration = requestRetryConfiguration;
         this.arraySerializationFormat = arraySerializationFormat;
     }
@@ -23,8 +23,8 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     }
 
     @Override
-    public boolean hasBinary() {
-        return hasBinary;
+    public boolean hasBinaryResponse() {
+        return hasBinaryResponse;
     }
 
     @Override
@@ -38,12 +38,12 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     }
 
     public static class Builder {
-        private boolean hasBinary;
-        private RequestRetryConfiguration requestRetryConfiguration;
-        private ArraySerializationFormat arraySerializationFormat;
+        private boolean hasBinaryResponse = false;
+        private RequestRetryConfiguration requestRetryConfiguration = new RetryConfiguration.Builder().build();
+        private ArraySerializationFormat arraySerializationFormat = ArraySerializationFormat.INDEXED;
 
-        public Builder hasBinary(boolean hasBinary) {
-            this.hasBinary = hasBinary;
+        public Builder hasBinaryResponse(boolean hasBinary) {
+            this.hasBinaryResponse = hasBinary;
             return this;
         }
 
@@ -59,7 +59,7 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         }
 
         public EndpointConfiguration build() {
-            return new EndpointConfiguration(hasBinary, requestRetryConfiguration,
+            return new EndpointConfiguration(hasBinaryResponse, requestRetryConfiguration,
                     arraySerializationFormat);
         }
 

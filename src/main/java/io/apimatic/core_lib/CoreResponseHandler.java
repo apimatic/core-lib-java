@@ -12,8 +12,8 @@ import io.apimatic.core_lib.types.ApiException;
 
 public class CoreResponseHandler<ResponseType, ExceptionType extends ApiException> {
 
-    private final Map<String, APIErrorCase<ExceptionType>> localErrorCases;
-    private final Map<String, APIErrorCase<ExceptionType>> globalErrorCases;
+    private final Map<String, ErrorCase<ExceptionType>> localErrorCases;
+    private final Map<String, ErrorCase<ExceptionType>> globalErrorCases;
     private final Deserializer<ResponseType> deserializer;
     private final ResponseClassType responseClassType;
     private final boolean isNullify404Enabled;
@@ -27,8 +27,8 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
      * @param objectCreator
      * @param isNullify404Enabled
      */
-    private CoreResponseHandler(Map<String, APIErrorCase<ExceptionType>> localErrorCases,
-            Map<String, APIErrorCase<ExceptionType>> globalErrorCases,
+    private CoreResponseHandler(Map<String, ErrorCase<ExceptionType>> localErrorCases,
+            Map<String, ErrorCase<ExceptionType>> globalErrorCases,
             Deserializer<ResponseType> deserializer, ResponseClassType responseClassType,
             boolean isNullify404Enabled) {
         this.localErrorCases = localErrorCases;
@@ -44,7 +44,7 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
      * 
      * @return the errorCase
      */
-    public Map<String, APIErrorCase<ExceptionType>> getLocalErrorCases() {
+    public Map<String, ErrorCase<ExceptionType>> getLocalErrorCases() {
         return this.localErrorCases;
     }
 
@@ -60,7 +60,7 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
     /**
      * @return the globalErrorCases
      */
-    public Map<String, APIErrorCase<ExceptionType>> getGlobalErrorCases() {
+    public Map<String, ErrorCase<ExceptionType>> getGlobalErrorCases() {
         return globalErrorCases;
     }
 
@@ -119,21 +119,21 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
         }
 
         if ((statusCode < 200) || (statusCode > 208)) { // [200,208] = HTTP OK
-            globalErrorCases.get(APIErrorCase.DEFAULT).throwException(httpContext);
+            globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
         }
     }
 
     public static class Builder<ResponseType, ExceptionType extends ApiException> {
-        private Map<String, APIErrorCase<ExceptionType>> localErrorCases = null;
-        private Map<String, APIErrorCase<ExceptionType>> globalErrorCases = null;
+        private Map<String, ErrorCase<ExceptionType>> localErrorCases = null;
+        private Map<String, ErrorCase<ExceptionType>> globalErrorCases = null;
         private Deserializer<ResponseType> deserializer;
         private ResponseClassType responseClassType;
-        private boolean isNullify404Enabled = false;
+        private boolean isNullify404Enabled = true;
 
         public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
-                APIErrorCase<ExceptionType> errorCase) {
+                ErrorCase<ExceptionType> errorCase) {
             if (this.localErrorCases == null) {
-                this.localErrorCases = new HashMap<String, APIErrorCase<ExceptionType>>();
+                this.localErrorCases = new HashMap<String, ErrorCase<ExceptionType>>();
             }
 
             this.localErrorCases.put(statusCode, errorCase);
@@ -141,7 +141,7 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
         }
 
         public Builder<ResponseType, ExceptionType> globalErrorCase(
-                Map<String, APIErrorCase<ExceptionType>> globalErrorCases) {
+                Map<String, ErrorCase<ExceptionType>> globalErrorCases) {
             this.globalErrorCases = globalErrorCases;
             return this;
         }

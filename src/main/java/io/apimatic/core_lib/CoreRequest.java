@@ -22,16 +22,9 @@ import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
 public class CoreRequest {
-    private final String server;
-    private final String Path;
-    private final CoreHttpMethod httpMethod;
-    private final boolean requiresAuth;
-    private final Map<String, Object> queryParams;
-    private final Map<String, SimpleEntry<Object, Boolean>> templateParams;
-    private final HttpHeaders headerParams;
-    private final Map<String, Object> formParams;
-    private final Object body;
-    private final Serializer bodySerializer;
+    private final CoreHttpRequest coreHttpRequest;
+    private final CoreConfig coreConfig;
+    private final StringBuilder urlBuilder;
 
     /**
      * @param server
@@ -44,95 +37,135 @@ public class CoreRequest {
      * @param formParams
      * @param body
      * @param bodySerializer
+     * @throws IOException
      */
-    private CoreRequest(String server, String path, CoreHttpMethod httpMethod, boolean requiresAuth,
-            Map<String, Object> queryParams,
-            Map<String, SimpleEntry<Object, Boolean>> templateParams, HttpHeaders headerParams,
-            Map<String, Object> formParams, Object body, Serializer bodySerializer) {
-        this.server = server;
-        Path = path;
-        this.httpMethod = httpMethod;
-        this.requiresAuth = requiresAuth;
-        this.queryParams = queryParams;
-        this.templateParams = templateParams;
-        this.headerParams = headerParams;
-        this.formParams = formParams;
-        this.body = body;
-        this.bodySerializer = bodySerializer;
+    private CoreRequest(CoreConfig coreConfig, String server, String path,
+            CoreHttpMethod httpMethod, boolean requiresAuth, Map<String, Object> queryParams,
+            Map<String, SimpleEntry<Object, Boolean>> templateParams,
+            Map<String, List<String>> headerParams, Set<Parameter> formParams, Object body,
+            Serializer bodySerializer, Map<String, Object> bodyParameters,
+            ArraySerializationFormat arraySerializationFormat) throws IOException {
+        this.coreConfig = coreConfig;
+        urlBuilder = getStringBuilder(server, path);
+
+        processTemplateParams(templateParams);
+        HttpHeaders headers = addHeaders(headerParams);
+        String bodyString = buildBodyString(body, bodySerializer, bodyParameters);
+        coreHttpRequest = buildRequest(httpMethod, bodyString, headers, queryParams, formParams,
+                arraySerializationFormat);
     }
 
-    /**
-     * @return the server
-     */
-    public String getServer() {
-        return server;
-    }
-
-    /**
-     * @return the path
-     */
-    public String getPath() {
-        return Path;
-    }
-
-    /**
-     * @return the httpMethod
-     */
-    public CoreHttpMethod getHttpMethod() {
-        return httpMethod;
-    }
-
-    /**
-     * @return the requiresAuth
-     */
-    public boolean isRequiresAuth() {
-        return requiresAuth;
-    }
-
-    /**
-     * @return the queryParams
-     */
-    public Map<String, Object> getQueryParams() {
-        return queryParams;
-    }
-
-    /**
-     * @return the templateParams
-     */
-    public Map<String, SimpleEntry<Object, Boolean>> getTemplateParams() {
-        return templateParams;
-    }
-
-    /**
-     * @return the headerParams
-     */
-    public HttpHeaders getHeaderParams() {
-        return headerParams;
-    }
-
-    /**
-     * @return the formParams
-     */
-    public Map<String, Object> getFormParams() {
-        return formParams;
-    }
-
-    /**
-     * @return the body
-     */
-    public Object getBody() {
-        return body;
-    }
-
-    /**
-     * @return the bodySerializer
-     */
-    public Serializer getBodySerializer() {
-        return bodySerializer;
+    public CoreHttpRequest getCoreHttpRequest() {
+        return coreHttpRequest;
     }
 
     public static Builder builder(String server, String path) {
-        return new CoreRequest.Builder(server, path);
+        return new CoreRequest.Builder();
+    }
+
+    private CoreHttpRequest buildRequest(CoreHttpMethod httpMethod, Object body,
+            HttpHeaders headerParams, Map<String, Object> queryParams, Set<Parameter> formParams,
+            ArraySerializationFormat arraySerializationFormat) throws IOException {
+        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
+
+        if (body != null) {
+
+            return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+                    queryParams, body);
+
+        } else {
+            List<SimpleEntry<String, Object>> formFields =
+                    generateFormFields(formParams, arraySerializationFormat);
+            return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+                    queryParams, formFields);
+
+        }
+
+    }
+
+    /**
+     * @param compatibilityFactory
+     * @return
+     */
+    private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
+            ArraySerializationFormat arraySerializationFormat) {
+        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
+        List<SimpleEntry<String, Object>> formFields = null;
+        Map<String, Object> formParamaters = new HashMap();
+        for (Parameter formParameter : formParams) {
+            String key = formParameter.getKey();
+            if (formParameter.getMultiPartRequest() != null) {
+                formParamaters.put(key,
+                        handleMultiPartRequest(formParameter, compatibilityFactory));
+                continue;
+            }
+
+            formParamaters.put(key, formParameter.getValue());
+        }
+        if (!formParams.isEmpty()) {
+            formFields = CoreHelper.prepareFormFields(formParamaters, arraySerializationFormat);
+
+        }
+        return formFields;
+    }
+
+    private StringBuilder getStringBuilder(String server, String path) {
+        return new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+    }
+
+    private void processTemplateParams(Map<String, SimpleEntry<Object, Boolean>> templateParams) {
+        if (!templateParams.isEmpty()) {
+            CoreHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+        }
+    }
+
+    private HttpHeaders addHeaders(Map<String, List<String>> headerParams) {
+        addGlobalHeader(headerParams);
+        return coreConfig.getCompatibilityFactory().createHttpHeaders(headerParams);
+
+    }
+
+    private void addGlobalHeader(Map<String, List<String>> headerParams) {
+        if (coreConfig.getGlobalHeaders() != null) {
+            headerParams.putAll(coreConfig.getGlobalHeaders().asMultimap());
+        }
+    }
+
+    private String buildBodyString(Object body, Serializer bodySerializer,
+            Map<String, Object> bodyParameters) throws IOException {
+        String serializedBody = null;
+        if (body != null) {
+            if (bodySerializer != null) {
+                serializedBody = bodySerializer.apply(body);
+            } else {
+                if (body instanceof String) {
+                    serializedBody = body.toString();
+                } else {
+                    serializedBody = CoreHelper.serialize(body);
+                }
+            }
+        }
+
+        if (bodyParameters != null) {
+            CoreHelper.removeNullValues(bodyParameters);
+            serializedBody = CoreHelper.serialize(bodyParameters);
+        }
+        return serializedBody;
+
+    }
+
+    private Object handleMultiPartRequest(Parameter formParameter,
+            CompatibilityFactory compatibilityFactory) {
+        HttpHeaders multipartFileHeaders =
+                compatibilityFactory.createHttpHeaders(formParameter.getMultipartHeaders());
+
+
+        if (formParameter.getMultiPartRequest() == MutliPartRequestType.MULTI_PART_FILE) {
+            return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
+                    multipartFileHeaders);
+        }
+        return new MultipartWrapper(formParameter.getValue().toString(), multipartFileHeaders);
+
     }
 
     public static class Builder {
@@ -151,9 +184,15 @@ public class CoreRequest {
                 ArraySerializationFormat.INDEXED;
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
-        public Builder(String server, String path) {
+
+        public Builder server(String server) {
             this.server = server;
+            return this;
+        }
+
+        public Builder path(String path) {
             this.path = path;
+            return this;
         }
 
         /**
@@ -301,118 +340,23 @@ public class CoreRequest {
         }
 
         public CoreHttpRequest build(CoreConfig coreConfig) throws IOException {
-            CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
-            final StringBuilder urlBuilder = getStringBuilder(coreConfig);
 
-            processTemplateParams(urlBuilder);
-            addGlobalHeader(coreConfig);
 
-            CoreHttpRequest request = buildRequest(compatibilityFactory, urlBuilder);
+            CoreRequest coreRequest = new CoreRequest(coreConfig, server, path, httpMethod,
+                    requiresAuth, queryParams, templateParams, headerParams, formParams, body,
+                    bodySerializer, bodyParameters, arraySerializationFormat);
+
 
             // Invoke the callback before request if its not null
             if (coreConfig.getHttpCallback() != null) {
-                coreConfig.getHttpCallback().onBeforeRequest(request);
+                coreConfig.getHttpCallback().onBeforeRequest(coreRequest.getCoreHttpRequest());
             }
 
-            return request;
+            return coreRequest.getCoreHttpRequest();
 
         }
 
-        private CoreHttpRequest buildRequest(CompatibilityFactory compatibilityFactory,
-                StringBuilder urlBuilder) throws IOException {
 
-            HttpHeaders headers = compatibilityFactory.createHttpHeaders(headerParams);
-            if (body != null || bodyParameters != null) {
-
-                return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headers,
-                        queryParams, buildBodyString(urlBuilder));
-
-            } else {
-                List<SimpleEntry<String, Object>> formFields =
-                        generateFormFields(compatibilityFactory);
-                return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headers,
-                        queryParams, formFields);
-
-            }
-
-        }
-
-        /**
-         * @param compatibilityFactory
-         * @return
-         */
-        private List<SimpleEntry<String, Object>> generateFormFields(
-                CompatibilityFactory compatibilityFactory) {
-            List<SimpleEntry<String, Object>> formFields = null;
-            Map<String, Object> formParamaters = new HashMap();
-            for (Parameter formParameter : formParams) {
-                String key = formParameter.getKey();
-                if (formParameter.getMultiPartRequest() != null) {
-                    formParamaters.put(key,
-                            handleMultiPartRequest(formParameter, compatibilityFactory));
-                    continue;
-                }
-
-                formParamaters.put(key, formParameter.getValue());
-            }
-            if (!formParams.isEmpty()) {
-                formFields = CoreHelper.prepareFormFields(formParamaters, arraySerializationFormat);
-
-            }
-            return formFields;
-        }
-
-        private StringBuilder getStringBuilder(CoreConfig coreConfig) {
-            return new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
-        }
-
-        private void processTemplateParams(StringBuilder urlBuilder) {
-            if (!templateParams.isEmpty()) {
-                CoreHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
-            }
-        }
-
-        private void addGlobalHeader(CoreConfig coreConfig) {
-            if (coreConfig.getGlobalHeaders() != null) {
-                headerParams.putAll(coreConfig.getGlobalHeaders().asMultimap());
-            }
-        }
-
-        private String buildBodyString(StringBuilder urlBuilder) throws IOException {
-            String serializedBody = null;
-            if (body != null) {
-                if (bodySerializer != null) {
-                    serializedBody = bodySerializer.apply(body);
-                } else {
-                    if (body instanceof String) {
-                        serializedBody = body.toString();
-                    } else {
-                        serializedBody = CoreHelper.serialize(body);
-                    }
-                }
-            }
-
-            if (bodyParameters != null) {
-                CoreHelper.removeNullValues(bodyParameters);
-                serializedBody = CoreHelper.serialize(bodyParameters);
-            }
-            return serializedBody;
-
-        }
-
-        private Object handleMultiPartRequest(Parameter formParameter,
-                CompatibilityFactory compatibilityFactory) {
-            HttpHeaders multipartFileHeaders =
-                    compatibilityFactory.createHttpHeaders(formParameter.getMultipartHeaders());
-
-
-            if (formParameter.getMultiPartRequest() == MutliPartRequestType.MULTI_PART_FILE) {
-                return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
-                        multipartFileHeaders);
-            }
-            return new MultipartWrapper(formParameter.getValue().toString(), multipartFileHeaders);
-
-        }
     }
 
 }
