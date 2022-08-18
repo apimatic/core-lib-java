@@ -2,24 +2,24 @@ package io.apimatic.core_lib.configurations.http.request;
 
 import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
 import io.apimatic.core_interfaces.http.request.configuration.CoreEndpointConfiguration;
-import io.apimatic.core_interfaces.http.request.configuration.RequestRetryConfiguration;
+import io.apimatic.core_interfaces.http.request.configuration.RetryOption;
 
 public class EndpointConfiguration implements CoreEndpointConfiguration {
 
     private final boolean hasBinaryResponse;
-    private final RequestRetryConfiguration requestRetryConfiguration;
+    private final RetryOption retryOption;
     private final ArraySerializationFormat arraySerializationFormat;
 
     public EndpointConfiguration(boolean hasBinary,
-            RequestRetryConfiguration requestRetryConfiguration,
+            RetryOption retryOption,
             ArraySerializationFormat arraySerializationFormat) {
         this.hasBinaryResponse = hasBinary;
-        this.requestRetryConfiguration = requestRetryConfiguration;
+        this.retryOption = retryOption;
         this.arraySerializationFormat = arraySerializationFormat;
     }
 
-    public RequestRetryConfiguration getRequestRetryConfiguration() {
-        return requestRetryConfiguration;
+    public RetryOption getRetryOption() {
+        return retryOption;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
 
     public static class Builder {
         private boolean hasBinaryResponse = false;
-        private RequestRetryConfiguration requestRetryConfiguration = new RetryConfiguration.Builder().build();
+        private RetryOption retryOption = RetryOption.DEFAULT;;
         private ArraySerializationFormat arraySerializationFormat = ArraySerializationFormat.INDEXED;
 
         public Builder hasBinaryResponse(boolean hasBinary) {
@@ -47,9 +47,9 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
             return this;
         }
 
-        public Builder requestRetryConfiguration(
-                RequestRetryConfiguration requestRetryConfiguration) {
-            this.requestRetryConfiguration = requestRetryConfiguration;
+        public Builder retryOption(
+                RetryOption retryOption) {
+            this.retryOption = retryOption;
             return this;
         }
 
@@ -59,7 +59,7 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         }
 
         public EndpointConfiguration build() {
-            return new EndpointConfiguration(hasBinaryResponse, requestRetryConfiguration,
+            return new EndpointConfiguration(hasBinaryResponse, retryOption,
                     arraySerializationFormat);
         }
 

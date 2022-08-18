@@ -442,10 +442,12 @@ public class CoreHelper {
         objectToList(name, obj, objectList, new HashSet<Integer>(), arraySerializationFormat);
         boolean hasParam = false;
 
+        if (arraySerializationFormat == ArraySerializationFormat.PSV
+                || arraySerializationFormat == ArraySerializationFormat.CSV
+                || arraySerializationFormat == ArraySerializationFormat.TSV) {
 
-
+        }
         for (SimpleEntry<String, Object> pair : objectList) {
-            String paramKeyValPair;
             String accessor = pair.getKey();
             // Ignore null
             Object value = pair.getValue();
@@ -455,24 +457,41 @@ public class CoreHelper {
 
             hasParam = true;
             // Load element value as string
-            if (arraySerializationFormat == ArraySerializationFormat.CSV
-                    || arraySerializationFormat == ArraySerializationFormat.TSV
-                    || arraySerializationFormat == ArraySerializationFormat.PSV) {
-                if (accessor.matches(".*?\\[\\d+\\]$")) {
-                    String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
+
+
+            if (accessor.matches(".*?\\[\\d+\\]$") && IsDelimeterFormat(arraySerializationFormat)) {
+                List<String> arrays = new ArrayList<String>();
+                String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
+
+                if (arrays.contains(arrayName)) {
+                    objBuilder.setLength(objBuilder.length() - 1);
+                    accessor = getAccessorStringFormat(arraySerializationFormat);
+                } else {
+                    accessor = arrayName + "=";
                 }
+
+                if (!arrays.contains(arrayName)) {
+                    arrays.add(arrayName);
+                }
+
+                appendParamKeyValuePair(objBuilder, accessor, value);
+            } else {
+                appendParamKeyValuePair(objBuilder, accessor, value);
             }
-
-            paramKeyValPair =
-                    String.format("%s=%s&", accessor, tryUrlEncode(value.toString(), false));
-            objBuilder.append(paramKeyValPair);
-
         }
 
         // Removing the last &
         if (hasParam) {
             objBuilder.setLength(objBuilder.length() - 1);
         }
+    }
+
+    private static void appendParamKeyValuePair(StringBuilder objBuilder, String accessor,
+            Object value) {
+       
+        String paramKeyValPair =
+                String.format("%s=%s&", accessor, tryUrlEncode(value.toString(), false));
+        objBuilder.append(paramKeyValPair);
     }
 
     /**
@@ -539,7 +558,18 @@ public class CoreHelper {
         int index = 0;
         for (Object element : array) {
             // load key value pair
-            String key = String.format("%s[%d]", objName, index++);
+            String key;
+
+            if (isWrapperType(element)
+                    && (arraySerializationFormat == ArraySerializationFormat.UNINDEXED
+                            || arraySerializationFormat == ArraySerializationFormat.PLAIN)) {
+                key = arraySerializationFormat == ArraySerializationFormat.UNINDEXED
+                        ? String.format("%s[]", objName)
+                        : objName;
+            } else {
+                key = String.format("%s[%d]", objName, index++);
+            }
+            key = String.format("%s[%d]", objName, index++);
             loadKeyValuePairForEncoding(key, element, objectList, processed,
                     arraySerializationFormat);
         }
@@ -657,6 +687,27 @@ public class CoreHelper {
                 clazz = clazz.getSuperclass();
             }
         }
+    }
+
+    private static String getAccessorStringFormat(
+            ArraySerializationFormat arraySerializationFormat) {
+        switch (arraySerializationFormat) {
+            case CSV:
+                return ",";
+            case PSV:
+                return "%7C";
+            case TSV:
+                return "%09";
+
+            default:
+                return "";
+        }
+    }
+
+    private static boolean IsDelimeterFormat(ArraySerializationFormat arraySerializationFormat) {
+        return (arraySerializationFormat == ArraySerializationFormat.CSV
+                || arraySerializationFormat == ArraySerializationFormat.TSV
+                || arraySerializationFormat == ArraySerializationFormat.PSV);
     }
 
     /**

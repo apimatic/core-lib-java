@@ -50,8 +50,8 @@ public class CoreRequest {
 
         processTemplateParams(templateParams);
         HttpHeaders headers = addHeaders(headerParams);
-        String bodyString = buildBodyString(body, bodySerializer, bodyParameters);
-        coreHttpRequest = buildRequest(httpMethod, bodyString, headers, queryParams, formParams,
+        body = buildBody(body, bodySerializer, bodyParameters);
+        coreHttpRequest = buildRequest(httpMethod, body, headers, queryParams, formParams,
                 arraySerializationFormat);
     }
 
@@ -131,27 +131,29 @@ public class CoreRequest {
         }
     }
 
-    private String buildBodyString(Object body, Serializer bodySerializer,
+    private Object buildBody(Object body, Serializer bodySerializer,
             Map<String, Object> bodyParameters) throws IOException {
-        String serializedBody = null;
         if (body != null) {
             if (bodySerializer != null) {
-                serializedBody = bodySerializer.apply(body);
+                return bodySerializer.apply(body);
             } else {
                 if (body instanceof String) {
-                    serializedBody = body.toString();
-                } else {
-                    serializedBody = CoreHelper.serialize(body);
+                    return body.toString();
+                } else if (body instanceof FileWrapper) {
+                   return body;
+                }
+                else {
+                    return CoreHelper.serialize(body);
                 }
             }
         }
 
         if (bodyParameters != null) {
             CoreHelper.removeNullValues(bodyParameters);
-            serializedBody = CoreHelper.serialize(bodyParameters);
+            return CoreHelper.serialize(bodyParameters);
         }
-        return serializedBody;
-
+        
+        return body;
     }
 
     private Object handleMultiPartRequest(Parameter formParameter,
@@ -252,6 +254,7 @@ public class CoreRequest {
          * @return Builder
          */
         public Builder templateParam(Consumer<Parameter.Builder> action) {
+            parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter templateParameter = parameterBuilder.build();
             templateParameter.validate();
@@ -268,6 +271,7 @@ public class CoreRequest {
          * @return Builder
          */
         public Builder headerParam(Consumer<Parameter.Builder> action) {
+            parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
@@ -292,6 +296,7 @@ public class CoreRequest {
          * @return Builder
          */
         public Builder formParams(Consumer<Parameter.Builder> action) {
+            parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter formParameter = parameterBuilder.build();
             formParameter.validate();
@@ -307,6 +312,7 @@ public class CoreRequest {
          * @return Builder
          */
         public Builder body(Consumer<Parameter.Builder> action) {
+            parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter bodyParam = parameterBuilder.build();
             bodyParam.validate();

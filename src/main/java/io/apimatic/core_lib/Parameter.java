@@ -90,7 +90,7 @@ public class Parameter {
         private Object value;
         private boolean isRequired = true;
         private boolean shouldEncode = false;
-        private MutliPartRequestType multiPartRequestType;
+        private MutliPartRequestType multiPartRequestType = null;
         private Map<String, List<String>> multipartHeaders = new HashMap<String, List<String>>();
 
         public Builder key(String key) {

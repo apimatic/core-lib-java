@@ -61,24 +61,21 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
     }
 
     public ResponseType execute() throws IOException, ExceptionType {
-        CoreHttpResponse httpResponse = coreConfig.getHttpClient().execute(request,
-                endpointConfiguration);
+        CoreHttpResponse httpResponse =
+                coreConfig.getHttpClient().execute(request, endpointConfiguration);
         return responseHandler.handle(request, httpResponse, coreConfig);
     }
 
     public CompletableFuture<ResponseType> executeAsync() throws IOException, ExceptionType {
-        return new AsyncExecutor(coreConfig).makeHttpCallAsync(
-                () -> request,
-                request -> coreConfig.getHttpClient().executeAsync(request,
-                        endpointConfiguration),
+        return new AsyncExecutor(coreConfig).makeHttpCallAsync(() -> request,
+                request -> coreConfig.getHttpClient().executeAsync(request, endpointConfiguration),
                 (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
                         httpResponse, coreConfig));
     }
-    
+
     public static class Builder<ResponseType, ExceptionType extends ApiException> {
         private CoreConfig coreConfig;
         private CoreRequest.Builder requestBuilder = new CoreRequest.Builder();
-        private CoreResponseHandler<ResponseType, ExceptionType> responseHandler = null;
         private CoreResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder =
                 new CoreResponseHandler.Builder<ResponseType, ExceptionType>();
 
@@ -92,18 +89,21 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
 
         public Builder<ResponseType, ExceptionType> requestBuilder(
                 Consumer<CoreRequest.Builder> action) {
+            requestBuilder = new CoreRequest.Builder();
             action.accept(requestBuilder);
             return this;
         }
 
         public Builder<ResponseType, ExceptionType> responseHandler(
                 Consumer<CoreResponseHandler.Builder<ResponseType, ExceptionType>> action) {
+            responseHandlerBuilder = new CoreResponseHandler.Builder<ResponseType, ExceptionType>();
             action.accept(responseHandlerBuilder);
             return this;
         }
 
         public Builder<ResponseType, ExceptionType> endpointConfiguration(
                 Consumer<EndpointConfiguration.Builder> action) {
+            endpointConfigurationBuilder = new EndpointConfiguration.Builder();
             action.accept(endpointConfigurationBuilder);
             return this;
         }
