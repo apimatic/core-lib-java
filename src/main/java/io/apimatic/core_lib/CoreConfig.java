@@ -2,7 +2,7 @@ package io.apimatic.core_lib;
 
 import java.util.Map;
 import java.util.function.Function;
-import io.apimatic.core_interfaces.authentication.AuthManager;
+import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.compatibility.*;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
@@ -12,7 +12,7 @@ public class CoreConfig {
     private CompatibilityFactory compatibilityFactory;
     private String userAgent;
     private Map<String, String> userAgentConfig;
-    private Map<String, AuthManager> authManagers;
+    private Map<String, Authentication> authManagers;
     private HttpCallback httpCallback;
     private HttpClient httpClient;
     private HttpHeaders globalHeaders;
@@ -22,7 +22,7 @@ public class CoreConfig {
      * private Constructor.
      */
     private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
-            Map<String, String> userAgentConfig, Map<String, AuthManager> authManagers,
+            Map<String, String> userAgentConfig, Map<String, Authentication> authManagers,
             HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalhHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
@@ -31,12 +31,12 @@ public class CoreConfig {
         this.authManagers = authManagers;
         this.httpCallback = httpCallback;
         this.httpClient = httpClient;
-        this.globalHeaders = globalhHeaders;
+        this.globalHeaders = globalhHeaders != null ? globalhHeaders : compatibilityFactory.createHttpHeaders();
         this.baseUri = baseUri;
+        
+        
         if (this.userAgent != null) {
             updateUserAgent();
-        }
-        if (this.userAgent != null && this.globalHeaders != null) {
             this.globalHeaders.add("user-agent", userAgent);
         }
     }
@@ -71,7 +71,7 @@ public class CoreConfig {
      * 
      * @return the map of AuthManager
      */
-    public Map<String, AuthManager> getAuthManagers() {
+    public Map<String, Authentication> getAuthManagers() {
         return authManagers;
     }
 
@@ -147,7 +147,7 @@ public class CoreConfig {
         private CompatibilityFactory compatibilityFactory;
         private String userAgent;
         private Map<String, String> userAgentConfig;
-        private Map<String, AuthManager> authManagers;
+        private Map<String, Authentication> authManagers;
         private HttpCallback httpCallback;
         private HttpClient httpClient;
         private HttpHeaders globalHeaders;
@@ -192,7 +192,7 @@ public class CoreConfig {
          * @param authManagers Map values for authManagers
          * @return Builder
          */
-        public Builder authManager(Map<String, AuthManager> authManagers) {
+        public Builder authManager(Map<String, Authentication> authManagers) {
             this.authManagers = authManagers;
             return this;
         }

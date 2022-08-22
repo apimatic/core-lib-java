@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.CoreHttpMethod;
 import io.apimatic.core_interfaces.http.HttpHeaders;
@@ -40,7 +41,7 @@ public class CoreRequest {
      * @throws IOException
      */
     private CoreRequest(CoreConfig coreConfig, String server, String path,
-            CoreHttpMethod httpMethod, boolean requiresAuth, Map<String, Object> queryParams,
+            CoreHttpMethod httpMethod, String authenticationKey, Map<String, Object> queryParams,
             Map<String, SimpleEntry<Object, Boolean>> templateParams,
             Map<String, List<String>> headerParams, Set<Parameter> formParams, Object body,
             Serializer bodySerializer, Map<String, Object> bodyParameters,
@@ -53,6 +54,19 @@ public class CoreRequest {
         body = buildBody(body, bodySerializer, bodyParameters);
         coreHttpRequest = buildRequest(httpMethod, body, headers, queryParams, formParams,
                 arraySerializationFormat);
+        applyAuthentication(authenticationKey);
+
+    }
+
+    private void applyAuthentication(String authenticationKey) {
+        if (authenticationKey == null) {
+            return;
+        }
+        
+        Authentication authManager = coreConfig.getAuthManagers().get(authenticationKey);
+        if (authManager != null) {
+            authManager.apply(coreHttpRequest);
+        }
     }
 
     public CoreHttpRequest getCoreHttpRequest() {
@@ -140,9 +154,8 @@ public class CoreRequest {
                 if (body instanceof String) {
                     return body.toString();
                 } else if (body instanceof FileWrapper) {
-                   return body;
-                }
-                else {
+                    return body;
+                } else {
                     return CoreHelper.serialize(body);
                 }
             }
@@ -152,7 +165,7 @@ public class CoreRequest {
             CoreHelper.removeNullValues(bodyParameters);
             return CoreHelper.serialize(bodyParameters);
         }
-        
+
         return body;
     }
 
@@ -174,7 +187,7 @@ public class CoreRequest {
         private String server;
         private String path;
         private CoreHttpMethod httpMethod;
-        private boolean requiresAuth;
+        private String authenticationKey;
         private Map<String, Object> queryParams = new HashMap<>();
         private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<>();
         private Map<String, List<String>> headerParams = new HashMap<>();
@@ -214,8 +227,8 @@ public class CoreRequest {
          * @param requiresAuth boolean value for requiresAuth
          * @return Builder
          */
-        public Builder requiresAuth(boolean requiresAuth) {
-            this.requiresAuth = requiresAuth;
+        public Builder authenticationKey(String authenticationKey) {
+            this.authenticationKey = authenticationKey;
             return this;
         }
 
@@ -349,7 +362,7 @@ public class CoreRequest {
 
 
             CoreRequest coreRequest = new CoreRequest(coreConfig, server, path, httpMethod,
-                    requiresAuth, queryParams, templateParams, headerParams, formParams, body,
+                    authenticationKey, queryParams, templateParams, headerParams, formParams, body,
                     bodySerializer, bodyParameters, arraySerializationFormat);
 
 
