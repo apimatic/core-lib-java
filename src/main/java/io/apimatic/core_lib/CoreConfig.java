@@ -7,6 +7,7 @@ import io.apimatic.core_interfaces.compatibility.*;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
+import io.apimatic.core_lib.utilities.CoreHelper;
 
 public class CoreConfig {
     private CompatibilityFactory compatibilityFactory;
@@ -23,7 +24,7 @@ public class CoreConfig {
      */
     private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authManagers,
-            HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalhHeaders,
+            HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
@@ -31,13 +32,14 @@ public class CoreConfig {
         this.authManagers = authManagers;
         this.httpCallback = httpCallback;
         this.httpClient = httpClient;
-        this.globalHeaders = globalhHeaders != null ? globalhHeaders : compatibilityFactory.createHttpHeaders();
+        this.globalHeaders =
+                globalHeaders != null ? globalHeaders : compatibilityFactory.createHttpHeaders();
         this.baseUri = baseUri;
-        
-        
+
+
         if (this.userAgent != null) {
-            updateUserAgent();
-            this.globalHeaders.add("user-agent", userAgent);
+            this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
+            this.globalHeaders.add("user-agent", this.userAgent);
         }
     }
 

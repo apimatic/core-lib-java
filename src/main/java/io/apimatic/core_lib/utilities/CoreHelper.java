@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
  */
 public class CoreHelper {
 
+    private static String userAgent;
     // Deserialization of Json data
     public static ObjectMapper mapper = new ObjectMapper() {
         private static final long serialVersionUID = -174113593500315394L;
@@ -372,6 +373,27 @@ public class CoreHelper {
     }
 
     /**
+     * Updates the user agent header value.
+     */
+    public static String updateUserAgent(String apiUserAgent, Map<String, String> userAgentConfig) {
+        String engineVersion = System.getProperty("java.runtime.version");
+        String osName = System.getProperty("os.name") + "-" + System.getProperty("os.version");
+        userAgent = apiUserAgent;
+        userAgent = userAgent.replace("{engine}", "JRE");
+        userAgent =
+                userAgent.replace("{engine-version}", engineVersion != null ? engineVersion : "");
+        userAgent = userAgent.replace("{os-info}", osName != null ? osName : "");
+
+        if (userAgentConfig != null) {
+            userAgentConfig.forEach((key, value) -> {
+                userAgent = userAgent.replace(key, value);
+            });
+        }
+
+        return userAgent;
+    }
+
+    /**
      * Removes null values from the given map.
      * 
      * @param map Map of values.
@@ -488,7 +510,7 @@ public class CoreHelper {
 
     private static void appendParamKeyValuePair(StringBuilder objBuilder, String accessor,
             Object value) {
-       
+
         String paramKeyValPair =
                 String.format("%s=%s&", accessor, tryUrlEncode(value.toString(), false));
         objBuilder.append(paramKeyValPair);
