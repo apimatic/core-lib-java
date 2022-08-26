@@ -65,6 +65,7 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
     }
 
 
+    @SuppressWarnings("unchecked")
     public ResponseType handle(CoreHttpRequest httpRequest, CoreHttpResponse httpResponse,
             CoreConfig coreConfig) throws IOException, ExceptionType {
         CoreHttpContext httpContext =
@@ -85,24 +86,24 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
         // handle errors defined at the API level
         validateResponse(httpContext);
 
+        ResponseType result = null;
         if (deserializer != null) {
             // extract result from the http response
-            return deserializer.apply(httpResponse.getBody());
+            result = deserializer.apply(httpResponse.getBody());
         }
 
-        switch (responseClassType) {
-            case API_RESPONSE:
-                return (ResponseType) coreConfig.getCompatibilityFactory()
-                        .createDynamicResponse(httpResponse);
-            case DYNAMIC_RESPONSE:
-                return (ResponseType) coreConfig.getCompatibilityFactory()
-                        .createDynamicResponse(httpResponse);
-
-            default:
-                return null;
+        if(responseClassType != null) {
+            switch (responseClassType) {
+                case API_RESPONSE:
+                    result = (ResponseType) coreConfig.getCompatibilityFactory().createAPiResponse(
+                            httpResponse.getStatusCode(), httpResponse.getHeaders(), result);
+                case DYNAMIC_RESPONSE:
+                    result = (ResponseType) coreConfig.getCompatibilityFactory()
+                            .createDynamicResponse(httpResponse);
+            }
         }
-
-
+        
+        return result;
     }
 
     private void validateResponse(CoreHttpContext httpContext) throws ExceptionType {

@@ -120,7 +120,7 @@ public class CoreConfig {
      * @return a new {@link CoreConfig.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder().compatibilityFactor(compatibilityFactory)
+        Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
                 .userAgent(userAgent).authManager(authManagers).httpCallback(httpCallback)
                 .httpClient(httpClient).globalHeaders(globalHeaders).baseUri(baseUri);
         return builder;
@@ -161,7 +161,7 @@ public class CoreConfig {
          * @param compatibilityFactory value for CompatibilityFactor
          * @return Builder
          */
-        public Builder compatibilityFactor(CompatibilityFactory compatibilityFactory) {
+        public Builder compatibilityFactory(CompatibilityFactory compatibilityFactory) {
             this.compatibilityFactory = compatibilityFactory;
             return this;
         }

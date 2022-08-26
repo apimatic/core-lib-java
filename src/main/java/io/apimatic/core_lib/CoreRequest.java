@@ -58,16 +58,6 @@ public class CoreRequest {
 
     }
 
-    private void applyAuthentication(String authenticationKey) {
-        if (authenticationKey == null) {
-            return;
-        }
-        
-        Authentication authManager = coreConfig.getAuthManagers().get(authenticationKey);
-        if (authManager != null) {
-            authManager.apply(coreHttpRequest);
-        }
-    }
 
     public CoreHttpRequest getCoreHttpRequest() {
         return coreHttpRequest;
@@ -75,6 +65,17 @@ public class CoreRequest {
 
     public static Builder builder(String server, String path) {
         return new CoreRequest.Builder();
+    }
+
+    private void applyAuthentication(String authenticationKey) {
+        if (authenticationKey == null) {
+            return;
+        }
+
+        Authentication authManager = coreConfig.getAuthManagers().get(authenticationKey);
+        if (authManager != null) {
+            authManager.apply(coreHttpRequest);
+        }
     }
 
     private CoreHttpRequest buildRequest(CoreHttpMethod httpMethod, Object body,
@@ -87,13 +88,15 @@ public class CoreRequest {
             return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
                     queryParams, body);
 
-        } else {
-            List<SimpleEntry<String, Object>> formFields =
-                    generateFormFields(formParams, arraySerializationFormat);
-            return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
-                    queryParams, formFields);
-
         }
+
+
+        List<SimpleEntry<String, Object>> formFields =
+                generateFormFields(formParams, arraySerializationFormat);
+        return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+                queryParams, formFields);
+
+
 
     }
 
