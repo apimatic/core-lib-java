@@ -31,6 +31,7 @@ import java.net.URLEncoder;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -569,6 +570,11 @@ public class CoreHelper {
         } catch (UnsupportedEncodingException ex) {
             return value;
         }
+    }
+    
+    public static String getBase64EncodedCredentials (String basicAuthUserName, String basicAuthPassword) {
+        String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
+        return "Basic " + Base64.getEncoder().encodeToString(authCredentials.getBytes());
     }
 
     private static void objectToList(String objName, Collection<?> obj,
