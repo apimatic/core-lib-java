@@ -6,23 +6,11 @@
 
 package io.apimatic.core_lib.utilities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
-import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
-import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -35,6 +23,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +31,31 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
+import io.apimatic.core_lib.annotations.TypeCombinator.FormSerialize;
+import io.apimatic.core_lib.annotations.TypeCombinator.TypeCombinatorCase;
+import io.apimatic.core_lib.annotations.TypeCombinator.TypeCombinatorStringCase;
+import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
+import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 
 /**
  * This is a Helper class with commonly used utilities for the SDK.
@@ -58,6 +72,36 @@ public class CoreHelper {
                     .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
         }
     };
+
+    // Strict Deserialization of Json data
+    public static ObjectMapper strictMapper = new ObjectMapper() {
+        private static final long serialVersionUID = 8417468888600344886L;
+        {
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
+            configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false);
+            configOverride(BigDecimal.class)
+                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
+            registerModule(new SimpleModule().addDeserializer(String.class,
+                    new CoercionLessStringDeserializer()));
+        }
+    };
+
+    /**
+     * Get a JsonSerializer instance for a collection from the provided annotation.
+     * 
+     * @param serializerAnnotation The Annotation containing information about the custom serializer
+     *        of a collection.
+     * @return The JsonSerializer instance of the required type.
+     */
+    private static JsonSerializer<?> getCollectionCustomSerializer(
+            FormSerialize serializerAnnotation) {
+        try {
+            return serializerAnnotation.contentUsing().getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * List of classes that are wrapped directly. This information is needed when traversing object
@@ -145,6 +189,52 @@ public class CoreHelper {
         return mapper.writeValueAsString(obj);
     }
 
+
+    /**
+     * Json Serialization of a given container object based on annotation.
+     * 
+     * @param obj The object to serialize into Json.
+     * @return The serialized Json String representation of the given object.
+     * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
+     */
+    public static String serializeTypeCombinator(Object obj) throws JsonProcessingException {
+        if (obj == null) {
+            return null;
+        }
+
+        Annotation stringCaseAnnotation =
+                obj.getClass().getAnnotation(TypeCombinatorStringCase.class);
+
+        if (stringCaseAnnotation != null) {
+            return obj.toString();
+        }
+
+        return serialize(obj);
+    }
+
+    /**
+     * Json deserialization of the given Json string using a specified JsonDerializer.
+     * 
+     * @param jsonNode The JsonNode to deserialize.
+     * @param typeReference TypeReference of T1.
+     * @param <T1> The type of the object to deserialize into.
+     * @param <T2> The type of the custom deserializer.
+     * @param cls The class to attach the deserializer to.
+     * @param deserializer The deserializer to use.
+     * @return The deserialized object.
+     * @throws IOException Signals if any I/O exception occured.
+     */
+    public static <T1 extends Object, T2 extends Object> T1 deserialize(JsonNode jsonNode,
+            final TypeReference<T1> typeReference, final Class<T2> cls,
+            final JsonDeserializer<T2> deserializer) throws IOException {
+        if (jsonNode == null) {
+            return null;
+        }
+
+        return deserialize(mapper.writeValueAsString(jsonNode), typeReference, cls, deserializer);
+    }
+
+
     /**
      * Json deserialization of the given Json string using a specified JsonDerializer.
      * 
@@ -192,6 +282,50 @@ public class CoreHelper {
     }
 
     /**
+     * Strict JSON deserialization of the given JSON string with FAIL_ON_UNKNOWN_PROPERTIES flag as
+     * true, used particularly for type combinators.
+     * 
+     * @param <T> The type of the object to deserialize into
+     * @param json The JsonNode to deserialize
+     * @param classes The list of types of the object to deserialize into
+     * @param isOneOf The boolean flag to validate for oneOf flow
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occured.
+     */
+    public static <T> T deserialize(JsonNode json, List<Class<? extends T>> classes,
+            boolean isOneOf) throws IOException {
+        if (json == null) {
+            return null;
+        }
+
+
+        T deserializedObject = null;
+        int deserializationCount = 0;
+        for (Class<? extends T> clazz : classes) {
+            try {
+                if (isOneOf) {
+                    deserializedObject = strictMapper.convertValue(json, clazz);
+                    deserializationCount++;
+                    if (deserializationCount > 1) {
+                        throw new IOException(
+                                "More than 1 matching one-of types found against given json");
+                    }
+                } else {
+                    return strictMapper.convertValue(json, clazz);
+                }
+            } catch (IllegalArgumentException e) {
+                // Ignoring the exception
+            }
+        }
+        if (deserializationCount == 0) {
+            throw new IOException("No " + (isOneOf ? "one-of" : "any-of")
+                    + " type deserializer found against given json");
+        }
+
+        return deserializedObject;
+    }
+
+    /**
      * Json deserialization of the given Json string.
      * 
      * @param json The Json string to deserialize
@@ -224,6 +358,75 @@ public class CoreHelper {
         }
 
         return mapper.readValue(json, typeReference);
+    }
+
+    /**
+     * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
+     * 
+     * @param jsonNode The Json Node to deserialize
+     * @param typeReference TypeReference of T
+     * @param <T> The type of the object to deserialize into
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occured.
+     */
+    public static <T extends Object> T deserialize(JsonNode jsonNode,
+            TypeReference<T> typeReference) throws IOException {
+        if (jsonNode == null) {
+            return null;
+        }
+
+        return strictMapper.convertValue(jsonNode, typeReference);
+    }
+
+    /**
+     * JSON deserialization of the given JsonNode with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
+     * 
+     * @param <T> The type of the object to deserialize into
+     * @param jsonNode The Json Node to deserialize
+     * @param clazz The type of the object to deserialize into
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occured.
+     */
+    public static <T extends Object> T deserialize(JsonNode jsonNode, Class<T> clazz)
+            throws IOException {
+        if (jsonNode == null) {
+            return null;
+        }
+
+        return strictMapper.convertValue(jsonNode, clazz);
+    }
+
+    /**
+     * JSON Deserialization from custom deserializer based on given discriminator and registry.
+     * 
+     * @param jp Parsed used for reading JSON content
+     * @param ctxt Context that can be used to access information about this deserialization
+     *        activity.
+     * @param discriminator The model's discriminator
+     * @param registry The map containing all discriminators as keys and associated classes as
+     *        values
+     * @param typesWithoutDiscriminator The list containing all types without discriminators
+     * @param isOneOf The boolean flag to validate for oneOf flow
+     * @return The deserialized object
+     * @throws IOException Signals if any I/O exception occurred.
+     */
+    public static <T> T deserialize(JsonParser jp, DeserializationContext ctxt,
+            String discriminator, List<Map<String, Class<? extends T>>> registry,
+            List<Class<? extends T>> typesWithoutDiscriminator, boolean isOneOf)
+            throws IOException {
+        ObjectCodec oc = jp.getCodec();
+        JsonNode jsonNode = oc.readTree(jp);
+        List<Class<? extends T>> types = deduceType(jsonNode, discriminator, registry);
+
+        if (types == null || types.isEmpty()) {
+            if (typesWithoutDiscriminator != null && !typesWithoutDiscriminator.isEmpty()) {
+                types = typesWithoutDiscriminator;
+            } else {
+                throw new IOException("Discriminator is missing.");
+            }
+        }
+
+        return deserialize(jsonNode, types, isOneOf);
     }
 
     /**
@@ -262,6 +465,8 @@ public class CoreHelper {
 
         return Arrays.asList(mapper.readValue(json, classArray));
     }
+
+
 
     /**
      * Replaces template parameters in the given URL.
@@ -449,6 +654,89 @@ public class CoreHelper {
     }
 
     /**
+     * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
+     * 
+     * @param <T> The type of the object to deserialize into
+     * @param json The Json string to deserialize
+     * @param classArray The class of the array of objects to deserialize into
+     * @return The deserialized list of objects
+     * @throws IOException Signals if any I/O exception occured.
+     */
+    public static <T extends Object> List<T> deserializeArray(JsonNode json, Class<T[]> classArray)
+            throws IOException {
+        if (json == null) {
+            return null;
+        }
+
+        return Arrays.asList(strictMapper.convertValue(json, classArray));
+    }
+
+    /**
+     * Deduces the type based on given discriminator and registry.
+     * 
+     * @param jsonNode The json to check against
+     * @param discriminator The model's discriminator
+     * @param registry The Map containing all discriminators as keys and associated classes as
+     *        values
+     * @return The type to deserialize into
+     * @throws IOException Signals if any I/O exception occurred.
+     */
+    private static <T> List<Class<? extends T>> deduceType(JsonNode jsonNode, String discriminator,
+            List<Map<String, Class<? extends T>>> registry) throws IOException {
+        if (jsonNode == null || registry == null) {
+            return null;
+        }
+
+        final String discriminatorValue;
+        if (jsonNode.isArray()) {
+            if (jsonNode.has(0) && jsonNode.get(0).has(discriminator)) {
+                // JSON is an array of model objects
+                discriminatorValue = jsonNode.get(0).get(discriminator).asText();
+            } else {
+                discriminatorValue = deduceTypeFromImmidiateChild(jsonNode.get(0), discriminator);
+            }
+        } else {
+            if (jsonNode.has(discriminator)) {
+                // JSON is a model object
+                discriminatorValue = jsonNode.get(discriminator).asText();
+            } else {
+                // JSON is a Map so deduce discriminator for first child only
+                discriminatorValue = deduceTypeFromImmidiateChild(jsonNode, discriminator);
+            }
+        }
+
+        return registry.stream().filter(item -> item.get(discriminatorValue) != null)
+                .map(item -> item.get(discriminatorValue)).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * Deduces the type from immediate child if exists based on given discriminator.
+     * 
+     * @param jsonNode The json to check against
+     * @param discriminator The model's discriminator
+     * @return The type to deserialize into
+     * @throws IOException Signals if any I/O exception occurred.
+     */
+    private static String deduceTypeFromImmidiateChild(JsonNode jsonNode, String discriminator) {
+        Iterator<JsonNode> iterator = jsonNode.iterator();
+        while (iterator.hasNext()) {
+            JsonNode tempNode = iterator.next();
+            if (tempNode.isArray()) {
+                if (tempNode.has(0) && tempNode.get(0).has(discriminator)) {
+                    // JSON is an array of model objects
+                    return tempNode.get(0).get(discriminator).asText();
+                }
+            } else {
+                if (tempNode.has(discriminator)) {
+                    // JSON is a model object
+                    return tempNode.get(discriminator).asText();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Encodes a given object to URL encoded string.
      * 
      * @param name Name of the object.
@@ -457,19 +745,12 @@ public class CoreHelper {
      */
     private static void encodeObjectAsQueryString(String name, Object obj, StringBuilder objBuilder,
             ArraySerializationFormat arraySerializationFormat) {
-        if (obj == null) {
-            return;
-        }
 
         List<SimpleEntry<String, Object>> objectList = new ArrayList<>();
         objectToList(name, obj, objectList, new HashSet<Integer>(), arraySerializationFormat);
         boolean hasParam = false;
+        List<String> arrays = new ArrayList<String>();
 
-        if (arraySerializationFormat == ArraySerializationFormat.PSV
-                || arraySerializationFormat == ArraySerializationFormat.CSV
-                || arraySerializationFormat == ArraySerializationFormat.TSV) {
-
-        }
         for (SimpleEntry<String, Object> pair : objectList) {
             String accessor = pair.getKey();
             // Ignore null
@@ -483,7 +764,7 @@ public class CoreHelper {
 
 
             if (accessor.matches(".*?\\[\\d+\\]$") && IsDelimeterFormat(arraySerializationFormat)) {
-                List<String> arrays = new ArrayList<String>();
+
                 String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
 
                 if (arrays.contains(arrayName)) {
@@ -571,8 +852,9 @@ public class CoreHelper {
             return value;
         }
     }
-    
-    public static String getBase64EncodedCredentials (String basicAuthUserName, String basicAuthPassword) {
+
+    public static String getBase64EncodedCredentials(String basicAuthUserName,
+            String basicAuthPassword) {
         String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
         return "Basic " + Base64.getEncoder().encodeToString(authCredentials.getBytes());
     }
@@ -597,7 +879,6 @@ public class CoreHelper {
             } else {
                 key = String.format("%s[%d]", objName, index++);
             }
-            key = String.format("%s[%d]", objName, index++);
             loadKeyValuePairForEncoding(key, element, objectList, processed,
                     arraySerializationFormat);
         }
@@ -638,14 +919,16 @@ public class CoreHelper {
 
         // Wrapper types are autoboxed, so reference checking is not needed
         Class<?> clazz = obj.getClass();
-        if (!isWrapperType(clazz)) {
+
+        Annotation typeCombinatorAnnotation = clazz.getAnnotation(TypeCombinatorCase.class);
+        if (!isWrapperType(clazz) && typeCombinatorAnnotation == null) {
             // Avoid infinite recursion
             if (processed.contains(objName.hashCode())) {
                 return;
             }
             processed.add(objName.hashCode());
         }
-
+ 
         // Process arrays
         if (obj instanceof Collection<?>) {
             objectToList(objName, (Collection<?>) obj, objectList, processed,
@@ -666,6 +949,41 @@ public class CoreHelper {
             objectToList(objName, (Map<?, ?>) obj, objectList, processed, arraySerializationFormat);
         } else {
             // Process objects
+            if (typeCombinatorAnnotation != null) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    // unexpected field $jococoData came for unit test coverage and makes test fails
+                    if (field.getName() == "$jacocoData") {
+                        continue;
+                    }
+
+                    Object fieldValue = null;
+                    Annotation serializeAnnotation = null;
+                    try {
+                        field.setAccessible(true);
+                        fieldValue = field.get(obj);
+                        serializeAnnotation = field.getAnnotation(JsonSerialize.class);
+                        if (serializeAnnotation == null) {
+                            serializeAnnotation = field.getAnnotation(FormSerialize.class);
+                        }
+                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                        // Ignoring the exception
+                    }
+
+                    if (serializeAnnotation != null) {
+                        if (serializeAnnotation instanceof JsonSerialize) {
+                            loadKeyValuePairForEncoding(objName, fieldValue, objectList, processed,
+                                    (JsonSerialize) serializeAnnotation, arraySerializationFormat);
+                        } else {
+                            loadKeyValuePairForEncoding(objName, fieldValue, objectList, processed,
+                                    (FormSerialize) serializeAnnotation, arraySerializationFormat);
+                        }
+                    } else {
+                        loadKeyValuePairForEncoding(objName, fieldValue, objectList, processed,
+                                arraySerializationFormat);
+                    }
+                }
+                return;
+            }
             // Invoke getter methods
             while (clazz != null) {
                 for (Method method : clazz.getDeclaredMethods()) {
@@ -765,6 +1083,34 @@ public class CoreHelper {
         }
     }
 
+
+    /**
+     * While processing objects to map, loads value after serializing.
+     * 
+     * @param key The key to used for creation of key value pair.
+     * @param value The value to process against the given key.
+     * @param objectList The object list to process with key value pair.
+     * @param processed List of processed objects hashCodes.
+     * @param formSerializerAnnotation Annotation for serializer
+     */
+    private static void loadKeyValuePairForEncoding(String key, Object value,
+            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
+            FormSerialize formSerializerAnnotation,
+            ArraySerializationFormat arraySerializationFormat) {
+        if (value == null) {
+            return;
+        }
+
+        try {
+            JsonSerializer<?> serializer = getCollectionCustomSerializer(formSerializerAnnotation);
+            loadKeyValueUsingSerializer(key, value, objectList, processed, serializer,
+                    arraySerializationFormat);
+         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * While processing objects to map, decides whether to perform recursion or load value.
      * 
@@ -785,8 +1131,8 @@ public class CoreHelper {
             // UUIDs can be converted to string
             objectList.add(new SimpleEntry<String, Object>(key, value.toString()));
         } else {
+            objectToList(key, value, objectList, processed, arraySerializationFormat);
         }
-        objectToList(key, value, objectList, processed, arraySerializationFormat);
     }
 
     /**
@@ -825,7 +1171,42 @@ public class CoreHelper {
      * @return true if the class is an autoboxed class e.g., Integer.
      */
     private static boolean isWrapperType(Object object) {
+        if (object == null) {
+            return false;
+        }
         return WRAPPER_TYPES.contains(object.getClass()) || object.getClass().isPrimitive()
                 || object.getClass().isEnum();
+    }
+
+    /**
+     * Json Serialization of an ENUM defined under oneOf/anyOf container.
+     * 
+     * @param value The object to serialize into Json String.
+     * @return The serialized Json String representation of the given object.
+     * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
+     */
+    public static String serializeEnumContainer(Object value) throws JsonProcessingException {
+        if (value instanceof String || value instanceof Integer) {
+            return String.valueOf(value);
+        }
+
+        return serialize(value);
+    }
+
+    /**
+     * Custom deserializer class of any string property for disallowing implicit type conversion.
+     */
+    private static class CoercionLessStringDeserializer extends StringDeserializer {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+
+            if (p.getCurrentToken() != JsonToken.VALUE_STRING) {
+                String message = "Cannot coerce " + p.getCurrentToken() + " to String value";
+                throw MismatchedInputException.from(p, String.class, message);
+            }
+            return super.deserialize(p, ctxt);
+        }
     }
 }

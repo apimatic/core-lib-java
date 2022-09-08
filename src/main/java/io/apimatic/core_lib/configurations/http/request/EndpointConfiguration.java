@@ -38,7 +38,7 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     }
 
     public static class Builder {
-        private boolean hasBinaryResponse = false;
+        private boolean hasBinaryResponse;
         private RetryOption retryOption = RetryOption.DEFAULT;;
         private ArraySerializationFormat arraySerializationFormat = ArraySerializationFormat.INDEXED;
 

@@ -72,7 +72,7 @@ public class CoreRequest {
             return;
         }
 
-        Authentication authManager = coreConfig.getAuthManagers().get(authenticationKey);
+        Authentication authManager = coreConfig.getAuthentications().get(authenticationKey);
         if (authManager != null) {
             authManager.apply(coreHttpRequest);
         }
@@ -179,7 +179,7 @@ public class CoreRequest {
 
 
         if (formParameter.getMultiPartRequest() == MutliPartRequestType.MULTI_PART_FILE) {
-            return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
+            return new MultipartFileWrapper((FileWrapper) formParameter.getValue() ,
                     multipartFileHeaders);
         }
         return new MultipartWrapper(formParameter.getValue().toString(), multipartFileHeaders);
@@ -377,8 +377,6 @@ public class CoreRequest {
             return coreRequest.getCoreHttpRequest();
 
         }
-
-
     }
 
 }

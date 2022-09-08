@@ -190,7 +190,7 @@ public class LocalDateTimeHelper extends DateHelper {
      * @return The converted String
      */
     public static String toRfc1123DateTime(LocalDateTime value) {
-        return value == null ? null
+         return value == null ? null
                 : RFC1123_DATE_TIME_FORMATTER.format(value.atZone(ZoneId.of("GMT")));
     }
 

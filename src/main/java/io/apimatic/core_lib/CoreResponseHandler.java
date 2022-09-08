@@ -18,8 +18,6 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
     private final ResponseClassType responseClassType;
     private final boolean isNullify404Enabled;
 
-
-
     /**
      * @param localErrorCases
      * @param globalErrorCases
@@ -39,35 +37,9 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
     }
 
 
-    /**
-     * Getter for the errorCases
-     * 
-     * @return the errorCase
-     */
-    public Map<String, ErrorCase<ExceptionType>> getLocalErrorCases() {
-        return this.localErrorCases;
-    }
-
-    /**
-     * Getter for the deserializer
-     * 
-     * @return the deserializer function
-     */
-    public Deserializer<ResponseType> getDeserializer() {
-        return this.deserializer;
-    }
-
-    /**
-     * @return the globalErrorCases
-     */
-    public Map<String, ErrorCase<ExceptionType>> getGlobalErrorCases() {
-        return globalErrorCases;
-    }
-
-
-    @SuppressWarnings("unchecked")
     public ResponseType handle(CoreHttpRequest httpRequest, CoreHttpResponse httpResponse,
             CoreConfig coreConfig) throws IOException, ExceptionType {
+        
         CoreHttpContext httpContext =
                 coreConfig.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
@@ -87,30 +59,40 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
         validateResponse(httpContext);
 
         ResponseType result = null;
+
         if (deserializer != null) {
             // extract result from the http response
-            result = deserializer.apply(httpResponse.getBody());
+            return deserializer.apply(httpResponse.getBody());
         }
 
-        if(responseClassType != null) {
-            switch (responseClassType) {
-                case API_RESPONSE:
-                    result = (ResponseType) coreConfig.getCompatibilityFactory().createAPiResponse(
-                            httpResponse.getStatusCode(), httpResponse.getHeaders(), result);
-                case DYNAMIC_RESPONSE:
-                    result = (ResponseType) coreConfig.getCompatibilityFactory()
-                            .createDynamicResponse(httpResponse);
-            }
+        if (responseClassType != null) {
+            return handlerResponse(httpResponse, coreConfig);
         }
-        
+
         return result;
     }
 
+
+    @SuppressWarnings("unchecked")
+    private ResponseType handlerResponse(CoreHttpResponse httpResponse, CoreConfig coreConfig) {
+        switch (responseClassType) {
+            case API_RESPONSE:
+                return (ResponseType) coreConfig.getCompatibilityFactory().createAPiResponse(
+                        httpResponse.getStatusCode(), httpResponse.getHeaders(),
+                        httpResponse.getBody());
+            case DYNAMIC_RESPONSE:
+                return (ResponseType) coreConfig.getCompatibilityFactory()
+                        .createDynamicResponse(httpResponse);
+            default:
+                return null;
+        }
+    }
+
     private void validateResponse(CoreHttpContext httpContext) throws ExceptionType {
-        // TODO Auto-generated method stub
         CoreHttpResponse response = httpContext.getResponse();
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
+
         if (localErrorCases != null && localErrorCases.containsKey(errorCode)) {
             localErrorCases.get(errorCode).throwException(httpContext);
         }
@@ -119,7 +101,7 @@ public class CoreResponseHandler<ResponseType, ExceptionType extends ApiExceptio
             globalErrorCases.get(errorCode).throwException(httpContext);
         }
 
-        if ((statusCode < 200) || (statusCode > 208)) { // [200,208] = HTTP OK
+        if ((statusCode < 200) || (statusCode > 208)) {
             globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
         }
     }

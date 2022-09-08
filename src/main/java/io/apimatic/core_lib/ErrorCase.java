@@ -21,10 +21,8 @@ public class ErrorCase<ExceptionType extends ApiException> {
         return reason;
     }
 
-    public ErrorCase<ExceptionType> exceptionCreator(
-            ExceptionCreator<ExceptionType> exceptionCreator) {
-        this.exceptionCreator = exceptionCreator;
-        return this;
+    public ExceptionCreator<ExceptionType> getExceptionCreator() {
+        return exceptionCreator;
     }
 
     public void throwException(CoreHttpContext httpContext) throws ExceptionType {
@@ -33,8 +31,7 @@ public class ErrorCase<ExceptionType extends ApiException> {
 
     public static <ExceptionType extends ApiException> ErrorCase<ExceptionType> create(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
-        ErrorCase<ExceptionType> errorCase =
-                new ErrorCase<ExceptionType>(reason, exceptionCreator);
+        ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
         return errorCase;
     }
 

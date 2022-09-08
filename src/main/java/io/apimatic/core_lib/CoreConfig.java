@@ -13,7 +13,7 @@ public class CoreConfig {
     private CompatibilityFactory compatibilityFactory;
     private String userAgent;
     private Map<String, String> userAgentConfig;
-    private Map<String, Authentication> authManagers;
+    private Map<String, Authentication> authentications;
     private HttpCallback httpCallback;
     private HttpClient httpClient;
     private HttpHeaders globalHeaders;
@@ -23,13 +23,13 @@ public class CoreConfig {
      * private Constructor.
      */
     private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
-            Map<String, String> userAgentConfig, Map<String, Authentication> authManagers,
+            Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
             HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
-        this.authManagers = authManagers;
+        this.authentications = authentications;
         this.httpCallback = httpCallback;
         this.httpClient = httpClient;
         this.globalHeaders =
@@ -73,8 +73,8 @@ public class CoreConfig {
      * 
      * @return the map of AuthManager
      */
-    public Map<String, Authentication> getAuthManagers() {
-        return authManagers;
+    public Map<String, Authentication> getAuthentications() {
+        return authentications;
     }
 
     /**
@@ -121,35 +121,17 @@ public class CoreConfig {
      */
     public Builder toBuilder() {
         Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
-                .userAgent(userAgent).authManager(authManagers).httpCallback(httpCallback)
+                .userAgent(userAgent).authentication(authentications).httpCallback(httpCallback)
                 .httpClient(httpClient).globalHeaders(globalHeaders).baseUri(baseUri);
         return builder;
 
-    }
-
-    /**
-     * Updates the user agent header value.
-     */
-    private void updateUserAgent() {
-        String engineVersion = System.getProperty("java.runtime.version");
-        String osName = System.getProperty("os.name") + "-" + System.getProperty("os.version");
-        userAgent = userAgent.replace("{engine}", "JRE");
-        userAgent =
-                userAgent.replace("{engine-version}", engineVersion != null ? engineVersion : "");
-        userAgent = userAgent.replace("{os-info}", osName != null ? osName : "");
-
-        if (userAgentConfig != null) {
-            userAgentConfig.forEach((key, value) -> {
-                userAgent = userAgent.replace(key, value);
-            });
-        }
     }
 
     public static class Builder {
         private CompatibilityFactory compatibilityFactory;
         private String userAgent;
         private Map<String, String> userAgentConfig;
-        private Map<String, Authentication> authManagers;
+        private Map<String, Authentication> authentications;
         private HttpCallback httpCallback;
         private HttpClient httpClient;
         private HttpHeaders globalHeaders;
@@ -191,11 +173,11 @@ public class CoreConfig {
         /**
          * Setter for authManagers
          * 
-         * @param authManagers Map values for authManagers
+         * @param authentications Map values for authManagers
          * @return Builder
          */
-        public Builder authManager(Map<String, Authentication> authManagers) {
-            this.authManagers = authManagers;
+        public Builder authentication(Map<String, Authentication> authentications) {
+            this.authentications = authentications;
             return this;
         }
 
@@ -249,7 +231,7 @@ public class CoreConfig {
          * @return {@link CoreConfig}
          */
         public CoreConfig build() {
-            return new CoreConfig(compatibilityFactory, userAgent, userAgentConfig, authManagers,
+            return new CoreConfig(compatibilityFactory, userAgent, userAgentConfig, authentications,
                     httpCallback, httpClient, globalHeaders, baseUri);
         }
     }

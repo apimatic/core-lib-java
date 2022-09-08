@@ -61,7 +61,7 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
     }
 
     public ResponseType execute() throws IOException, ExceptionType {
-        CoreHttpResponse httpResponse =
+        CoreHttpResponse httpResponse = 
                 coreConfig.getHttpClient().execute(request, endpointConfiguration);
         return responseHandler.handle(request, httpResponse, coreConfig);
     }
