@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import apimatic.core_lib.exceptions.GlobalTestException;
 import apimatic.core_lib.utilities.MockCoreRequest;
 import io.apimatic.core_interfaces.http.CoreHttpContext;
 import io.apimatic.core_interfaces.http.CoreHttpMethod;
@@ -210,6 +213,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(209);
+        
 
         ApiException apiException = assertThrows(ApiException.class, () -> {
             coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockCoreConfig);
@@ -218,6 +222,14 @@ public class ResponseHandlerTest extends MockCoreRequest {
         String expectedMessage = "Invalid response.";
         String actualMessage = apiException.getMessage();
 
+        int expectedResponseCode = 209;
+        int actualResponseCode = apiException.getResponseCode();
+        
+        CoreHttpContext expectedContext = context;
+        CoreHttpContext actualContext = apiException.getHttpContext();
+        
+        assertEquals(actualContext, expectedContext);
+        assertEquals(actualResponseCode, expectedResponseCode);
         assertEquals(actualMessage, expectedMessage);
     }
 
@@ -228,25 +240,37 @@ public class ResponseHandlerTest extends MockCoreRequest {
                 new CoreResponseHandler.Builder<String, ApiException>()
                         .globalErrorCase(getGlobalErrorCases()).build();
 
+        String exceptionResponse = "{\"ServerMessage\" : \"This is a message from server\" , \"ServerCode\" : 5000 }";
+        InputStream exceptionResponseStream = new ByteArrayInputStream(exceptionResponse.getBytes());
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(400);
+        when(coreHttpResponse.getRawBody()).thenReturn(exceptionResponseStream);
 
 
-        ApiException apiException = assertThrows(ApiException.class, () -> {
+        GlobalTestException apiException = assertThrows(GlobalTestException.class, () -> {
             coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockCoreConfig);
         });
 
         String expectedMessage = "Bad Request";
         String actualMessage = apiException.getMessage();
 
+        String expectedServerMessage = "This is a message from server";
+        String actualSeverMessage = apiException.getServerMessage();
+        
+        int expectedServerCode = 5000;
+        int actualSeverCode = apiException.getServerCode();
+        
+        
         assertEquals(actualMessage, expectedMessage);
+        assertEquals(actualSeverMessage, expectedServerMessage);
+        assertEquals(actualSeverCode, expectedServerCode);
     }
 
     private Map<String, ErrorCase<ApiException>> getGlobalErrorCases() {
 
         Map<String, ErrorCase<ApiException>> globalErrorCase = new HashMap<>();
         globalErrorCase.put("400", ErrorCase.create("Bad Request",
-                (reason, context) -> new ApiException(reason, context)));
+                (reason, context) -> new GlobalTestException(reason, context)));
 
         globalErrorCase.put("404", ErrorCase.create("Not found",
                 (reason, context) -> new ApiException(reason, context)));

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import apimatic.core_lib.models.AtomCase;
 import apimatic.core_lib.models.CarCase;
+import apimatic.core_lib.models.ChildClass;
 import apimatic.core_lib.models.DateTimeCases;
 import apimatic.core_lib.models.DeleteBody;
 import apimatic.core_lib.models.MorningCase;
@@ -48,6 +49,7 @@ public class CoreHelperTest {
         Object obj = null;
         assertNull(CoreHelper.serialize(obj));
     }
+
 
     @Test
     public void testIsWhiteSpace() {
@@ -140,7 +142,8 @@ public class CoreHelperTest {
         actual.put("key1", null);
         actual.put("key2", "value2");
 
-        Map<String, Object> expected = Map.of("key2", "value2");
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("key2", "value2");
         CoreHelper.removeNullValues(actual);
 
         assertEquals(actual, expected);
@@ -168,7 +171,8 @@ public class CoreHelperTest {
     @Test
     public void testUpdateUserAgent1() {
         String userAgent = "Java|31.8.0|{engine}|{engine-version}|{os-info}|{square-version}";
-        Map<String, String> userAgentConfig = Map.of("{square-version}", "17.2.6");
+        Map<String, String> userAgentConfig = new HashMap<>();
+        userAgentConfig.put("{square-version}", "17.2.6");
 
         String expected = "Java|31.8.0|JRE|" + System.getProperty("java.runtime.version") + "|"
                 + System.getProperty("os.name") + "-" + System.getProperty("os.version")
@@ -295,6 +299,21 @@ public class CoreHelperTest {
     }
 
 
+    @Test
+    public void testptionalNullable() throws IOException {
+        ChildClass child = CoreHelper.deserialize(
+                "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable "
+                        + "and required\",\"class\":23,\"Parent_Optional_Nullable_With_Default_Value\":\"Ha"
+                        + "s default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nu"
+                        + "llable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Defaul"
+                        + "t_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not n"
+                        + "ullable and required\",\"Child_Class_Array\":null}",
+                ChildClass.class);
+       String expected = "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable and required\",\"Parent_Optional_Nullable_With_Default_Value\":\"Has default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nullable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
+               
+       String actual = CoreHelper.serialize(child);
+       assertEquals(actual, expected);
+    }
 
     @Test
     public void testAppendQueryParameters() {
@@ -650,7 +669,8 @@ public class CoreHelperTest {
 
     @Test
     public void testSerializeMapOfString() throws JsonProcessingException {
-        Map<String, String> mapOfStrings = Map.of("Electonics", "laptop");
+        Map<String, Object> mapOfStrings = new HashMap<>();
+        mapOfStrings.put("Electonics", "laptop");
 
         String expected = "{\"Electonics\":\"laptop\"}";
         String actual = CoreHelper.serialize(mapOfStrings);
@@ -1013,8 +1033,10 @@ public class CoreHelperTest {
                 + "\"sessionType\":\"Noon\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\","
                 + "\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}}", NonScalarModel.class);
 
+        Map<String, Object> formParameters = new HashMap<>();
+        formParameters.put("Key1", formNonScalarModel);
         List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(
-                Map.of("Key1", formNonScalarModel), ArraySerializationFormat.INDEXED);
+               formParameters, ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
 
@@ -1025,9 +1047,10 @@ public class CoreHelperTest {
                         + ":49:37 GMT\",\"key2\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}}",
                 DateTimeCases.class);
 
-
+        Map<String, Object> formParameters = new HashMap<>();
+        formParameters.put("DateTime", formDateTimeCases);
         List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(
-                Map.of("DateTime", formDateTimeCases), ArraySerializationFormat.INDEXED);
+                formParameters, ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
 

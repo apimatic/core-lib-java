@@ -9,6 +9,7 @@ package apimatic.core_lib.exceptions;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import io.apimatic.core_interfaces.http.CoreHttpContext;
+import io.apimatic.core_lib.types.ApiException;
 
 /**
  * This is a model class for GlobalTestException type.

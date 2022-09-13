@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
@@ -59,12 +60,14 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeMapToRfc1123() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         // stub
-        Map<String, String> expected = Map.of("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT",
-                "dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        expected.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
 
         assertEquals(LocalDateTimeHelper.toRfc1123DateTime(dateTimeMap), expected);
 
@@ -74,14 +77,18 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeListOfMapToRfc1123() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         List<Map<String, LocalDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected = Arrays.asList(Map.of("dateTime1",
-                "Thu, 13 Jul 2000 06:10:00 GMT", "dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT"));
+        Map<String, String> mapOfStrings = new HashMap<>();
+        mapOfStrings.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        mapOfStrings.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfStrings);
 
         assertEquals(LocalDateTimeHelper.toArrayOfMapOfRfc1123DateTime(listOfMapOfLocalDateTime),
                 expected);
@@ -141,12 +148,14 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeMapToRfc8601() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         // stub
-        Map<String, String> expected =
-                Map.of("dateTime1", "2000-07-13T06:10Z", "dateTime2", "2020-07-25T06:10Z");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "2000-07-13T06:10Z");
+        expected.put("dateTime2", "2020-07-25T06:10Z");
 
         assertEquals(LocalDateTimeHelper.toRfc8601DateTime(dateTimeMap), expected);
 
@@ -156,14 +165,18 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeListOfMapToRfc8601() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         List<Map<String, LocalDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected = Arrays
-                .asList(Map.of("dateTime1", "2000-07-13T06:10Z", "dateTime2", "2020-07-25T06:10Z"));
+        Map<String, String> mapOfString = new HashMap<>();
+        mapOfString.put("dateTime1", "2000-07-13T06:10Z");
+        mapOfString.put("dateTime2", "2020-07-25T06:10Z");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfString);
 
         assertEquals(LocalDateTimeHelper.toArrayOfMapOfRfc8601DateTime(listOfMapOfLocalDateTime),
                 expected);
@@ -223,10 +236,15 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeMapToUnixTimeStamp() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
+
         // stub
-        Map<String, String> expected = Map.of("dateTime1", "963450600", "dateTime2", "1595639400");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "963450600");
+        expected.put("dateTime2", "1595639400");
+
         assertEquals(LocalDateTimeHelper.toUnixTimestamp(dateTimeMap), expected);
 
     }
@@ -235,14 +253,18 @@ public class LocalDateTimeHelperTest {
     public void testListOfMapToUnixTimeStamp() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         List<Map<String, LocalDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected =
-                Arrays.asList(Map.of("dateTime1", "963450600", "dateTime2", "1595639400"));
+        Map<String, String> mapOfStrings = new HashMap<>();
+        mapOfStrings.put("dateTime1", "963450600");
+        mapOfStrings.put("dateTime2", "1595639400");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfStrings);
 
         assertEquals(LocalDateTimeHelper.toArrayOfMapOfUnixTimestamp(listOfMapOfLocalDateTime),
                 expected);
@@ -306,10 +328,15 @@ public class LocalDateTimeHelperTest {
     public void testLocalDateTimeMapToUnixTimeLong() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
+
         // stub
-        Map<String, Long> expected = Map.of("dateTime1", 963450600L, "dateTime2", 1595639400L);
+        Map<String, Long> expected = new HashMap<>();
+        expected.put("dateTime1", 963450600L);
+        expected.put("dateTime2", 1595639400L);
+
         assertEquals(LocalDateTimeHelper.toUnixTimestampLong(dateTimeMap), expected);
 
     }
@@ -318,14 +345,18 @@ public class LocalDateTimeHelperTest {
     public void testListOfMapToUnixTimeLong() {
         LocalDateTime dateTime1 = LocalDateTime.of(2000, 7, 13, 6, 10);
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
-        Map<String, LocalDateTime> dateTimeMap =
-                Map.of("dateTime1", dateTime1, "dateTime2", dateTime2);
+        Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", dateTime1);
+        dateTimeMap.put("dateTime2", dateTime2);
 
         List<Map<String, LocalDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, Long>> expected =
-                Arrays.asList(Map.of("dateTime1", 963450600L, "dateTime2", 1595639400L));
+        Map<String, Long> mapOfLong = new HashMap<>();
+        mapOfLong.put("dateTime1", 963450600L);
+        mapOfLong.put("dateTime2", 1595639400L);
+
+        List<Map<String, Long>> expected = Arrays.asList(mapOfLong);
 
         assertEquals(LocalDateTimeHelper.toArrayOfMapOfUnixTimestampLong(listOfMapOfLocalDateTime),
                 expected);

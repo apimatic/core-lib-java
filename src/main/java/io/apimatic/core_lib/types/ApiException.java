@@ -1,17 +1,14 @@
 package io.apimatic.core_lib.types;
 
 import java.io.IOException;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import io.apimatic.core_interfaces.http.CoreHttpContext;
-import io.apimatic.core_interfaces.type.CoreApiException;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
 /**
  * This is the base class for all exceptions that represent an error response from the server.
  */
-public class ApiException extends Exception implements CoreApiException {
+public class ApiException extends Exception {
     //UID for serialization
     private static final long serialVersionUID = 6424174253911720338L;
 

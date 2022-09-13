@@ -14,17 +14,6 @@ public class ErrorCase<ExceptionType extends ApiException> {
         this.exceptionCreator = exceptionCreator;
     }
 
-    /**
-     * @return the reason
-     */
-    public String getReason() {
-        return reason;
-    }
-
-    public ExceptionCreator<ExceptionType> getExceptionCreator() {
-        return exceptionCreator;
-    }
-
     public void throwException(CoreHttpContext httpContext) throws ExceptionType {
         throw exceptionCreator.apply(reason, httpContext);
     }

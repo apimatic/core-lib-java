@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
@@ -59,12 +60,16 @@ public class ZonedDateTimeHelperTest {
     public void testZonedDateTimeMapToRfc1123() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         // stub
-        Map<String, String> expected = Map.of("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT",
-                "dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        expected.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+
+
 
         assertEquals(ZonedDateTimeHelper.toRfc1123DateTime(dateTimeMap), expected);
     }
@@ -73,14 +78,18 @@ public class ZonedDateTimeHelperTest {
     public void testZonedDateTimeListOfMapToRfc1123() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         List<Map<String, ZonedDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected = Arrays.asList(Map.of("dateTime1",
-                "Thu, 13 Jul 2000 06:10:00 GMT", "dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT"));
+        Map<String, String> mapOfString = new HashMap<>();
+        mapOfString.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        mapOfString.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfString);
 
         assertEquals(ZonedDateTimeHelper.toArrayOfMapOfRfc1123DateTime(listOfMapOfLocalDateTime),
                 expected);
@@ -142,34 +151,38 @@ public class ZonedDateTimeHelperTest {
     public void testZonedDateTimeMapToRfc8601() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         // stub
-        Map<String, String> expected = Map.of("dateTime1", "2000-07-13T06:10Z[GMT]", "dateTime2",
-                "2020-07-25T06:10Z[GMT]");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "2000-07-13T06:10Z[GMT]");
+        expected.put("dateTime2", "2020-07-25T06:10Z[GMT]");
 
         assertEquals(ZonedDateTimeHelper.toRfc8601DateTime(dateTimeMap), expected);
-
     }
 
     @Test
     public void testZonedDateTimeListOfMapToRfc8601() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         List<Map<String, ZonedDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected = Arrays.asList(Map.of("dateTime1",
-                "2000-07-13T06:10Z[GMT]", "dateTime2", "2020-07-25T06:10Z[GMT]"));
+        Map<String, String> mapOfStirng = new HashMap<>();
+        mapOfStirng.put("dateTime1", "2000-07-13T06:10Z[GMT]");
+        mapOfStirng.put("dateTime2", "2020-07-25T06:10Z[GMT]");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfStirng);
 
         List<Map<String, String>> actual =
                 ZonedDateTimeHelper.toArrayOfMapOfRfc8601DateTime(listOfMapOfLocalDateTime);
         assertEquals(actual, expected);
-
     }
 
     @Test
@@ -226,10 +239,15 @@ public class ZonedDateTimeHelperTest {
     public void testZonedDateTimeMapToUnixTimeStamp() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
+
         // stub
-        Map<String, String> expected = Map.of("dateTime1", "963468600", "dateTime2", "1595657400");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("dateTime1", "963468600");
+        expected.put("dateTime2", "1595657400");
+
         assertEquals(ZonedDateTimeHelper.toUnixTimestamp(dateTimeMap), expected);
 
     }
@@ -238,14 +256,18 @@ public class ZonedDateTimeHelperTest {
     public void testListOfMapToUnixTimeStamp() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         List<Map<String, ZonedDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
 
         // stub
-        List<Map<String, String>> expected =
-                Arrays.asList(Map.of("dateTime1", "963468600", "dateTime2", "1595657400"));
+        Map<String, String> mapOfStirng = new HashMap<>();
+        mapOfStirng.put("dateTime1", "963468600");
+        mapOfStirng.put("dateTime2", "1595657400");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfStirng);
 
         assertEquals(ZonedDateTimeHelper.toArrayOfMapOfUnixTimestamp(listOfMapOfLocalDateTime),
                 expected);
@@ -310,10 +332,15 @@ public class ZonedDateTimeHelperTest {
     public void testZonedDateTimeMapToUnixTimeLong() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
+
         // stub
-        Map<String, Long> expected = Map.of("dateTime1", 963468600L, "dateTime2", 1595657400L);
+        Map<String, Long> expected = new HashMap<>();
+        expected.put("dateTime1", 963468600L);
+        expected.put("dateTime2", 1595657400L);
+
         assertEquals(ZonedDateTimeHelper.toUnixTimestampLong(dateTimeMap), expected);
     }
 
@@ -321,13 +348,17 @@ public class ZonedDateTimeHelperTest {
     public void testListOfMapToUnixTimeLong() {
         ZonedDateTime zonedDateTime1 = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2020, 7, 25, 6, 10, 0, 0, ZoneId.of("GMT"));
-        Map<String, ZonedDateTime> dateTimeMap =
-                Map.of("dateTime1", zonedDateTime1, "dateTime2", zonedDateTime2);
+        Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
+        dateTimeMap.put("dateTime1", zonedDateTime1);
+        dateTimeMap.put("dateTime2", zonedDateTime2);
 
         List<Map<String, ZonedDateTime>> listOfMapOfLocalDateTime = Arrays.asList(dateTimeMap);
         // stub
-        List<Map<String, Long>> expected =
-                Arrays.asList(Map.of("dateTime1", 963468600L, "dateTime2", 1595657400L));
+        Map<String, Long> mapOfString = new HashMap<>();
+        mapOfString.put("dateTime1", 963468600L);
+        mapOfString.put("dateTime2", 1595657400L);
+
+        List<Map<String, Long>> expected = Arrays.asList(mapOfString);
 
         assertEquals(ZonedDateTimeHelper.toArrayOfMapOfUnixTimestampLong(listOfMapOfLocalDateTime),
                 expected);

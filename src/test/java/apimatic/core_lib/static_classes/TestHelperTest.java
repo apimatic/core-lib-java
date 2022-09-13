@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -344,11 +345,11 @@ public class TestHelperTest {
         boolean actual = TestHelper.isProperSubsetOf(leftObject, rightObject, true, true, false);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testIsProperSubsetOfList1() throws IOException {
         String leftObject = "[0.987,0.987]";
-        String rightObject = "[0.987,0.987,0.578]" ;
+        String rightObject = "[0.987,0.987,0.578]";
         boolean actual = TestHelper.isProperSubsetOf(leftObject, rightObject, true, false, false);
         assertFalse(actual);
     }
@@ -403,8 +404,9 @@ public class TestHelperTest {
 
     @Test
     public void testConvertInputStreamToString() {
-        InputStream inputStream = InputStream.nullInputStream();
-        String expected = "";
+        String stringToCOnvert = "test string";
+        InputStream inputStream = new ByteArrayInputStream(stringToCOnvert.getBytes());
+        String expected = "test string";
         String actual = TestHelper.convertStreamToString(inputStream);
         assertEquals(actual, expected);
     }

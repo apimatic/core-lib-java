@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
@@ -54,9 +55,14 @@ public class DateHelperTest {
     public void testMapDateToSimpleDate() {
         LocalDate date1 = LocalDate.of(2022, 9, 2);
         LocalDate date2 = LocalDate.of(2021, 8, 1);
+        Map<String, LocalDate> dateMap = new HashMap<>();
+        dateMap.put("date1", date1);
+        dateMap.put("date2", date2);
 
-        Map<String, LocalDate> dateMap = Map.of("date1", date1, "date2", date2);
-        Map<String, String> expected = Map.of("date1", "2022-09-02", "date2", "2021-08-01");
+        Map<String, String> expected = new HashMap<>();
+        expected.put("date1", "2022-09-02");
+        expected.put("date2", "2021-08-01");
+
         Map<String, String> actual = DateHelper.toSimpleDate(dateMap);
         assertEquals(actual, expected);
     }
@@ -72,11 +78,16 @@ public class DateHelperTest {
         LocalDate date1 = LocalDate.of(2022, 9, 2);
         LocalDate date2 = LocalDate.of(2021, 8, 1);
 
-        Map<String, LocalDate> dateMap = Map.of("date1", date1, "date2", date2);
+        Map<String, LocalDate> dateMap = new HashMap<>();
+        dateMap.put("date1", date1);
+        dateMap.put("date2", date2);
 
         List<Map<String, LocalDate>> listOfMapOfDate = Arrays.asList(dateMap);
-        List<Map<String, String>> expected =
-                Arrays.asList(Map.of("date1", "2022-09-02", "date2", "2021-08-01"));
+        Map<String, String> mapOfDateString = new HashMap<>();
+        mapOfDateString.put("date1", "2022-09-02");
+        mapOfDateString.put("date2", "2021-08-01");
+
+        List<Map<String, String>> expected = Arrays.asList(mapOfDateString);
         List<Map<String, String>> actual = DateHelper.toArrayOfMapOfSimpleDate(listOfMapOfDate);
         assertEquals(actual, expected);
     }
