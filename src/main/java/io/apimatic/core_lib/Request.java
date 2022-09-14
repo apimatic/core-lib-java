@@ -22,10 +22,11 @@ import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
 import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
-public class CoreRequest {
+public class Request {
     private final CoreHttpRequest coreHttpRequest;
     private final CoreConfig coreConfig;
     private final StringBuilder urlBuilder;
+    private final CompatibilityFactory compatibilityFactory;
 
     /**
      * @param server
@@ -40,31 +41,29 @@ public class CoreRequest {
      * @param bodySerializer
      * @throws IOException
      */
-    private CoreRequest(CoreConfig coreConfig, String server, String path,
-            CoreHttpMethod httpMethod, String authenticationKey, Map<String, Object> queryParams,
+    private Request(CoreConfig coreConfig, String server, String path, CoreHttpMethod httpMethod,
+            String authenticationKey, Map<String, Object> queryParams,
             Map<String, SimpleEntry<Object, Boolean>> templateParams,
             Map<String, List<String>> headerParams, Set<Parameter> formParams, Object body,
             Serializer bodySerializer, Map<String, Object> bodyParameters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
+        this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
 
         processTemplateParams(templateParams);
-        HttpHeaders headers = addHeaders(headerParams);
         body = buildBody(body, bodySerializer, bodyParameters);
-        coreHttpRequest = buildRequest(httpMethod, body, headers, queryParams, formParams,
-                arraySerializationFormat);
+        coreHttpRequest = buildRequest(httpMethod, body, addHeaders(headerParams), queryParams,
+                formParams, arraySerializationFormat);
         applyAuthentication(authenticationKey);
-
     }
 
-
+    /**
+     * 
+     * @return the {@link CoreHttpRequest} instance which is used for making {@link ApiCall}
+     */
     public CoreHttpRequest getCoreHttpRequest() {
         return coreHttpRequest;
-    }
-
-    public static Builder builder(String server, String path) {
-        return new CoreRequest.Builder();
     }
 
     private void applyAuthentication(String authenticationKey) {
@@ -72,32 +71,27 @@ public class CoreRequest {
             return;
         }
 
-        Authentication authManager = coreConfig.getAuthentications().get(authenticationKey);
-        if (authManager != null) {
-            authManager.apply(coreHttpRequest);
+        Map<String, Authentication> authentications = coreConfig.getAuthentications();
+        if (authentications != null) {
+            Authentication authManager = authentications.get(authenticationKey);
+            if (authManager != null) {
+                authManager.apply(coreHttpRequest);
+            }
         }
     }
 
     private CoreHttpRequest buildRequest(CoreHttpMethod httpMethod, Object body,
             HttpHeaders headerParams, Map<String, Object> queryParams, Set<Parameter> formParams,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
-        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
-
         if (body != null) {
-
             return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
                     queryParams, body);
-
         }
-
 
         List<SimpleEntry<String, Object>> formFields =
                 generateFormFields(formParams, arraySerializationFormat);
         return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
                 queryParams, formFields);
-
-
-
     }
 
     /**
@@ -106,24 +100,22 @@ public class CoreRequest {
      */
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
             ArraySerializationFormat arraySerializationFormat) {
-        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
-        List<SimpleEntry<String, Object>> formFields = null;
-        Map<String, Object> formParamaters = new HashMap();
+        if (formParams.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> formParamaters = new HashMap<>();
         for (Parameter formParameter : formParams) {
             String key = formParameter.getKey();
+            Object value = formParameter.getValue();
             if (formParameter.getMultiPartRequest() != null) {
-                formParamaters.put(key,
-                        handleMultiPartRequest(formParameter, compatibilityFactory));
-                continue;
+                value = handleMultiPartRequest(formParameter);
             }
 
-            formParamaters.put(key, formParameter.getValue());
+            formParamaters.put(key, value);
         }
-        if (!formParams.isEmpty()) {
-            formFields = CoreHelper.prepareFormFields(formParamaters, arraySerializationFormat);
 
-        }
-        return formFields;
+        return CoreHelper.prepareFormFields(formParamaters, arraySerializationFormat);
     }
 
     private StringBuilder getStringBuilder(String server, String path) {
@@ -138,8 +130,7 @@ public class CoreRequest {
 
     private HttpHeaders addHeaders(Map<String, List<String>> headerParams) {
         addGlobalHeader(headerParams);
-        return coreConfig.getCompatibilityFactory().createHttpHeaders(headerParams);
-
+        return compatibilityFactory.createHttpHeaders(headerParams);
     }
 
     private void addGlobalHeader(Map<String, List<String>> headerParams) {
@@ -153,15 +144,16 @@ public class CoreRequest {
         if (body != null) {
             if (bodySerializer != null) {
                 return bodySerializer.apply(body);
-            } else {
-                if (body instanceof String) {
-                    return body.toString();
-                } else if (body instanceof FileWrapper) {
-                    return body;
-                } else {
-                    return CoreHelper.serialize(body);
-                }
             }
+            if (body instanceof FileWrapper) {
+                return body;
+            }
+
+            if (body instanceof String) {
+                return body.toString();
+            }
+
+            return CoreHelper.serialize(body);
         }
 
         if (bodyParameters != null) {
@@ -172,14 +164,12 @@ public class CoreRequest {
         return body;
     }
 
-    private Object handleMultiPartRequest(Parameter formParameter,
-            CompatibilityFactory compatibilityFactory) {
+    private Object handleMultiPartRequest(Parameter formParameter) {
         HttpHeaders multipartFileHeaders =
                 compatibilityFactory.createHttpHeaders(formParameter.getMultipartHeaders());
 
-
         if (formParameter.getMultiPartRequest() == MutliPartRequestType.MULTI_PART_FILE) {
-            return new MultipartFileWrapper((FileWrapper) formParameter.getValue() ,
+            return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
                     multipartFileHeaders);
         }
         return new MultipartWrapper(formParameter.getValue().toString(), multipartFileHeaders);
@@ -202,20 +192,28 @@ public class CoreRequest {
                 ArraySerializationFormat.INDEXED;
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
-
+        /**
+         * 
+         * @param server the base uri address
+         * @return
+         */
         public Builder server(String server) {
             this.server = server;
             return this;
         }
 
+        /**
+         * 
+         * @param path the endpoint path
+         * @return
+         */
         public Builder path(String path) {
             this.path = path;
             return this;
         }
 
         /**
-         * Setter for httpMethod
-         * 
+         *
          * @param httpMethod HttpMethod value for httpMethod
          * @return Builder
          */
@@ -236,7 +234,6 @@ public class CoreRequest {
         }
 
         /**
-         * Key value pair for queryParams
          * 
          * @param key String value for key
          * @param param Object value for param
@@ -251,7 +248,6 @@ public class CoreRequest {
         }
 
         /**
-         * Key value pair for queryParams
          * 
          * @param key String value for key
          * @param param Object value for param
@@ -263,7 +259,6 @@ public class CoreRequest {
         }
 
         /**
-         * Key value pair for templateParams
          * 
          * @param key String value for key
          * @param param SimpleEntry<Object, Boolean> value for param
@@ -281,7 +276,6 @@ public class CoreRequest {
         }
 
         /**
-         * Setter for httpHeaders
          * 
          * @param headerParams HttpHeaders for headerParams
          * @return Builder
@@ -305,8 +299,6 @@ public class CoreRequest {
         }
 
         /**
-         * Key value pair for formParams
-         * 
          * @param key String value for key
          * @param param Object value for param
          * @return Builder
@@ -322,7 +314,6 @@ public class CoreRequest {
 
 
         /**
-         * Setter for body
          * 
          * @param body Object value for body
          * @return Builder
@@ -345,8 +336,6 @@ public class CoreRequest {
         }
 
         /**
-         * Setter for bodySerializer
-         * 
          * @param bodySerializer Function value for bodySerializer
          * @return Builder
          */
@@ -356,27 +345,34 @@ public class CoreRequest {
             return this;
         }
 
+        /**
+         * 
+         * @param arraySerializationFormat the serialization format for the array
+         * @return
+         */
         public Builder arraySerializationFormat(ArraySerializationFormat arraySerializationFormat) {
             this.arraySerializationFormat = arraySerializationFormat;
             return this;
         }
 
+        /**
+         * Initialise the CoreHttpRequest
+         * 
+         * @param coreConfig the configuration for the Http request
+         * @return
+         * @throws IOException
+         */
         public CoreHttpRequest build(CoreConfig coreConfig) throws IOException {
-
-
-            CoreRequest coreRequest = new CoreRequest(coreConfig, server, path, httpMethod,
+            Request coreRequest = new Request(coreConfig, server, path, httpMethod,
                     authenticationKey, queryParams, templateParams, headerParams, formParams, body,
                     bodySerializer, bodyParameters, arraySerializationFormat);
-
-
-            // Invoke the callback before request if its not null
+            CoreHttpRequest coreHttpRequest = coreRequest.getCoreHttpRequest();
+            
             if (coreConfig.getHttpCallback() != null) {
-                coreConfig.getHttpCallback().onBeforeRequest(coreRequest.getCoreHttpRequest());
+                coreConfig.getHttpCallback().onBeforeRequest(coreHttpRequest);
             }
 
-            return coreRequest.getCoreHttpRequest();
-
+            return coreHttpRequest;
         }
     }
-
 }

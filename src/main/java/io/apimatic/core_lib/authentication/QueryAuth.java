@@ -13,6 +13,9 @@ public class QueryAuth implements Authentication {
         this.authParams = authParams;
     }
 
+    /**
+     * Apply the Query authentication
+     */
     @Override
     public CoreHttpRequest apply(CoreHttpRequest httpRequest) {
         authParams.forEach((key, value) -> {

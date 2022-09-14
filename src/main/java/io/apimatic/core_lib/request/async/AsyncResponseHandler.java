@@ -19,5 +19,4 @@ public interface AsyncResponseHandler<T, ExceptionType extends ApiException> {
      */
     T handle(CoreHttpRequest httpRequest, CoreHttpResponse httpResponse, CoreConfig coreConfig)
             throws IOException, ExceptionType;
-
 }

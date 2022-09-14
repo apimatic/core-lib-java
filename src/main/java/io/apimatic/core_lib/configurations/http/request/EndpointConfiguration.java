@@ -18,6 +18,9 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         this.arraySerializationFormat = arraySerializationFormat;
     }
 
+    /**
+     * @return the option for the retries
+     */
     public RetryOption getRetryOption() {
         return retryOption;
     }
@@ -47,23 +50,35 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
             return this;
         }
 
+        /**
+         * 
+         * @param retryOption
+         * @return {@link EndpointConfiguration.Builder}
+         */
         public Builder retryOption(
                 RetryOption retryOption) {
             this.retryOption = retryOption;
             return this;
         }
 
+        /**
+         * 
+         * @param arraySerializationFormat
+         * @return
+         */
         public Builder arraySerializationFormat(ArraySerializationFormat arraySerializationFormat) {
             this.arraySerializationFormat = arraySerializationFormat;
             return this;
         }
 
+        /**
+         * Initialise the {@link EndpointConfiguration}
+         * 
+         * @return the {@link EndpointConfiguration} instance
+         */
         public EndpointConfiguration build() {
             return new EndpointConfiguration(hasBinaryResponse, retryOption,
                     arraySerializationFormat);
         }
-
     }
-
-
 }

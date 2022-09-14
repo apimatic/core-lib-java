@@ -16,8 +16,6 @@ public class AsyncExecutor {
         this.coreConfig = coreConfig;
     }
 
-
-
     /**
      * Make an asynchronous HTTP endpoint call.
      * 

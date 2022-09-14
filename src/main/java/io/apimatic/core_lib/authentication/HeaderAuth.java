@@ -14,6 +14,9 @@ public class HeaderAuth implements Authentication {
         this.authParams = authParams;
     }
 
+    /**
+     * Apply the header authentication
+     */
     @Override
     public CoreHttpRequest apply(CoreHttpRequest httpRequest) {
         authParams.forEach((key, value) -> {

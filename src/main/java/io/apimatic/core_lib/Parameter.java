@@ -17,12 +17,14 @@ public class Parameter {
 
 
     /**
-     * @param key
-     * @param value
-     * @param isRequired
-     * @param shouldEncode
-     * @param multiPartRequest
-     * @param multipartHeaders
+     * A private constructor
+     * 
+     * @param key the parameter key 
+     * @param value the parameter value
+     * @param isRequired is used for validation
+     * @param shouldEncode is used for encoding template parameter
+     * @param multiPartRequest enum used to determine the multiRequestType
+     * @param multipartHeaders the multipart headers
      */
     private Parameter(String key, Object value, boolean isRequired, boolean shouldEncode,
             MutliPartRequestType multiPartRequest, Map<String, List<String>> multipartHeaders) {
@@ -36,7 +38,8 @@ public class Parameter {
     }
 
     /**
-     * @return the key
+     * 
+     * @return the String key
      */
     public String getKey() {
         return key;
@@ -44,28 +47,32 @@ public class Parameter {
 
     /**
      * 
-     * @return the encodeFlag
+     * @return the boolean shouldEncode which determines that should encode the template parameter
+     *         or not
      */
     public boolean shouldEncode() {
         return shouldEncode;
     }
 
     /**
-     * @return the value
+     * 
+     * @return the parameter value
      */
     public Object getValue() {
         return value;
     }
 
     /**
-     * @return the multiPartRequest
+     * 
+     * @return the MultiPartRequestType
      */
     public MutliPartRequestType getMultiPartRequest() {
         return multiPartRequestType;
     }
 
     /**
-     * @return the multipartHeaders
+     * 
+     * @return the Map of headers
      */
     public Map<String, List<String>> getMultipartHeaders() {
         return multipartHeaders;
@@ -82,7 +89,6 @@ public class Parameter {
                         "The parameter value is a required parameter and cannot be null.");
             }
         }
-
     }
 
     public static class Builder {
@@ -98,27 +104,52 @@ public class Parameter {
             return this;
         }
 
+        /**
+         * 
+         * @param value
+         * @return {@link Parameter.Builder}
+         */
         public Builder value(Object value) {
             this.value = value;
             return this;
         }
 
-
+        /**
+         * 
+         * @param isRequired
+         * @return {@link Parameter.Builder}
+         */
         public Builder isRequired(boolean isRequired) {
             this.isRequired = isRequired;
             return this;
         }
 
+        /**
+         * 
+         * @param shouldEncode
+         * @return {@link Parameter.Builder}
+         */
         public Builder shouldEncode(boolean shouldEncode) {
             this.shouldEncode = shouldEncode;
             return this;
         }
 
+        /**
+         * 
+         * @param multiPartRequestType
+         * @return {@link Parameter.Builder}
+         */
         public Builder multiPartRequestType(MutliPartRequestType multiPartRequestType) {
             this.multiPartRequestType = multiPartRequestType;
             return this;
         }
 
+        /**
+         * 
+         * @param key
+         * @param value
+         * @return {@link Parameter.Builder}
+         */
         public Builder multipartHeaders(String key, String value) {
             if (multipartHeaders.containsKey(key)) {
                 multipartHeaders.get(key).add(value);
@@ -130,10 +161,14 @@ public class Parameter {
             return this;
         }
 
+        /**
+         * this method initiates the {@link Parameter}
+         * 
+         * @return the instance of {@link Parameter}
+         */
         public Parameter build() {
             return new Parameter(key, value, isRequired, shouldEncode, multiPartRequestType,
                     multipartHeaders);
-
         }
     }
 

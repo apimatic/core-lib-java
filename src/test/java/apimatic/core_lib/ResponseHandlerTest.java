@@ -30,7 +30,7 @@ import io.apimatic.core_interfaces.http.response.ApiResponseType;
 import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
 import io.apimatic.core_interfaces.http.response.DynamicType;
 import io.apimatic.core_lib.ApiCall;
-import io.apimatic.core_lib.CoreResponseHandler;
+import io.apimatic.core_lib.ResponseHandler;
 import io.apimatic.core_lib.ErrorCase;
 import io.apimatic.core_lib.types.ApiException;
 
@@ -49,7 +49,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
     private HttpClient client;
 
     @Mock
-    private CoreResponseHandler<?, ?> responseHandler;
+    private ResponseHandler<?, ?> responseHandler;
 
     @Mock
     private CoreHttpResponse coreHttpResponse;
@@ -74,8 +74,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testDeserializerMethod() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>()
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>()
                         .deserializer(string -> new String(string)).build();
 
         // stub
@@ -89,8 +89,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testDynamicResponseTypeMethod() throws IOException, ApiException {
-        CoreResponseHandler<DynamicType, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<DynamicType, ApiException>()
+        ResponseHandler<DynamicType, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<DynamicType, ApiException>()
                         .responseClassType(ResponseClassType.DYNAMIC_RESPONSE).build();
 
         // stub
@@ -105,8 +105,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testApiResponseTypeMethod() throws IOException, ApiException {
-        CoreResponseHandler<ApiResponseType<String>, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<ApiResponseType<String>, ApiException>()
+        ResponseHandler<ApiResponseType<String>, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<ApiResponseType<String>, ApiException>()
                         .responseClassType(ResponseClassType.API_RESPONSE).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(201);
@@ -120,8 +120,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testDefaultTypeMethod() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>().build();
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>().build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(201);
         // verify
@@ -130,8 +130,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testNullify404() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>().nullify404(true).build();
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>().nullify404(true).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(404);
 
@@ -141,8 +141,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testNullify404False() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>().nullify404(false)
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>().nullify404(false)
                         .globalErrorCase(getGlobalErrorCases()).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(404);
@@ -159,8 +159,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testLocalException() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>()
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>()
                         .localErrorCase("403",
                                 ErrorCase.create("Forbidden",
                                         (reason, context) -> new ApiException(reason, context)))
@@ -180,8 +180,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testDefaultException() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>()
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>()
                         .localErrorCase("403",
                                 ErrorCase.create("Forbidden",
                                         (reason, context) -> new ApiException(reason, context)))
@@ -203,8 +203,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
     @Test
     public void testDefaultException1() throws IOException, ApiException {
         // when
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>()
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>()
                         .localErrorCase("403",
                                 ErrorCase.create("Forbidden",
                                         (reason, context) -> new ApiException(reason, context)))
@@ -236,8 +236,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Test
     public void testGlobalException() throws IOException, ApiException {
-        CoreResponseHandler<String, ApiException> coreResponseHandler =
-                new CoreResponseHandler.Builder<String, ApiException>()
+        ResponseHandler<String, ApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, ApiException>()
                         .globalErrorCase(getGlobalErrorCases()).build();
 
         String exceptionResponse = "{\"ServerMessage\" : \"This is a message from server\" , \"ServerCode\" : 5000 }";

@@ -3,7 +3,7 @@ package io.apimatic.core_lib;
 import java.util.Map;
 import java.util.function.Function;
 import io.apimatic.core_interfaces.authentication.Authentication;
-import io.apimatic.core_interfaces.compatibility.*;
+import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
@@ -20,7 +20,16 @@ public class CoreConfig {
     private Function<String, String> baseUri;
 
     /**
-     * private Constructor.
+     * A private constructor
+     * 
+     * @param compatibilityFactory
+     * @param userAgent
+     * @param userAgentConfig
+     * @param authentications
+     * @param httpCallback
+     * @param httpClient
+     * @param globalHeaders
+     * @param baseUri
      */
     private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
@@ -44,7 +53,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for CompatibilityFactory
      * 
      * @return the compatibilityFactory instance
      */
@@ -53,7 +61,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for UserAgent
      * 
      * @return the UserAgent string
      */
@@ -69,7 +76,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for AuthManagers
      * 
      * @return the map of AuthManager
      */
@@ -78,7 +84,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for HttpCallback
      * 
      * @return the httpCallback instance
      */
@@ -87,7 +92,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for HttpClient
      * 
      * @return the httpClient instance
      */
@@ -96,7 +100,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for HttpHeaders
      * 
      * @return the HttpHeaders instance
      */
@@ -105,7 +108,6 @@ public class CoreConfig {
     }
 
     /**
-     * Getter for BaseUri
      * 
      * @return the baseUri function
      */
@@ -138,7 +140,6 @@ public class CoreConfig {
         private Function<String, String> baseUri;
 
         /**
-         * Setter for compatibilityFactor.
          * 
          * @param compatibilityFactory value for CompatibilityFactor
          * @return Builder
@@ -149,7 +150,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for userAgent
          * 
          * @param userAgent String value for UserAgent
          * @return Builder
@@ -160,7 +160,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for userAgentConfig
          * 
          * @param userAgentConfig Map values for userAgentConfig
          * @return Builder
@@ -171,7 +170,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for authManagers
          * 
          * @param authentications Map values for authManagers
          * @return Builder
@@ -182,7 +180,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for HttpCallback
          * 
          * @param httpCallback value for HttpCallback
          * @return
@@ -193,7 +190,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for HttpClient
          * 
          * @param httpClient value for
          * @return Builder
@@ -204,7 +200,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for globalHeaders
          * 
          * @param headers value for HttpHeaders
          * @return Builder
@@ -215,7 +210,6 @@ public class CoreConfig {
         }
 
         /**
-         * Setter for baseUri
          * 
          * @param baseUri value for BaseUri
          * @return Builder

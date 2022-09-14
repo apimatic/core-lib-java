@@ -462,12 +462,6 @@ public class TestHelperTest {
         assertFalse(result);
     }
 
-    @Test
-    public void testGetFile() throws IOException {
-        File file = TestHelper.getFile("http://localhost:3000/response/image");
-        assertNotNull(file);
-    }
-
 }
 
 
