@@ -1,6 +1,7 @@
 package apimatic.core_lib;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,12 +28,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import apimatic.core_lib.models.Employee;
 import apimatic.core_lib.utilities.MockCoreRequest;
 import io.apimatic.core_interfaces.authentication.Authentication;
-import io.apimatic.core_interfaces.http.Method;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpHeaders;
+import io.apimatic.core_interfaces.http.Method;
 import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
-import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.request.MutliPartRequestType;
+import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.type.FileWrapper;
 import io.apimatic.core_lib.ApiCall;
 import io.apimatic.core_lib.HttpRequest;
@@ -158,12 +159,12 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testHeaderParamValidation1() throws IOException {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParams(param -> param.key("formKey").value("value"))
-                .headerParam(param -> param.key("accept").isRequired(false)).build(mockCoreConfig);
+                .headerParam(param -> param.key("accept").value(null).isRequired(false)).build(mockCoreConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn(null);
 
-        assertNull(coreHttpRequest.getHeaders().has("accept"));
+        assertFalse(coreHttpRequest.getHeaders().has("accept"));
     }
 
     @Test
