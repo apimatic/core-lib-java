@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -154,12 +155,12 @@ public class RequestBuilderTest extends MockCoreRequest {
                 .headerParam(param -> param.key("accept")).build(mockCoreConfig);
     }
 
-
     @Test
     public void testHeaderParamValidation1() throws IOException {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParams(param -> param.key("formKey").value("value"))
-                .headerParam(param -> param.key("accept").value(null).isRequired(false)).build(mockCoreConfig);
+                .headerParam(param -> param.key("accept").value(null).isRequired(false))
+                .build(mockCoreConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn(null);
@@ -180,6 +181,79 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         // verify
         assertEquals(coreHttpRequest.getHeaders().value("accept"), "application/json");
+    }
+
+    @Test
+    public void testHeaderPrecedenceOverGlobal() throws IOException {
+        Map<String, List<String>> headers = new HashMap<>();
+        List<String> listOfheaders = Arrays.asList("image/png");
+        headers.put("accept", listOfheaders);
+        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers);
+        // when
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParams(param -> param.key("formKey").value("value"))
+                .headerParam(param -> param.key("accept").value("application/json"))
+                .build(mockCoreConfig);
+
+        when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
+        when(httpHeaders.value("accept")).thenReturn("application/json");
+
+        String expected = "application/json";
+        String actual = coreHttpRequest.getHeaders().value("accept");
+        // verify
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testHeaderPrecedenceOverGlobal1() throws IOException {
+        Map<String, List<String>> headers = new HashMap<>();
+        List<String> listOfheaders = Arrays.asList("image/png");
+        headers.put("content-type", listOfheaders);
+        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers);
+        // when
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParams(param -> param.key("formKey").value("value"))
+                .headerParam(param -> param.key("accept").value("application/json"))
+                .build(mockCoreConfig);
+
+        when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
+        when(httpHeaders.value("accept")).thenReturn("application/json");
+        when(httpHeaders.value("content-type")).thenReturn("image/png");
+
+        String expectedContentType = "image/png";
+        String actualContentType = coreHttpRequest.getHeaders().value("content-type");
+        String expectedAcceptHeader = "application/json";
+        String actualAcceptHeader = coreHttpRequest.getHeaders().value("accept");
+        // verify
+        assertEquals(actualContentType, expectedContentType);
+        assertEquals(actualAcceptHeader, expectedAcceptHeader);
+    }
+
+    @Test
+    public void testHeaderPrecedenceOverAdditional() throws IOException {
+        Map<String, List<String>> headers = new HashMap<>();
+        List<String> listOfheaders = Arrays.asList("image/png");
+        headers.put("content-type", listOfheaders);
+        when(mockCoreConfig.getAdditionalHeaders()).thenReturn(headers);
+        Map<String, List<String>> headers2 = new HashMap<>();
+        List<String> listOfheaders2 = Arrays.asList("application/json");
+        headers2.put("content-type", listOfheaders2);
+        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers2);
+
+        // when
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParams(param -> param.key("formKey").value("value"))
+                .headerParam(param -> param.key("content-type").value("text/plain"))
+                .build(mockCoreConfig);
+
+        when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
+        when(httpHeaders.value("content-type")).thenReturn("image/png");
+
+        String expectedContentType = "image/png";
+        String actualContentType = coreHttpRequest.getHeaders().value("content-type");
+
+        // verify
+        assertEquals(actualContentType, expectedContentType);
     }
 
     @Test
@@ -357,7 +431,6 @@ public class RequestBuilderTest extends MockCoreRequest {
     @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testTemplateParamModel() throws IOException {
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(null);
         // Parameters for the API call
         Employee model = getEmployeeModel();
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
@@ -518,12 +591,10 @@ public class RequestBuilderTest extends MockCoreRequest {
     private void prepareCoreConfigStub() {
         when(mockApiCall.getCoreConfig()).thenReturn(mockCoreConfig);
         when(mockCoreConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(httpHeaders);
         when(mockCoreConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
         when(mockCoreConfig.getAuthentications()).thenReturn(authentications);
         when(mockCoreConfig.getUserAgent()).thenReturn("APIMATIC3.0");
         when(mockCoreConfig.getHttpCallback()).thenReturn(httpCallback);
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(httpHeaders);
 
         // doNothing().when(authentication.apply(coreHttpRequest));
     }
@@ -535,13 +606,11 @@ public class RequestBuilderTest extends MockCoreRequest {
 
     private void prepareCompatibilityStub() {
         when(compatibilityFactory.createHttpHeaders(anyMap())).thenReturn(httpHeaders);
-        when(compatibilityFactory.createHttpRequest(any(Method.class),
-                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), any(Object.class)))
-                        .thenReturn(coreHttpRequest);
+        when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
+                any(HttpHeaders.class), anyMap(), any(Object.class))).thenReturn(coreHttpRequest);
 
-        when(compatibilityFactory.createHttpRequest(any(Method.class),
-                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
-                        .thenReturn(coreHttpRequest);
+        when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
+                any(HttpHeaders.class), anyMap(), anyList())).thenReturn(coreHttpRequest);
 
     }
 

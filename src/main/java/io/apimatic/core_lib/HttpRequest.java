@@ -41,8 +41,8 @@ public class HttpRequest {
      * @param bodySerializer
      * @throws IOException
      */
-    private HttpRequest(GlobalConfiguration coreConfig, String server, String path, Method httpMethod,
-            String authenticationKey, Map<String, Object> queryParams,
+    private HttpRequest(GlobalConfiguration coreConfig, String server, String path,
+            Method httpMethod, String authenticationKey, Map<String, Object> queryParams,
             Map<String, SimpleEntry<Object, Boolean>> templateParams,
             Map<String, List<String>> headerParams, Set<Parameter> formParams, Object body,
             Serializer bodySerializer, Map<String, Object> bodyParameters,
@@ -80,8 +80,8 @@ public class HttpRequest {
         }
     }
 
-    private Request buildRequest(Method httpMethod, Object body,
-            HttpHeaders headerParams, Map<String, Object> queryParams, Set<Parameter> formParams,
+    private Request buildRequest(Method httpMethod, Object body, HttpHeaders headerParams,
+            Map<String, Object> queryParams, Set<Parameter> formParams,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
             return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
@@ -130,13 +130,20 @@ public class HttpRequest {
 
     private HttpHeaders addHeaders(Map<String, List<String>> headerParams) {
         addGlobalHeader(headerParams);
+        addAdditionalHeaders(headerParams);
         return compatibilityFactory.createHttpHeaders(headerParams);
     }
 
     private void addGlobalHeader(Map<String, List<String>> headerParams) {
-        if (coreConfig.getGlobalHeaders() != null) {
-            headerParams.putAll(coreConfig.getGlobalHeaders().asMultimap());
-        }
+        coreConfig.getGlobalHeaders().forEach((key, value) -> {
+            if (!headerParams.containsKey(key)) {
+                headerParams.put(key, value);
+            }
+        });
+    }
+
+    private void addAdditionalHeaders(Map<String, List<String>> headerParams) {
+        headerParams.putAll(coreConfig.getAdditionalHeaders());
     }
 
     private Object buildBody(Object body, Serializer bodySerializer,
@@ -286,8 +293,9 @@ public class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = httpHeaderParameter.getValue() == null ? null : httpHeaderParameter.getValue().toString();
-            
+            String value = httpHeaderParameter.getValue() == null ? null
+                    : httpHeaderParameter.getValue().toString();
+
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
             } else {
@@ -367,7 +375,7 @@ public class HttpRequest {
                     authenticationKey, queryParams, templateParams, headerParams, formParams, body,
                     bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
-            
+
             if (coreConfig.getHttpCallback() != null) {
                 coreConfig.getHttpCallback().onBeforeRequest(coreHttpRequest);
             }

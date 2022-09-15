@@ -1,5 +1,9 @@
 package io.apimatic.core_lib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import io.apimatic.core_interfaces.authentication.Authentication;
@@ -16,7 +20,8 @@ public class GlobalConfiguration {
     private Map<String, Authentication> authentications;
     private HttpCallback httpCallback;
     private HttpClient httpClient;
-    private HttpHeaders globalHeaders;
+    private Map<String, List<String>> globalHeaders;
+    private Map<String, List<String>> additionalHeaders;
     private Function<String, String> baseUri;
 
     /**
@@ -33,7 +38,8 @@ public class GlobalConfiguration {
      */
     private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
-            HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalHeaders,
+            HttpCallback httpCallback, HttpClient httpClient,
+            Map<String, List<String>> globalHeaders, Map<String, List<String>> additionalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
@@ -41,14 +47,13 @@ public class GlobalConfiguration {
         this.authentications = authentications;
         this.httpCallback = httpCallback;
         this.httpClient = httpClient;
-        this.globalHeaders =
-                globalHeaders != null ? globalHeaders : compatibilityFactory.createHttpHeaders();
+        this.globalHeaders = globalHeaders != null ? globalHeaders : new HashMap<>();
+        this.additionalHeaders = additionalHeaders;
         this.baseUri = baseUri;
-
 
         if (this.userAgent != null) {
             this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
-            this.globalHeaders.add("user-agent", this.userAgent);
+            this.globalHeaders.put("user-agent", Arrays.asList(this.userAgent));
         }
     }
 
@@ -101,12 +106,20 @@ public class GlobalConfiguration {
 
     /**
      * 
-     * @return the HttpHeaders instance
+     * @return the Map of global headers
      */
-    public HttpHeaders getGlobalHeaders() {
+    public Map<String, List<String>> getGlobalHeaders() {
         return globalHeaders;
     }
 
+    /**
+     * 
+     * @return the Map of additional headers
+     */
+    public Map<String, List<String>> getAdditionalHeaders() {
+        return additionalHeaders;
+    }
+    
     /**
      * 
      * @return the baseUri function
@@ -116,8 +129,8 @@ public class GlobalConfiguration {
     }
 
     /**
-     * Builds a new {@link GlobalConfiguration.Builder} object. Creates the instance with the state of the
-     * current state.
+     * Builds a new {@link GlobalConfiguration.Builder} object. Creates the instance with the state
+     * of the current state.
      * 
      * @return a new {@link GlobalConfiguration.Builder} object
      */
@@ -136,7 +149,8 @@ public class GlobalConfiguration {
         private Map<String, Authentication> authentications;
         private HttpCallback httpCallback;
         private HttpClient httpClient;
-        private HttpHeaders globalHeaders;
+        private Map<String, List<String>> globalHeaders;
+        private Map<String, List<String>> additionalheaders = new HashMap<>();
         private Function<String, String> baseUri;
 
         /**
@@ -204,8 +218,24 @@ public class GlobalConfiguration {
          * @param headers value for HttpHeaders
          * @return Builder
          */
-        public Builder globalHeaders(HttpHeaders headers) {
+        public Builder globalHeaders(Map<String, List<String>> headers) {
             this.globalHeaders = headers;
+            return this;
+        }
+
+        /**
+         * 
+         * @param additional headers value for HttpHeaders
+         * @return Builder
+         */
+        public Builder additionalHeaders(String key, String value) {
+            if (additionalheaders.containsKey(key)) {
+                additionalheaders.get(key).add(value);
+            } else {
+                List<String> headerValues = new ArrayList<String>();
+                headerValues.add(value);
+                additionalheaders.put(key, headerValues);
+            }
             return this;
         }
 
@@ -225,8 +255,9 @@ public class GlobalConfiguration {
          * @return {@link GlobalConfiguration}
          */
         public GlobalConfiguration build() {
-            return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig, authentications,
-                    httpCallback, httpClient, globalHeaders, baseUri);
+            return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig,
+                    authentications, httpCallback, httpClient, globalHeaders, additionalheaders,
+                    baseUri);
         }
     }
 

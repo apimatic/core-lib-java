@@ -284,9 +284,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     private void prepareCoreConfigStub() throws IOException {
         when(mockCoreConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(httpHeaders);
         when(mockCoreConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
-        // when(mockCoreConfig.getHttpCallback()).thenReturn(httpCallback);
     }
 
     private void setExpectations() throws IOException {
