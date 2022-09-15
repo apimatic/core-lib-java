@@ -11,10 +11,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
-import io.apimatic.core_interfaces.http.CoreHttpMethod;
+import io.apimatic.core_interfaces.http.Method;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
-import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
+import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.request.MutliPartRequestType;
 import io.apimatic.core_interfaces.type.FileWrapper;
 import io.apimatic.core_interfaces.type.functional.Serializer;
@@ -22,9 +22,9 @@ import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
 import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
-public class Request {
-    private final CoreHttpRequest coreHttpRequest;
-    private final CoreConfig coreConfig;
+public class HttpRequest {
+    private final Request coreHttpRequest;
+    private final GlobalConfiguration coreConfig;
     private final StringBuilder urlBuilder;
     private final CompatibilityFactory compatibilityFactory;
 
@@ -41,7 +41,7 @@ public class Request {
      * @param bodySerializer
      * @throws IOException
      */
-    private Request(CoreConfig coreConfig, String server, String path, CoreHttpMethod httpMethod,
+    private HttpRequest(GlobalConfiguration coreConfig, String server, String path, Method httpMethod,
             String authenticationKey, Map<String, Object> queryParams,
             Map<String, SimpleEntry<Object, Boolean>> templateParams,
             Map<String, List<String>> headerParams, Set<Parameter> formParams, Object body,
@@ -60,9 +60,9 @@ public class Request {
 
     /**
      * 
-     * @return the {@link CoreHttpRequest} instance which is used for making {@link ApiCall}
+     * @return the {@link Request} instance which is used for making {@link ApiCall}
      */
-    public CoreHttpRequest getCoreHttpRequest() {
+    public Request getCoreHttpRequest() {
         return coreHttpRequest;
     }
 
@@ -80,7 +80,7 @@ public class Request {
         }
     }
 
-    private CoreHttpRequest buildRequest(CoreHttpMethod httpMethod, Object body,
+    private Request buildRequest(Method httpMethod, Object body,
             HttpHeaders headerParams, Map<String, Object> queryParams, Set<Parameter> formParams,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
@@ -179,7 +179,7 @@ public class Request {
     public static class Builder {
         private String server;
         private String path;
-        private CoreHttpMethod httpMethod;
+        private Method httpMethod;
         private String authenticationKey;
         private Map<String, Object> queryParams = new HashMap<>();
         private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<>();
@@ -217,7 +217,7 @@ public class Request {
          * @param httpMethod HttpMethod value for httpMethod
          * @return Builder
          */
-        public Builder httpMethod(CoreHttpMethod httpMethod) {
+        public Builder httpMethod(Method httpMethod) {
             this.httpMethod = httpMethod;
             return this;
         }
@@ -286,8 +286,8 @@ public class Request {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = httpHeaderParameter.getValue().toString();
-
+            String value = httpHeaderParameter.getValue() == null ? null : httpHeaderParameter.getValue().toString();
+            
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
             } else {
@@ -362,11 +362,11 @@ public class Request {
          * @return
          * @throws IOException
          */
-        public CoreHttpRequest build(CoreConfig coreConfig) throws IOException {
-            Request coreRequest = new Request(coreConfig, server, path, httpMethod,
+        public Request build(GlobalConfiguration coreConfig) throws IOException {
+            HttpRequest coreRequest = new HttpRequest(coreConfig, server, path, httpMethod,
                     authenticationKey, queryParams, templateParams, headerParams, formParams, body,
                     bodySerializer, bodyParameters, arraySerializationFormat);
-            CoreHttpRequest coreHttpRequest = coreRequest.getCoreHttpRequest();
+            Request coreHttpRequest = coreRequest.getCoreHttpRequest();
             
             if (coreConfig.getHttpCallback() != null) {
                 coreConfig.getHttpCallback().onBeforeRequest(coreHttpRequest);

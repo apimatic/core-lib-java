@@ -8,13 +8,13 @@ package io.apimatic.core_lib.types.http.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.apimatic.core_interfaces.http.HttpHeaders;
-import io.apimatic.core_interfaces.http.request.CoreMultipartFileWrapper;
+import io.apimatic.core_interfaces.http.request.MultipartFile;
 import io.apimatic.core_interfaces.type.FileWrapper;
 
 /**
  * Class to wrap file and headers to be sent as part of a multipart request.
  */
-public class MultipartFileWrapper implements CoreMultipartFileWrapper {
+public class MultipartFileWrapper implements MultipartFile {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileWrapper fileWrapper;

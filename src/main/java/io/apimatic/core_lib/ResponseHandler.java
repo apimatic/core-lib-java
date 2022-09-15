@@ -3,10 +3,10 @@ package io.apimatic.core_lib;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import io.apimatic.core_interfaces.http.CoreHttpContext;
-import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
+import io.apimatic.core_interfaces.http.Context;
+import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.request.ResponseClassType;
-import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_interfaces.type.functional.Deserializer;
 import io.apimatic.core_lib.types.ApiException;
 
@@ -38,7 +38,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
 
 
     /**
-     * This method is responsible for handle the {@link CoreHttpResponse} of {@link CoreHttpRequest}
+     * This method is responsible for handle the {@link Response} of {@link Request}
      * 
      * @param httpRequest
      * @param httpResponse
@@ -47,10 +47,10 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
      * @throws IOException
      * @throws ExceptionType
      */
-    public ResponseType handle(CoreHttpRequest httpRequest, CoreHttpResponse httpResponse,
-            CoreConfig coreConfig) throws IOException, ExceptionType {
+    public ResponseType handle(Request httpRequest, Response httpResponse,
+            GlobalConfiguration coreConfig) throws IOException, ExceptionType {
 
-        CoreHttpContext httpContext =
+        Context httpContext =
                 coreConfig.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
         if (coreConfig.getHttpCallback() != null) {
@@ -81,8 +81,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseType createResponseClassType(CoreHttpResponse httpResponse,
-            CoreConfig coreConfig) {
+    private ResponseType createResponseClassType(Response httpResponse,
+            GlobalConfiguration coreConfig) {
         switch (responseClassType) {
             case API_RESPONSE:
                 return (ResponseType) coreConfig.getCompatibilityFactory().createAPiResponse(
@@ -103,8 +103,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
      * @param httpContext
      * @throws ExceptionType
      */
-    private void validateResponse(CoreHttpContext httpContext) throws ExceptionType {
-        CoreHttpResponse response = httpContext.getResponse();
+    private void validateResponse(Context httpContext) throws ExceptionType {
+        Response response = httpContext.getResponse();
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
 

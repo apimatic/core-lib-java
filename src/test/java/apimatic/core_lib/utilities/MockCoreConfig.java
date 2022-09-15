@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import io.apimatic.core_lib.CoreConfig;
+import io.apimatic.core_lib.GlobalConfiguration;
 
 public class MockCoreConfig  extends CompatibilityFactoryMock{
 
@@ -16,10 +16,10 @@ public class MockCoreConfig  extends CompatibilityFactoryMock{
     public MockitoRule initRule = MockitoJUnit.rule(); 
     
     @Mock
-    protected static CoreConfig.Builder mockCoreConfigBuilder;
+    protected static GlobalConfiguration.Builder mockCoreConfigBuilder;
     
     @Mock
-    protected static CoreConfig mockCoreConfig;
+    protected static GlobalConfiguration mockCoreConfig;
 
   
 

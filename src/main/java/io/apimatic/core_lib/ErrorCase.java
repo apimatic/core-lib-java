@@ -1,6 +1,6 @@
 package io.apimatic.core_lib;
 
-import io.apimatic.core_interfaces.http.CoreHttpContext;
+import io.apimatic.core_interfaces.http.Context;
 import io.apimatic.core_interfaces.type.functional.ExceptionCreator;
 import io.apimatic.core_lib.types.ApiException;
 
@@ -26,7 +26,7 @@ public class ErrorCase<ExceptionType extends ApiException> {
      * @param httpContext
      * @throws ExceptionType
      */
-    public void throwException(CoreHttpContext httpContext) throws ExceptionType {
+    public void throwException(Context httpContext) throws ExceptionType {
         throw exceptionCreator.apply(reason, httpContext);
     }
 

@@ -9,7 +9,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import io.apimatic.core_lib.Request;
+import io.apimatic.core_lib.HttpRequest;
 import io.apimatic.core_lib.Parameter;
 
 public class MockCoreRequest extends MockCoreConfig {
@@ -19,7 +19,7 @@ public class MockCoreRequest extends MockCoreConfig {
 
     
     @Mock
-    Request.Builder coreRequestBuilder;
+    HttpRequest.Builder coreRequestBuilder;
     
     @Captor
     ArgumentCaptor<Consumer<Parameter.Builder>> argument;

@@ -3,7 +3,7 @@ package io.apimatic.core_lib.authentication;
 import java.util.HashMap;
 import java.util.Map;
 import io.apimatic.core_interfaces.authentication.Authentication;
-import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
+import io.apimatic.core_interfaces.http.request.Request;
 
 public class QueryAuth implements Authentication {
 
@@ -17,7 +17,7 @@ public class QueryAuth implements Authentication {
      * Apply the Query authentication
      */
     @Override
-    public CoreHttpRequest apply(CoreHttpRequest httpRequest) {
+    public Request apply(Request httpRequest) {
         authParams.forEach((key, value) -> {
             httpRequest.addQueryParameter(key, value);
         });

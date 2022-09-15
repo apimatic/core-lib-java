@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.Map;
 
 import io.apimatic.core_interfaces.http.HttpHeaders;
-import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_lib.utilities.CoreHelper;
 import io.apimatic.core_interfaces.http.response.DynamicType;
 
@@ -21,7 +21,7 @@ import io.apimatic.core_interfaces.http.response.DynamicType;
  * a primitive or a more complex type using parse().
  */
 public class Dynamic implements DynamicType {
-    private CoreHttpResponse response;
+    private Response response;
     private String responseString;
 
     public Dynamic() {}
@@ -31,7 +31,7 @@ public class Dynamic implements DynamicType {
      * 
      * @param responseBody The object of HttpResponse
      */
-    public Dynamic(CoreHttpResponse responseBody) {
+    public Dynamic(Response responseBody) {
         this.response = responseBody;
     }
 

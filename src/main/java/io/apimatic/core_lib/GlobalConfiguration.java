@@ -9,7 +9,7 @@ import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
-public class CoreConfig {
+public class GlobalConfiguration {
     private CompatibilityFactory compatibilityFactory;
     private String userAgent;
     private Map<String, String> userAgentConfig;
@@ -31,7 +31,7 @@ public class CoreConfig {
      * @param globalHeaders
      * @param baseUri
      */
-    private CoreConfig(CompatibilityFactory compatibilityFactory, String userAgent,
+    private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
             HttpCallback httpCallback, HttpClient httpClient, HttpHeaders globalHeaders,
             Function<String, String> baseUri) {
@@ -116,10 +116,10 @@ public class CoreConfig {
     }
 
     /**
-     * Builds a new {@link CoreConfig.Builder} object. Creates the instance with the state of the
+     * Builds a new {@link GlobalConfiguration.Builder} object. Creates the instance with the state of the
      * current state.
      * 
-     * @return a new {@link CoreConfig.Builder} object
+     * @return a new {@link GlobalConfiguration.Builder} object
      */
     public Builder toBuilder() {
         Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
@@ -220,12 +220,12 @@ public class CoreConfig {
         }
 
         /**
-         * Builds a new {@link CoreConfig} object using the set fields.
+         * Builds a new {@link GlobalConfiguration} object using the set fields.
          * 
-         * @return {@link CoreConfig}
+         * @return {@link GlobalConfiguration}
          */
-        public CoreConfig build() {
-            return new CoreConfig(compatibilityFactory, userAgent, userAgentConfig, authentications,
+        public GlobalConfiguration build() {
+            return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig, authentications,
                     httpCallback, httpClient, globalHeaders, baseUri);
         }
     }

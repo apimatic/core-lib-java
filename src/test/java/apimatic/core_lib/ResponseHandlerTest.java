@@ -20,14 +20,14 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import apimatic.core_lib.exceptions.GlobalTestException;
 import apimatic.core_lib.utilities.MockCoreRequest;
-import io.apimatic.core_interfaces.http.CoreHttpContext;
-import io.apimatic.core_interfaces.http.CoreHttpMethod;
+import io.apimatic.core_interfaces.http.Context;
+import io.apimatic.core_interfaces.http.Method;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
 import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_interfaces.http.request.ResponseClassType;
 import io.apimatic.core_interfaces.http.response.ApiResponseType;
-import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_interfaces.http.response.DynamicType;
 import io.apimatic.core_lib.ApiCall;
 import io.apimatic.core_lib.ResponseHandler;
@@ -52,10 +52,10 @@ public class ResponseHandlerTest extends MockCoreRequest {
     private ResponseHandler<?, ?> responseHandler;
 
     @Mock
-    private CoreHttpResponse coreHttpResponse;
+    private Response coreHttpResponse;
 
     @Mock
-    private CoreHttpContext context;
+    private Context context;
 
     @Mock
     private HttpCallback httpCallback;
@@ -225,8 +225,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
         int expectedResponseCode = 209;
         int actualResponseCode = apiException.getResponseCode();
         
-        CoreHttpContext expectedContext = context;
-        CoreHttpContext actualContext = apiException.getHttpContext();
+        Context expectedContext = context;
+        Context actualContext = apiException.getHttpContext();
         
         assertEquals(actualContext, expectedContext);
         assertEquals(actualResponseCode, expectedResponseCode);
@@ -298,10 +298,10 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     private void prepareCompatibilityStub() {
         when(compatibilityFactory.createHttpHeaders(anyMap())).thenReturn(httpHeaders);
-        when(compatibilityFactory.createHttpRequest(any(CoreHttpMethod.class),
+        when(compatibilityFactory.createHttpRequest(any(Method.class),
                 any(StringBuilder.class), any(HttpHeaders.class), anyMap(), any(Object.class)))
                         .thenReturn(coreHttpRequest);
-        when(compatibilityFactory.createHttpRequest(any(CoreHttpMethod.class),
+        when(compatibilityFactory.createHttpRequest(any(Method.class),
                 any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
                         .thenReturn(coreHttpRequest);
         when(compatibilityFactory.createHttpContext(coreHttpRequest, coreHttpResponse))

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import io.apimatic.core_interfaces.http.HttpHeaders;
-import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_lib.types.http.response.Dynamic;
 
 public class DynamicTest {
@@ -25,7 +25,7 @@ public class DynamicTest {
     public MockitoRule initRule = MockitoJUnit.rule();
 
     @Mock
-    private CoreHttpResponse coreHttpResponse;
+    private Response coreHttpResponse;
 
     @Mock
     private HttpHeaders headers;

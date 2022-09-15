@@ -1,10 +1,10 @@
 package io.apimatic.core_lib.configurations.http.request;
 
 import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
-import io.apimatic.core_interfaces.http.request.configuration.CoreEndpointConfiguration;
+import io.apimatic.core_interfaces.http.request.configuration.EndpointSetting;
 import io.apimatic.core_interfaces.http.request.configuration.RetryOption;
 
-public class EndpointConfiguration implements CoreEndpointConfiguration {
+public class EndpointConfiguration implements EndpointSetting {
 
     private final boolean hasBinaryResponse;
     private final RetryOption retryOption;

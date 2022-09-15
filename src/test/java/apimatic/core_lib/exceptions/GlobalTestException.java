@@ -8,7 +8,7 @@ package apimatic.core_lib.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import io.apimatic.core_interfaces.http.CoreHttpContext;
+import io.apimatic.core_interfaces.http.Context;
 import io.apimatic.core_lib.types.ApiException;
 
 /**
@@ -25,7 +25,7 @@ public class GlobalTestException extends ApiException {
      * @param reason The reason for throwing exception
      * @param context The http context of the API exception
      */
-    public GlobalTestException(String reason, CoreHttpContext context) {
+    public GlobalTestException(String reason, Context context) {
         super(reason, context);
     }
 

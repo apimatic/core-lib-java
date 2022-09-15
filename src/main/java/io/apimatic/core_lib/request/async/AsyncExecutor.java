@@ -3,16 +3,16 @@ package io.apimatic.core_lib.request.async;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
-import io.apimatic.core_lib.CoreConfig;
+import io.apimatic.core_interfaces.http.request.Request;
+import io.apimatic.core_lib.GlobalConfiguration;
 import io.apimatic.core_lib.types.ApiException;
 
 
 public class AsyncExecutor {
 
-    private CoreConfig coreConfig;
+    private GlobalConfiguration coreConfig;
 
-    public AsyncExecutor(CoreConfig coreConfig) {
+    public AsyncExecutor(GlobalConfiguration coreConfig) {
         this.coreConfig = coreConfig;
     }
 
@@ -28,7 +28,7 @@ public class AsyncExecutor {
     public <ResponseType, ExceptionType extends ApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
             RequestSupplier requestSupplier, RequestExecutor requestExecutor,
             AsyncResponseHandler<ResponseType, ExceptionType> responseHandler) {
-        final CoreHttpRequest request;
+        final Request request;
         try {
             request = requestSupplier.supply();
         } catch (Exception e) {

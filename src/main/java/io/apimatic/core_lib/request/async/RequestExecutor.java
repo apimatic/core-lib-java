@@ -2,8 +2,8 @@ package io.apimatic.core_lib.request.async;
 
 import java.util.concurrent.CompletableFuture;
 
-import io.apimatic.core_interfaces.http.request.CoreHttpRequest;
-import io.apimatic.core_interfaces.http.response.CoreHttpResponse;
+import io.apimatic.core_interfaces.http.request.Request;
+import io.apimatic.core_interfaces.http.response.Response;
 
 @FunctionalInterface
 public interface RequestExecutor {
@@ -14,5 +14,5 @@ public interface RequestExecutor {
      * @param request The given HttpRequest to execute
      * @return CompletableFuture of HttpResponse after execution
      */
-    CompletableFuture<CoreHttpResponse> execute(CoreHttpRequest request);
+    CompletableFuture<Response> execute(Request request);
 }
