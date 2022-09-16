@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This is a utility class for DateTime operations.
+ * This is a utility class for LocalDateTime operations.
  */
 public class LocalDateTimeHelper extends DateHelper {
     /**

@@ -10,9 +10,12 @@ import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
-import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
+/**
+ * A class which hold the global configuration properties to make a successful Api Call
+ *
+ */
 public class GlobalConfiguration {
     private CompatibilityFactory compatibilityFactory;
     private String userAgent;
@@ -119,7 +122,7 @@ public class GlobalConfiguration {
     public Map<String, List<String>> getAdditionalHeaders() {
         return additionalHeaders;
     }
-    
+
     /**
      * 
      * @return the baseUri function

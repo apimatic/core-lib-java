@@ -5,6 +5,10 @@ import java.util.concurrent.CompletableFuture;
 import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.response.Response;
 
+/**
+ * A Request executor that executes request and returns the response asynchronously 
+ *
+ */
 @FunctionalInterface
 public interface RequestExecutor {
 

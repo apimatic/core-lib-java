@@ -10,6 +10,13 @@ import io.apimatic.core_lib.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core_lib.request.async.AsyncExecutor;
 import io.apimatic.core_lib.types.ApiException;
 
+/**
+ * An API call, or API request, is a message sent to a server asking an API to provide a service or
+ * information
+ *
+ * @param <ResponseType> resource from server
+ * @param <ExceptionType> in case of a problem or the connection was aborted
+ */
 public class ApiCall<ResponseType, ExceptionType extends ApiException> {
 
     private final GlobalConfiguration coreConfig;
@@ -73,8 +80,7 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @throws ExceptionType
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse =
-                coreConfig.getHttpClient().execute(request, endpointConfiguration);
+        Response httpResponse = coreConfig.getHttpClient().execute(request, endpointConfiguration);
         return responseHandler.handle(request, httpResponse, coreConfig);
     }
 

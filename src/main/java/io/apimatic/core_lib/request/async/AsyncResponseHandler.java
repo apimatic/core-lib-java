@@ -6,7 +6,12 @@ import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_lib.GlobalConfiguration;
 import io.apimatic.core_lib.types.ApiException;
-
+/**
+ * A Handler that handles the response asynchronously
+ *
+ * @param <T> A response that is determined
+ * @param <ExceptionType> in case of a problem
+ */
 @FunctionalInterface
 public interface AsyncResponseHandler<T, ExceptionType extends ApiException> {
     /**

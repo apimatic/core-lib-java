@@ -12,9 +12,9 @@ import io.apimatic.core_interfaces.http.request.Request;
 @FunctionalInterface
 public interface RequestSupplier {
     /**
-     * Supplies the HttpRequest object.
+     * Supplies the Request object.
      * 
-     * @return An object of type HttpRequest
+     * @return An object of type Request
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
     Request supply() throws IOException;

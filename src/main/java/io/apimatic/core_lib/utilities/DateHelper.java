@@ -15,19 +15,25 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+/**
+ * This is a utility class for Date operations.
+ *
+ */
 public class DateHelper {
 
-	/**
+    /**
      * Parse a simple date string to a LocalDate object.
+     * 
      * @param date The date string
      * @return The parsed LocalDate object
      */
     public static LocalDate fromSimpleDate(String date) {
         return LocalDate.parse(date);
     }
-    
+
     /**
      * Convert a LocalDate object to a string.
+     * 
      * @param value The LocalDate object to convert
      * @return The converted Strings
      */
@@ -37,6 +43,7 @@ public class DateHelper {
 
     /**
      * Convert a List of LocalDate objects to strings.
+     * 
      * @param values The List of LocalDate objects to convert
      * @return The List of converted Strings
      */
@@ -45,7 +52,7 @@ public class DateHelper {
             return null;
         }
         List<String> valuesAsString = new ArrayList<>();
-        for (LocalDate value: values) {
+        for (LocalDate value : values) {
             valuesAsString.add(toSimpleDate(value));
         }
         return valuesAsString;
@@ -53,6 +60,7 @@ public class DateHelper {
 
     /**
      * Convert a Map of LocalDate objects to strings.
+     * 
      * @param values The Map of LocalDate objects to convert
      * @return The Map of converted Strings
      */
@@ -61,7 +69,7 @@ public class DateHelper {
             return null;
         }
         Map<String, String> valuesAsString = new HashMap<>();
-        for (Map.Entry<String, LocalDate> value: values.entrySet()) {
+        for (Map.Entry<String, LocalDate> value : values.entrySet()) {
             valuesAsString.put(value.getKey(), toSimpleDate(value.getValue()));
         }
         return valuesAsString;
@@ -69,6 +77,7 @@ public class DateHelper {
 
     /**
      * Convert a List of Map of LocalDate objects to strings.
+     * 
      * @param values The List of Map of LocalDate objects to convert
      * @return The list of map of converted Strings
      */
@@ -95,7 +104,7 @@ public class DateHelper {
             return fromSimpleDate(jp.getValueAsString());
         }
     }
-    
+
     /**
      * A class to handle serialization of LocalDate objects to date strings.
      */

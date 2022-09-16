@@ -4,14 +4,17 @@ import io.apimatic.core_interfaces.http.request.ArraySerializationFormat;
 import io.apimatic.core_interfaces.http.request.configuration.EndpointSetting;
 import io.apimatic.core_interfaces.http.request.configuration.RetryOption;
 
+/**
+ * The configuration for an endpoint.
+ *
+ */
 public class EndpointConfiguration implements EndpointSetting {
 
     private final boolean hasBinaryResponse;
     private final RetryOption retryOption;
     private final ArraySerializationFormat arraySerializationFormat;
 
-    public EndpointConfiguration(boolean hasBinary,
-            RetryOption retryOption,
+    public EndpointConfiguration(boolean hasBinary, RetryOption retryOption,
             ArraySerializationFormat arraySerializationFormat) {
         this.hasBinaryResponse = hasBinary;
         this.retryOption = retryOption;
@@ -43,7 +46,8 @@ public class EndpointConfiguration implements EndpointSetting {
     public static class Builder {
         private boolean hasBinaryResponse;
         private RetryOption retryOption = RetryOption.DEFAULT;;
-        private ArraySerializationFormat arraySerializationFormat = ArraySerializationFormat.INDEXED;
+        private ArraySerializationFormat arraySerializationFormat =
+                ArraySerializationFormat.INDEXED;
 
         public Builder hasBinaryResponse(boolean hasBinary) {
             this.hasBinaryResponse = hasBinary;
@@ -55,8 +59,7 @@ public class EndpointConfiguration implements EndpointSetting {
          * @param retryOption
          * @return {@link EndpointConfiguration.Builder}
          */
-        public Builder retryOption(
-                RetryOption retryOption) {
+        public Builder retryOption(RetryOption retryOption) {
             this.retryOption = retryOption;
             return this;
         }

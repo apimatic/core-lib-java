@@ -10,6 +10,12 @@ import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_interfaces.type.functional.Deserializer;
 import io.apimatic.core_lib.types.ApiException;
 
+/**
+ * Handler that encapsulates the process of generating a response object from a Response.
+ *
+ * @param <ResponseType> The response to process
+ * @param <ExceptionType> in case of a problem
+ */
 public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
 
     private final Map<String, ErrorCase<ExceptionType>> localErrorCases;
@@ -38,7 +44,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
 
 
     /**
-     * This method is responsible for handle the {@link Response} of {@link Request}
+     * Processes an HttpResponse and returns some value corresponding to that response.
      * 
      * @param httpRequest
      * @param httpResponse

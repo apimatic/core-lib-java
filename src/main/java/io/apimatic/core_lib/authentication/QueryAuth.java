@@ -5,6 +5,11 @@ import java.util.Map;
 import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.http.request.Request;
 
+/**
+ * QueryAuth is an implementation of {@link Authentication} that supports HTTP authentication
+ * through Query parameters
+ *
+ */
 public class QueryAuth implements Authentication {
 
     private Map<String, String> authParams = new HashMap<>();

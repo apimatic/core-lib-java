@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 /**
- * This is a utility class for DateTime operations.
+ * This is a utility class for ZonedDateTime operations.
  */
 public class ZonedDateTimeHelper extends DateHelper {
 	/**

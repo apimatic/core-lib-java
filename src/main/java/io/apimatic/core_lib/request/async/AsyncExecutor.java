@@ -7,7 +7,10 @@ import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_lib.GlobalConfiguration;
 import io.apimatic.core_lib.types.ApiException;
 
-
+/**
+ * Executor service for asynchronous HTTP endpoint call
+ *
+ */
 public class AsyncExecutor {
 
     private GlobalConfiguration coreConfig;

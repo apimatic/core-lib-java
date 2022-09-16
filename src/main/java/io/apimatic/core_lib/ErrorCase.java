@@ -4,6 +4,11 @@ import io.apimatic.core_interfaces.http.Context;
 import io.apimatic.core_interfaces.type.functional.ExceptionCreator;
 import io.apimatic.core_lib.types.ApiException;
 
+/**
+ * A class is responsible to generate the SDK Exception.
+ *
+ * @param <ExceptionType>
+ */
 public class ErrorCase<ExceptionType extends ApiException> {
     public static final String DEFAULT = "DEFAULT";
     private String reason;

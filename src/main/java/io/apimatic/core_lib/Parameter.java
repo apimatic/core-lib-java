@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import io.apimatic.core_interfaces.http.request.MutliPartRequestType;
 
+/**
+ * HTTP parameters consist of a type, a name, and a value. These parameters appear in the header and
+ * body of an HTTP request.
+ *
+ */
 public class Parameter {
 
     private final String key;
@@ -19,7 +24,7 @@ public class Parameter {
     /**
      * A private constructor
      * 
-     * @param key the parameter key 
+     * @param key the parameter key
      * @param value the parameter value
      * @param isRequired is used for validation
      * @param shouldEncode is used for encoding template parameter
