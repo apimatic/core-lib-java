@@ -22,6 +22,14 @@ import io.apimatic.core_lib.types.http.request.MultipartFileWrapper;
 import io.apimatic.core_lib.types.http.request.MultipartWrapper;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
+/**
+ * An HttpRequest instance is built through an HttpRequest builder. A request's URI, headers, and
+ * body can be set. Request bodies are provided through a body supplied to one of the POST, PUT or
+ * method methods. Once all required parameters have been set in the builder, build will return the
+ * HttpRequest. Builders can be copied and modified many times in order to build multiple related
+ * requests that differ in some parameters.
+ *
+ */
 public class HttpRequest {
     private final Request coreHttpRequest;
     private final GlobalConfiguration coreConfig;

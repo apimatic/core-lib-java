@@ -9,14 +9,15 @@ import io.apimatic.core_lib.utilities.CoreHelper;
  * This is the base class for all exceptions that represent an error response from the server.
  */
 public class ApiException extends Exception {
-    //UID for serialization
+    // UID for serialization
     private static final long serialVersionUID = 6424174253911720338L;
 
-    //private fields
+    // private fields
     private Context httpContext;
 
     /**
      * Initialization constructor.
+     * 
      * @param reason The reason for throwing exception
      */
     public ApiException(String reason) {
@@ -25,16 +26,17 @@ public class ApiException extends Exception {
 
     /**
      * Initialization constructor.
-     * @param   reason  The reason for throwing exception
-     * @param   context The http context of the API exception
+     * 
+     * @param reason The reason for throwing exception
+     * @param context The http context of the API exception
      */
     public ApiException(String reason, Context context) {
         super(reason);
         this.httpContext = context;
 
-        //if a derived exception class is used, then perform deserialization of response body
+        // if a derived exception class is used, then perform deserialization of response body
         if ((context == null) || (context.getResponse() == null)
-            || (context.getResponse().getRawBody() == null)) {
+                || (context.getResponse().getRawBody() == null)) {
             return;
         }
 
@@ -45,7 +47,7 @@ public class ApiException extends Exception {
                 // In case of IOException JsonNode cannot be detected.
                 CoreHelper.mapper.readerForUpdating(this).readValue(jsonNode);
             }
-        } catch (IOException ioException) { 
+        } catch (IOException ioException) {
             // Can throw exception while object mapper tries to:
             // Deserialize the content as JSON tree.
             // Convert results from JSON tree into given value type.
@@ -54,17 +56,19 @@ public class ApiException extends Exception {
 
     /**
      * The HTTP response code from the API request.
-     * @return   Returns the response code for ApiException
+     * 
+     * @return Returns the response code for ApiException
      */
-	public int getResponseCode() {
+    public int getResponseCode() {
         return (httpContext != null) ? httpContext.getResponse().getStatusCode() : -1;
     }
 
     /**
      * The HTTP response body from the API request.
-     * @return   Returns the object of HttpContext for ApiException
+     * 
+     * @return Returns the object of HttpContext for ApiException
      */
-	public Context getHttpContext() {
+    public Context getHttpContext() {
         return httpContext;
     }
 }

@@ -11,7 +11,7 @@ import io.apimatic.core_interfaces.type.functional.Deserializer;
 import io.apimatic.core_lib.types.ApiException;
 
 /**
- * Handler that encapsulates the process of generating a response object from a Response.
+ * Handler that encapsulates the process of generating a response object from a Response
  *
  * @param <ResponseType> The response to process
  * @param <ExceptionType> in case of a problem

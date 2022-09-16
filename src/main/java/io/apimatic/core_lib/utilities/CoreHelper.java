@@ -928,7 +928,7 @@ public class CoreHelper {
             }
             processed.add(objName.hashCode());
         }
- 
+
         // Process arrays
         if (obj instanceof Collection<?>) {
             objectToList(objName, (Collection<?>) obj, objectList, processed,
@@ -1105,7 +1105,7 @@ public class CoreHelper {
             JsonSerializer<?> serializer = getCollectionCustomSerializer(formSerializerAnnotation);
             loadKeyValueUsingSerializer(key, value, objectList, processed, serializer,
                     arraySerializationFormat);
-         } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
@@ -1127,6 +1127,16 @@ public class CoreHelper {
         }
         if (isWrapperType(value)) {
             objectList.add(new SimpleEntry<String, Object>(key, value));
+        } else if (value.getClass().equals(JsonObject.class)) {
+            objectToList(key, ((JsonObject) value).getStoredObject(), objectList, processed,
+                    arraySerializationFormat);
+        } else if (value.getClass().equals(JsonValue.class)) {
+            Object storedValue = ((JsonValue) value).getStoredObject();
+            if (isWrapperType(storedValue)) {
+                objectList.add(new SimpleEntry<String, Object>(key, storedValue));
+            } else {
+                objectToList(key, storedValue, objectList, processed, arraySerializationFormat);
+            }
         } else if (value instanceof UUID) {
             // UUIDs can be converted to string
             objectList.add(new SimpleEntry<String, Object>(key, value.toString()));
