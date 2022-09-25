@@ -35,8 +35,8 @@ public class CoreConfigTest extends MockCoreConfig {
 
     @Test
     public void testCoreConfig() throws IOException {
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.coreConfig(mockCoreConfig).build();
-        assertEquals(apiCall.getCoreConfig(), mockCoreConfig);
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
+        assertEquals(apiCall.getGlobalConfig(), mockCoreConfig);
     }
 
 
@@ -50,10 +50,10 @@ public class CoreConfigTest extends MockCoreConfig {
 
     @Test
     public void testCoreConfigCompatibility() throws IOException {
-        when(mockApiCall.getCoreConfig().getCompatibilityFactory())
+        when(mockApiCall.getGlobalConfig().getCompatibilityFactory())
                 .thenReturn(compatibilityFactory);
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.coreConfig(mockCoreConfig).build();
-        assertEquals(apiCall.getCoreConfig().getCompatibilityFactory(), compatibilityFactory);
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
+        assertEquals(apiCall.getGlobalConfig().getCompatibilityFactory(), compatibilityFactory);
     }
 
     // @Test
@@ -65,9 +65,9 @@ public class CoreConfigTest extends MockCoreConfig {
 
     @Test
     public void testCoreConfigUserAgent() throws IOException {
-        when(mockApiCall.getCoreConfig().getUserAgent()).thenReturn("APIMATIC3.0");
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.coreConfig(mockCoreConfig).build();
-        assertEquals(apiCall.getCoreConfig().getUserAgent(), "APIMATIC3.0");
+        when(mockApiCall.getGlobalConfig().getUserAgent()).thenReturn("APIMATIC3.0");
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
+        assertEquals(apiCall.getGlobalConfig().getUserAgent(), "APIMATIC3.0");
     }
 
     // @Test
@@ -80,9 +80,9 @@ public class CoreConfigTest extends MockCoreConfig {
     // }
 
     private void setConditions() throws IOException {
-        doReturn(mockApiCallBuilder).when(mockApiCallBuilder).coreConfig(mockCoreConfig);
+        doReturn(mockApiCallBuilder).when(mockApiCallBuilder).globalConfig(mockCoreConfig);
         doReturn(mockApiCall).when(mockApiCallBuilder).build();
-        doReturn(mockCoreConfig).when(mockApiCall).getCoreConfig();
+        doReturn(mockCoreConfig).when(mockApiCall).getGlobalConfig();
     }
 
 }

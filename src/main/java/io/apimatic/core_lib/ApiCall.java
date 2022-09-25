@@ -19,7 +19,7 @@ import io.apimatic.core_lib.types.ApiException;
  */
 public class ApiCall<ResponseType, ExceptionType extends ApiException> {
 
-    private final GlobalConfiguration coreConfig;
+    private final GlobalConfiguration globalConfig;
     private final Request request;
     private final ResponseHandler<ResponseType, ExceptionType> responseHandler;
     private final EndpointSetting endpointConfiguration;
@@ -27,15 +27,15 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
     /**
      * ApiCall constructor
      * 
-     * @param coreConfig the required configuration to built the ApiCall
+     * @param globalConfig the required configuration to built the ApiCall
      * @param coreHttpRequest Http request for the api call
      * @param responseHandler the handler for the response
      * @param coreEndpointConfiguration endPoint configuration
      */
-    private ApiCall(GlobalConfiguration coreConfig, Request coreHttpRequest,
+    private ApiCall(GlobalConfiguration globalConfig, Request coreHttpRequest,
             ResponseHandler<ResponseType, ExceptionType> responseHandler,
             EndpointSetting coreEndpointConfiguration) {
-        this.coreConfig = coreConfig;
+        this.globalConfig = globalConfig;
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
@@ -45,8 +45,8 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * 
      * @return the {@link GlobalConfiguration} instance
      */
-    public GlobalConfiguration getCoreConfig() {
-        return this.coreConfig;
+    public GlobalConfiguration getGlobalConfig() {
+        return this.globalConfig;
     }
 
     /**
@@ -80,8 +80,8 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @throws ExceptionType
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse = coreConfig.getHttpClient().execute(request, endpointConfiguration);
-        return responseHandler.handle(request, httpResponse, coreConfig);
+        Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        return responseHandler.handle(request, httpResponse, globalConfig);
     }
 
     /**
@@ -92,10 +92,10 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @throws ExceptionType
      */
     public CompletableFuture<ResponseType> executeAsync() {
-        return new AsyncExecutor(coreConfig).makeHttpCallAsync(() -> request,
-                request -> coreConfig.getHttpClient().executeAsync(request, endpointConfiguration),
+        return new AsyncExecutor(globalConfig).makeHttpCallAsync(() -> request,
+                request -> globalConfig.getHttpClient().executeAsync(request, endpointConfiguration),
                 (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
-                        httpResponse, coreConfig));
+                        httpResponse, globalConfig));
     }
 
     /**
@@ -106,7 +106,7 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @param <ExceptionType>
      */
     public static class Builder<ResponseType, ExceptionType extends ApiException> {
-        private GlobalConfiguration coreConfig;
+        private GlobalConfiguration globalConfig;
         private HttpRequest.Builder requestBuilder = new HttpRequest.Builder();
         private ResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder =
                 new ResponseHandler.Builder<ResponseType, ExceptionType>();
@@ -115,11 +115,11 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
                 new EndpointConfiguration.Builder();
 
         /**
-         * @param coreConfig the configuration of Http Request
+         * @param globalConfig the configuration of Http Request
          * @return {@link ApiCall.Builder}
          */
-        public Builder<ResponseType, ExceptionType> coreConfig(GlobalConfiguration coreConfig) {
-            this.coreConfig = coreConfig;
+        public Builder<ResponseType, ExceptionType> globalConfig(GlobalConfiguration globalConfig) {
+            this.globalConfig = globalConfig;
             return this;
         }
 
@@ -166,8 +166,8 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
          * @throws IOException
          */
         public ApiCall<ResponseType, ExceptionType> build() throws IOException {
-            return new ApiCall<ResponseType, ExceptionType>(coreConfig,
-                    requestBuilder.build(coreConfig), responseHandlerBuilder.build(),
+            return new ApiCall<ResponseType, ExceptionType>(globalConfig,
+                    requestBuilder.build(globalConfig), responseHandlerBuilder.build(),
                     endpointConfigurationBuilder.build());
         }
     }

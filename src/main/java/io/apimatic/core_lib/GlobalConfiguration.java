@@ -10,6 +10,7 @@ import io.apimatic.core_interfaces.authentication.Authentication;
 import io.apimatic.core_interfaces.compatibility.CompatibilityFactory;
 import io.apimatic.core_interfaces.http.HttpCallback;
 import io.apimatic.core_interfaces.http.HttpClient;
+import io.apimatic.core_interfaces.http.HttpHeaders;
 import io.apimatic.core_lib.utilities.CoreHelper;
 
 /**
@@ -24,7 +25,7 @@ public class GlobalConfiguration {
     private HttpCallback httpCallback;
     private HttpClient httpClient;
     private Map<String, List<String>> globalHeaders;
-    private Map<String, List<String>> additionalHeaders;
+    private HttpHeaders additionalHeaders;
     private Function<String, String> baseUri;
 
     /**
@@ -42,7 +43,7 @@ public class GlobalConfiguration {
     private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
             HttpCallback httpCallback, HttpClient httpClient,
-            Map<String, List<String>> globalHeaders, Map<String, List<String>> additionalHeaders,
+            Map<String, List<String>> globalHeaders, HttpHeaders additionalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
@@ -119,7 +120,7 @@ public class GlobalConfiguration {
      * 
      * @return the Map of additional headers
      */
-    public Map<String, List<String>> getAdditionalHeaders() {
+    public HttpHeaders getAdditionalHeaders() {
         return additionalHeaders;
     }
 
@@ -153,7 +154,7 @@ public class GlobalConfiguration {
         private HttpCallback httpCallback;
         private HttpClient httpClient;
         private Map<String, List<String>> globalHeaders;
-        private Map<String, List<String>> additionalheaders = new HashMap<>();
+        private HttpHeaders additionalheaders;
         private Function<String, String> baseUri;
 
         /**
@@ -231,14 +232,8 @@ public class GlobalConfiguration {
          * @param additional headers value for HttpHeaders
          * @return Builder
          */
-        public Builder additionalHeaders(String key, String value) {
-            if (additionalheaders.containsKey(key)) {
-                additionalheaders.get(key).add(value);
-            } else {
-                List<String> headerValues = new ArrayList<String>();
-                headerValues.add(value);
-                additionalheaders.put(key, headerValues);
-            }
+        public Builder additionalHeaders(HttpHeaders additionalHeaders) {
+            this.additionalheaders = additionalHeaders;
             return this;
         }
 

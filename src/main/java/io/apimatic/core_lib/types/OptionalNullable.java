@@ -1,4 +1,3 @@
-
 package io.apimatic.core_lib.types;
 
 import com.fasterxml.jackson.core.JsonGenerator;
