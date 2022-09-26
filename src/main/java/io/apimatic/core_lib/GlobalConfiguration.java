@@ -141,7 +141,7 @@ public class GlobalConfiguration {
     public Builder toBuilder() {
         Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
                 .userAgent(userAgent).authentication(authentications).httpCallback(httpCallback)
-                .httpClient(httpClient).globalHeaders(globalHeaders).baseUri(baseUri);
+                .httpClient(httpClient).globalHeader(globalHeaders).baseUri(baseUri);
         return builder;
 
     }
@@ -219,11 +219,27 @@ public class GlobalConfiguration {
 
         /**
          * 
+         * @param global header key value
+         * @return Builder
+         */
+        public Builder globalHeader(String key, String value) {
+            if (globalHeaders.containsKey(key)) {
+                globalHeaders.get(key).add(value);
+            } else {
+                List<String> headerValues = new ArrayList<String>();
+                headerValues.add(value);
+                globalHeaders.put(key, headerValues);
+            }
+            return this;
+        }
+        
+        /**
+         * 
          * @param headers value for HttpHeaders
          * @return Builder
          */
-        public Builder globalHeaders(Map<String, List<String>> headers) {
-            this.globalHeaders = headers;
+        private Builder globalHeader(Map<String, List<String>> headers) {
+            globalHeaders = headers;
             return this;
         }
 
