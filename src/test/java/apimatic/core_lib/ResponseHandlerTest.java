@@ -307,7 +307,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
         when(compatibilityFactory.createDynamicResponse(coreHttpResponse)).thenReturn(dynamicType);
 
-        when(compatibilityFactory.createAPiResponse(any(int.class), any(HttpHeaders.class),
+        when(compatibilityFactory.createApiResponse(any(int.class), any(HttpHeaders.class),
                 any(String.class))).thenReturn(apiResponseType);
     }
 

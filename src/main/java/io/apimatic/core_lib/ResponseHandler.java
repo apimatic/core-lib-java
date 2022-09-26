@@ -91,7 +91,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
             GlobalConfiguration coreConfig) {
         switch (responseClassType) {
             case API_RESPONSE:
-                return (ResponseType) coreConfig.getCompatibilityFactory().createAPiResponse(
+                return (ResponseType) coreConfig.getCompatibilityFactory().createApiResponse(
                         httpResponse.getStatusCode(), httpResponse.getHeaders(),
                         httpResponse.getBody());
             case DYNAMIC_RESPONSE:

@@ -595,8 +595,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         when(mockCoreConfig.getAuthentications()).thenReturn(authentications);
         when(mockCoreConfig.getUserAgent()).thenReturn("APIMATIC3.0");
         when(mockCoreConfig.getHttpCallback()).thenReturn(httpCallback);
-
-        // doNothing().when(authentication.apply(coreHttpRequest));
+        when(mockCoreConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
     }
 
     private void setExpectations() throws IOException {
