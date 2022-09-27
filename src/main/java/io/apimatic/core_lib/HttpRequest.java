@@ -106,10 +106,11 @@ public class HttpRequest {
     /**
      * @param compatibilityFactory
      * @return
+     * @throws IOException 
      */
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
             Map<String, Object> optionalFormParamaters,
-            ArraySerializationFormat arraySerializationFormat) {
+            ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (formParams.isEmpty()) {
             return null;
         }
@@ -153,7 +154,9 @@ public class HttpRequest {
     }
 
     private void addAdditionalHeaders(Map<String, List<String>> headerParams) {
-        headerParams.putAll(coreConfig.getAdditionalHeaders().asMultimap());
+        if (coreConfig.getAdditionalHeaders() != null) {
+            headerParams.putAll(coreConfig.getAdditionalHeaders().asMultimap());
+        }
     }
 
     private Object buildBody(Object body, Serializer bodySerializer,
@@ -181,7 +184,7 @@ public class HttpRequest {
         return body;
     }
 
-    private Object handleMultiPartRequest(Parameter formParameter) {
+    private Object handleMultiPartRequest(Parameter formParameter) throws IOException {
         HttpHeaders multipartFileHeaders =
                 compatibilityFactory.createHttpHeaders(formParameter.getMultipartHeaders());
 
@@ -189,7 +192,8 @@ public class HttpRequest {
             return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
                     multipartFileHeaders);
         }
-        return new MultipartWrapper(formParameter.getValue().toString(), multipartFileHeaders);
+        String value = formParameter.getMultipartSerializer().apply(formParameter.getValue());
+        return new MultipartWrapper(value , multipartFileHeaders);
 
     }
 
@@ -331,11 +335,11 @@ public class HttpRequest {
             return this;
         }
 
-       /**
-        * 
-        * @param formParameters
-        * @return
-        */
+        /**
+         * 
+         * @param formParameters
+         * @return
+         */
         public Builder formParam(Map<String, Object> formParameters) {
             this.formParamaters.putAll(formParameters);
             return this;
@@ -347,7 +351,7 @@ public class HttpRequest {
          * @param body Object value for body
          * @return Builder
          */
-        public Builder body(Consumer<Parameter.Builder> action) {
+        public Builder bodyParam(Consumer<Parameter.Builder> action) {
             parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter bodyParam = parameterBuilder.build();

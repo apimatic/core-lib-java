@@ -80,8 +80,9 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @throws ExceptionType
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
-        return responseHandler.handle(request, httpResponse, globalConfig);
+        Response httpResponse =
+                globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
     }
 
     /**
@@ -92,10 +93,11 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @throws ExceptionType
      */
     public CompletableFuture<ResponseType> executeAsync() {
-        return new AsyncExecutor(globalConfig).makeHttpCallAsync(() -> request,
-                request -> globalConfig.getHttpClient().executeAsync(request, endpointConfiguration),
-                (httpRequest, httpResponse, coreconfig) -> responseHandler.handle(httpRequest,
-                        httpResponse, globalConfig));
+        return AsyncExecutor.makeHttpCallAsync(() -> request,
+                request -> globalConfig.getHttpClient().executeAsync(request,
+                        endpointConfiguration),
+                (httpRequest, httpResponse) -> responseHandler.handle(httpRequest, httpResponse,
+                        globalConfig, endpointConfiguration));
     }
 
     /**

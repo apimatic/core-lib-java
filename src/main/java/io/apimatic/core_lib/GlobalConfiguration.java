@@ -153,7 +153,7 @@ public class GlobalConfiguration {
         private Map<String, Authentication> authentications;
         private HttpCallback httpCallback;
         private HttpClient httpClient;
-        private Map<String, List<String>> globalHeaders;
+        private Map<String, List<String>> globalHeaders = new HashMap<>();
         private HttpHeaders additionalheaders;
         private Function<String, String> baseUri;
 

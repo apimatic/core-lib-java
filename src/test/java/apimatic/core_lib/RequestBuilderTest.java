@@ -84,7 +84,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamValidation() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.value(null)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(null)).build(mockCoreConfig);
 
     }
 
@@ -92,7 +92,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamValidation1() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.value(null)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(null)).build(mockCoreConfig);
 
     }
 
@@ -100,7 +100,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParam() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.PATCH)
-                .body(param -> param.value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.value("bodyValue")).build(mockCoreConfig);
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
 
         // verify
@@ -111,7 +111,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey1() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.key("bodykey").value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key("bodykey").value("bodyValue")).build(mockCoreConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -124,7 +124,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey2() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.key("").value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key("").value("bodyValue")).build(mockCoreConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -137,7 +137,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey3() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.key(null).value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key(null).value("bodyValue")).build(mockCoreConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -495,7 +495,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.value(dateTime)).bodySerializer(res -> CoreHelper
+                .bodyParam(param -> param.value(dateTime)).bodySerializer(res -> CoreHelper
                         .serialize(res, new LocalDateTimeHelper.UnixTimestampSerializer()))
                 .build(mockCoreConfig);
 
@@ -513,7 +513,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Employee model = getEmployeeModel();
         // when
         Request coreHttpRequest1 = new HttpRequest.Builder().httpMethod(Method.POST)
-                .body(param -> param.value(model)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(model)).build(mockCoreConfig);
 
         // stub
         when(coreHttpRequest1.getBody()).thenReturn(model);
@@ -525,7 +525,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     @Test
     public void testBodyParamFileWrapper() throws IOException {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
-                .body(param -> param.value(fileWrapper)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(fileWrapper)).build(mockCoreConfig);
 
         when(coreHttpRequest.getBody()).thenReturn(fileWrapper);
 

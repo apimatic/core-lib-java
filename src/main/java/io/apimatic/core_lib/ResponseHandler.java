@@ -6,8 +6,10 @@ import java.util.Map;
 import io.apimatic.core_interfaces.http.Context;
 import io.apimatic.core_interfaces.http.request.Request;
 import io.apimatic.core_interfaces.http.request.ResponseClassType;
+import io.apimatic.core_interfaces.http.request.configuration.EndpointSetting;
 import io.apimatic.core_interfaces.http.response.Response;
 import io.apimatic.core_interfaces.type.functional.Deserializer;
+import io.apimatic.core_lib.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core_lib.types.ApiException;
 
 /**
@@ -48,19 +50,21 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
      * 
      * @param httpRequest
      * @param httpResponse
-     * @param coreConfig
+     * @param globalConfiguration
+     * @param endpointConfiguration
      * @return the ResponseType
      * @throws IOException
      * @throws ExceptionType
      */
+    @SuppressWarnings("unchecked")
     public ResponseType handle(Request httpRequest, Response httpResponse,
-            GlobalConfiguration coreConfig) throws IOException, ExceptionType {
+            GlobalConfiguration globalConfiguration, EndpointSetting endpointConfiguration) throws IOException, ExceptionType {
 
         Context httpContext =
-                coreConfig.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);
+                globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
-        if (coreConfig.getHttpCallback() != null) {
-            coreConfig.getHttpCallback().onAfterResponse(httpContext);
+        if (globalConfiguration.getHttpCallback() != null) {
+            globalConfiguration.getHttpCallback().onAfterResponse(httpContext);
         }
 
         if (isNullify404Enabled) {
@@ -73,14 +77,19 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
 
         // handle errors defined at the API level
         validateResponse(httpContext);
+        
         ResponseType result = null;
-
+        
+        if(endpointConfiguration.hasBinaryResponse()) {
+            result = (ResponseType) httpResponse.getRawBody();
+        }
+        
         if (deserializer != null) {
             // extract result from the http response
             return deserializer.apply(httpResponse.getBody());
         }
         if (responseClassType != null) {
-            return createResponseClassType(httpResponse, coreConfig);
+            return createResponseClassType(httpResponse, globalConfiguration);
         }
 
         return result;

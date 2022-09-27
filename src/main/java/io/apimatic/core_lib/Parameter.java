@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import io.apimatic.core_interfaces.http.request.MutliPartRequestType;
+import io.apimatic.core_interfaces.type.functional.Serializer;
 
 /**
  * HTTP parameters consist of a type, a name, and a value. These parameters appear in the header and
@@ -15,6 +16,7 @@ public class Parameter {
 
     private final String key;
     private final Object value;
+    private final Serializer multipartSerializer;
     private final boolean isRequired;
     private final boolean shouldEncode;
     private final MutliPartRequestType multiPartRequestType;
@@ -26,16 +28,18 @@ public class Parameter {
      * 
      * @param key the parameter key
      * @param value the parameter value
+     * @param multipartSerializer the serializer for multipart request
      * @param isRequired is used for validation
      * @param shouldEncode is used for encoding template parameter
      * @param multiPartRequest enum used to determine the multiRequestType
      * @param multipartHeaders the multipart headers
      */
-    private Parameter(String key, Object value, boolean isRequired, boolean shouldEncode,
-            MutliPartRequestType multiPartRequest, Map<String, List<String>> multipartHeaders) {
-        super();
+    private Parameter(String key, Object value, Serializer multipartSerializer, boolean isRequired,
+            boolean shouldEncode, MutliPartRequestType multiPartRequest,
+            Map<String, List<String>> multipartHeaders) {
         this.key = key;
         this.value = value;
+        this.multipartSerializer = multipartSerializer;
         this.isRequired = isRequired;
         this.shouldEncode = shouldEncode;
         this.multiPartRequestType = multiPartRequest;
@@ -65,6 +69,14 @@ public class Parameter {
      */
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * 
+     * @return the {@link Serializer} multipartSerializer
+     */
+    public Serializer getMultipartSerializer() {
+        return multipartSerializer;
     }
 
     /**
@@ -99,6 +111,7 @@ public class Parameter {
     public static class Builder {
         private String key;
         private Object value;
+        private Serializer multipartSerializer;
         private boolean isRequired = true;
         private boolean shouldEncode;
         private MutliPartRequestType multiPartRequestType = null;
@@ -116,6 +129,16 @@ public class Parameter {
          */
         public Builder value(Object value) {
             this.value = value;
+            return this;
+        }
+
+        /**
+         * 
+         * @param value
+         * @return {@link Parameter.Builder}
+         */
+        public Builder multipartSerializer(Serializer multipartSerializer) {
+            this.multipartSerializer = multipartSerializer;
             return this;
         }
 
@@ -172,8 +195,8 @@ public class Parameter {
          * @return the instance of {@link Parameter}
          */
         public Parameter build() {
-            return new Parameter(key, value, isRequired, shouldEncode, multiPartRequestType,
-                    multipartHeaders);
+            return new Parameter(key, value, multipartSerializer, isRequired, shouldEncode,
+                    multiPartRequestType, multipartHeaders);
         }
     }
 
