@@ -377,17 +377,12 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testFormParamMultiPart() throws IOException {
         List<Employee> models = getEmployeeModels();
 
-        Request coreHttpRequest =
-                new HttpRequest.Builder().httpMethod(Method.GET).formParam(param -> {
-                    try {
-                        param.key("models").value(CoreHelper.serialize(models))
-                                .multipartHeaders("content-type", "application/octet-stream")
-                                .multiPartRequestType(MutliPartRequestType.MULTI_PART);
-                    } catch (JsonProcessingException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                }).build(mockCoreConfig);
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParam(param -> param.key("models").value(models)
+                        .multipartSerializer(multipartValue -> CoreHelper.serialize(multipartValue))
+                        .multipartHeaders("content-type", "application/octet-stream")
+                        .multiPartRequestType(MutliPartRequestType.MULTI_PART))
+                .build(mockCoreConfig);
 
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
