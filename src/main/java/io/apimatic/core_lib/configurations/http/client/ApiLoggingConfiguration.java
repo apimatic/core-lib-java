@@ -12,12 +12,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import io.apimatic.core_interfaces.http.LoggingLevel;
 import io.apimatic.core_interfaces.http.LoggingPolicy;
-import io.apimatic.core_interfaces.logger.configuration.ReadonlyLoggingConfiguration;
+import io.apimatic.core_interfaces.logger.configuration.ReadonlyLogging;
 
 /**
  * Class for holding logging configuration.
  */
-public class ApiLoggingConfiguration implements ReadonlyLoggingConfiguration {
+public class ApiLoggingConfiguration implements ReadonlyLogging {
     
     /**
      * Level enum to use with level in {@link ApiLoggingConfiguration.Builder}.
