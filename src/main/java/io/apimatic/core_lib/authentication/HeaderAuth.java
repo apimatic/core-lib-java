@@ -11,6 +11,7 @@ import io.apimatic.core_interfaces.http.request.Request;
  *
  */
 public class HeaderAuth implements Authentication {
+    
     private Map<String, String> authParams = new HashMap<>();
 
     public HeaderAuth(Map<String, String> authParams) {
@@ -23,6 +24,9 @@ public class HeaderAuth implements Authentication {
     @Override
     public Request apply(Request httpRequest) {
         authParams.forEach((key, value) -> {
+            if (key == null || value == null) {
+                throw new IllegalArgumentException("Auth key or value cannot be null.");
+            }
             httpRequest.getHeaders().add(key, value);
         });
         return httpRequest;
