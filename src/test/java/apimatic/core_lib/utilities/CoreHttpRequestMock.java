@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import io.apimatic.core_interfaces.http.request.Request;
+import io.apimatic.coreinterfaces.http.request.Request;
 
 public class CoreHttpRequestMock extends HttpHeadersMock {
 

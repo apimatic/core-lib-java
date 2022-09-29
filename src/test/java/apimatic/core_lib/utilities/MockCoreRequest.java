@@ -9,8 +9,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import io.apimatic.core_lib.HttpRequest;
-import io.apimatic.core_lib.Parameter;
+import io.apimatic.core.HttpRequest;
+import io.apimatic.core.Parameter;
 
 public class MockCoreRequest extends MockCoreConfig {
 

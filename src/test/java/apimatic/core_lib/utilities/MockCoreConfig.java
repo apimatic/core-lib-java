@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import io.apimatic.core_lib.GlobalConfiguration;
+import io.apimatic.core.GlobalConfiguration;
 
 public class MockCoreConfig extends CompatibilityFactoryMock {
 
