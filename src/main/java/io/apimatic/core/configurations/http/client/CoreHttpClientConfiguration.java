@@ -1,9 +1,3 @@
-/*
- * TesterLib
- *
- * This file was automatically generated for Stamplay by APIMATIC v3.0 ( https://www.apimatic.io ).
- */
-
 package io.apimatic.core.configurations.http.client;
 
 import java.util.Arrays;
@@ -15,7 +9,7 @@ import io.apimatic.coreinterfaces.http.Method;
 /**
  * Class to hold HTTP Client Configuration.
  */
-public class HttpClientConfiguration implements ClientConfiguration {
+public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * The timeout in seconds to use for making HTTP requests.
@@ -76,7 +70,7 @@ public class HttpClientConfiguration implements ClientConfiguration {
     /**
      * Default Constructor.
      */
-    private HttpClientConfiguration(long timeout, int numberOfRetries, int backOffFactor,
+    private CoreHttpClientConfiguration(long timeout, int numberOfRetries, int backOffFactor,
             long retryInterval, Set<Integer> httpStatusCodesToRetry,
             Set<Method> httpMethodsToRetry, long maximumRetryWaitTime,
             boolean shouldRetryOnTimeout, okhttp3.OkHttpClient httpClientInstance,
@@ -211,10 +205,10 @@ public class HttpClientConfiguration implements ClientConfiguration {
     }
 
     /**
-     * Builds a new {@link HttpClientConfiguration.Builder} object. Creates the instance with the
+     * Builds a new {@link CoreHttpClientConfiguration.Builder} object. Creates the instance with the
      * current state.
      * 
-     * @return a new {@link HttpClientConfiguration.Builder} object
+     * @return a new {@link CoreHttpClientConfiguration.Builder} object
      */
     public Builder newBuilder() {
         return new Builder().timeout(timeout).numberOfRetries(numberOfRetries)
@@ -226,7 +220,7 @@ public class HttpClientConfiguration implements ClientConfiguration {
     }
 
     /**
-     * Class to build instances of {@link HttpClientConfiguration}.
+     * Class to build instances of {@link CoreHttpClientConfiguration}.
      */
     public static class Builder {
 
@@ -395,10 +389,10 @@ public class HttpClientConfiguration implements ClientConfiguration {
         /**
          * Builds a new HttpClientConfiguration object using the set fields.
          * 
-         * @return {@link HttpClientConfiguration}
+         * @return {@link CoreHttpClientConfiguration}
          */
-        public HttpClientConfiguration build() {
-            return new HttpClientConfiguration(timeout, numberOfRetries, backOffFactor,
+        public CoreHttpClientConfiguration build() {
+            return new CoreHttpClientConfiguration(timeout, numberOfRetries, backOffFactor,
                     retryInterval, httpStatusCodesToRetry, httpMethodsToRetry, maximumRetryWaitTime,
                     shouldRetryOnTimeout, httpClientInstance, overrideHttpClientConfigurations,
                     skipSslCertVerification);

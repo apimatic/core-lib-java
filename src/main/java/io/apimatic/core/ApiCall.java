@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
-import io.apimatic.core.types.ApiException;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.EndpointSetting;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -17,7 +17,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
  * @param <ResponseType> resource from server
  * @param <ExceptionType> in case of a problem or the connection was aborted
  */
-public class ApiCall<ResponseType, ExceptionType extends ApiException> {
+public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
     private final GlobalConfiguration globalConfig;
     private final Request request;
@@ -107,7 +107,7 @@ public class ApiCall<ResponseType, ExceptionType extends ApiException> {
      * @param <ResponseType>
      * @param <ExceptionType>
      */
-    public static class Builder<ResponseType, ExceptionType extends ApiException> {
+    public static class Builder<ResponseType, ExceptionType extends CoreApiException> {
         private GlobalConfiguration globalConfig;
         private HttpRequest.Builder requestBuilder = new HttpRequest.Builder();
         private ResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder =

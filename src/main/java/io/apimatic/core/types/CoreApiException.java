@@ -8,7 +8,7 @@ import io.apimatic.coreinterfaces.http.Context;
 /**
  * This is the base class for all exceptions that represent an error response from the server.
  */
-public class ApiException extends Exception {
+public class CoreApiException extends Exception {
     // UID for serialization
     private static final long serialVersionUID = 6424174253911720338L;
 
@@ -20,7 +20,7 @@ public class ApiException extends Exception {
      * 
      * @param reason The reason for throwing exception
      */
-    public ApiException(String reason) {
+    public CoreApiException(String reason) {
         super(reason);
     }
 
@@ -30,7 +30,7 @@ public class ApiException extends Exception {
      * @param reason The reason for throwing exception
      * @param context The http context of the API exception
      */
-    public ApiException(String reason, Context context) {
+    public CoreApiException(String reason, Context context) {
         super(reason);
         this.httpContext = context;
 
@@ -43,7 +43,7 @@ public class ApiException extends Exception {
         try {
             // Can throw IOException if input has invalid content type.
             JsonNode jsonNode = CoreHelper.mapper.readTree(context.getResponse().getRawBody());
-            if (!getClass().equals(ApiException.class)) {
+            if (!getClass().equals(CoreApiException.class)) {
                 // In case of IOException JsonNode cannot be detected.
                 CoreHelper.mapper.readerForUpdating(this).readValue(jsonNode);
             }

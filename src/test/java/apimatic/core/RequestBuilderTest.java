@@ -34,13 +34,13 @@ import io.apimatic.core.authentication.QueryAuth;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
-import io.apimatic.coreinterfaces.http.HttpCallback;
+import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.MutliPartRequestType;
 import io.apimatic.coreinterfaces.http.request.Request;
-import io.apimatic.coreinterfaces.type.FileWrapper;
+import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 public class RequestBuilderTest extends MockCoreRequest {
 
@@ -66,10 +66,10 @@ public class RequestBuilderTest extends MockCoreRequest {
     private HeaderAuth authentication;
 
     @Mock
-    private HttpCallback httpCallback;
+    private Callback httpCallback;
 
     @Mock
-    private FileWrapper fileWrapper;
+    private CoreFileWrapper fileWrapper;
     @Captor
     ArgumentCaptor<Consumer<HttpRequest.Builder>> requestBuilder;
 

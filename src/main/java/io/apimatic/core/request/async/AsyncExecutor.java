@@ -2,7 +2,7 @@ package io.apimatic.core.request.async;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import io.apimatic.core.types.ApiException;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
@@ -20,7 +20,7 @@ public class AsyncExecutor {
      * @param responseHandler An object of ResponseHandler to handle the endpoint response
      * @return An object of type CompletableFuture of T
      */
-    public static <ResponseType, ExceptionType extends ApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
+    public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
             RequestSupplier requestSupplier, RequestExecutor requestExecutor,
             AsyncResponseHandler<ResponseType, ExceptionType> responseHandler) {
         final Request request;

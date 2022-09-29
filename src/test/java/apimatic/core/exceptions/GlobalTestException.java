@@ -8,13 +8,13 @@ package apimatic.core.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import io.apimatic.core.types.ApiException;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.Context;
 
 /**
  * This is a model class for GlobalTestException type.
  */
-public class GlobalTestException extends ApiException {
+public class GlobalTestException extends CoreApiException {
     private static final long serialVersionUID = 5538622956749835538L;
     private String serverMessage;
     private int serverCode;

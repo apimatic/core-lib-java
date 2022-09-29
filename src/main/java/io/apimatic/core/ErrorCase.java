@@ -1,6 +1,6 @@
 package io.apimatic.core;
 
-import io.apimatic.core.types.ApiException;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.type.functional.ExceptionCreator;
 
@@ -9,7 +9,7 @@ import io.apimatic.coreinterfaces.type.functional.ExceptionCreator;
  *
  * @param <ExceptionType>
  */
-public class ErrorCase<ExceptionType extends ApiException> {
+public class ErrorCase<ExceptionType extends CoreApiException> {
     public static final String DEFAULT = "DEFAULT";
     private String reason;
     private ExceptionCreator<ExceptionType> exceptionCreator;
@@ -44,7 +44,7 @@ public class ErrorCase<ExceptionType extends ApiException> {
      * @param exceptionCreator
      * @return
      */
-    public static <ExceptionType extends ApiException> ErrorCase<ExceptionType> create(
+    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
         return errorCase;

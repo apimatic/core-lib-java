@@ -19,7 +19,7 @@ import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.MutliPartRequestType;
 import io.apimatic.coreinterfaces.http.request.Request;
-import io.apimatic.coreinterfaces.type.FileWrapper;
+import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 import io.apimatic.coreinterfaces.type.functional.Serializer;
 
 /**
@@ -165,7 +165,7 @@ public class HttpRequest {
             if (bodySerializer != null) {
                 return bodySerializer.apply(body);
             }
-            if (body instanceof FileWrapper) {
+            if (body instanceof CoreFileWrapper) {
                 return body;
             }
 
@@ -189,7 +189,7 @@ public class HttpRequest {
                 compatibilityFactory.createHttpHeaders(formParameter.getMultipartHeaders());
 
         if (formParameter.getMultiPartRequest() == MutliPartRequestType.MULTI_PART_FILE) {
-            return new MultipartFileWrapper((FileWrapper) formParameter.getValue(),
+            return new MultipartFileWrapper((CoreFileWrapper) formParameter.getValue(),
                     multipartFileHeaders);
         }
         String value = formParameter.getMultipartSerializer().apply(formParameter.getValue());

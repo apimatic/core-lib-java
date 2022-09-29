@@ -3,7 +3,7 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import io.apimatic.core.types.ApiException;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.ResponseClassType;
@@ -17,7 +17,7 @@ import io.apimatic.coreinterfaces.type.functional.Deserializer;
  * @param <ResponseType> The response to process
  * @param <ExceptionType> in case of a problem
  */
-public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
+public class ResponseHandler<ResponseType, ExceptionType extends CoreApiException> {
 
     private final Map<String, ErrorCase<ExceptionType>> localErrorCases;
     private final Map<String, ErrorCase<ExceptionType>> globalErrorCases;
@@ -135,7 +135,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends ApiException> {
         }
     }
 
-    public static class Builder<ResponseType, ExceptionType extends ApiException> {
+    public static class Builder<ResponseType, ExceptionType extends CoreApiException> {
         private Map<String, ErrorCase<ExceptionType>> localErrorCases = null;
         private Map<String, ErrorCase<ExceptionType>> globalErrorCases = null;
         private Deserializer<ResponseType> deserializer;

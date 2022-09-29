@@ -9,7 +9,7 @@ import java.util.function.Function;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
-import io.apimatic.coreinterfaces.http.HttpCallback;
+import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 
@@ -22,7 +22,7 @@ public class GlobalConfiguration {
     private String userAgent;
     private Map<String, String> userAgentConfig;
     private Map<String, Authentication> authentications;
-    private HttpCallback httpCallback;
+    private Callback httpCallback;
     private HttpClient httpClient;
     private Map<String, List<String>> globalHeaders;
     private HttpHeaders additionalHeaders;
@@ -42,7 +42,7 @@ public class GlobalConfiguration {
      */
     private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
-            HttpCallback httpCallback, HttpClient httpClient,
+            Callback httpCallback, HttpClient httpClient,
             Map<String, List<String>> globalHeaders, HttpHeaders additionalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
@@ -96,7 +96,7 @@ public class GlobalConfiguration {
      * 
      * @return the httpCallback instance
      */
-    public HttpCallback getHttpCallback() {
+    public Callback getHttpCallback() {
         return httpCallback;
     }
 
@@ -151,7 +151,7 @@ public class GlobalConfiguration {
         private String userAgent;
         private Map<String, String> userAgentConfig;
         private Map<String, Authentication> authentications;
-        private HttpCallback httpCallback;
+        private Callback httpCallback;
         private HttpClient httpClient;
         private Map<String, List<String>> globalHeaders = new HashMap<>();
         private HttpHeaders additionalheaders;
@@ -202,7 +202,7 @@ public class GlobalConfiguration {
          * @param httpCallback value for HttpCallback
          * @return
          */
-        public Builder httpCallback(HttpCallback httpCallback) {
+        public Builder httpCallback(Callback httpCallback) {
             this.httpCallback = httpCallback;
             return this;
         }
