@@ -22,7 +22,7 @@ public class GlobalConfiguration {
     private String userAgent;
     private Map<String, String> userAgentConfig;
     private Map<String, Authentication> authentications;
-    private Callback httpCallback;
+    private Callback callback;
     private HttpClient httpClient;
     private Map<String, List<String>> globalHeaders;
     private HttpHeaders additionalHeaders;
@@ -35,21 +35,21 @@ public class GlobalConfiguration {
      * @param userAgent
      * @param userAgentConfig
      * @param authentications
-     * @param httpCallback
+     * @param callback
      * @param httpClient
      * @param globalHeaders
      * @param baseUri
      */
     private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
-            Callback httpCallback, HttpClient httpClient,
+            Callback callback, HttpClient httpClient,
             Map<String, List<String>> globalHeaders, HttpHeaders additionalHeaders,
             Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
         this.authentications = authentications;
-        this.httpCallback = httpCallback;
+        this.callback = callback;
         this.httpClient = httpClient;
         this.globalHeaders = globalHeaders != null ? globalHeaders : new HashMap<>();
         this.additionalHeaders = additionalHeaders;
@@ -94,10 +94,10 @@ public class GlobalConfiguration {
 
     /**
      * 
-     * @return the httpCallback instance
+     * @return the callback instance
      */
     public Callback getHttpCallback() {
-        return httpCallback;
+        return callback;
     }
 
     /**
@@ -140,7 +140,7 @@ public class GlobalConfiguration {
      */
     public Builder toBuilder() {
         Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
-                .userAgent(userAgent).authentication(authentications).httpCallback(httpCallback)
+                .userAgent(userAgent).authentication(authentications).callback(callback)
                 .httpClient(httpClient).globalHeader(globalHeaders).baseUri(baseUri);
         return builder;
 
@@ -151,7 +151,7 @@ public class GlobalConfiguration {
         private String userAgent;
         private Map<String, String> userAgentConfig;
         private Map<String, Authentication> authentications;
-        private Callback httpCallback;
+        private Callback callback;
         private HttpClient httpClient;
         private Map<String, List<String>> globalHeaders = new HashMap<>();
         private HttpHeaders additionalheaders;
@@ -199,11 +199,11 @@ public class GlobalConfiguration {
 
         /**
          * 
-         * @param httpCallback value for HttpCallback
+         * @param callback value for callback
          * @return
          */
-        public Builder httpCallback(Callback httpCallback) {
-            this.httpCallback = httpCallback;
+        public Builder callback(Callback callback) {
+            this.callback = callback;
             return this;
         }
 
@@ -270,7 +270,7 @@ public class GlobalConfiguration {
          */
         public GlobalConfiguration build() {
             return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig,
-                    authentications, httpCallback, httpClient, globalHeaders, additionalheaders,
+                    authentications, callback, httpClient, globalHeaders, additionalheaders,
                     baseUri);
         }
     }
