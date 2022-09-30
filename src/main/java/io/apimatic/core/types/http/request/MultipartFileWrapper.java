@@ -6,7 +6,7 @@ import io.apimatic.coreinterfaces.http.request.MultipartFile;
 import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 /**
- * Class to wrap file and headers to be sent as part of a multipart request.
+ * To wrap file and headers to be sent as part of a multipart request.
  */
 public class MultipartFileWrapper implements MultipartFile {
 

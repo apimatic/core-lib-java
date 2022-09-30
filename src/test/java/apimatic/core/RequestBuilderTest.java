@@ -83,7 +83,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamValidation() throws IOException {
         // when
         new HttpRequest.Builder().httpMethod(Method.POST).bodyParam(param -> param.value(null))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
     }
 
@@ -91,7 +91,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamValidation1() throws IOException {
         // when
         new HttpRequest.Builder().httpMethod(Method.POST).bodyParam(param -> param.value(null))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
     }
 
@@ -99,7 +99,8 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParam() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.PATCH)
-                .bodyParam(param -> param.value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.value("bodyValue")).build(mockGlobalConfig);
+        
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
 
         // verify
@@ -110,7 +111,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey1() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.key("bodykey").value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key("bodykey").value("bodyValue")).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -123,7 +124,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey2() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.key("").value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key("").value("bodyValue")).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -136,7 +137,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey3() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.key(null).value("bodyValue")).build(mockCoreConfig);
+                .bodyParam(param -> param.key(null).value("bodyValue")).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -150,7 +151,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     @Test(expected = NullPointerException.class)
     public void testHeaderParamValidation() throws IOException {
         // when
-        new HttpRequest.Builder().headerParam(param -> param.key("accept")).build(mockCoreConfig);
+        new HttpRequest.Builder().headerParam(param -> param.key("accept")).build(mockGlobalConfig);
     }
 
     @Test
@@ -158,7 +159,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("accept").value(null).isRequired(false))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn(null);
@@ -172,7 +173,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("accept").value("application/json"))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn("application/json");
@@ -186,12 +187,12 @@ public class RequestBuilderTest extends MockCoreRequest {
         Map<String, List<String>> headers = new HashMap<>();
         List<String> listOfheaders = Arrays.asList("image/png");
         headers.put("accept", listOfheaders);
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers);
+        when(mockGlobalConfig.getGlobalHeaders()).thenReturn(headers);
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("accept").value("application/json"))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn("application/json");
@@ -207,12 +208,12 @@ public class RequestBuilderTest extends MockCoreRequest {
         Map<String, List<String>> headers = new HashMap<>();
         List<String> listOfheaders = Arrays.asList("image/png");
         headers.put("content-type", listOfheaders);
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers);
+        when(mockGlobalConfig.getGlobalHeaders()).thenReturn(headers);
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("accept").value("application/json"))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("accept")).thenReturn("application/json");
@@ -232,17 +233,17 @@ public class RequestBuilderTest extends MockCoreRequest {
         Map<String, List<String>> headers = new HashMap<>();
         List<String> listOfheaders = Arrays.asList("image/png");
         headers.put("content-type", listOfheaders);
-        when(mockCoreConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
+        when(mockGlobalConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
         Map<String, List<String>> headers2 = new HashMap<>();
         List<String> listOfheaders2 = Arrays.asList("application/json");
         headers2.put("content-type", listOfheaders2);
-        when(mockCoreConfig.getGlobalHeaders()).thenReturn(headers2);
+        when(mockGlobalConfig.getGlobalHeaders()).thenReturn(headers2);
 
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("content-type").value("text/plain"))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.value("content-type")).thenReturn("image/png");
@@ -261,7 +262,7 @@ public class RequestBuilderTest extends MockCoreRequest {
                 .formParam(param -> param.key("formKey").value("value"))
                 .headerParam(param -> param.key("accept").value("application/json"))
                 .headerParam(param -> param.key("accept").value("text/plain"))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
         when(httpHeaders.has("accept")).thenReturn(true);
@@ -274,7 +275,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testHttpMethodParam() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
-                .formParam(param -> param.key("formKey").value("formValue")).build(mockCoreConfig);
+                .formParam(param -> param.key("formKey").value("formValue")).build(mockGlobalConfig);
 
         when(coreHttpRequest.getHttpMethod()).thenReturn(Method.POST);
 
@@ -286,7 +287,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     @Test(expected = NullPointerException.class)
     public void testFormParamValidation() throws IOException {
         // when
-        new HttpRequest.Builder().formParam(param -> param.key("integers")).build(mockCoreConfig);
+        new HttpRequest.Builder().formParam(param -> param.key("integers")).build(mockGlobalConfig);
     }
 
     @SuppressWarnings("unlikely-arg-type")
@@ -295,7 +296,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("integers").value(1))
-                .arraySerializationFormat(ArraySerializationFormat.INDEXED).build(mockCoreConfig);
+                .arraySerializationFormat(ArraySerializationFormat.INDEXED).build(mockGlobalConfig);
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
         when(parameterList.contains("integers")).thenReturn(true);
@@ -308,7 +309,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testFormParamEmptyFormParameter() throws IOException {
         // when
         Request coreHttpRequest =
-                new HttpRequest.Builder().httpMethod(Method.GET).build(mockCoreConfig);
+                new HttpRequest.Builder().httpMethod(Method.GET).build(mockGlobalConfig);
         // verify
         assertNull(coreHttpRequest);
     }
@@ -320,7 +321,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Employee model = getEmployeeModel();
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
-                .formParam(param -> param.key("employee").value(model)).build(mockCoreConfig);
+                .formParam(param -> param.key("employee").value(model)).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
@@ -339,7 +340,7 @@ public class RequestBuilderTest extends MockCoreRequest {
                 .formParam(param -> param.key("file").value(fileWrapper)
                         .multipartHeaders("content-type", "application/octet-stream")
                         .multiPartRequestType(MutliPartRequestType.MULTI_PART_FILE))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
         when(parameterList.contains("file")).thenReturn(true);
@@ -358,7 +359,7 @@ public class RequestBuilderTest extends MockCoreRequest {
                         .multipartHeaders("content-type", "application/octet-stream")
                         .multipartHeaders("content-type", "text/plain")
                         .multiPartRequestType(MutliPartRequestType.MULTI_PART_FILE))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
@@ -378,7 +379,7 @@ public class RequestBuilderTest extends MockCoreRequest {
                         .multipartSerializer(multipartValue -> CoreHelper.serialize(multipartValue))
                         .multipartHeaders("content-type", "application/octet-stream")
                         .multiPartRequestType(MutliPartRequestType.MULTI_PART))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
@@ -393,7 +394,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testTemplateParam() throws IOException {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
-                .templateParam(param -> param.key("integer").value(1)).build(mockCoreConfig);
+                .templateParam(param -> param.key("integer").value(1)).build(mockGlobalConfig);
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
         when(parameterList.contains("integer")).thenReturn(true);
@@ -408,7 +409,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value"))
                 .templateParam(param -> param.key("integer").value(1).shouldEncode(false))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
         when(parameterList.contains("integer")).thenReturn(true);
@@ -426,7 +427,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Employee model = getEmployeeModel();
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("formKey").value("value").isRequired(false))
-                .templateParam(param -> param.key("model").value(model)).build(mockCoreConfig);
+                .templateParam(param -> param.key("model").value(model)).build(mockGlobalConfig);
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
         when(parameterList.contains("model")).thenReturn(true);
@@ -438,22 +439,22 @@ public class RequestBuilderTest extends MockCoreRequest {
 
     @Test(expected = NullPointerException.class)
     public void testTemplateParamValidation() throws IOException {
-        new HttpRequest.Builder().templateParam(param -> param.key("model")).build(mockCoreConfig);
+        new HttpRequest.Builder().templateParam(param -> param.key("model")).build(mockGlobalConfig);
     }
 
 
 
     @Test(expected = NullPointerException.class)
     public void testQueryParamValidation() throws IOException {
-        new HttpRequest.Builder().queryParam(param -> param.key("query")).build(mockCoreConfig);
+        new HttpRequest.Builder().queryParam(param -> param.key("query")).build(mockGlobalConfig);
     }
 
     @Test
     public void testQueryParam() throws IOException {
-        when(mockCoreConfig.getHttpCallback()).thenReturn(null);
+        when(mockGlobalConfig.getHttpCallback()).thenReturn(null);
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("form").value("formValue"))
-                .queryParam(param -> param.key("query").value("queryValue")).build(mockCoreConfig);
+                .queryParam(param -> param.key("query").value("queryValue")).build(mockGlobalConfig);
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
         when(queryParameters.get("query")).thenReturn("queryValue");
@@ -470,7 +471,7 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("form").value("formValue"))
-                .queryParam(param -> param.key("model").value(model)).build(mockCoreConfig);
+                .queryParam(param -> param.key("model").value(model)).build(mockGlobalConfig);
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
         when(queryParameters.get("model")).thenReturn(model);
@@ -486,7 +487,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.value(dateTime)).bodySerializer(res -> CoreHelper
                         .serialize(res, new LocalDateTimeHelper.UnixTimestampSerializer()))
-                .build(mockCoreConfig);
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getBody()).thenReturn(
                 CoreHelper.serialize(dateTime, new LocalDateTimeHelper.UnixTimestampSerializer()));
@@ -502,7 +503,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         Employee model = getEmployeeModel();
         // when
         Request coreHttpRequest1 = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.value(model)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(model)).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest1.getBody()).thenReturn(model);
@@ -514,7 +515,7 @@ public class RequestBuilderTest extends MockCoreRequest {
     @Test
     public void testBodyParamFileWrapper() throws IOException {
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
-                .bodyParam(param -> param.value(fileWrapper)).build(mockCoreConfig);
+                .bodyParam(param -> param.value(fileWrapper)).build(mockGlobalConfig);
 
         when(coreHttpRequest.getBody()).thenReturn(fileWrapper);
 
@@ -530,7 +531,7 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
                 .path("/auth/basic").formParam(param -> param.key("key").value("string"))
-                .authenticationKey("global").httpMethod(Method.GET).build(mockCoreConfig);
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
 
 
         when(httpHeaders.value("Authorization"))
@@ -549,7 +550,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
         Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
                 .path("/auth/basic").formParam(param -> param.key("key").value("string"))
-                .authenticationKey("global").httpMethod(Method.GET).build(mockCoreConfig);
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
         when(queryParameters.get("token")).thenReturn("api-token");
@@ -562,11 +563,11 @@ public class RequestBuilderTest extends MockCoreRequest {
 
     @Test
     public void testEmptyAuthenticatioMap() throws IOException {
-        when(mockCoreConfig.getAuthentications()).thenReturn(null);
+        when(mockGlobalConfig.getAuthentications()).thenReturn(null);
 
         Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
                 .path("/auth/basic").formParam(param -> param.key("key").value("string"))
-                .authenticationKey("global").httpMethod(Method.GET).build(mockCoreConfig);
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
         when(queryParameters.get("token")).thenReturn(null);
@@ -578,13 +579,13 @@ public class RequestBuilderTest extends MockCoreRequest {
     }
 
     private void prepareCoreConfigStub() {
-        when(mockApiCall.getGlobalConfig()).thenReturn(mockCoreConfig);
-        when(mockCoreConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
-        when(mockCoreConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
-        when(mockCoreConfig.getAuthentications()).thenReturn(authentications);
-        when(mockCoreConfig.getUserAgent()).thenReturn("APIMATIC3.0");
-        when(mockCoreConfig.getHttpCallback()).thenReturn(httpCallback);
-        when(mockCoreConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
+        when(mockApiCall.getGlobalConfig()).thenReturn(mockGlobalConfig);
+        when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
+        when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
+        when(mockGlobalConfig.getAuthentications()).thenReturn(authentications);
+        when(mockGlobalConfig.getUserAgent()).thenReturn("APIMATIC3.0");
+        when(mockGlobalConfig.getHttpCallback()).thenReturn(httpCallback);
+        when(mockGlobalConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
     }
 
     private void setExpectations() throws IOException {
@@ -599,9 +600,7 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
                 any(HttpHeaders.class), anyMap(), anyList())).thenReturn(coreHttpRequest);
-
     }
-
 
     private Employee getEmployeeModel() throws IOException {
         return CoreHelper.deserialize(

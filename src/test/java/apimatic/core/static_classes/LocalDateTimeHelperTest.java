@@ -40,11 +40,9 @@ public class LocalDateTimeHelperTest {
         LocalDateTime dateTime2 = LocalDateTime.of(2020, 7, 25, 6, 10);
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
-
         // stub
         List<String> expected =
                 Arrays.asList("Thu, 13 Jul 2000 06:10:00 GMT", "Sat, 25 Jul 2020 06:10:00 GMT");
-
 
         assertEquals(LocalDateTimeHelper.toRfc1123DateTime(dateTimeArray), expected);
     }

@@ -16,10 +16,11 @@ public interface AsyncResponseHandler<T, ExceptionType extends CoreApiException>
     /**
      * Handles the response for an endpoint.
      * 
-     * @param context HttpContext of the request and the received response
+     * @param httpRequest Request which is made for endpoint
+     * @param httpResponse Response which is received after execution
      * @return An object of type T .
-     * @throws CoreApiException Represents error response from the server.
-     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws IOException IOException Signals that an I/O exception of some sort has occurred.
+     * @throws ExceptionType The custom exception which is configured for that endpoint
      */
     T handle(Request httpRequest, Response httpResponse) throws IOException, ExceptionType;
 }

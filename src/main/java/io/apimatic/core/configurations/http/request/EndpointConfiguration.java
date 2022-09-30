@@ -1,14 +1,14 @@
 package io.apimatic.core.configurations.http.request;
 
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
-import io.apimatic.coreinterfaces.http.request.configuration.EndpointSetting;
+import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.request.configuration.RetryOption;
 
 /**
  * The configuration for an endpoint.
  *
  */
-public class EndpointConfiguration implements EndpointSetting {
+public class EndpointConfiguration implements CoreEndpointConfiguration {
 
     private final boolean hasBinaryResponse;
     private final RetryOption retryOption;
@@ -28,19 +28,18 @@ public class EndpointConfiguration implements EndpointSetting {
         return retryOption;
     }
 
-    @Override
+    /**
+     * @return the response is binary or not
+     */
     public boolean hasBinaryResponse() {
         return hasBinaryResponse;
     }
 
-    @Override
+    /**
+     * @return the array serialization Format
+     */
     public ArraySerializationFormat getArraySerializationFormat() {
         return arraySerializationFormat;
-    }
-
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {

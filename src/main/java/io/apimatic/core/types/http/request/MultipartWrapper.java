@@ -5,7 +5,7 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.request.Multipart;
 
 /**
- * Class to wrap byteArray and headers to be sent as part of a multipart request.
+ * To wrap byteArray and headers to be sent as part of a multipart request.
  */
 public class MultipartWrapper implements Multipart {
 

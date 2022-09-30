@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * This is a wrapper class for JSON object.
+ * Wrapper class for JSON object.
  */
 public class JsonObject {
     @com.fasterxml.jackson.annotation.JsonValue
@@ -50,7 +50,6 @@ public class JsonObject {
      * Converts the JSON into string.
      * @return String representation of JSON
      */
-    @Override
     public String toString() {
         try {
             return CoreHelper.mapper.writeValueAsString(jsonNode);

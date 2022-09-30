@@ -9,7 +9,7 @@ import io.apimatic.coreinterfaces.http.LoggingPolicy;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 /**
- * Class for holding logging configuration.
+ * To hold logging configuration.
  */
 public class ApiLoggingConfiguration implements ReadonlyLogging {
     

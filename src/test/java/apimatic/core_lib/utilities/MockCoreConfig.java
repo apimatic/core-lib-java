@@ -11,7 +11,6 @@ import io.apimatic.core.GlobalConfiguration;
 
 public class MockCoreConfig extends CompatibilityFactoryMock {
 
-
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule();
 
@@ -19,7 +18,7 @@ public class MockCoreConfig extends CompatibilityFactoryMock {
     protected static GlobalConfiguration.Builder mockCoreConfigBuilder;
 
     @Mock
-    protected static GlobalConfiguration mockCoreConfig;
+    protected static GlobalConfiguration mockGlobalConfig;
 
     @Before
     public void setup() throws IOException {
@@ -32,13 +31,14 @@ public class MockCoreConfig extends CompatibilityFactoryMock {
                 .thenReturn(mockCoreConfigBuilder);
         when(mockCoreConfigBuilder.compatibilityFactory(compatibilityFactory))
                 .thenReturn(mockCoreConfigBuilder);
-        when(mockCoreConfigBuilder.build()).thenReturn(mockCoreConfig);
+        when(mockCoreConfigBuilder.build()).thenReturn(mockGlobalConfig);
     }
 
     private void prepareMockCoreConfig() {
-        when(mockCoreConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
-        when(mockCoreConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
-        when(mockCoreConfig.getUserAgent()).thenReturn("APIMATIC3.0");
+        //stubs
+        when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
+        when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
+        when(mockGlobalConfig.getUserAgent()).thenReturn("APIMATIC3.0");
     }
 
     protected static String getBaseUri(String test) {

@@ -7,7 +7,7 @@ import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
-import io.apimatic.coreinterfaces.http.request.configuration.EndpointSetting;
+import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
@@ -22,7 +22,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
     private final GlobalConfiguration globalConfig;
     private final Request request;
     private final ResponseHandler<ResponseType, ExceptionType> responseHandler;
-    private final EndpointSetting endpointConfiguration;
+    private final CoreEndpointConfiguration endpointConfiguration;
 
     /**
      * ApiCall constructor
@@ -34,7 +34,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
      */
     private ApiCall(GlobalConfiguration globalConfig, Request coreHttpRequest,
             ResponseHandler<ResponseType, ExceptionType> responseHandler,
-            EndpointSetting coreEndpointConfiguration) {
+            CoreEndpointConfiguration coreEndpointConfiguration) {
         this.globalConfig = globalConfig;
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
@@ -68,7 +68,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
     /**
      * @return the {@link EndpointConfiguration} instance
      */
-    public EndpointSetting getEndpointConfiguration() {
+    public CoreEndpointConfiguration getEndpointConfiguration() {
         return endpointConfiguration;
     }
 

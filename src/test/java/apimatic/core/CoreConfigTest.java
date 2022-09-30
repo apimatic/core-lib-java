@@ -35,8 +35,8 @@ public class CoreConfigTest extends MockCoreConfig {
 
     @Test
     public void testCoreConfig() throws IOException {
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
-        assertEquals(apiCall.getGlobalConfig(), mockCoreConfig);
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockGlobalConfig).build();
+        assertEquals(apiCall.getGlobalConfig(), mockGlobalConfig);
     }
 
 
@@ -52,7 +52,7 @@ public class CoreConfigTest extends MockCoreConfig {
     public void testCoreConfigCompatibility() throws IOException {
         when(mockApiCall.getGlobalConfig().getCompatibilityFactory())
                 .thenReturn(compatibilityFactory);
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockGlobalConfig).build();
         assertEquals(apiCall.getGlobalConfig().getCompatibilityFactory(), compatibilityFactory);
     }
 
@@ -66,7 +66,7 @@ public class CoreConfigTest extends MockCoreConfig {
     @Test
     public void testCoreConfigUserAgent() throws IOException {
         when(mockApiCall.getGlobalConfig().getUserAgent()).thenReturn("APIMATIC3.0");
-        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockCoreConfig).build();
+        ApiCall<?, ?> apiCall = mockApiCallBuilder.globalConfig(mockGlobalConfig).build();
         assertEquals(apiCall.getGlobalConfig().getUserAgent(), "APIMATIC3.0");
     }
 
@@ -80,9 +80,9 @@ public class CoreConfigTest extends MockCoreConfig {
     // }
 
     private void setConditions() throws IOException {
-        doReturn(mockApiCallBuilder).when(mockApiCallBuilder).globalConfig(mockCoreConfig);
+        doReturn(mockApiCallBuilder).when(mockApiCallBuilder).globalConfig(mockGlobalConfig);
         doReturn(mockApiCall).when(mockApiCallBuilder).build();
-        doReturn(mockCoreConfig).when(mockApiCall).getGlobalConfig();
+        doReturn(mockGlobalConfig).when(mockApiCall).getGlobalConfig();
     }
 
 }

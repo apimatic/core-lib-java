@@ -12,10 +12,10 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public interface RequestExecutor {
 
     /**
-     * Execute a given HttpRequest to get the response back.
+     * Execute a given Request to get the response back.
      * 
-     * @param request The given HttpRequest to execute
-     * @return CompletableFuture of HttpResponse after execution
+     * @param request The given Request to execute
+     * @return CompletableFuture of Response after execution
      */
     CompletableFuture<Response> execute(Request request);
 }

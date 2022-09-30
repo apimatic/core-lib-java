@@ -7,7 +7,7 @@ import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.ResponseClassType;
-import io.apimatic.coreinterfaces.http.request.configuration.EndpointSetting;
+import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
@@ -57,7 +57,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
      */
     @SuppressWarnings("unchecked")
     public ResponseType handle(Request httpRequest, Response httpResponse,
-            GlobalConfiguration globalConfiguration, EndpointSetting endpointConfiguration) throws IOException, ExceptionType {
+            GlobalConfiguration globalConfiguration, CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
         Context httpContext =
                 globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);

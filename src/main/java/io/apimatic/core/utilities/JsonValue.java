@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 /**
- * This is a wrapper class for JSON value.
+ * Wrapper class for JSON value.
  */
 public class JsonValue {
     @com.fasterxml.jackson.annotation.JsonValue
