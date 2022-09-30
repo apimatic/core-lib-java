@@ -1,15 +1,12 @@
 package io.apimatic.core.utilities;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
 public class XMLDateHelper {
 
-    public static String serializeSimpleDate(LocalDateTime dateObj, String rootName) {
+    public static String serializeSimpleDate(LocalDate dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
         xmlBlock +=  dateObj.toString();
         xmlBlock += "</" + rootName + ">";
@@ -25,9 +22,4 @@ public class XMLDateHelper {
         }
         return LocalDate.parse(patternMatcher.group(1));
     }
-
-    public XMLDateHelper() {
-        super();
-    }
-
 }
