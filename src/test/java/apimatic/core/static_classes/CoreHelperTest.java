@@ -38,7 +38,7 @@ import apimatic.core.models.OrbitCase;
 import apimatic.core.models.Person;
 import apimatic.core.models.containers.SendParamsFormDateTime;
 import apimatic.core.models.containers.SendScalarParamBody;
-import apimatic.core_lib.utilities.TestDateTimeHelper;
+import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.DateHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;

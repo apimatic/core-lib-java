@@ -71,10 +71,10 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
      * Default Constructor.
      */
     private CoreHttpClientConfiguration(long timeout, int numberOfRetries, int backOffFactor,
-            long retryInterval, Set<Integer> httpStatusCodesToRetry,
-            Set<Method> httpMethodsToRetry, long maximumRetryWaitTime,
-            boolean shouldRetryOnTimeout, okhttp3.OkHttpClient httpClientInstance,
-            boolean overrideHttpClientConfigurations, boolean skipSslCertVerification) {
+            long retryInterval, Set<Integer> httpStatusCodesToRetry, Set<Method> httpMethodsToRetry,
+            long maximumRetryWaitTime, boolean shouldRetryOnTimeout,
+            okhttp3.OkHttpClient httpClientInstance, boolean overrideHttpClientConfigurations,
+            boolean skipSslCertVerification) {
         this.timeout = timeout;
         this.numberOfRetries = numberOfRetries;
         this.backOffFactor = backOffFactor;
@@ -205,8 +205,8 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
     }
 
     /**
-     * Builds a new {@link CoreHttpClientConfiguration.Builder} object. Creates the instance with the
-     * current state.
+     * Builds a new {@link CoreHttpClientConfiguration.Builder} object. Creates the instance with
+     * the current state.
      * 
      * @return a new {@link CoreHttpClientConfiguration.Builder} object
      */

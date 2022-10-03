@@ -1,4 +1,4 @@
-package apimatic.core_lib.utilities;
+package apimatic.core.utilities;
 
 import java.io.IOException;
 import org.junit.Before;

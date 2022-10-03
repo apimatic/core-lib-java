@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import apimatic.core.exceptions.GlobalTestException;
-import apimatic.core_lib.utilities.MockCoreRequest;
+import apimatic.core.utilities.MockCoreRequest;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.ResponseHandler;

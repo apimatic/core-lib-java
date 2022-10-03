@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.junit.Test;
-import apimatic.core_lib.utilities.TestDateTimeHelper;
+import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.XmlLocalDateTimeHelper;
 
 public class XmlLocalDateTimeHelperTest {

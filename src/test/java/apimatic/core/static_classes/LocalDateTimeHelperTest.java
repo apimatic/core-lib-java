@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import apimatic.core_lib.utilities.TestDateTimeHelper;
+import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class LocalDateTimeHelperTest {

@@ -14,8 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.quality.Strictness;
-import apimatic.core_lib.utilities.MockCoreRequest;
+import apimatic.core.utilities.MockCoreRequest;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.types.CoreApiException;
@@ -76,13 +75,13 @@ public class EndToEndTest extends MockCoreRequest {
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
                         .formParam(param -> param.key("limit").value("limit").isRequired(false))
-                        .queryParam(param -> param.key("location_id").value("locationId")
+                        .templateParam(param -> param.key("location_id").value("locationId").shouldEncode(true)
                                 .isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(Collections.EMPTY_MAP))
+                        .nullify404(false).globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                         .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
@@ -93,9 +92,9 @@ public class EndToEndTest extends MockCoreRequest {
     private GlobalConfiguration getGlobalConfig() {
         String userAgent = "APIMATIC 3.0";
         GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
-                .authentication(Collections.EMPTY_MAP).compatibilityFactory(compatibilityFactory)
+                .authentication(Collections.emptyMap()).compatibilityFactory(compatibilityFactory)
                 .httpClient(httpClient).baseUri(server -> getBaseUri(server)).callback(callback)
-                .userAgent(userAgent).userAgentConfig(Collections.EMPTY_MAP).additionalHeaders(null)
+                .userAgent(userAgent).userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
                 .globalHeader("Square-Version", "square version").build();
         return globalConfig;
     }

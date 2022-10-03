@@ -26,7 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import apimatic.core.models.Employee;
-import apimatic.core_lib.utilities.MockCoreRequest;
+import apimatic.core.utilities.MockCoreRequest;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.HttpRequest;
 import io.apimatic.core.authentication.HeaderAuth;
