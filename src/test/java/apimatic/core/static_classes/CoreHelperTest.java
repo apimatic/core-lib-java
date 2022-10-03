@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +38,7 @@ import apimatic.core.models.OrbitCase;
 import apimatic.core.models.Person;
 import apimatic.core.models.containers.SendParamsFormDateTime;
 import apimatic.core.models.containers.SendScalarParamBody;
+import apimatic.core_lib.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.DateHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
@@ -309,10 +312,11 @@ public class CoreHelperTest {
                         + "t_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not n"
                         + "ullable and required\",\"Child_Class_Array\":null}",
                 ChildClass.class);
-       String expected = "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable and required\",\"Parent_Optional_Nullable_With_Default_Value\":\"Has default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nullable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
-               
-       String actual = CoreHelper.serialize(child);
-       assertEquals(actual, expected);
+        String expected =
+                "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable and required\",\"Parent_Optional_Nullable_With_Default_Value\":\"Has default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nullable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
+
+        String actual = CoreHelper.serialize(child);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -679,7 +683,8 @@ public class CoreHelperTest {
 
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
+        LocalDateTime localDateTime = TestDateTimeHelper.getLocalDateTimeFromGMT(
+                ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "868756200";
         String actual = CoreHelper.serialize(localDateTime, serializer);
@@ -690,7 +695,8 @@ public class CoreHelperTest {
     @Test
     public void testUnixTimeStampSerializerArray() throws JsonProcessingException {
         List<LocalDateTime> localDateTimeArray = new ArrayList<LocalDateTime>();
-        localDateTimeArray.add(LocalDateTime.of(1997, 7, 13, 6, 10));
+        localDateTimeArray.add(TestDateTimeHelper.getLocalDateTimeFromGMT(
+                ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"))));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "[868756200]";
         String actual = CoreHelper.serialize(localDateTimeArray, serializer);
@@ -701,7 +707,8 @@ public class CoreHelperTest {
     @Test
     public void testUnixTimeStampSerializerMap() throws JsonProcessingException {
         Map<String, LocalDateTime> mapOfLocalDateTime = new LinkedHashMap<>();
-        mapOfLocalDateTime.put("date", LocalDateTime.of(1997, 7, 13, 6, 10));
+        mapOfLocalDateTime.put("date", TestDateTimeHelper.getLocalDateTimeFromGMT(
+                ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"))));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "{\"date\":868756200}";
         String actual = CoreHelper.serialize(mapOfLocalDateTime, serializer);
@@ -1035,8 +1042,8 @@ public class CoreHelperTest {
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("Key1", formNonScalarModel);
-        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(
-               formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual =
+                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
 
@@ -1049,8 +1056,8 @@ public class CoreHelperTest {
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("DateTime", formDateTimeCases);
-        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(
-                formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual =
+                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
 

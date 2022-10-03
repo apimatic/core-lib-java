@@ -201,8 +201,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeToUnixTimeStamp() {
-        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.of("GMT"));
 
         // stub
         String expected = "868756200";
@@ -289,8 +289,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testUnixDateTimeLong() {
-        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.of("GMT"));
 
         Long expectedValue = 868756200L;
         Long actualValue = ZonedDateTimeHelper.toUnixTimestampLong(zonedDateTime);
@@ -380,20 +380,22 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromUnixTimeStampLong() {
-        ZonedDateTime expected = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expected = ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"));
 
         Long date = 963450600L;
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromUnixTimestamp(date);
-        assertEquals(actualValue, expected);
+        ZonedDateTime actual = ZonedDateTime.ofInstant(actualValue.toInstant(), ZoneId.of("GMT"));
+        assertEquals(actual, expected);
     }
 
     @Test
     public void testFromUnixTimeStampString() {
-        ZonedDateTime expected = ZonedDateTime.of(2000, 7, 13, 6, 10, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expected = ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"));
 
         String date = "963450600";
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromUnixTimestamp(date);
-        assertEquals(actualValue, expected);
+        ZonedDateTime actual = ZonedDateTime.ofInstant(actualValue.toInstant(), ZoneId.of("GMT"));
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -407,9 +409,9 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromRfc8601String() {
-        String date = "1997-07-13T06:10+05:00[Asia/Karachi]";
-        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime expected = dateTime.atZone(ZoneId.systemDefault());
+        String date = "1997-07-13T01:10Z[GMT]";
+        LocalDateTime dateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime expected = dateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromRfc8601DateTime(date);
         assertEquals(actualValue, expected);
     }
@@ -418,8 +420,8 @@ public class ZonedDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testRfc1123Serializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("GMT"));
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new ZonedDateTimeHelper.Rfc1123DateTimeSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -453,8 +455,8 @@ public class ZonedDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testRfc8601Serializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("GMT"));
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new ZonedDateTimeHelper.Rfc8601DateTimeSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -462,7 +464,7 @@ public class ZonedDateTimeHelperTest {
         module.addSerializer(zonedDateTime.getClass(), serializer);
         mapper.registerModule(module);
 
-        String expected = "\"1997-07-13T06:10+05:00[Asia/Karachi]\"";
+        String expected = "\"1997-07-13T01:10Z[GMT]\"";
 
         String actual = mapper.writeValueAsString(zonedDateTime);;
 
@@ -481,11 +483,12 @@ public class ZonedDateTimeHelperTest {
 
         String dateTime = "\"1997-07-13T06:10+05:00[Asia/Karachi]\"";
 
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime expected = localDateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actual = mapper.readValue(dateTime, ZonedDateTime.class);
-
-        assertEquals(actual, expected);
+        ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
+        
+        assertEquals(actualGMT, expected);
     }
 
 
@@ -493,8 +496,8 @@ public class ZonedDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("GMT"));
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new ZonedDateTimeHelper.UnixTimestampSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -521,11 +524,12 @@ public class ZonedDateTimeHelperTest {
 
         String datetime = "868756200";
 
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
-        ZonedDateTime expected = localDateTime.atZone(ZoneId.systemDefault());
+        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 1, 10);
+        ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actual = mapper.readValue(datetime, ZonedDateTime.class);;
-
-        assertEquals(actual, expected);
+        ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
+        
+        assertEquals(actualGMT, expected);
     }
 
 }

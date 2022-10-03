@@ -2,7 +2,9 @@ package apimatic.core.static_classes;
 
 import static org.junit.Assert.assertEquals;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import org.junit.Test;
 import io.apimatic.core.utilities.XmlZonedDateTimeHelper;
 
@@ -63,5 +65,18 @@ public class XmlZonedDateTimeHelperTest {
         String actual = XmlZonedDateTimeHelper.serializeUnixTimeStamp(zonedDateTime, rootName);
         
         assertEquals(actual, expected);
+    }
+    
+    @Test
+    public void testDeserializeUnixTimeStamp() {
+        String zonedDateTime = "<XmlRootName>868774200</XmlRootName>";
+        
+        // stub
+        ZonedDateTime expected = ZonedDateTime.of(1997, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeUnixTimeStamp(zonedDateTime);
+        
+        ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
+        
+        assertEquals(actualGMT, expected);
     }
 }
