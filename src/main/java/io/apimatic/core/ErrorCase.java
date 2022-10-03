@@ -7,7 +7,7 @@ import io.apimatic.coreinterfaces.type.functional.ExceptionCreator;
 /**
  * A class is responsible to generate the SDK Exception.
  *
- * @param <ExceptionType>
+ * @param <ExceptionType> Represents error response from the server.
  */
 public class ErrorCase<ExceptionType extends CoreApiException> {
     public static final String DEFAULT = "DEFAULT";
@@ -17,8 +17,8 @@ public class ErrorCase<ExceptionType extends CoreApiException> {
     /**
      * A private constructor
      * 
-     * @param reason
-     * @param exceptionCreator
+     * @param reason the exception reason
+     * @param exceptionCreator the exceptionCreator
      */
     private ErrorCase(String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         this.reason = reason;
@@ -28,8 +28,9 @@ public class ErrorCase<ExceptionType extends CoreApiException> {
     /**
      * this method throw the configured exception using functional interface
      * 
-     * @param httpContext
-     * @throws ExceptionType
+     * @param httpContext is wrapped the request sent to the server and the response received from
+     *        the server.
+     * @throws ExceptionType Represents error response from the server.
      */
     public void throwException(Context httpContext) throws ExceptionType {
         throw exceptionCreator.apply(reason, httpContext);
@@ -39,10 +40,11 @@ public class ErrorCase<ExceptionType extends CoreApiException> {
      * Create the errorcase using the error reason and exception creator functional interface which
      * throws the respective exception while throwing
      * 
-     * @param <ExceptionType>
-     * @param reason
-     * @param exceptionCreator
-     * @return
+     * @param <ExceptionType> Represents error response from the server.
+     * @param reason the exception message
+     * @param exceptionCreator the functional interface which is responsible to create the server
+     *        thrown exception
+     * @return {@link ErrorCase}
      */
     public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {

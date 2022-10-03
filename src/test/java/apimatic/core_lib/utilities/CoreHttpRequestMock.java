@@ -9,8 +9,7 @@ import io.apimatic.coreinterfaces.http.request.Request;
 public class CoreHttpRequestMock extends HttpHeadersMock {
 
     @Rule
-    public MockitoRule initRule = MockitoJUnit.rule();
-
+    public MockitoRule initRule = MockitoJUnit.rule().silent();
     @Mock
     public Request coreHttpRequest;
 

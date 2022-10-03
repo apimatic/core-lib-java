@@ -5,7 +5,7 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
- * A Request executor that executes request and returns the response asynchronously 
+ * A Request executor that executes request and returns the response asynchronously
  *
  */
 @FunctionalInterface

@@ -12,7 +12,7 @@ import io.apimatic.core.GlobalConfiguration;
 public class MockCoreConfig extends CompatibilityFactoryMock {
 
     @Rule
-    public MockitoRule initRule = MockitoJUnit.rule();
+    public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Mock
     protected static GlobalConfiguration.Builder mockCoreConfigBuilder;

@@ -106,7 +106,7 @@ public class HttpRequest {
     /**
      * @param compatibilityFactory
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
             Map<String, Object> optionalFormParamaters,
@@ -193,7 +193,7 @@ public class HttpRequest {
                     multipartFileHeaders);
         }
         String value = formParameter.getMultipartSerializer().apply(formParameter.getValue());
-        return new MultipartWrapper(value , multipartFileHeaders);
+        return new MultipartWrapper(value, multipartFileHeaders);
 
     }
 
@@ -215,9 +215,10 @@ public class HttpRequest {
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
         /**
+         * Base uri server address
          * 
          * @param server the base uri address
-         * @return
+         * @return Builder
          */
         public Builder server(String server) {
             this.server = server;
@@ -225,9 +226,10 @@ public class HttpRequest {
         }
 
         /**
+         * Endpoint route path
          * 
          * @param path the endpoint path
-         * @return
+         * @return Builder
          */
         public Builder path(String path) {
             this.path = path;
@@ -235,6 +237,7 @@ public class HttpRequest {
         }
 
         /**
+         * Http Request Method
          *
          * @param httpMethod HttpMethod value for httpMethod
          * @return Builder
@@ -247,7 +250,7 @@ public class HttpRequest {
         /**
          * Setter for requiresAuth
          * 
-         * @param requiresAuth boolean value for requiresAuth
+         * @param authenticationKey string value for authenticationKey
          * @return Builder
          */
         public Builder authenticationKey(String authenticationKey) {
@@ -256,9 +259,9 @@ public class HttpRequest {
         }
 
         /**
+         * To configure the query paramater
          * 
-         * @param key String value for key
-         * @param param Object value for param
+         * @param action the query parameter {@link Consumer}
          * @return Builder
          */
         public Builder queryParam(Consumer<Parameter.Builder> action) {
@@ -270,20 +273,9 @@ public class HttpRequest {
         }
 
         /**
-         * Optional query parameters
+         * To configure the template parameter
          * 
-         * @param queryParameters
-         * @return
-         */
-        public Builder queryParam(Map<String, Object> queryParameters) {
-            this.queryParams.putAll(queryParameters);
-            return this;
-        }
-
-        /**
-         * 
-         * @param key String value for key
-         * @param param SimpleEntry<Object, Boolean> value for param
+         * @param action the template parameter {@link Consumer}
          * @return Builder
          */
         public Builder templateParam(Consumer<Parameter.Builder> action) {
@@ -298,8 +290,9 @@ public class HttpRequest {
         }
 
         /**
+         * To configure the header parameter
          * 
-         * @param headerParams HttpHeaders for headerParams
+         * @param action the header parameter {@link Consumer}
          * @return Builder
          */
         public Builder headerParam(Consumer<Parameter.Builder> action) {
@@ -322,8 +315,9 @@ public class HttpRequest {
         }
 
         /**
-         * @param key String value for key
-         * @param param Object value for param
+         * To configure the form parameter
+         * 
+         * @param action the form parameter {@link Consumer}
          * @return Builder
          */
         public Builder formParam(Consumer<Parameter.Builder> action) {
@@ -336,9 +330,10 @@ public class HttpRequest {
         }
 
         /**
+         * To configure the optional form parameters
          * 
-         * @param formParameters
-         * @return
+         * @param formParameters the optional form parameter map
+         * @return Builder
          */
         public Builder formParam(Map<String, Object> formParameters) {
             this.formParamaters.putAll(formParameters);
@@ -347,8 +342,9 @@ public class HttpRequest {
 
 
         /**
+         * To configure the body parameter
          * 
-         * @param body Object value for body
+         * @param action the body parameter {@link Consumer}
          * @return Builder
          */
         public Builder bodyParam(Consumer<Parameter.Builder> action) {
@@ -381,7 +377,7 @@ public class HttpRequest {
         /**
          * 
          * @param arraySerializationFormat the serialization format for the array
-         * @return
+         * @return Builder
          */
         public Builder arraySerializationFormat(ArraySerializationFormat arraySerializationFormat) {
             this.arraySerializationFormat = arraySerializationFormat;
@@ -392,8 +388,8 @@ public class HttpRequest {
          * Initialise the CoreHttpRequest
          * 
          * @param coreConfig the configuration for the Http request
-         * @return
-         * @throws IOException
+         * @return {@link Request}
+         * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
             HttpRequest coreRequest = new HttpRequest(coreConfig, server, path, httpMethod,

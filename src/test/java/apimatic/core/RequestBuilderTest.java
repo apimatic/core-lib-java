@@ -45,7 +45,7 @@ import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 public class RequestBuilderTest extends MockCoreRequest {
 
     @Rule
-    public MockitoRule initRule = MockitoJUnit.rule();
+    public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Mock
     private ApiCall.Builder<?, ?> mockApiCallBuilder;
@@ -579,7 +579,6 @@ public class RequestBuilderTest extends MockCoreRequest {
     }
 
     private void prepareCoreConfigStub() {
-        when(mockApiCall.getGlobalConfig()).thenReturn(mockGlobalConfig);
         when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
         when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
         when(mockGlobalConfig.getAuthentications()).thenReturn(authentications);

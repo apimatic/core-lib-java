@@ -47,20 +47,21 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
     /**
      * Processes an HttpResponse and returns some value corresponding to that response.
      * 
-     * @param httpRequest
-     * @param httpResponse
-     * @param globalConfiguration
-     * @param endpointConfiguration
-     * @return the ResponseType
-     * @throws IOException
-     * @throws ExceptionType
+     * @param httpRequest Request which is made for endpoint
+     * @param httpResponse Response which is received after execution
+     * @param globalConfiguration the global configuration to store the request global information
+     * @param endpointConfiguration the endpoint level configuration
+     * @return An object of type ResponseType
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws ExceptionType Represents error response from the server.
      */
     @SuppressWarnings("unchecked")
     public ResponseType handle(Request httpRequest, Response httpResponse,
-            GlobalConfiguration globalConfiguration, CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
+            GlobalConfiguration globalConfiguration,
+            CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
-        Context httpContext =
-                globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest, httpResponse);
+        Context httpContext = globalConfiguration.getCompatibilityFactory()
+                .createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
         if (globalConfiguration.getHttpCallback() != null) {
             globalConfiguration.getHttpCallback().onAfterResponse(httpContext);
@@ -76,13 +77,13 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
 
         // handle errors defined at the API level
         validateResponse(httpContext);
-        
+
         ResponseType result = null;
-        
-        if(endpointConfiguration.hasBinaryResponse()) {
+
+        if (endpointConfiguration.hasBinaryResponse()) {
             result = (ResponseType) httpResponse.getRawBody();
         }
-        
+
         if (deserializer != null) {
             // extract result from the http response
             return deserializer.apply(httpResponse.getBody());
@@ -145,8 +146,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         /**
          * Setter for the localErrorCase
          * 
-         * @param statusCode
-         * @param errorCase
+         * @param statusCode the response status code from the server
+         * @param errorCase to generate the SDK Exception
          * @return {@link ResponseHandler.Builder}
          */
         public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
@@ -162,7 +163,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         /**
          * Setter for the globalErrorCases
          * 
-         * @param globalErrorCases
+         * @param globalErrorCases the global error cases for endpoints
          * @return {@link ResponseHandler.Builder}
          */
         public Builder<ResponseType, ExceptionType> globalErrorCase(
@@ -174,7 +175,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         /**
          * Setter for the deserializer
          * 
-         * @param deserializer
+         * @param deserializer to deserialize the server response
          * @return {@link ResponseHandler.Builder}
          */
         public Builder<ResponseType, ExceptionType> deserializer(
@@ -186,7 +187,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         /**
          * Setter for the responseClassType
          * 
-         * @param responseClassType
+         * @param responseClassType specify the response class type for result.
          * @return {@link ResponseHandler.Builder}
          */
         public Builder<ResponseType, ExceptionType> responseClassType(
@@ -198,7 +199,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         /**
          * Setter for the nullify404
          * 
-         * @param isNullify404Enabled
+         * @param isNullify404Enabled in case of 404 error return null or not
          * @return {@link ResponseHandler.Builder}
          */
         public Builder<ResponseType, ExceptionType> nullify404(boolean isNullify404Enabled) {

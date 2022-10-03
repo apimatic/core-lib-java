@@ -42,42 +42,11 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
     }
 
     /**
-     * 
-     * @return the {@link GlobalConfiguration} instance
-     */
-    public GlobalConfiguration getGlobalConfig() {
-        return this.globalConfig;
-    }
-
-    /**
-     *
-     * @return the {@link Request} instance
-     */
-    public Request getRequest() {
-        return request;
-    }
-
-    /**
-     * 
-     * @return the {@link ResponseHandler} instance
-     */
-    public ResponseHandler<?, ?> getResponseHandler() {
-        return responseHandler;
-    }
-
-    /**
-     * @return the {@link EndpointConfiguration} instance
-     */
-    public CoreEndpointConfiguration getEndpointConfiguration() {
-        return endpointConfiguration;
-    }
-
-    /**
      * Execute the ApiCall and returns the expected response
      * 
      * @return instance of ResponseType
-     * @throws IOException
-     * @throws ExceptionType
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
         Response httpResponse =
@@ -89,8 +58,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
      * Execute the Api call asynchronously and returns the expected response in CompletableFuture
      * 
      * @return the instance of {@link CompletableFuture}
-     * @throws IOException
-     * @throws ExceptionType
      */
     public CompletableFuture<ResponseType> executeAsync() {
         return AsyncExecutor.makeHttpCallAsync(() -> request,
@@ -104,8 +71,8 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
      * 
      * Builder class for the {@link ApiCall} class
      *
-     * @param <ResponseType>
-     * @param <ExceptionType>
+     * @param <ResponseType> resource from server
+     * @param <ExceptionType> Represents error response from the server.
      */
     public static class Builder<ResponseType, ExceptionType extends CoreApiException> {
         private GlobalConfiguration globalConfig;
@@ -127,7 +94,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
         /**
          * 
-         * @param action
+         * @param action requestBuilder {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
         public Builder<ResponseType, ExceptionType> requestBuilder(
@@ -139,7 +106,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
         /**
          * 
-         * @param action
+         * @param action responseHandler {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
         public Builder<ResponseType, ExceptionType> responseHandler(
@@ -151,7 +118,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
         /**
          * 
-         * @param action
+         * @param action endpointConfiguration {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
         public Builder<ResponseType, ExceptionType> endpointConfiguration(
@@ -165,7 +132,7 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
          * build the {@link ApiCall}
          * 
          * @return the instance of {@link ApiCall}
-         * @throws IOException
+         * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public ApiCall<ResponseType, ExceptionType> build() throws IOException {
             return new ApiCall<ResponseType, ExceptionType>(globalConfig,

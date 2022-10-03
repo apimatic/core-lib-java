@@ -47,6 +47,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the key
      * 
      * @return the String key
      */
@@ -55,6 +56,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the shouldEncode
      * 
      * @return the boolean shouldEncode which determines that should encode the template parameter
      *         or not
@@ -64,6 +66,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the parameter value
      * 
      * @return the parameter value
      */
@@ -72,6 +75,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the multipartSerializer
      * 
      * @return the {@link Serializer} multipartSerializer
      */
@@ -80,6 +84,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the MultipartRequestType
      * 
      * @return the MultiPartRequestType
      */
@@ -88,6 +93,7 @@ public class Parameter {
     }
 
     /**
+     * Getter for the multipartHeaders
      * 
      * @return the Map of headers
      */
@@ -117,14 +123,21 @@ public class Parameter {
         private MutliPartRequestType multiPartRequestType = null;
         private Map<String, List<String>> multipartHeaders = new HashMap<String, List<String>>();
 
+        /**
+         * Setter for the key
+         * 
+         * @param key the parameter key
+         * @return {@link Parameter.Builder}
+         */
         public Builder key(String key) {
             this.key = key;
             return this;
         }
 
         /**
+         * Setter for the value
          * 
-         * @param value
+         * @param value the parameter value
          * @return {@link Parameter.Builder}
          */
         public Builder value(Object value) {
@@ -133,8 +146,10 @@ public class Parameter {
         }
 
         /**
+         * Setter for the multipartSerializer
          * 
-         * @param value
+         * @param multipartSerializer if the request is {@link MutliPartRequestType} MULTI_PART then
+         *        configure the multipartSerializer
          * @return {@link Parameter.Builder}
          */
         public Builder multipartSerializer(Serializer multipartSerializer) {
@@ -143,8 +158,9 @@ public class Parameter {
         }
 
         /**
-         * 
-         * @param isRequired
+         * Variable determines either we need to validate the parameter
+         *
+         * @param isRequired the parameter is required or not
          * @return {@link Parameter.Builder}
          */
         public Builder isRequired(boolean isRequired) {
@@ -153,8 +169,9 @@ public class Parameter {
         }
 
         /**
+         * Setter for the shouldEncode
          * 
-         * @param shouldEncode
+         * @param shouldEncode the template parameter value shouldEncode or not
          * @return {@link Parameter.Builder}
          */
         public Builder shouldEncode(boolean shouldEncode) {
@@ -163,8 +180,9 @@ public class Parameter {
         }
 
         /**
+         * Setter for the multipPart request type
          * 
-         * @param multiPartRequestType
+         * @param multiPartRequestType the type of multipart request
          * @return {@link Parameter.Builder}
          */
         public Builder multiPartRequestType(MutliPartRequestType multiPartRequestType) {
@@ -173,9 +191,10 @@ public class Parameter {
         }
 
         /**
+         * Add the multi part headers for the multi part request
          * 
-         * @param key
-         * @param value
+         * @param key the header key
+         * @param value the header value
          * @return {@link Parameter.Builder}
          */
         public Builder multipartHeaders(String key, String value) {
