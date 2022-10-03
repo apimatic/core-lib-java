@@ -38,7 +38,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public class ResponseHandlerTest extends MockCoreRequest {
 
     @Rule
-    public MockitoRule initRule = MockitoJUnit.rule();
+    public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Mock
     private ApiCall.Builder<?, ?> mockApiCallBuilder;

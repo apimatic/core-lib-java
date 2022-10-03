@@ -194,14 +194,15 @@ public class CoreHelper {
 
     /**
      * Xml Serialization of a given object.
-     * @param <T>       Type of object to be serialized
-     * @param obj       Object to be serialized.
-     * @param rootName  Root name for the xml
-     * @param cls       Class of object to be serialized
-     * @return          The serialized Xml String representation of the given object
+     * 
+     * @param <T> Type of object to be serialized
+     * @param obj Object to be serialized.
+     * @param rootName Root name for the xml
+     * @param cls Class of object to be serialized
+     * @return The serialized Xml String representation of the given object
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
-    public static <T> String serializeXml(T obj, String rootName,  Class<T> cls)
+    public static <T> String serializeXml(T obj, String rootName, Class<T> cls)
             throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(obj.getClass());
         JAXBElement<T> elem = new JAXBElement<>(new QName(rootName), cls, obj);
@@ -215,12 +216,13 @@ public class CoreHelper {
 
     /**
      * Xml Serialization of a given object list.
-     * @param <T>       Type of object to be serialized
-     * @param objArray  Object Array to be serialized.
-     * @param rootName  Root name for the xml
-     * @param nodeName  Node name for the array nodes
-     * @param cls       Class of object to be serialized
-     * @return          The serialized Xml String representation of the given object array.
+     * 
+     * @param <T> Type of object to be serialized
+     * @param objArray Object Array to be serialized.
+     * @param rootName Root name for the xml
+     * @param nodeName Node name for the array nodes
+     * @param cls Class of object to be serialized
+     * @return The serialized Xml String representation of the given object array.
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
     public static <T> String serializeXmlArray(T[] objArray, String rootName, String nodeName,
@@ -228,7 +230,7 @@ public class CoreHelper {
         JAXBContext context = JAXBContext.newInstance(cls);
         JAXBElement<T> jaxbElement;
         String xmlBlock = "<" + rootName + ">\n";
-        for (T element: objArray) {
+        for (T element : objArray) {
             jaxbElement = new JAXBElement<>(new QName(nodeName), cls, element);
             StringWriter writer = new StringWriter();
             Marshaller marshaller = context.createMarshaller();
@@ -237,9 +239,9 @@ public class CoreHelper {
             marshaller.marshal(jaxbElement, writer);
             xmlBlock += "  " + writer.toString() + "\n";
         }
-       
+
         xmlBlock += "</" + rootName + ">";
-        return xmlBlock;  
+        return xmlBlock;
     }
 
 
@@ -449,9 +451,10 @@ public class CoreHelper {
         return strictMapper.convertValue(jsonNode, clazz);
     }
 
-    
+
     /**
      * XML Deserialization of the given xml string.
+     * 
      * @param <T> The class of the object to deserialize into
      * @param xml The xml string to deserialize
      * @param cls The class of the object to deserialize into
@@ -464,12 +467,13 @@ public class CoreHelper {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         StringReader reader = new StringReader(xml);
         JAXBElement<T> jaxbElement = jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
-        
+
         return jaxbElement.getValue();
     }
 
     /**
      * XML Deserialization of the given xml string.
+     * 
      * @param <T> The class of the object to deserialize into
      * @param xml The xml string to deserialize
      * @param cls The class of the object to deserialize into
@@ -482,16 +486,17 @@ public class CoreHelper {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         StringReader reader = new StringReader(xml);
         JAXBElement<T[]> jaxbElement = jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
-        
+
         return Arrays.asList(jaxbElement.getValue());
     }
 
     /**
      * XML Deserialization of the given xml string for simple types.
+     * 
      * @param <T> The class of the object to deserialize into
-     * @param xml  The xml string to deserialize
-     * @param cls  The class of the object to deserialize into
-     * @return     The deserialized simple types object list
+     * @param xml The xml string to deserialize
+     * @param cls The class of the object to deserialize into
+     * @return The deserialized simple types object list
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlSimpleTypesArray(String xml,
@@ -509,7 +514,7 @@ public class CoreHelper {
         }
         return deserializedList;
     }
-    
+
     /**
      * JSON Deserialization from custom deserializer based on given discriminator and registry.
      * 
@@ -521,6 +526,7 @@ public class CoreHelper {
      *        values
      * @param typesWithoutDiscriminator The list containing all types without discriminators
      * @param isOneOf The boolean flag to validate for oneOf flow
+     * @param <T> the deserialized response type
      * @return The deserialized object
      * @throws IOException Signals if any I/O exception occurred.
      */
@@ -631,6 +637,7 @@ public class CoreHelper {
      * 
      * @param queryBuilder The query URL string to append the parameters.
      * @param parameters The parameters to append.
+     * @param arraySerializationFormat the array serialization format
      */
     public static void appendUrlWithQueryParameters(StringBuilder queryBuilder,
             Map<String, Object> parameters, ArraySerializationFormat arraySerializationFormat) {
@@ -694,6 +701,10 @@ public class CoreHelper {
 
     /**
      * Updates the user agent header value.
+     * 
+     * @param apiUserAgent the String value of apiUserAgent
+     * @param userAgentConfig the Map of user agent config
+     * @return {@link String}
      */
     public static String updateUserAgent(String apiUserAgent, Map<String, String> userAgentConfig) {
         String engineVersion = System.getProperty("java.runtime.version");
@@ -755,7 +766,7 @@ public class CoreHelper {
      * Prepares Array style form fields from a given array of values.
      * 
      * @param value Value for the form fields.
-     * @param arraySerializationFormat
+     * @param arraySerializationFormat serialization format
      * @return Dictionary of form fields created from array elements.
      */
     public static List<SimpleEntry<String, Object>> prepareFormFields(Map<?, ?> value,

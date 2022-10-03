@@ -22,13 +22,17 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     }
 
     /**
-     * @return the option for the retries
+     * Retry options enumeration for HTTP request
+     * 
+     * @return the option for the retries {@link RetryOption}
      */
     public RetryOption getRetryOption() {
         return retryOption;
     }
 
     /**
+     * Endpoint response has the binary response or not
+     * 
      * @return the response is binary or not
      */
     public boolean hasBinaryResponse() {
@@ -36,6 +40,8 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     }
 
     /**
+     * Enumeration for all ArraySerialization formats
+     * 
      * @return the array serialization Format
      */
     public ArraySerializationFormat getArraySerializationFormat() {
@@ -48,14 +54,21 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         private ArraySerializationFormat arraySerializationFormat =
                 ArraySerializationFormat.INDEXED;
 
+        /**
+         * Setter for the binary response
+         * 
+         * @param hasBinary end point may have binary response
+         * @return {@link EndpointConfiguration.Builder}
+         */
         public Builder hasBinaryResponse(boolean hasBinary) {
             this.hasBinaryResponse = hasBinary;
             return this;
         }
 
         /**
+         * Setter for the {@link RetryOption}
          * 
-         * @param retryOption
+         * @param retryOption Retry options enumeration for HTTP request
          * @return {@link EndpointConfiguration.Builder}
          */
         public Builder retryOption(RetryOption retryOption) {
@@ -64,9 +77,10 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         }
 
         /**
+         * Setter for the arraySerializationFormat
          * 
-         * @param arraySerializationFormat
-         * @return
+         * @param arraySerializationFormat Enumeration for all ArraySerialization formats
+         * @return {@link EndpointConfiguration.Builder}
          */
         public Builder arraySerializationFormat(ArraySerializationFormat arraySerializationFormat) {
             this.arraySerializationFormat = arraySerializationFormat;

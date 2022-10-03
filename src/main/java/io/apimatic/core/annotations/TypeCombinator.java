@@ -1,10 +1,10 @@
 package io.apimatic.core.annotations;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import com.fasterxml.jackson.databind.JsonSerializer;
 
 /**
  * This is a container of annotations for oneOf/anyOf cases.
@@ -24,12 +24,14 @@ public interface TypeCombinator {
          * constructors), to apply to values of {@link java.util.Map}-valued properties; not
          * applicable for value types used as Array elements or {@link java.util.Collection} and
          * {@link java.util.Map} values.
+         * 
+         * @return JsonSerializer instance
          */
         public Class<? extends JsonSerializer<?>> contentUsing() default JsonSerializer.None.class;
     }
 
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface TypeCombinatorStringCase{
+    public @interface TypeCombinatorStringCase {
     }
 }

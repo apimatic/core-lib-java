@@ -42,9 +42,8 @@ public class GlobalConfiguration {
      */
     private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
             Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
-            Callback callback, HttpClient httpClient,
-            Map<String, List<String>> globalHeaders, HttpHeaders additionalHeaders,
-            Function<String, String> baseUri) {
+            Callback callback, HttpClient httpClient, Map<String, List<String>> globalHeaders,
+            HttpHeaders additionalHeaders, Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -132,20 +131,6 @@ public class GlobalConfiguration {
         return baseUri;
     }
 
-    /**
-     * Builds a new {@link GlobalConfiguration.Builder} object. Creates the instance with the state
-     * of the current state.
-     * 
-     * @return a new {@link GlobalConfiguration.Builder} object
-     */
-    public Builder toBuilder() {
-        Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
-                .userAgent(userAgent).authentication(authentications).callback(callback)
-                .httpClient(httpClient).globalHeader(globalHeaders).baseUri(baseUri);
-        return builder;
-
-    }
-
     public static class Builder {
         private CompatibilityFactory compatibilityFactory;
         private String userAgent;
@@ -200,7 +185,7 @@ public class GlobalConfiguration {
         /**
          * 
          * @param callback value for callback
-         * @return
+         * @return Builder
          */
         public Builder callback(Callback callback) {
             this.callback = callback;
@@ -219,7 +204,8 @@ public class GlobalConfiguration {
 
         /**
          * 
-         * @param global header key value
+         * @param key the global header key
+         * @param value the global header value
          * @return Builder
          */
         public Builder globalHeader(String key, String value) {
@@ -232,7 +218,7 @@ public class GlobalConfiguration {
             }
             return this;
         }
-        
+
         /**
          * 
          * @param headers value for HttpHeaders
@@ -244,8 +230,9 @@ public class GlobalConfiguration {
         }
 
         /**
+         * Additional headers which you can configure other than endpoints headers
          * 
-         * @param additional headers value for HttpHeaders
+         * @param additionalHeaders headers which is configured other than endpoints
          * @return Builder
          */
         public Builder additionalHeaders(HttpHeaders additionalHeaders) {

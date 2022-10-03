@@ -15,6 +15,7 @@ public class AsyncExecutor {
      * Make an asynchronous HTTP endpoint call.
      * 
      * @param <ResponseType> The type of the object for response
+     * @param <ExceptionType> Server error
      * @param requestSupplier An object of RequestSupplier to supply an instance of HttpRequest
      * @param requestExecutor An object of RequestExecutor to execute the given request
      * @param responseHandler An object of ResponseHandler to handle the endpoint response
