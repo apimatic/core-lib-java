@@ -125,7 +125,7 @@ public class JsonValueTest {
     
     @Test
     public void testFromObject() {
-        Object value = (Object) 21L;
+        Object value = 21L;
         
         // stub
         String expected = "21";
