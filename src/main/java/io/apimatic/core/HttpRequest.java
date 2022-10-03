@@ -259,6 +259,18 @@ public class HttpRequest {
         }
 
         /**
+         * Optional query parameters
+         * 
+         * @param queryParameters the optional query parameter
+         * @return Builder
+         */
+        public Builder queryParam(Map<String, Object> queryParameters) {
+            this.queryParams.putAll(queryParameters);
+            return this;
+        }
+
+
+        /**
          * To configure the query paramater
          * 
          * @param action the query parameter {@link Consumer}
