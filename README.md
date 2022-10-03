@@ -1,4 +1,7 @@
-# Getting Started with CoreLib Java
+# APIMatic Core Library for JAVA
+[![Tests][test-badge]][test-url]
+[![Licence][license-badge]][license-url]
+
 ## Introduction
 This project contains core logic and the utilities for the APIMatic's Java SDK
 ## Prerequisites
@@ -10,7 +13,7 @@ To add a dependency on core library using Maven, use the following:
 <dependency>
     <groupId>io.apimatic</groupId>
     <artifactId>core</artifactId>
-    <version>{version}</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -57,3 +60,8 @@ To add a dependency on core library using Maven, use the following:
 ## Links
 * [Core-interfaces-java](https://github.com/apimatic/core-interfaces-java)
 * [OkHttpClient](https://github.com/apimatic/okhttp-client-lib)
+
+[test-badge]: https://github.com/apimatic/core-lib-php/actions/workflows/test.yml/badge.svg
+[test-url]: https://github.com/apimatic/core-lib-php/actions/workflows/test.yml
+[license-badge]: https://img.shields.io/badge/licence-APIMATIC-blue
+[license-url]: LICENSE
