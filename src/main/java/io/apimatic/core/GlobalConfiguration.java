@@ -131,6 +131,20 @@ public class GlobalConfiguration {
         return baseUri;
     }
 
+    /**
+     * Builds a new {@link GlobalConfiguration.Builder} object. Creates the instance with the state
+     * of the current state.
+     * 
+     * @return a new {@link GlobalConfiguration.Builder} object
+     */
+    public Builder toBuilder() {
+        Builder builder = new Builder().compatibilityFactory(compatibilityFactory)
+                .userAgent(userAgent).authentication(authentications).callback(callback)
+                .httpClient(httpClient).globalHeader(globalHeaders).baseUri(baseUri);
+        return builder;
+
+    }
+    
     public static class Builder {
         private CompatibilityFactory compatibilityFactory;
         private String userAgent;

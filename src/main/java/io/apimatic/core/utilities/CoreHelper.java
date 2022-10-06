@@ -192,27 +192,6 @@ public class CoreHelper {
         return mapper.writeValueAsString(obj);
     }
 
-    /**
-     * Xml Serialization of a given object.
-     * 
-     * @param <T> Type of object to be serialized
-     * @param obj Object to be serialized.
-     * @param rootName Root name for the xml
-     * @param cls Class of object to be serialized
-     * @return The serialized Xml String representation of the given object
-     * @throws JAXBException Signals that a JAXB exception occurred.
-     */
-    public static <T> String serializeXml(T obj, String rootName, Class<T> cls)
-            throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(obj.getClass());
-        JAXBElement<T> elem = new JAXBElement<>(new QName(rootName), cls, obj);
-
-        StringWriter writer = new StringWriter();
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(elem, writer);
-        return writer.toString();
-    }
 
     /**
      * Xml Serialization of a given object list.
@@ -223,25 +202,54 @@ public class CoreHelper {
      * @param nodeName Node name for the array nodes
      * @param cls Class of object to be serialized
      * @return The serialized Xml String representation of the given object array.
-     * @throws JAXBException Signals that a JAXB exception occurred.
+     * @throws IOException Signals that a IO exception occurred.
      */
     public static <T> String serializeXmlArray(T[] objArray, String rootName, String nodeName,
-            Class<T> cls) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(cls);
-        JAXBElement<T> jaxbElement;
-        String xmlBlock = "<" + rootName + ">\n";
-        for (T element : objArray) {
-            jaxbElement = new JAXBElement<>(new QName(nodeName), cls, element);
+            Class<T> cls) throws IOException {
+        try {
+            JAXBContext context = JAXBContext.newInstance(cls);
+            JAXBElement<T> jaxbElement;
+            String xmlBlock = "<" + rootName + ">\n";
+            for (T element : objArray) {
+                jaxbElement = new JAXBElement<>(new QName(nodeName), cls, element);
+                StringWriter writer = new StringWriter();
+                Marshaller marshaller = context.createMarshaller();
+                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+                marshaller.marshal(jaxbElement, writer);
+                xmlBlock += "  " + writer.toString() + "\n";
+            }
+
+            xmlBlock += "</" + rootName + ">";
+            return xmlBlock;
+        } catch (JAXBException jaxbException) {
+            throw new IOException(jaxbException);
+        }
+    }
+
+    /**
+     * Xml Serialization of a given object.
+     * 
+     * @param <T> Type of object to be serialized
+     * @param obj Object to be serialized.
+     * @param rootName Root name for the xml
+     * @param cls Class of object to be serialized
+     * @return The serialized Xml String representation of the given object
+     * @throws IOException Signals that a IOException exception occurred.
+     */
+    public static <T> String serializeXml(T obj, String rootName, Class<T> cls) throws IOException {
+        try {
+            JAXBContext context = JAXBContext.newInstance(obj.getClass());
+            JAXBElement<T> elem = new JAXBElement<>(new QName(rootName), cls, obj);
+
             StringWriter writer = new StringWriter();
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            marshaller.marshal(jaxbElement, writer);
-            xmlBlock += "  " + writer.toString() + "\n";
+            marshaller.marshal(elem, writer);
+            return writer.toString();
+        } catch (JAXBException jaxbException) {
+            throw new IOException(jaxbException);
         }
-
-        xmlBlock += "</" + rootName + ">";
-        return xmlBlock;
     }
 
 
@@ -461,14 +469,17 @@ public class CoreHelper {
      * @return The deserialized object
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
-    public static <T extends Object> T deserializeXml(String xml, Class<T> cls)
-            throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(cls);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        StringReader reader = new StringReader(xml);
-        JAXBElement<T> jaxbElement = jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
+    public static <T extends Object> T deserializeXml(String xml, Class<T> cls) throws IOException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(cls);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            StringReader reader = new StringReader(xml);
+            JAXBElement<T> jaxbElement = jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
 
-        return jaxbElement.getValue();
+            return jaxbElement.getValue();
+        } catch (JAXBException jaxbException) {
+            throw new IOException(jaxbException);
+        }
     }
 
     /**
@@ -481,13 +492,19 @@ public class CoreHelper {
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlArray(String xml, Class<T[]> cls)
-            throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(cls);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        StringReader reader = new StringReader(xml);
-        JAXBElement<T[]> jaxbElement = jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
+            throws IOException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(cls);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            StringReader reader = new StringReader(xml);
+            JAXBElement<T[]> jaxbElement =
+                    jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls);
 
-        return Arrays.asList(jaxbElement.getValue());
+            return Arrays.asList(jaxbElement.getValue());
+        } catch (JAXBException jaxbException) {
+            throw new IOException(jaxbException);
+        }
+
     }
 
     /**
@@ -500,19 +517,23 @@ public class CoreHelper {
      * @throws JAXBException Signals that a JAXB exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlSimpleTypesArray(String xml,
-            Class<T> cls) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(cls);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        List<T> deserializedList = new ArrayList<>();
-        Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
-        Matcher patternMatcher = pattern.matcher(xml);
-        while (patternMatcher.find()) {
-            StringReader reader = new StringReader(patternMatcher.group());
-            T unmarshalledElement =
-                    jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls).getValue();
-            deserializedList.add(unmarshalledElement);
+            Class<T> cls) throws IOException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(cls);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            List<T> deserializedList = new ArrayList<>();
+            Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
+            Matcher patternMatcher = pattern.matcher(xml);
+            while (patternMatcher.find()) {
+                StringReader reader = new StringReader(patternMatcher.group());
+                T unmarshalledElement =
+                        jaxbUnmarshaller.unmarshal(new StreamSource(reader), cls).getValue();
+                deserializedList.add(unmarshalledElement);
+            }
+            return deserializedList;
+        } catch (JAXBException jaxbException) {
+            throw new IOException(jaxbException);
         }
-        return deserializedList;
     }
 
     /**
