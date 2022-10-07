@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import java.io.IOException;
 import org.junit.Test;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.apimatic.core.utilities.JsonObject;
 
 public class JsonObjectTest {
@@ -28,6 +29,13 @@ public class JsonObjectTest {
         Object actual = jsonObject.getStoredObject();
         
         assertNull(actual);
+    }
+    
+    @Test(expected = IOException.class)
+    public void testFromJsonStringInvalidObject() throws IOException {
+        String value = "\"name\":\"\"";
+
+        JsonObject.fromJsonString(value);
     }
     
     @Test
