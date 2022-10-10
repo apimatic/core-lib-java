@@ -13,7 +13,7 @@ To add a dependency on core library using Maven, use the following:
 <dependency>
     <groupId>io.apimatic</groupId>
     <artifactId>core</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -64,4 +64,4 @@ To add a dependency on core library using Maven, use the following:
 [license-badge]: https://img.shields.io/badge/licence-APIMATIC-blue
 [license-url]: LICENSE
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
-[maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.1.1
+[maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.1.2

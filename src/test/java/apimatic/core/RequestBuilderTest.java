@@ -376,7 +376,7 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("models").value(models)
-                        .multipartSerializer(multipartValue -> CoreHelper.serialize(multipartValue))
+                        .multipartSerializer(() -> CoreHelper.serialize(models))
                         .multipartHeaders("content-type", "application/octet-stream")
                         .multiPartRequestType(MutliPartRequestType.MULTI_PART))
                 .build(mockGlobalConfig);
@@ -485,8 +485,8 @@ public class RequestBuilderTest extends MockCoreRequest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.value(dateTime)).bodySerializer(res -> CoreHelper
-                        .serialize(res, new LocalDateTimeHelper.UnixTimestampSerializer()))
+                .bodyParam(param -> param.value(dateTime)).bodySerializer(() -> CoreHelper
+                        .serialize(dateTime, new LocalDateTimeHelper.UnixTimestampSerializer()))
                 .build(mockGlobalConfig);
 
         when(coreHttpRequest.getBody()).thenReturn(

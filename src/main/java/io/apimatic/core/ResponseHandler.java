@@ -88,6 +88,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
             // extract result from the http response
             return deserializer.apply(httpResponse.getBody());
         }
+
         if (responseClassType != null) {
             return createResponseClassType(httpResponse, globalConfiguration);
         }

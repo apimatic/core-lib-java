@@ -163,8 +163,9 @@ public class HttpRequest {
             Map<String, Object> bodyParameters) throws IOException {
         if (body != null) {
             if (bodySerializer != null) {
-                return bodySerializer.apply(body);
+                return bodySerializer.supply();
             }
+
             if (body instanceof CoreFileWrapper) {
                 return body;
             }
@@ -192,7 +193,7 @@ public class HttpRequest {
             return new MultipartFileWrapper((CoreFileWrapper) formParameter.getValue(),
                     multipartFileHeaders);
         }
-        String value = formParameter.getMultipartSerializer().apply(formParameter.getValue());
+        String value = formParameter.getMultipartSerializer().supply();
         return new MultipartWrapper(value, multipartFileHeaders);
 
     }
@@ -380,7 +381,6 @@ public class HttpRequest {
          * @param bodySerializer Function value for bodySerializer
          * @return Builder
          */
-
         public Builder bodySerializer(Serializer bodySerializer) {
             this.bodySerializer = bodySerializer;
             return this;
