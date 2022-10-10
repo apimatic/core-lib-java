@@ -202,7 +202,7 @@ public class CoreHelper {
      * @param nodeName Node name for the array nodes
      * @param cls Class of object to be serialized
      * @return The serialized Xml String representation of the given object array.
-     * @throws IOException Signals that a IO exception occurred.
+     * @throws IOException Signals that an IO exception occurred.
      */
     public static <T> String serializeXmlArray(T[] objArray, String rootName, String nodeName,
             Class<T> cls) throws IOException {
@@ -235,7 +235,7 @@ public class CoreHelper {
      * @param rootName Root name for the xml
      * @param cls Class of object to be serialized
      * @return The serialized Xml String representation of the given object
-     * @throws IOException Signals that a IOException exception occurred.
+     * @throws IOException Signals that an IOException exception occurred.
      */
     public static <T> String serializeXml(T obj, String rootName, Class<T> cls) throws IOException {
         try {
@@ -285,7 +285,7 @@ public class CoreHelper {
      * @param cls The class to attach the deserializer to.
      * @param deserializer The deserializer to use.
      * @return The deserialized object.
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T1 extends Object, T2 extends Object> T1 deserialize(JsonNode jsonNode,
             final TypeReference<T1> typeReference, final Class<T2> cls,
@@ -308,7 +308,7 @@ public class CoreHelper {
      * @param cls The class to attach the deserializer to.
      * @param deserializer The deserializer to use.
      * @return The deserialized object.
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T1 extends Object, T2 extends Object> T1 deserialize(String json,
             final TypeReference<T1> typeReference, final Class<T2> cls,
@@ -334,7 +334,7 @@ public class CoreHelper {
      * @param json The Json string to deserialize
      * @param clazz The type of the object to deserialize into
      * @return The deserialized object
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(String json, Class<T> clazz) throws IOException {
         if (isNullOrWhiteSpace(json)) {
@@ -353,7 +353,7 @@ public class CoreHelper {
      * @param classes The list of types of the object to deserialize into
      * @param isOneOf The boolean flag to validate for oneOf flow
      * @return The deserialized object
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T> T deserialize(JsonNode json, List<Class<? extends T>> classes,
             boolean isOneOf) throws IOException {
@@ -393,7 +393,7 @@ public class CoreHelper {
      * 
      * @param json The Json string to deserialize
      * @return The deserialized Json as a Map
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static LinkedHashMap<String, Object> deserialize(String json) throws IOException {
         if (isNullOrWhiteSpace(json)) {
@@ -412,7 +412,7 @@ public class CoreHelper {
      * @param typeReference TypeReference of T
      * @param <T> The type of the object to deserialize into
      * @return The deserialized object
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(String json, TypeReference<T> typeReference)
             throws IOException {
@@ -430,7 +430,7 @@ public class CoreHelper {
      * @param typeReference TypeReference of T
      * @param <T> The type of the object to deserialize into
      * @return The deserialized object
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(JsonNode jsonNode,
             TypeReference<T> typeReference) throws IOException {
@@ -448,7 +448,7 @@ public class CoreHelper {
      * @param jsonNode The Json Node to deserialize
      * @param clazz The type of the object to deserialize into
      * @return The deserialized object
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(JsonNode jsonNode, Class<T> clazz)
             throws IOException {
@@ -459,7 +459,6 @@ public class CoreHelper {
         return strictMapper.convertValue(jsonNode, clazz);
     }
 
-
     /**
      * XML Deserialization of the given xml string.
      * 
@@ -467,7 +466,7 @@ public class CoreHelper {
      * @param xml The xml string to deserialize
      * @param cls The class of the object to deserialize into
      * @return The deserialized object
-     * @throws JAXBException Signals that a JAXB exception occurred.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserializeXml(String xml, Class<T> cls) throws IOException {
         try {
@@ -489,7 +488,7 @@ public class CoreHelper {
      * @param xml The xml string to deserialize
      * @param cls The class of the object to deserialize into
      * @return The deserialized object list
-     * @throws JAXBException Signals that a JAXB exception occurred.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlArray(String xml, Class<T[]> cls)
             throws IOException {
@@ -514,7 +513,7 @@ public class CoreHelper {
      * @param xml The xml string to deserialize
      * @param cls The class of the object to deserialize into
      * @return The deserialized simple types object list
-     * @throws JAXBException Signals that a JAXB exception occurred.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlSimpleTypesArray(String xml,
             Class<T> cls) throws IOException {
@@ -596,7 +595,7 @@ public class CoreHelper {
      * @param json The Json string to deserialize
      * @param classArray The class of the array of objects to deserialize into
      * @return The deserialized list of objects
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeArray(String json, Class<T[]> classArray)
             throws IOException {
@@ -806,7 +805,7 @@ public class CoreHelper {
      * @param json The Json string to deserialize
      * @param classArray The class of the array of objects to deserialize into
      * @return The deserialized list of objects
-     * @throws IOException Signals if any I/O exception occured.
+     * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeArray(JsonNode json, Class<T[]> classArray)
             throws IOException {
