@@ -923,9 +923,9 @@ public class CoreHelper {
                     arrays.add(arrayName);
                 }
 
-                appendParamKeyValuePair(objBuilder, accessor, value);
+                appendParamKeyValuePair("%s%s&", objBuilder, accessor, value);
             } else {
-                appendParamKeyValuePair(objBuilder, accessor, value);
+                appendParamKeyValuePair("%s=%s&", objBuilder, accessor, value);
             }
         }
 
@@ -935,11 +935,11 @@ public class CoreHelper {
         }
     }
 
-    private static void appendParamKeyValuePair(StringBuilder objBuilder, String accessor,
-            Object value) {
+    private static void appendParamKeyValuePair(String formatString, StringBuilder objBuilder,
+            String accessor, Object value) {
 
         String paramKeyValPair =
-                String.format("%s=%s&", accessor, tryUrlEncode(value.toString(), false));
+                String.format(formatString, accessor, tryUrlEncode(value.toString(), false));
         objBuilder.append(paramKeyValPair);
     }
 
