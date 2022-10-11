@@ -86,6 +86,7 @@ public class HttpRequest {
         if (authentications != null) {
             Authentication authManager = authentications.get(authenticationKey);
             if (authManager != null) {
+                authManager.validate();
                 authManager.apply(coreHttpRequest);
             }
         }

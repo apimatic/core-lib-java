@@ -24,11 +24,20 @@ public class QueryAuth implements Authentication {
     @Override
     public Request apply(Request httpRequest) {
         authParams.forEach((key, value) -> {
-            if (key == null || value == null) {
-                throw new IllegalArgumentException("Auth key or value cannot be null.");
-            }
             httpRequest.addQueryParameter(key, value);
         });
         return httpRequest;
+    }
+    
+    /**
+     * Validate the query authentication
+     */
+    @Override
+    public void validate() {
+        authParams.forEach((key, value) -> {
+            if (key == null || value == null) {
+                throw new IllegalStateException("Auth key or value cannot be null.");
+            }
+        });
     }
 }

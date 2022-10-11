@@ -24,11 +24,20 @@ public class HeaderAuth implements Authentication {
     @Override
     public Request apply(Request httpRequest) {
         authParams.forEach((key, value) -> {
-            if (key == null || value == null) {
-                throw new IllegalArgumentException("Auth key or value cannot be null.");
-            }
             httpRequest.getHeaders().add(key, value);
         });
         return httpRequest;
+    }
+
+    /**
+     * Validate the header authentication
+     */
+    @Override
+    public void validate() {
+        authParams.forEach((key, value) -> {
+            if (key == null || value == null) {
+                throw new IllegalStateException("Auth key or value cannot be null.");
+            }
+        });
     }
 }
