@@ -398,7 +398,7 @@ public class CoreHelperTest {
 
         CoreHelper.appendUrlWithQueryParameters(queryBuilder, queryParameters,
                 ArraySerializationFormat.CSV);
-        String expected = "https://localhost:3000/query?operations==x%2By";
+        String expected = "https://localhost:3000/query?operations=x%2By";
         String actual = queryBuilder.toString();
         assertEquals(actual, expected);
     }
@@ -415,7 +415,7 @@ public class CoreHelperTest {
 
         CoreHelper.appendUrlWithQueryParameters(queryBuilder, queryParameters,
                 ArraySerializationFormat.TSV);
-        String expected = "https://localhost:3000/query?operations==x%2By";
+        String expected = "https://localhost:3000/query?operations=x%2By";
         String actual = queryBuilder.toString();
         assertEquals(actual, expected);
     }
@@ -432,7 +432,7 @@ public class CoreHelperTest {
 
         CoreHelper.appendUrlWithQueryParameters(queryBuilder, queryParameters,
                 ArraySerializationFormat.PSV);
-        String expected = "https://localhost:3000/query?operations==x%2By";
+        String expected = "https://localhost:3000/query?operations=x%2By";
         String actual = queryBuilder.toString();
         assertEquals(actual, expected);
     }
