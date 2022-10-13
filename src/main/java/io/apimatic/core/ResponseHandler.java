@@ -97,8 +97,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         }
 
         if (responseClassType != null) {
-
-            return createResponseClassType(httpResponse, globalConfiguration);
+            return createResponseClassType(httpResponse, globalConfiguration,
+                    endpointConfiguration.hasBinaryResponse());
         }
 
         return result;
@@ -126,13 +126,14 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
 
     @SuppressWarnings("unchecked")
     private <T> ResponseType createResponseClassType(Response httpResponse,
-            GlobalConfiguration coreConfig) throws IOException {
+            GlobalConfiguration coreConfig, boolean hasBinaryResponse) throws IOException {
         CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
         switch (responseClassType) {
             case API_RESPONSE:
                 return (ResponseType) compatibilityFactory.createApiResponse(
                         httpResponse.getStatusCode(), httpResponse.getHeaders(),
-                        applyDeserializer(intermediateDeserializer, httpResponse));
+                        hasBinaryResponse ? httpResponse.getRawBody()
+                                : applyDeserializer(intermediateDeserializer, httpResponse));
             case DYNAMIC_RESPONSE:
                 return createDynamicResponse(httpResponse, compatibilityFactory);
             case DYNAMIC_API_RESPONSE:
