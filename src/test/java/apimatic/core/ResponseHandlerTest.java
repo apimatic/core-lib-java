@@ -111,15 +111,18 @@ public class ResponseHandlerTest extends MockCoreRequest {
     public void testApiResponseTypeMethod() throws IOException, CoreApiException {
         ResponseHandler<ApiResponseType<String>, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<ApiResponseType<String>, CoreApiException>()
-                        .responseClassType(ResponseClassType.API_RESPONSE).build();
+                        .responseClassType(ResponseClassType.API_RESPONSE)
+                        .apiResponseDeserializer(response -> new String(response))
+                        .build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(201);
         when(coreHttpResponse.getHeaders()).thenReturn(httpHeaders);
         when(coreHttpResponse.getBody()).thenReturn("bodyValue");
+        when(apiResponseType.getResult()).thenReturn("bodyValue");
 
         // verify
-        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting),
-                apiResponseType);
+        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting).getResult(),
+                apiResponseType.getResult());
     }
 
     @Test

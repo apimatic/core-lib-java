@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.ResponseClassType;
@@ -23,26 +24,30 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
     private final Map<String, ErrorCase<ExceptionType>> localErrorCases;
     private final Map<String, ErrorCase<ExceptionType>> globalErrorCases;
     private final Deserializer<ResponseType> deserializer;
+    private final Deserializer<?> intermediateDeserializer;
     private final ResponseClassType responseClassType;
     private final ContextInitializer<ResponseType> contextInitializer;
     private final boolean isNullify404Enabled;
 
-   /**
-    * 
-    * @param localErrorCases the map of local errors
-    * @param globalErrorCases the map of global errors
-    * @param deserializer the deserializer of json response
-    * @param responseClassType the type of response class
-    * @param contextInitializer the context initializer in response models
-    * @param isNullify404Enabled on 404 error return null or not?
-    */
+    /**
+     * 
+     * @param localErrorCases the map of local errors
+     * @param globalErrorCases the map of global errors
+     * @param deserializer the deserializer of json response
+     * @param intermediateDeserializer the api response deserializer
+     * @param responseClassType the type of response class
+     * @param contextInitializer the context initializer in response models
+     * @param isNullify404Enabled on 404 error return null or not?
+     */
     private ResponseHandler(Map<String, ErrorCase<ExceptionType>> localErrorCases,
             Map<String, ErrorCase<ExceptionType>> globalErrorCases,
-            Deserializer<ResponseType> deserializer, ResponseClassType responseClassType,
+            Deserializer<ResponseType> deserializer, Deserializer<?> intermediateDeserializer,
+            ResponseClassType responseClassType,
             ContextInitializer<ResponseType> contextInitializer, boolean isNullify404Enabled) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
         this.deserializer = deserializer;
+        this.intermediateDeserializer = intermediateDeserializer;
         this.responseClassType = responseClassType;
         this.contextInitializer = contextInitializer;
         this.isNullify404Enabled = isNullify404Enabled;
@@ -83,42 +88,66 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         // handle errors defined at the API level
         validateResponse(httpContext);
 
-        ResponseType result = null;
+        ResponseType result = applyDeserializer(deserializer, httpResponse);
+
+        result = applyContextInitializer(contextInitializer, httpContext, result);
 
         if (endpointConfiguration.hasBinaryResponse()) {
             result = (ResponseType) httpResponse.getRawBody();
         }
 
-        if (deserializer != null) {
-            // extract result from the http response
-            result = deserializer.apply(httpResponse.getBody()); 
-        }
-        
-        if (contextInitializer != null && deserializer != null) {
-            result = contextInitializer.apply(httpContext, result);
-        }
-
         if (responseClassType != null) {
+
             return createResponseClassType(httpResponse, globalConfiguration);
         }
 
         return result;
     }
 
+
+    private ResponseType applyContextInitializer(
+            ContextInitializer<ResponseType> contextInitializer, Context httpContext,
+            ResponseType result) throws IOException {
+        if (contextInitializer != null && deserializer != null) {
+            result = contextInitializer.apply(httpContext, result);
+        }
+        return result;
+    }
+
+    private <T> T applyDeserializer(Deserializer<T> deserializer, Response httpResponse)
+            throws IOException {
+        T result = null;
+        if (deserializer != null) {
+            // extract result from the http response
+            result = deserializer.apply(httpResponse.getBody());
+        }
+        return result;
+    }
+
     @SuppressWarnings("unchecked")
-    private ResponseType createResponseClassType(Response httpResponse,
-            GlobalConfiguration coreConfig) {
+    private <T> ResponseType createResponseClassType(Response httpResponse,
+            GlobalConfiguration coreConfig) throws IOException {
+        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
         switch (responseClassType) {
             case API_RESPONSE:
-                return (ResponseType) coreConfig.getCompatibilityFactory().createApiResponse(
+                return (ResponseType) compatibilityFactory.createApiResponse(
                         httpResponse.getStatusCode(), httpResponse.getHeaders(),
-                        httpResponse.getBody());
+                        applyDeserializer(intermediateDeserializer, httpResponse));
             case DYNAMIC_RESPONSE:
-                return (ResponseType) coreConfig.getCompatibilityFactory()
-                        .createDynamicResponse(httpResponse);
+                return createDynamicResponse(httpResponse, compatibilityFactory);
+            case DYNAMIC_API_RESPONSE:
+                return (ResponseType) compatibilityFactory.createApiResponse(
+                        httpResponse.getStatusCode(), httpResponse.getHeaders(),
+                        createDynamicResponse(httpResponse, compatibilityFactory));
             default:
                 return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private ResponseType createDynamicResponse(Response httpResponse,
+            CompatibilityFactory compatibilityFactory) {
+        return (ResponseType) compatibilityFactory.createDynamicResponse(httpResponse);
     }
 
     /**
@@ -150,6 +179,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         private Map<String, ErrorCase<ExceptionType>> localErrorCases = null;
         private Map<String, ErrorCase<ExceptionType>> globalErrorCases = null;
         private Deserializer<ResponseType> deserializer;
+        private Deserializer<?> intermediateDeserializer;
         private ResponseClassType responseClassType;
         private ContextInitializer<ResponseType> contextInitializer;
         private boolean isNullify404Enabled = true;
@@ -195,6 +225,20 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
             return this;
         }
 
+
+        /**
+         * Setter for the deserializer
+         * 
+         * @param intermediateDeserializer to deserialize the api response
+         * @param <IntermediateResponseType> the intermediate type of api response
+         * @return {@link ResponseHandler.Builder}
+         */
+        public <IntermediateResponseType> Builder<ResponseType, ExceptionType> apiResponseDeserializer(
+                Deserializer<IntermediateResponseType> intermediateDeserializer) {
+            this.intermediateDeserializer = intermediateDeserializer;
+            return this;
+        }
+
         /**
          * Setter for the responseClassType
          * 
@@ -237,8 +281,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
          */
         public ResponseHandler<ResponseType, ExceptionType> build() {
             return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
-                    globalErrorCases, deserializer, responseClassType, contextInitializer,
-                    isNullify404Enabled);
+                    globalErrorCases, deserializer, intermediateDeserializer, responseClassType,
+                    contextInitializer, isNullify404Enabled);
         }
     }
 }
