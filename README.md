@@ -1,5 +1,6 @@
 # APIMatic Core Library for JAVA
 [![Maven Central][maven-badge]][maven-url]
+[![Tests][test-badge]][test-url]
 [![Licence][license-badge]][license-url]
 
 ## Introduction
@@ -65,3 +66,5 @@ To add a dependency on core library using Maven, use the following:
 [license-url]: LICENSE
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
 [maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.1.2
+[test-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml/badge.svg
+[test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
