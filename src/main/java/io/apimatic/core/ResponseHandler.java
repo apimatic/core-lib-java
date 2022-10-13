@@ -9,6 +9,7 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.ResponseClassType;
 import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
+import io.apimatic.coreinterfaces.type.functional.ContextInitializer;
 import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
 /**
@@ -23,23 +24,27 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
     private final Map<String, ErrorCase<ExceptionType>> globalErrorCases;
     private final Deserializer<ResponseType> deserializer;
     private final ResponseClassType responseClassType;
+    private final ContextInitializer<ResponseType> contextInitializer;
     private final boolean isNullify404Enabled;
 
-    /**
-     * @param localErrorCases
-     * @param globalErrorCases
-     * @param deserializer
-     * @param objectCreator
-     * @param isNullify404Enabled
-     */
+   /**
+    * 
+    * @param localErrorCases the map of local errors
+    * @param globalErrorCases the map of global errors
+    * @param deserializer the deserializer of json response
+    * @param responseClassType the type of response class
+    * @param contextInitializer the context initializer in response models
+    * @param isNullify404Enabled on 404 error return null or not?
+    */
     private ResponseHandler(Map<String, ErrorCase<ExceptionType>> localErrorCases,
             Map<String, ErrorCase<ExceptionType>> globalErrorCases,
             Deserializer<ResponseType> deserializer, ResponseClassType responseClassType,
-            boolean isNullify404Enabled) {
+            ContextInitializer<ResponseType> contextInitializer, boolean isNullify404Enabled) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
         this.deserializer = deserializer;
         this.responseClassType = responseClassType;
+        this.contextInitializer = contextInitializer;
         this.isNullify404Enabled = isNullify404Enabled;
     }
 
@@ -86,7 +91,11 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
 
         if (deserializer != null) {
             // extract result from the http response
-            return deserializer.apply(httpResponse.getBody());
+            result = deserializer.apply(httpResponse.getBody()); 
+        }
+        
+        if (contextInitializer != null && deserializer != null) {
+            result = contextInitializer.apply(httpContext, result);
         }
 
         if (responseClassType != null) {
@@ -142,6 +151,7 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         private Map<String, ErrorCase<ExceptionType>> globalErrorCases = null;
         private Deserializer<ResponseType> deserializer;
         private ResponseClassType responseClassType;
+        private ContextInitializer<ResponseType> contextInitializer;
         private boolean isNullify404Enabled = true;
 
         /**
@@ -198,6 +208,18 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
         }
 
         /**
+         * Setter for the {@link ContextInitializer}
+         * 
+         * @param contextInitializer the context initializer in response models.
+         * @return {@link ResponseHandler.Builder}
+         */
+        public Builder<ResponseType, ExceptionType> contextInitializer(
+                ContextInitializer<ResponseType> contextInitializer) {
+            this.contextInitializer = contextInitializer;
+            return this;
+        }
+
+        /**
          * Setter for the nullify404
          * 
          * @param isNullify404Enabled in case of 404 error return null or not
@@ -215,7 +237,8 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
          */
         public ResponseHandler<ResponseType, ExceptionType> build() {
             return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
-                    globalErrorCases, deserializer, responseClassType, isNullify404Enabled);
+                    globalErrorCases, deserializer, responseClassType, contextInitializer,
+                    isNullify404Enabled);
         }
     }
 }
