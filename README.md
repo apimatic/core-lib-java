@@ -13,7 +13,7 @@ To add a dependency on core library using Maven, use the following:
 <dependency>
     <groupId>io.apimatic</groupId>
     <artifactId>core</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
 </dependency>
 ```
 
