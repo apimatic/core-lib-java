@@ -130,7 +130,7 @@ public class GlobalConfiguration {
     public Function<String, String> getBaseUri() {
         return baseUri;
     }
-
+    
     public static class Builder {
         private CompatibilityFactory compatibilityFactory;
         private String userAgent;
@@ -216,16 +216,6 @@ public class GlobalConfiguration {
                 headerValues.add(value);
                 globalHeaders.put(key, headerValues);
             }
-            return this;
-        }
-
-        /**
-         * 
-         * @param headers value for HttpHeaders
-         * @return Builder
-         */
-        private Builder globalHeader(Map<String, List<String>> headers) {
-            globalHeaders = headers;
             return this;
         }
 
