@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * Wrapper class for JSON object.
  */
-public class JsonObject {
+public class CoreJsonObject {
     @com.fasterxml.jackson.annotation.JsonValue
     private JsonNode jsonNode;
 
@@ -17,7 +17,7 @@ public class JsonObject {
      * @param jsonNode The JSON of type JsonNode.
      */
     @JsonCreator
-    private JsonObject(JsonNode jsonNode) {
+    protected CoreJsonObject(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
     }
 
@@ -27,13 +27,13 @@ public class JsonObject {
      * @return The JsonObject instance.
      * @throws IOException signals that provided JSON string does not contain a valid JSON object.
      */
-    public static JsonObject fromJsonString(String jsonString) throws IOException {
+    public static CoreJsonObject fromJsonString(String jsonString) throws IOException {
         if (jsonString == null) {
-            return new JsonObject(null);
+            return new CoreJsonObject(null);
         }
         JsonNode node = CoreHelper.mapper.readTree(jsonString);
         if (node.isObject()) {
-            return new JsonObject(node);
+            return new CoreJsonObject(node);
         }
         throw new IOException("Provided JSON string must contain a valid JSON object.");
     }

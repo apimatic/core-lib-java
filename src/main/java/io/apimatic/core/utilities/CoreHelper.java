@@ -1270,11 +1270,11 @@ public class CoreHelper {
         }
         if (isWrapperType(value)) {
             objectList.add(new SimpleEntry<String, Object>(key, value));
-        } else if (value.getClass().equals(JsonObject.class)) {
-            objectToList(key, ((JsonObject) value).getStoredObject(), objectList, processed,
+        } else if (value instanceof CoreJsonObject) {
+            objectToList(key, ((CoreJsonObject) value).getStoredObject(), objectList, processed,
                     arraySerializationFormat);
-        } else if (value.getClass().equals(JsonValue.class)) {
-            Object storedValue = ((JsonValue) value).getStoredObject();
+        } else if (value instanceof CoreJsonValue) {
+            Object storedValue = ((CoreJsonValue) value).getStoredObject();
             if (isWrapperType(storedValue)) {
                 objectList.add(new SimpleEntry<String, Object>(key, storedValue));
             } else {
