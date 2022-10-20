@@ -189,37 +189,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
     }
 
     /**
-     * Converts this HttpClientConfiguration into string format.
-     * 
-     * @return String representation of this class
-     */
-    @Override
-    public String toString() {
-        return "HttpClientConfiguration [" + "timeout=" + timeout + ", numberOfRetries="
-                + numberOfRetries + ", backOffFactor=" + backOffFactor + ", retryInterval="
-                + retryInterval + ", httpStatusCodesToRetry=" + httpStatusCodesToRetry
-                + ", httpMethodsToRetry=" + httpMethodsToRetry + ", maximumRetryWaitTime="
-                + maximumRetryWaitTime + ", shouldRetryOnTimeout=" + shouldRetryOnTimeout
-                + ", httpClientInstance=" + httpClientInstance
-                + ", overrideHttpClientConfigurations=" + overrideHttpClientConfigurations + "]";
-    }
-
-    /**
-     * Builds a new {@link CoreHttpClientConfiguration.Builder} object. Creates the instance with
-     * the current state.
-     * 
-     * @return a new {@link CoreHttpClientConfiguration.Builder} object
-     */
-    public Builder newBuilder() {
-        return new Builder().timeout(timeout).numberOfRetries(numberOfRetries)
-                .backOffFactor(backOffFactor).retryInterval(retryInterval)
-                .httpStatusCodesToRetry(httpStatusCodesToRetry)
-                .httpMethodsToRetry(httpMethodsToRetry).maximumRetryWaitTime(maximumRetryWaitTime)
-                .shouldRetryOnTimeout(shouldRetryOnTimeout)
-                .httpClientInstance(httpClientInstance, overrideHttpClientConfigurations);
-    }
-
-    /**
      * Class to build instances of {@link CoreHttpClientConfiguration}.
      */
     public static class Builder {

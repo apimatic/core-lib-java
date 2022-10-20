@@ -100,7 +100,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.PATCH)
                 .bodyParam(param -> param.value("bodyValue")).build(mockGlobalConfig);
-        
+
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
 
         // verify
@@ -111,7 +111,8 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testBodyParamKey1() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.key("bodykey").value("bodyValue")).build(mockGlobalConfig);
+                .bodyParam(param -> param.key("bodykey").value("bodyValue"))
+                .build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
@@ -275,7 +276,8 @@ public class RequestBuilderTest extends MockCoreRequest {
     public void testHttpMethodParam() throws IOException {
         // when
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
-                .formParam(param -> param.key("formKey").value("formValue")).build(mockGlobalConfig);
+                .formParam(param -> param.key("formKey").value("formValue"))
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getHttpMethod()).thenReturn(Method.POST);
 
@@ -322,6 +324,25 @@ public class RequestBuilderTest extends MockCoreRequest {
 
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("employee").value(model)).build(mockGlobalConfig);
+
+        // stub
+        when(coreHttpRequest.getParameters()).thenReturn(parameterList);
+        when(parameterList.contains("employee")).thenReturn(true);
+
+        // verify
+        assertTrue(coreHttpRequest.getParameters().contains("employee"));
+    }
+    
+    @SuppressWarnings("unlikely-arg-type")
+    @Test
+    public void testFormParamOptional() throws IOException {
+        // Parameters for the API call
+        Employee model = getEmployeeModel();
+        Map<String, Object> formParameters = new HashMap<String, Object>();
+        formParameters.put("model", model);
+
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParam(formParameters).build(mockGlobalConfig);
 
         // stub
         when(coreHttpRequest.getParameters()).thenReturn(parameterList);
@@ -439,7 +460,8 @@ public class RequestBuilderTest extends MockCoreRequest {
 
     @Test(expected = NullPointerException.class)
     public void testTemplateParamValidation() throws IOException {
-        new HttpRequest.Builder().templateParam(param -> param.key("model")).build(mockGlobalConfig);
+        new HttpRequest.Builder().templateParam(param -> param.key("model"))
+                .build(mockGlobalConfig);
     }
 
 
@@ -454,7 +476,8 @@ public class RequestBuilderTest extends MockCoreRequest {
         when(mockGlobalConfig.getHttpCallback()).thenReturn(null);
         Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("form").value("formValue"))
-                .queryParam(param -> param.key("query").value("queryValue")).build(mockGlobalConfig);
+                .queryParam(param -> param.key("query").value("queryValue"))
+                .build(mockGlobalConfig);
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
         when(queryParameters.get("query")).thenReturn("queryValue");
@@ -464,6 +487,24 @@ public class RequestBuilderTest extends MockCoreRequest {
     }
 
 
+    @Test
+    public void testQueryParamModelOptional() throws IOException {
+        // Parameters for the API call
+        Employee model = getEmployeeModel();
+        Map<String, Object> optionalQueryParameters = new HashMap<String, Object>();
+        optionalQueryParameters.put("model", model);
+        
+        Request coreHttpRequest = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParam(param -> param.key("form").value("formValue"))
+                .queryParam(optionalQueryParameters).build(mockGlobalConfig);
+
+        when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
+        when(queryParameters.get("model")).thenReturn(model);
+
+        // verify
+        assertEquals(coreHttpRequest.getQueryParameters().get("model"), model);
+    }
+    
     @Test
     public void testQueryParamModel() throws IOException {
         // Parameters for the API call
@@ -479,6 +520,7 @@ public class RequestBuilderTest extends MockCoreRequest {
         // verify
         assertEquals(coreHttpRequest.getQueryParameters().get("model"), model);
     }
+    
 
     @Test
     public void testbodySerializer() throws IOException {
@@ -542,6 +584,29 @@ public class RequestBuilderTest extends MockCoreRequest {
                 CoreHelper.getBase64EncodedCredentials("username", "password"));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testHeaderAuthenticationWithNull() throws IOException {
+        when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
+        when(authentications.get("global"))
+                .thenReturn(new HeaderAuth(Collections.singletonMap(null, null)));
+
+        Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
+                .path("/auth/basic").formParam(param -> param.key("key").value("string"))
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testHeaderAuthenticationWithValueNull() throws IOException {
+        when(coreHttpRequest.getHeaders()).thenReturn(httpHeaders);
+        when(authentications.get("global"))
+                .thenReturn(new HeaderAuth(Collections.singletonMap("authorization", null)));
+
+        Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
+                .path("/auth/basic").formParam(param -> param.key("key").value("string"))
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
+    }
+
+
     @Test
     public void testQueryAuthentication() throws IOException {
         Map<String, String> authParams = new HashMap<>();
@@ -559,6 +624,39 @@ public class RequestBuilderTest extends MockCoreRequest {
         // verify
         assertEquals(coreHttpRequest.getQueryParameters().get("token"), "api-token");
         assertEquals(coreHttpRequest.getQueryParameters().get("api-key"), "apikey");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testQueryAuthenticationWithNull() throws IOException {
+        Map<String, String> authParams = new HashMap<>();
+        authParams.put(null, null);
+        authParams.put("api-key", "apikey");
+        when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
+                .path("/auth/basic").formParam(param -> param.key("key").value("string"))
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testQueryAuthenticationWithKeyNull() throws IOException {
+        Map<String, String> authParams = new HashMap<>();
+        authParams.put(null, "api-token");
+        authParams.put("api-key", "apikey");
+        when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
+                .path("/auth/basic").formParam(param -> param.key("key").value("string"))
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testQueryAuthenticationWithValueNull() throws IOException {
+        Map<String, String> authParams = new HashMap<>();
+        authParams.put("token", null);
+        authParams.put("api-key", "apikey");
+        when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        Request coreHttpRequest = new HttpRequest.Builder().server("https:\\localhost:3000")
+                .path("/auth/basic").formParam(param -> param.key("key").value("string"))
+                .authenticationKey("global").httpMethod(Method.GET).build(mockGlobalConfig);
     }
 
     @Test
@@ -582,7 +680,6 @@ public class RequestBuilderTest extends MockCoreRequest {
         when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
         when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
         when(mockGlobalConfig.getAuthentications()).thenReturn(authentications);
-        when(mockGlobalConfig.getUserAgent()).thenReturn("APIMATIC3.0");
         when(mockGlobalConfig.getHttpCallback()).thenReturn(httpCallback);
         when(mockGlobalConfig.getAdditionalHeaders()).thenReturn(httpHeaders);
     }

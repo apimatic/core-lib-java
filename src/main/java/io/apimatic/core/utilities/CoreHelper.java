@@ -1187,7 +1187,6 @@ public class CoreHelper {
                 return "%7C";
             case TSV:
                 return "%09";
-
             default:
                 return "";
         }
@@ -1329,21 +1328,6 @@ public class CoreHelper {
         }
         return WRAPPER_TYPES.contains(object.getClass()) || object.getClass().isPrimitive()
                 || object.getClass().isEnum();
-    }
-
-    /**
-     * Json Serialization of an ENUM defined under oneOf/anyOf container.
-     * 
-     * @param value The object to serialize into Json String.
-     * @return The serialized Json String representation of the given object.
-     * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
-     */
-    public static String serializeEnumContainer(Object value) throws JsonProcessingException {
-        if (value instanceof String || value instanceof Integer) {
-            return String.valueOf(value);
-        }
-
-        return serialize(value);
     }
 
     /**

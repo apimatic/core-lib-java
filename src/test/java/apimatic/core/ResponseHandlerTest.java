@@ -19,11 +19,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import apimatic.core.exceptions.GlobalTestException;
+import apimatic.core.models.DeleteBody;
+import apimatic.core.models.TestModel;
 import apimatic.core.utilities.MockCoreRequest;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.ResponseHandler;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.HttpClient;
@@ -48,7 +51,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     @Mock
     private HttpClient client;
-    
+
     @Mock
     private CoreEndpointConfiguration endpointSetting;
 
@@ -68,27 +71,82 @@ public class ResponseHandlerTest extends MockCoreRequest {
     private DynamicType dynamicType;
 
     @Mock
-    private ApiResponseType<String> apiResponseType;
+    private ApiResponseType<String> stringApiResponseType;
+
+    @Mock
+    private ApiResponseType<DynamicType> dynamicApiResponseType;
 
     @Before
     public void setup() throws IOException {
         setExpectations();
     }
 
-
     @Test
     public void testDeserializerMethod() throws IOException, CoreApiException {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>()
                         .deserializer(string -> new String(string)).build();
-
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(200);
         when(coreHttpResponse.getBody()).thenReturn("bodyValue");
 
         // verify
-        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting),
-                "bodyValue");
+        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting), "bodyValue");
+    }
+
+    @Test
+    public void testDeserializerMethodUsingRawBody() throws IOException, CoreApiException {
+        ResponseHandler<InputStream, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<InputStream, CoreApiException>().build();
+
+        String responseString = "bodyValue";
+        InputStream inputStream = new ByteArrayInputStream(responseString.getBytes());
+        // stub
+
+        when(endpointSetting.hasBinaryResponse()).thenReturn(true);
+        when(coreHttpResponse.getStatusCode()).thenReturn(200);
+        when(coreHttpResponse.getRawBody()).thenReturn(inputStream);
+
+        // verify
+        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting), inputStream);
+    }
+
+
+    @Test
+    public void testDeserializerMethodUsingContext() throws IOException, CoreApiException {
+        ResponseHandler<TestModel, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<TestModel, CoreApiException>()
+                        .deserializer(string -> CoreHelper.deserialize(string, TestModel.class))
+                        .contextInitializer((context, response) -> response.toBuilder()
+                                .httpContext(context).build())
+                        .build();
+        TestModel model = new TestModel.Builder("ali", "DEV").httpContext(context).build();
+
+        // stub
+        when(coreHttpResponse.getStatusCode()).thenReturn(200);
+        when(coreHttpResponse.getBody()).thenReturn("{\"name\" : \"ali\", \"field\" : \"DEV\"}");
+
+        // verify
+        assertEquals(coreResponseHandler
+                .handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting)
+                .getContext(), model.getContext());
+    }
+
+    @Test
+    public void testContextWithoutDeserializer() throws IOException, CoreApiException {
+        ResponseHandler<TestModel, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<TestModel, CoreApiException>().contextInitializer(
+                        (context, response) -> response.toBuilder().httpContext(context).build())
+                        .build();
+        // stub
+        when(coreHttpResponse.getStatusCode()).thenReturn(200);
+        when(coreHttpResponse.getBody()).thenReturn("{\"name\" : \"ali\", \"field\" : \"DEV\"}");
+
+        // verify
+        assertNull(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting));
     }
 
     @Test
@@ -102,27 +160,42 @@ public class ResponseHandlerTest extends MockCoreRequest {
         when(coreHttpResponse.getBody()).thenReturn("bodyValue");
 
         // verify
-        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting),
-                dynamicType);
+        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting), dynamicType);
     }
-
 
     @Test
     public void testApiResponseTypeMethod() throws IOException, CoreApiException {
         ResponseHandler<ApiResponseType<String>, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<ApiResponseType<String>, CoreApiException>()
                         .responseClassType(ResponseClassType.API_RESPONSE)
-                        .apiResponseDeserializer(response -> new String(response))
-                        .build();
+                        .apiResponseDeserializer(response -> new String(response)).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(201);
         when(coreHttpResponse.getHeaders()).thenReturn(httpHeaders);
         when(coreHttpResponse.getBody()).thenReturn("bodyValue");
-        when(apiResponseType.getResult()).thenReturn("bodyValue");
+        when(stringApiResponseType.getResult()).thenReturn("bodyValue");
 
         // verify
-        assertEquals(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting).getResult(),
-                apiResponseType.getResult());
+        assertEquals(coreResponseHandler
+                .handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting)
+                .getResult(), stringApiResponseType.getResult());
+    }
+
+    @Test
+    public void testDynamicApiResponseTypeMethod() throws IOException, CoreApiException {
+        ResponseHandler<ApiResponseType<DynamicType>, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<ApiResponseType<DynamicType>, CoreApiException>()
+                        .responseClassType(ResponseClassType.DYNAMIC_API_RESPONSE).build();
+        // stub
+        when(coreHttpResponse.getStatusCode()).thenReturn(201);
+        when(coreHttpResponse.getHeaders()).thenReturn(httpHeaders);
+        when(dynamicApiResponseType.getResult()).thenReturn(dynamicType);
+
+        // verify
+        assertEquals(coreResponseHandler
+                .handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting)
+                .getResult(), dynamicApiResponseType.getResult());
     }
 
     @Test
@@ -132,7 +205,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(201);
         // verify
-        assertNull(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting));
+        assertNull(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting));
     }
 
     @Test
@@ -141,9 +215,13 @@ public class ResponseHandlerTest extends MockCoreRequest {
                 new ResponseHandler.Builder<String, CoreApiException>().nullify404(true).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(404);
+        when(compatibilityFactory.createHttpContext(coreHttpRequest, coreHttpResponse))
+                .thenReturn(context);
+
 
         // verify
-        assertNull(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting));
+        assertNull(coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                endpointSetting));
     }
 
     @Test
@@ -155,7 +233,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
         when(coreHttpResponse.getStatusCode()).thenReturn(404);
 
         CoreApiException apiException = assertThrows(CoreApiException.class, () -> {
-            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting);
+            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                    endpointSetting);
         });
 
         String expectedMessage = "Not found";
@@ -176,7 +255,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
         when(coreHttpResponse.getStatusCode()).thenReturn(403);
 
         CoreApiException apiException = assertThrows(CoreApiException.class, () -> {
-            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting);
+            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                    endpointSetting);
         });
 
         String expectedMessage = "Forbidden";
@@ -198,7 +278,8 @@ public class ResponseHandlerTest extends MockCoreRequest {
         when(coreHttpResponse.getStatusCode()).thenReturn(199);
 
         CoreApiException apiException = assertThrows(CoreApiException.class, () -> {
-            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting);
+            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                    endpointSetting);
         });
 
         String expectedMessage = "Invalid response.";
@@ -220,10 +301,11 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(209);
-        
+
 
         CoreApiException apiException = assertThrows(CoreApiException.class, () -> {
-            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting);
+            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                    endpointSetting);
         });
 
         String expectedMessage = "Invalid response.";
@@ -231,15 +313,14 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
         int expectedResponseCode = 209;
         int actualResponseCode = apiException.getResponseCode();
-        
+
         Context expectedContext = context;
         Context actualContext = apiException.getHttpContext();
-        
+
         assertEquals(actualContext, expectedContext);
         assertEquals(actualResponseCode, expectedResponseCode);
         assertEquals(actualMessage, expectedMessage);
     }
-
 
     @Test
     public void testGlobalException() throws IOException, CoreApiException {
@@ -247,17 +328,20 @@ public class ResponseHandlerTest extends MockCoreRequest {
                 new ResponseHandler.Builder<String, CoreApiException>()
                         .globalErrorCase(getGlobalErrorCases()).build();
 
-        String exceptionResponse = "{\"ServerMessage\" : \"This is a message from server\" , \"ServerCode\" : 5000 }";
-        InputStream exceptionResponseStream = new ByteArrayInputStream(exceptionResponse.getBytes());
+        String exceptionResponse =
+                "{\"ServerMessage\" : \"This is a message from server\" , \"ServerCode\" : 5000 }";
+        InputStream exceptionResponseStream =
+                new ByteArrayInputStream(exceptionResponse.getBytes());
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(400);
         when(coreHttpResponse.getRawBody()).thenReturn(exceptionResponseStream);
-        
+
         when(endpointSetting.hasBinaryResponse()).thenReturn(true);
 
 
         GlobalTestException apiException = assertThrows(GlobalTestException.class, () -> {
-            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig, endpointSetting);
+            coreResponseHandler.handle(coreHttpRequest, coreHttpResponse, mockGlobalConfig,
+                    endpointSetting);
         });
 
         String expectedMessage = "Bad Request";
@@ -265,11 +349,11 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
         String expectedServerMessage = "This is a message from server";
         String actualSeverMessage = apiException.getServerMessage();
-        
+
         int expectedServerCode = 5000;
         int actualSeverCode = apiException.getServerCode();
-        
-        
+
+
         assertEquals(actualMessage, expectedMessage);
         assertEquals(actualSeverMessage, expectedServerMessage);
         assertEquals(actualSeverCode, expectedServerCode);
@@ -291,6 +375,7 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     }
 
+
     private void prepareCoreConfigStub() throws IOException {
         when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
         when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
@@ -306,19 +391,19 @@ public class ResponseHandlerTest extends MockCoreRequest {
 
     private void prepareCompatibilityStub() {
         when(compatibilityFactory.createHttpHeaders(anyMap())).thenReturn(httpHeaders);
-        when(compatibilityFactory.createHttpRequest(any(Method.class),
-                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), any(Object.class)))
-                        .thenReturn(coreHttpRequest);
-        when(compatibilityFactory.createHttpRequest(any(Method.class),
-                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
-                        .thenReturn(coreHttpRequest);
+        when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
+                any(HttpHeaders.class), anyMap(), any(Object.class))).thenReturn(coreHttpRequest);
+        when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
+                any(HttpHeaders.class), anyMap(), anyList())).thenReturn(coreHttpRequest);
         when(compatibilityFactory.createHttpContext(coreHttpRequest, coreHttpResponse))
                 .thenReturn(context);
 
         when(compatibilityFactory.createDynamicResponse(coreHttpResponse)).thenReturn(dynamicType);
 
         when(compatibilityFactory.createApiResponse(any(int.class), any(HttpHeaders.class),
-                any(String.class))).thenReturn(apiResponseType);
+                any(String.class))).thenReturn(stringApiResponseType);
+        when(compatibilityFactory.createApiResponse(any(int.class), any(HttpHeaders.class),
+                any(DynamicType.class))).thenReturn(dynamicApiResponseType);
     }
 
 

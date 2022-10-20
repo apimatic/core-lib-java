@@ -14,7 +14,7 @@ import io.apimatic.core.utilities.CoreHelper;
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @TypeCombinatorCase
-public  class MorningCase {
+public class MorningCase {
 
     @JsonValue
     private Morning morning;
@@ -26,8 +26,7 @@ public  class MorningCase {
 
     @JsonCreator
     private MorningCase(JsonNode jsonNode) throws IOException {
-        this.morning = CoreHelper.deserialize(jsonNode,
-            Morning.class);
+        this.morning = CoreHelper.deserialize(jsonNode, Morning.class);
     }
 
     @Override

@@ -30,6 +30,12 @@ public class XmlZonedDateTimeHelperTest {
         assertEquals(actual, expected);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeRfc8601DateTimeInvalidXml() {
+        String zonedDateTime = "<XmlRootName1997-07-13T06:10Z[GMT]XmlRootName>";
+        XmlZonedDateTimeHelper.deserializeRfc8601DateTime(zonedDateTime);
+    }
+
     @Test
     public void testSerializeRfc1123DateTime() {
         ZonedDateTime zonedDateTime = ZonedDateTime.of(1997, 7, 13, 6, 10, 0, 0, ZoneId.of("GMT"));
@@ -51,6 +57,12 @@ public class XmlZonedDateTimeHelperTest {
         ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeRfc1123DateTime(zonedDateTime);
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeRfc1123DateTimeInvalidXml() {
+        String zonedDateTime = "<XmlRootNameSun, 13 Jul 1997 06:10:00 GMTXmlRootName>";
+        XmlZonedDateTimeHelper.deserializeRfc1123DateTime(zonedDateTime);
     }
 
     @Test
@@ -76,5 +88,11 @@ public class XmlZonedDateTimeHelperTest {
         ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
 
         assertEquals(actualGMT, expected);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeUnixTimeStampInvalidXml() {
+        String zonedDateTime = "<868774200/XmlRootName>";
+        XmlZonedDateTimeHelper.deserializeUnixTimeStamp(zonedDateTime);
     }
 }

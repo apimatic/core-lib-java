@@ -95,7 +95,8 @@ public class EndToEndTest extends MockCoreRequest {
                 .authentication(Collections.emptyMap()).compatibilityFactory(compatibilityFactory)
                 .httpClient(httpClient).baseUri(server -> getBaseUri(server)).callback(callback)
                 .userAgent(userAgent).userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
-                .globalHeader("Square-Version", "square version").build();
+                .globalHeader("version", "0.1")
+                .globalHeader("version", "1.2").build();
         return globalConfig;
     }
 

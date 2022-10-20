@@ -60,7 +60,10 @@ public class CoreApiException extends Exception {
      * @return Returns the response code for ApiException
      */
     public int getResponseCode() {
-        return (httpContext != null) ? httpContext.getResponse().getStatusCode() : -1;
+        return (httpContext != null)
+                ? (httpContext.getResponse() != null ? httpContext.getResponse().getStatusCode()
+                        : -1)
+                : -1;
     }
 
     /**
