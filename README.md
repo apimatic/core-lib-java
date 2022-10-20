@@ -14,7 +14,7 @@ To add a dependency on core library using Maven, use the following:
 <dependency>
     <groupId>io.apimatic</groupId>
     <artifactId>core</artifactId>
-    <version>0.1.4</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
@@ -46,8 +46,8 @@ To add a dependency on core library using Maven, use the following:
 | [`XMLDateHelper`](./src/main/java/io/apimatic/core/utilities/XMLDateHelper.java)                     | This is a utility class for XML LocalDate operations |
 | [`XMLLocalDateTimeHelper`](./src/main/java/io/apimatic/core/utilities/XmlLocalDateTimeHelper.java)                     | This is a utility class for XML LocalDateTime operations |
 | [`XMLZonedDateTimeHelper`](./src/main/java/io/apimatic/core/utilities/XmlZonedDateTimeHelper.java)                     | This is a utility class for XML ZonedDateTime operations |
-| [`JsonObject`](./src/main/java/io/apimatic/core/utilities/JsonObject.java)                     | Wrapper class for JSON object |
-| [`JsonValue`](./src/main/java/io/apimatic/core/utilities/JsonValue.java)                     | Wrapper class for JSON value |
+| [`CoreJsonObject`](./src/main/java/io/apimatic/core/utilities/CoreJsonObject.java)                     | Wrapper class for JSON object |
+| [`CoreJsonValue`](./src/main/java/io/apimatic/core/utilities/CoreJsonValue.java)                     | Wrapper class for JSON value |
 | [`TestHelper`](./src/main/java/io/apimatic/core/testing/TestHelper.java)                     | Contains utility methods for comparing objects, arrays and files |
 
 ## Interfaces
@@ -65,6 +65,6 @@ To add a dependency on core library using Maven, use the following:
 [license-badge]: https://img.shields.io/badge/licence-APIMATIC-blue
 [license-url]: LICENSE
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
-[maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.1.2
+[maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.2.0
 [test-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml/badge.svg
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml

@@ -5,16 +5,16 @@ import static org.junit.Assert.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import io.apimatic.core.utilities.JsonValue;
+import io.apimatic.core.utilities.CoreJsonValue;
 
-public class JsonValueTest {
+public class CoreJsonValueTest {
     @Test
     public void testFromString() {
         String value = "TestString";
         
         // stub
         String expected = "\"TestString\"";
-        JsonValue jsonValue = JsonValue.fromString(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromString(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -25,7 +25,7 @@ public class JsonValueTest {
         String value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromString(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromString(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -37,7 +37,7 @@ public class JsonValueTest {
         
         // stub
         String expected = "true";
-        JsonValue jsonValue = JsonValue.fromBoolean(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromBoolean(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -48,7 +48,7 @@ public class JsonValueTest {
         Boolean value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromBoolean(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromBoolean(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -60,7 +60,7 @@ public class JsonValueTest {
         
         // stub
         String expected = "21";
-        JsonValue jsonValue = JsonValue.fromInteger(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromInteger(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -71,7 +71,7 @@ public class JsonValueTest {
         Integer value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromInteger(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromInteger(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -83,7 +83,7 @@ public class JsonValueTest {
         
         // stub
         String expected = String.format("%s", value);
-        JsonValue jsonValue = JsonValue.fromLong(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromLong(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -94,7 +94,7 @@ public class JsonValueTest {
         Long value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromLong(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromLong(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -106,7 +106,7 @@ public class JsonValueTest {
         
         // stub
         String expected = "5.5";
-        JsonValue jsonValue = JsonValue.fromDouble(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromDouble(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -117,7 +117,7 @@ public class JsonValueTest {
         Double value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromDouble(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromDouble(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -129,7 +129,7 @@ public class JsonValueTest {
         
         // stub
         String expected = "21";
-        JsonValue jsonValue = JsonValue.fromObject(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromObject(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -140,7 +140,7 @@ public class JsonValueTest {
         Object value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromObject(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromObject(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -155,7 +155,7 @@ public class JsonValueTest {
         
         // stub
         String expected = "[1,2,3]";
-        JsonValue jsonValue = JsonValue.fromArray(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromArray(value);
         String actual = jsonValue.toString();
         
         assertEquals(actual, expected);
@@ -166,7 +166,7 @@ public class JsonValueTest {
         List<Integer> value = null;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromArray(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromArray(value);
         Object actual = jsonValue.getStoredObject();
         
         assertNull(actual);
@@ -177,7 +177,7 @@ public class JsonValueTest {
         Integer value = 21;
         
         // stub
-        JsonValue jsonValue = JsonValue.fromInteger(value);
+        CoreJsonValue jsonValue = CoreJsonValue.fromInteger(value);
         Integer actual = (Integer) jsonValue.getStoredObject();
         
         assertEquals(actual, value);

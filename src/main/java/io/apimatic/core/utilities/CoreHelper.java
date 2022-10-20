@@ -52,6 +52,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.apimatic.core.annotations.TypeCombinator.FormSerialize;
 import io.apimatic.core.annotations.TypeCombinator.TypeCombinatorCase;
@@ -66,29 +67,26 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 public class CoreHelper {
 
     private static String userAgent;
+
     // Deserialization of Json data
-    public static ObjectMapper mapper = new ObjectMapper() {
-        private static final long serialVersionUID = -174113593500315394L;
-        {
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            configOverride(BigDecimal.class)
-                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
-        }
-    };
+    public static ObjectMapper mapper = JsonMapper
+            .builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                    false)
+            .withConfigOverride(BigDecimal.class, mutableConfigOverride -> mutableConfigOverride
+                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
+            .build();
 
     // Strict Deserialization of Json data
-    public static ObjectMapper strictMapper = new ObjectMapper() {
-        private static final long serialVersionUID = 8417468888600344886L;
-        {
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
-            configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false);
-            configOverride(BigDecimal.class)
-                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING));
-            registerModule(new SimpleModule().addDeserializer(String.class,
-                    new CoercionLessStringDeserializer()));
-        }
-    };
+    public static ObjectMapper strictMapper =
+            JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
+                    .configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false)
+                    .addModule(new SimpleModule().addDeserializer(String.class,
+                            new CoercionLessStringDeserializer()))
+                    .withConfigOverride(BigDecimal.class,
+                            mutableConfigOverride -> mutableConfigOverride
+                                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
+                    .build();
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
@@ -1272,11 +1270,11 @@ public class CoreHelper {
         }
         if (isWrapperType(value)) {
             objectList.add(new SimpleEntry<String, Object>(key, value));
-        } else if (value.getClass().equals(JsonObject.class)) {
-            objectToList(key, ((JsonObject) value).getStoredObject(), objectList, processed,
+        } else if (value instanceof CoreJsonObject) {
+            objectToList(key, ((CoreJsonObject) value).getStoredObject(), objectList, processed,
                     arraySerializationFormat);
-        } else if (value.getClass().equals(JsonValue.class)) {
-            Object storedValue = ((JsonValue) value).getStoredObject();
+        } else if (value instanceof CoreJsonValue) {
+            Object storedValue = ((CoreJsonValue) value).getStoredObject();
             if (isWrapperType(storedValue)) {
                 objectList.add(new SimpleEntry<String, Object>(key, storedValue));
             } else {
