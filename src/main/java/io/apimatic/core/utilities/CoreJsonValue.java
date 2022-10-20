@@ -31,7 +31,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The string value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromString(String value) {
         if (value == null) {
@@ -44,7 +44,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The boolean value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromBoolean(Boolean value) {
         if (value == null) {
@@ -57,7 +57,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The integer value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromInteger(Integer value) {
         if (value == null) {
@@ -70,7 +70,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The long value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromLong(Long value) {
         if (value == null) {
@@ -83,7 +83,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The double value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromDouble(Double value) {
         if (value == null) {
@@ -96,7 +96,7 @@ public class CoreJsonValue {
      * Initializes JsonValue instance with provided value.
      * 
      * @param value The double value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static CoreJsonValue fromObject(Object value) {
         if (value == null) {
@@ -110,7 +110,7 @@ public class CoreJsonValue {
      * 
      * @param <T> The list type
      * @param values The list of values of given type.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
     public static <T> CoreJsonValue fromArray(List<T> values) {
         if (values == null) {

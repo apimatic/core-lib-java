@@ -26,7 +26,7 @@ public class CoreJsonObject {
      * Initializes JsonObject with provided JSON.
      * 
      * @param jsonString The JSON string.
-     * @return The JsonObject instance.
+     * @return The {@link CoreJsonObject} instance.
      * @throws IOException signals that provided JSON string does not contain a valid JSON object.
      */
     public static CoreJsonObject fromJsonString(String jsonString) throws IOException {
