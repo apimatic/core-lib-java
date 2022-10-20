@@ -20,7 +20,7 @@ public class CoreJsonValue {
     /**
      * Initialization constructor.
      * 
-     * @param jsonNode The JSON of type JsonNode.
+     * @param value The JSON of type JsonNode.
      */
     @JsonCreator
     protected CoreJsonValue(JsonNode value) {
@@ -29,91 +29,99 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The string value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromString(String value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(TextNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The boolean value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromBoolean(Boolean value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(BooleanNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The integer value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromInteger(Integer value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(IntNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The long value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromLong(Long value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(LongNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The double value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromDouble(Double value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(DoubleNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The double value to initialize with.
      * @return The JsonValue instance.
      */
     public static CoreJsonValue fromObject(Object value) {
         if (value == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(CoreHelper.mapper.valueToTree(value));
     }
 
     /**
      * Initializes JsonValue instance with provided list of values.
+     * 
      * @param <T> The list type
      * @param values The list of values of given type.
      * @return The JsonValue instance.
      */
     public static <T> CoreJsonValue fromArray(List<T> values) {
         if (values == null) {
-            return new CoreJsonValue(null);            
+            return new CoreJsonValue(null);
         }
         return new CoreJsonValue(CoreHelper.mapper.valueToTree(values));
     }
 
     /**
      * Getter for stored JSON object.
+     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -122,6 +130,7 @@ public class CoreJsonValue {
 
     /**
      * Converts the JSON into string.
+     * 
      * @return String representation of JSON
      */
     @Override
