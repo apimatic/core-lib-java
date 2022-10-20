@@ -4,43 +4,44 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import java.io.IOException;
 import org.junit.Test;
-import io.apimatic.core.utilities.JsonObject;
+import io.apimatic.core.utilities.CoreJsonObject;
 
-public class JsonObjectTest {
+public class CoreJsonObjectTest {
     @Test
     public void testFromJsonString() throws IOException {
         String value = "{\"name\":\"test name\",\"field\":\"QA\"}";
 
         // stub
         String expected = value;
-        JsonObject jsonObject = JsonObject.fromJsonString(value);
+        CoreJsonObject jsonObject = CoreJsonObject.fromJsonString(value);
         String actual = jsonObject.toString();
-        
+
         assertEquals(actual, expected);
     }
 
     @Test
     public void testFromJsonStringNull() throws IOException {
         String value = null;
-        
+
         // stub
-        JsonObject jsonObject = JsonObject.fromJsonString(value);
+        CoreJsonObject jsonObject = CoreJsonObject.fromJsonString(value);
         Object actual = jsonObject.getStoredObject();
-        
+
         assertNull(actual);
     }
-    
+
     @Test
     public void testGetStoredObject() throws IOException {
         String value = "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
                 + "\" : \"090078601\",\"first name\" : \"Adeel\",\"last name\" : \"Ali\","
                 + "\"address_boss\" : \"nust\"}";
-        
+
         // stub
-        String expected = "{company name=APIMatic, address=nust, cell number=090078601, first name=Adeel, last name=Ali, address_boss=nust}";
-        JsonObject jsonObject = JsonObject.fromJsonString(value);
+        String expected =
+                "{company name=APIMatic, address=nust, cell number=090078601, first name=Adeel, last name=Ali, address_boss=nust}";
+        CoreJsonObject jsonObject = CoreJsonObject.fromJsonString(value);
         String actual = String.valueOf(jsonObject.getStoredObject());
-        
+
         assertEquals(actual, expected);
     }
 }

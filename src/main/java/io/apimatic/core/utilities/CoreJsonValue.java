@@ -13,107 +13,115 @@ import com.fasterxml.jackson.databind.node.TextNode;
 /**
  * Wrapper class for JSON value.
  */
-public class JsonValue {
+public class CoreJsonValue {
     @com.fasterxml.jackson.annotation.JsonValue
     private JsonNode value;
 
     /**
      * Initialization constructor.
      * 
-     * @param jsonNode The JSON of type JsonNode.
+     * @param value The JSON of type JsonNode.
      */
     @JsonCreator
-    private JsonValue(JsonNode value) {
+    protected CoreJsonValue(JsonNode value) {
         this.value = value;
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The string value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromString(String value) {
+    public static CoreJsonValue fromString(String value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(TextNode.valueOf(value));
+        return new CoreJsonValue(TextNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The boolean value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromBoolean(Boolean value) {
+    public static CoreJsonValue fromBoolean(Boolean value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(BooleanNode.valueOf(value));
+        return new CoreJsonValue(BooleanNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The integer value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromInteger(Integer value) {
+    public static CoreJsonValue fromInteger(Integer value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(IntNode.valueOf(value));
+        return new CoreJsonValue(IntNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The long value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromLong(Long value) {
+    public static CoreJsonValue fromLong(Long value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(LongNode.valueOf(value));
+        return new CoreJsonValue(LongNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The double value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromDouble(Double value) {
+    public static CoreJsonValue fromDouble(Double value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(DoubleNode.valueOf(value));
+        return new CoreJsonValue(DoubleNode.valueOf(value));
     }
 
     /**
      * Initializes JsonValue instance with provided value.
+     * 
      * @param value The double value to initialize with.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static JsonValue fromObject(Object value) {
+    public static CoreJsonValue fromObject(Object value) {
         if (value == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(CoreHelper.mapper.valueToTree(value));
+        return new CoreJsonValue(CoreHelper.mapper.valueToTree(value));
     }
 
     /**
      * Initializes JsonValue instance with provided list of values.
+     * 
      * @param <T> The list type
      * @param values The list of values of given type.
-     * @return The JsonValue instance.
+     * @return The {@link CoreJsonValue} instance.
      */
-    public static <T> JsonValue fromArray(List<T> values) {
+    public static <T> CoreJsonValue fromArray(List<T> values) {
         if (values == null) {
-            return new JsonValue(null);            
+            return new CoreJsonValue(null);
         }
-        return new JsonValue(CoreHelper.mapper.valueToTree(values));
+        return new CoreJsonValue(CoreHelper.mapper.valueToTree(values));
     }
 
     /**
      * Getter for stored JSON object.
+     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -122,6 +130,7 @@ public class JsonValue {
 
     /**
      * Converts the JSON into string.
+     * 
      * @return String representation of JSON
      */
     @Override
