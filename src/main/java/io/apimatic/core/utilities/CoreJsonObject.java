@@ -13,7 +13,7 @@ public class CoreJsonObject {
     private JsonNode jsonNode;
 
     /**
-     * Initialization private constructor.
+     * Initialization constructor.
      * 
      * @param jsonNode The JSON of type JsonNode.
      */
