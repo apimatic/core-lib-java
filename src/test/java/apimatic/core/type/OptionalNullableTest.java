@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import apimatic.core.models.Rfc1123Date;
@@ -29,11 +30,6 @@ public class OptionalNullableTest {
     private final String SIMPLE_DATE = "{\"dateNullable\":\"2020-01-08\"}";
     private final String SIMPLE_DATE_ARRAY = "{\"date\":[\"2020-01-08\",\"2020-01-08\"]}";
     private final String SIMPLE_DATE_MAP = "{\"date\":{\"key\":\"2020-01-08\"}}";
-    private final String UNIX_DATE = "{\"dateTime\":1611126761,\"dateTime1\":null}";
-    private final String UNIX_DATE_ARRAY =
-            "{\"dateTime\":[1611126761,1611126761],\"dateTime1\":null}";
-    private final String UNIX_DATE_MAP =
-            "{\"dateTime\":{\"key\":1611126761},\"dateTime1\":{\"key\":1611126761}}";
     private final String RFC1123_DATE =
             "{\"dateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\",\"dateTime1\":null}";
     private final String RFC1123_DATE_ARRAY =
@@ -83,7 +79,8 @@ public class OptionalNullableTest {
 
     @Test
     public void testUnixTimeStamp() throws IOException {
-        String expected = UNIX_DATE;
+        String UnixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
+        String expected = "{\"dateTime\":" + UnixDateTime + ",\"dateTime1\":null}";
         UnixDate unixDate = new UnixDate.Builder().dateTime(LOCAL_DATE_TIME).build();
         String actual = CoreHelper.serialize(unixDate);
         assertEquals(actual, expected);
@@ -91,24 +88,29 @@ public class OptionalNullableTest {
 
     @Test
     public void testUnixTimeStampArray() throws IOException {
-        String expected = UNIX_DATE_ARRAY;
-        UnixDateArray rfc1123DateArray = new UnixDateArray.Builder()
+        List<LocalDateTime> localDateTimes = Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME);
+        String unixDateTimeArray =
+                LocalDateTimeHelper.toUnixTimestamp(localDateTimes).toString().replace(" ", "");
+        String expected = "{\"dateTime\":" + unixDateTimeArray + ",\"dateTime1\":null}";
+        UnixDateArray unixDateArray = new UnixDateArray.Builder()
                 .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME)).build();
-        String actual = CoreHelper.serialize(rfc1123DateArray);
+        String actual = CoreHelper.serialize(unixDateArray);
         assertEquals(actual, expected);
     }
 
 
     @Test
     public void testUnixTimeStampMap() throws IOException {
-        String expected = UNIX_DATE_MAP;
+        String UnixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
+        String expected = "{\"dateTime\":{\"key\":" + UnixDateTime + "},\"dateTime1\":{\"key\":"
+                + UnixDateTime + "}}";
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
         Map<String, LocalDateTime> mapOfLocalDateTime1 = new HashMap<>();
         mapOfLocalDateTime1.put("key", LOCAL_DATE_TIME);
-        UnixDateMap rfc1123DateMap = new UnixDateMap.Builder().dateTime(mapOfLocalDateTime)
+        UnixDateMap unixDateMap = new UnixDateMap.Builder().dateTime(mapOfLocalDateTime)
                 .dateTime1(mapOfLocalDateTime1).build();
-        String actual = CoreHelper.serialize(rfc1123DateMap);
+        String actual = CoreHelper.serialize(unixDateMap);
         assertEquals(actual, expected);
     }
 
@@ -189,7 +191,7 @@ public class OptionalNullableTest {
         String actual = CoreHelper.serialize(rfc8601DateMap);
         assertEquals(actual, expected);
     }
-    
+
     @Test
     public void testRfc8601DateMapToString() throws IOException {
         String expected = RFC8601_DATE_MAP_TO_STRING;
@@ -197,11 +199,11 @@ public class OptionalNullableTest {
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
         Rfc8601DateMap rfc8601DateMap =
                 new Rfc8601DateMap.Builder().dateTime(mapOfLocalDateTime).build();
-        
+
         String actual = rfc8601DateMap.toString();
         assertEquals(actual, expected);
     }
-    
-    
-    
+
+
+
 }
