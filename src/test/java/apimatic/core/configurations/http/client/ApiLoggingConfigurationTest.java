@@ -43,6 +43,8 @@ public class ApiLoggingConfigurationTest {
 
     @Test
     public void testLogsExplicity() {
+        TreeSet<String> headerFilters = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        headerFilters.add("accept");
         ApiLoggingConfiguration apiLoggingConfiguration = new ApiLoggingConfiguration.Builder()
                 .logRequestBody(false).logRequestHeaders(true).logRequestInfo(true)
                 .logResponseBody(false).logResponseInfo(true).logResponseHeaders(true)
@@ -56,7 +58,7 @@ public class ApiLoggingConfigurationTest {
         assertTrue(apiLoggingConfiguration.isLoggingResponseInfo());
         assertTrue(apiLoggingConfiguration.isPrettyPrinting());
         assertEquals(apiLoggingConfiguration.getHeaderLoggingPolicy(), LoggingPolicy.INCLUDE);
-        assertEquals(apiLoggingConfiguration.getHeaderFilters(), Set.of("accept"));
+        assertEquals(apiLoggingConfiguration.getHeaderFilters(), headerFilters);
         assertEquals(apiLoggingConfiguration.getLevel(), LoggingLevel.ERROR);
     }
 
@@ -68,7 +70,7 @@ public class ApiLoggingConfigurationTest {
         ApiLoggingConfiguration apiLoggingConfiguration = new ApiLoggingConfiguration.Builder()
                 .headerFilters(headerFilters).headerLoggingPolicy(LoggingPolicy.INCLUDE)
                 .level(LoggingLevel.ERROR).build();
-        assertEquals(apiLoggingConfiguration.getHeaderFilters(), Set.of("accept"));
+        assertEquals(apiLoggingConfiguration.getHeaderFilters(), headerFilters);
         assertEquals(apiLoggingConfiguration.getLevel(), LoggingLevel.ERROR);
     }
 
