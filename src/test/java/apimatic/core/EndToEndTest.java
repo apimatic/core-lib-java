@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,8 +67,7 @@ public class EndToEndTest extends MockCoreRequest {
         String actual = getApiCall().execute();
         assertEquals(actual, expected);
     }
-
-
+  
     private ApiCall<String, CoreApiException> getApiCall() throws IOException {
         when(response.getBody()).thenReturn("\"Turtle\"");
         return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
@@ -75,8 +75,8 @@ public class EndToEndTest extends MockCoreRequest {
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
                         .formParam(param -> param.key("limit").value("limit").isRequired(false))
-                        .templateParam(param -> param.key("location_id").value("locationId").shouldEncode(true)
-                                .isRequired(false))
+                        .templateParam(param -> param.key("location_id").value("locationId")
+                                .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
@@ -84,7 +84,7 @@ public class EndToEndTest extends MockCoreRequest {
                         .nullify404(false).globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
-                        .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
+                                .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
                 .build();
 
     }
@@ -94,8 +94,8 @@ public class EndToEndTest extends MockCoreRequest {
         GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
                 .authentication(Collections.emptyMap()).compatibilityFactory(compatibilityFactory)
                 .httpClient(httpClient).baseUri(server -> getBaseUri(server)).callback(callback)
-                .userAgent(userAgent).userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
-                .globalHeader("version", "0.1")
+                .userAgent(userAgent).userAgentConfig(Collections.emptyMap())
+                .additionalHeaders(null).globalHeader("version", "0.1")
                 .globalHeader("version", "1.2").build();
         return globalConfig;
     }
