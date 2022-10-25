@@ -137,8 +137,13 @@ public class Dynamic implements DynamicType {
      * @return Parsed value
      */
     @Override
-    public String parseAsString() {
-        return getResponseString();
+    public String parseAsString() throws ParseException {
+        try {
+            return getResponseString();
+        } catch (Throwable e) {
+            throw new java.text.ParseException(
+                    "Could not deserialize dynamic content as given type", 0);
+        }
     }
 
     /**
