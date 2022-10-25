@@ -149,7 +149,7 @@ public class BaseModel {
             }
             if (annotation != null) {
                 String methodName = key;
-                if ((getter) && ((JsonGetter) annotation).value()
+                if (getter && ((JsonGetter) annotation).value()
                         .equalsIgnoreCase(methodName.replace("get", ""))) {
                     return method;
                 } else if ((!getter) && ((JsonSetter) annotation).value()
