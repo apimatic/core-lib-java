@@ -30,6 +30,13 @@ public class CoreJsonObjectTest {
         assertNull(actual);
     }
 
+    @Test(expected = IOException.class)
+    public void testFromJsonStringInvalidObject() throws IOException {
+        String value = "\"name\":\"\"";
+
+        CoreJsonObject.fromJsonString(value);
+    }
+
     @Test
     public void testGetStoredObject() throws IOException {
         String value = "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
@@ -39,9 +46,9 @@ public class CoreJsonObjectTest {
         // stub
         String expected =
                 "{company name=APIMatic, address=nust, cell number=090078601, first name=Adeel, last name=Ali, address_boss=nust}";
+
         CoreJsonObject jsonObject = CoreJsonObject.fromJsonString(value);
         String actual = String.valueOf(jsonObject.getStoredObject());
-
         assertEquals(actual, expected);
     }
 }

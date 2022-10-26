@@ -22,14 +22,17 @@ import java.util.UUID;
 import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import apimatic.core.models.AtomCase;
+import apimatic.core.models.AttributesAndElements;
 import apimatic.core.models.CarCase;
 import apimatic.core.models.ChildClass;
+import apimatic.core.models.ComplexType;
 import apimatic.core.models.DateTimeCases;
 import apimatic.core.models.DeleteBody;
 import apimatic.core.models.MorningCase;
@@ -41,11 +44,27 @@ import apimatic.core.models.containers.SendScalarParamBody;
 import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.DateHelper;
+import io.apimatic.core.utilities.CoreJsonObject;
+import io.apimatic.core.utilities.CoreJsonValue;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 
 public class CoreHelperTest {
 
+    private final String XML_ARRAY = "<arrayOfModels>\r\n"
+            + "  <item number=\"3\" string=\"XMLRootName\">\r\n" + "    <number>6</number>\r\n"
+            + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
+    private final String INVALID_XML =
+            "\r\n" + "  item number=\"3\" string=\"XMLRootName\"\r\n" + "    number>6</number>\r\n"
+                    + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
+    private final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n"
+            + "<arrayOfModels number=\"3\" string=\"XMLRootName\">\r\n"
+            + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n"
+            + "</arrayOfModels>\r\n" + "";
+
+    private final String JSON_OBJECT =
+            "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson.schema.json&operations[$schema]=https%3A%2F%2Fjson-schema.org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations[type]=object&operations[properties][firstName][type]=string&operations[properties][firstName][description]=The+person%27s+first+name.&operations[properties][lastName][type]=string&operations[properties][lastName][description]=The+person%27s+last+name.&operations[properties][age][type]=integer&operations[properties][age][description]=Age+in+years&operations[properties][age][minimum]=0";
+    private final String JSON_VALUE = "https://localhost:3000/query?operations=test-JsonValue";
 
     @Test
     public void testSerializeNullObject() throws JsonProcessingException {
@@ -91,6 +110,17 @@ public class CoreHelperTest {
 
     @Test
     public void testUrlEncoding() {
+        String urlString = "https://localhost:8080%query=0";
+        boolean spaceAsPecentage = false;
+
+        String expected = "https%3A%2F%2Flocalhost%3A8080%25query%3D0";
+        String actual = CoreHelper.tryUrlEncode(urlString, spaceAsPecentage);
+
+        assertEquals(actual, expected);
+    }
+    
+    @Test
+    public void testInvalidUrlEncoding() {
         String urlString = "https://localhost:8080%query=0";
         boolean spaceAsPecentage = false;
 
@@ -312,6 +342,7 @@ public class CoreHelperTest {
                         + "t_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not n"
                         + "ullable and required\",\"Child_Class_Array\":null}",
                 ChildClass.class);
+
         String expected =
                 "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable and required\",\"Parent_Optional_Nullable_With_Default_Value\":\"Has default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nullable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
 
@@ -494,6 +525,54 @@ public class CoreHelperTest {
         String expected = "https://localhost:3000/query?type=calculator";
         String actual = queryBuilder.toString();
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testTabSeperated() throws IOException {
+        String baseUri = "https://localhost:3000";
+        StringBuilder queryBuilder = new StringBuilder(baseUri + "/query?type=calculator");
+
+        Map<String, ComplexType> complexType = getComplexType();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("query", complexType);
+        CoreHelper.appendUrlWithQueryParameters(queryBuilder, parameters,
+                ArraySerializationFormat.TSV);
+        String expected = "a5e48529-745b-4dfb-aac0-a7d844debd8b";
+        String actual = queryBuilder.toString();
+        assertTrue(actual.contains(expected));
+        assertTrue(actual.contains("%09"));
+    }
+
+    @Test
+    public void testPipeSeperated() throws IOException {
+        String baseUri = "https://localhost:3000";
+        StringBuilder queryBuilder = new StringBuilder(baseUri + "/query?type=calculator");
+
+        Map<String, ComplexType> complexType = getComplexType();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("query", complexType);
+        CoreHelper.appendUrlWithQueryParameters(queryBuilder, parameters,
+                ArraySerializationFormat.PSV);
+        String expected = "a5e48529-745b-4dfb-aac0-a7d844debd8b";
+        String actual = queryBuilder.toString();
+        assertTrue(actual.contains(expected));
+        assertTrue(actual.contains("%7C"));
+    }
+
+    @Test
+    public void testCommaSeperated() throws IOException {
+        String baseUri = "https://localhost:3000";
+        StringBuilder queryBuilder = new StringBuilder(baseUri + "/query?type=calculator");
+
+        Map<String, ComplexType> complexType = getComplexType();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("query", complexType);
+        CoreHelper.appendUrlWithQueryParameters(queryBuilder, parameters,
+                ArraySerializationFormat.CSV);
+        String expected = "a5e48529-745b-4dfb-aac0-a7d844debd8b";
+        String actual = queryBuilder.toString();
+        assertTrue(actual.contains(expected));
+        assertTrue(actual.contains(","));
     }
 
 
@@ -1034,6 +1113,38 @@ public class CoreHelperTest {
     }
 
     @Test
+    public void testDeserializeThroughParser3() throws IOException {
+        String discriminator = "";
+        ObjectMapper mapper = new ObjectMapper();
+        DeserializationContext context = mapper.getDeserializationContext();
+        JsonParser jsonParser =
+                mapper.createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
+
+        CoreHelper.deserialize(jsonParser, context, discriminator,
+                Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)),
+                Arrays.asList(CarCase[].class, AtomCase[].class), true);
+    }
+
+    @Test(expected = IOException.class)
+    public void testDeserializeThroughParser4() throws IOException {
+        String discriminator = "";
+        ObjectMapper mapper = new ObjectMapper();
+        DeserializationContext context = mapper.getDeserializationContext();
+        JsonParser jsonParser =
+                mapper.createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
+
+        CoreHelper.deserialize(jsonParser, context, discriminator,
+                Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)), null, true);
+    }
+
+    @Test
+    public void testDeserializeThroughParser5() throws IOException {
+        JsonNode node = null;
+        Object actual = CoreHelper.deserialize(node, null,null, null);
+        assertNull(actual);
+    }
+
+    @Test
     public void testPrepareFormFieldOneOfAnyOf() throws IOException {
         NonScalarModel formNonScalarModel = CoreHelper.deserialize("{\"outerMap"
                 + "\":{\"key1\":{\"startsAt\":\"15:00\",\"endsAt\":\"21:00\",\"offerLunch\":true,"
@@ -1127,5 +1238,143 @@ public class CoreHelperTest {
         List<SimpleEntry<String, Object>> formFields =
                 CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.PLAIN);
         assertNotNull(formFields);
+    }
+
+    @Test
+    public void testSerializeXMLArray() throws IOException {
+        String expected = XML_ARRAY.replace("\r\n", "");
+        AttributesAndElements elements =
+                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+        List<AttributesAndElements> attributesAndElements = new ArrayList<>();
+        attributesAndElements.add(elements);
+        String actual = CoreHelper.serializeXmlArray(
+                attributesAndElements
+                        .toArray(new AttributesAndElements[attributesAndElements.size()]),
+                "arrayOfModels", "item", AttributesAndElements.class);
+        assertEquals(actual.replace("\n", ""), expected);
+    }
+
+    @Test
+    public void testSerializeXML() throws IOException {
+        String expected = XML.replace("\r\n", "");
+        AttributesAndElements elements =
+                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+
+        String actual =
+                CoreHelper.serializeXml(elements, "arrayOfModels", AttributesAndElements.class);
+        assertEquals(actual.replace("\n", ""), expected);
+    }
+
+    @Test
+    public void testDeserializeXML() throws IOException {
+        AttributesAndElements expected =
+                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+
+        AttributesAndElements actual = CoreHelper.deserializeXml(XML, AttributesAndElements.class);
+        assertEquals(actual.getNumberAttr(), expected.getNumberAttr());
+        assertEquals(actual.getNumberElement(), expected.getNumberElement());
+        assertEquals(actual.getStringAttr(), expected.getStringAttr());
+        assertEquals(actual.getStringElement(), expected.getStringElement());
+    }
+
+    @Test
+    public void testDeserializeXMLArray() throws IOException {
+        AttributesAndElements elements =
+                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+        List<AttributesAndElements> expected = new ArrayList<>();
+        expected.add(elements);
+
+        List<AttributesAndElements> actual =
+                CoreHelper.deserializeXmlArray(XML_ARRAY, AttributesAndElements[].class);
+        assertEquals(actual.get(0).getNumberAttr(), expected.get(0).getNumberAttr());
+    }
+
+    @Test(expected = IOException.class)
+    public void testDeserializeInvalidXMLArray() throws IOException {
+        CoreHelper.deserializeXmlArray(INVALID_XML, AttributesAndElements[].class);
+    }
+
+    @Test(expected = IOException.class)
+    public void testDeserializeInvalidXML() throws IOException {
+        CoreHelper.deserializeXml(INVALID_XML, AttributesAndElements[].class);
+    }
+
+    @Test
+    public void testDeserializeXMLArrayTypes() throws IOException {
+        List<String> expected = Arrays.asList("6", "Data");
+        List<String> actual = CoreHelper.deserializeXmlSimpleTypesArray(XML_ARRAY, String.class);
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testJSonObjectDeserialization() throws IOException {
+        CoreJsonObject body = CoreJsonObject.fromJsonString(
+                "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":\"https://json-sch"
+                        + "ema.org/draft/2020-12/schema\",\"title\":\"Person\",\"type\":\"object\",\"proper"
+                        + "ties\":{\"firstName\":{\"type\":\"string\",\"description\":\"The person's first "
+                        + "name.\"},\"lastName\":{\"type\":\"string\",\"description\":\"The person's last n"
+                        + "ame.\",\"test\":null},\"age\":{\"type\":\"integer\",\"description\":\"Age in yea"
+                        + "rs\",\"minimum\":0}}}");
+        String baseUri = "https://localhost:3000";
+        StringBuilder queryBuilder = new StringBuilder(baseUri + "/query");
+
+        Map<String, Object> queryParameters = new HashMap<>();
+        queryParameters.put("operations", body);
+
+        CoreHelper.appendUrlWithQueryParameters(queryBuilder, queryParameters,
+                ArraySerializationFormat.INDEXED);
+        String expected = JSON_OBJECT;
+        String actual = queryBuilder.toString();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testJSonValueDeserialization() throws IOException {
+        CoreJsonValue body = CoreJsonValue.fromString("test-JsonValue");
+        String baseUri = "https://localhost:3000";
+        StringBuilder queryBuilder = new StringBuilder(baseUri + "/query");
+
+        Map<String, Object> queryParameters = new HashMap<>();
+        queryParameters.put("operations", body);
+
+        CoreHelper.appendUrlWithQueryParameters(queryBuilder, queryParameters,
+                ArraySerializationFormat.INDEXED);
+        String expected = JSON_VALUE;
+        String actual = queryBuilder.toString();
+        assertEquals(actual, expected);
+    }
+
+    private Map<String, ComplexType> getComplexType() throws IOException {
+        Map<String, ComplexType> complexType = CoreHelper.deserialize(
+                "{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":{\"num1\":1,\"num3"
+                        + "\":2,\"num2\":3},\"innerComplexType\":{\"stringType\":\"MyString1\",\"booleanTyp"
+                        + "e\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\","
+                        + "\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longType\":500000000,\"p"
+                        + "recisionType\":5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000},"
+                        + "\"stringListType\":[\"Item1\",\"Item2\"]},\"innerComplexListType\":[{\"stringTyp"
+                        + "e\":\"MyString1\",\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z"
+                        + "\",\"dateType\":\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd"
+                        + "8b\",\"longType\":500000000,\"precisionType\":5.43,\"objectType\":{\"long2\":100"
+                        + "0000000,\"long1\":500000000},\"stringListType\":[\"Item1\",\"Item2\"]},{\"string"
+                        + "Type\":\"MyString2\",\"booleanType\":false,\"dateTimeType\":\"1994-11-07T08:49:3"
+                        + "7Z\",\"dateType\":\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c"
+                        + "89a6\",\"longType\":1000000000,\"precisionType\":5.43,\"objectType\":{\"bool1\":"
+                        + "true,\"bool2\":false},\"stringListType\":[\"Item1\",\"Item2\"]}]}, \"key2\": {"
+                        + "\"numberListType\":[555,666,777],\"numberMapType\":{\"num1\":1,\"num3\":2,\"num2"
+                        + "\":3},\"innerComplexType\":{\"stringType\":\"MyString1\",\"booleanType\":true,"
+                        + "\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\",\"uuidType"
+                        + "\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longType\":500000000,\"precisionTy"
+                        + "pe\":5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000},\"stringList"
+                        + "Type\":[\"Item1\",\"Item2\"]},\"innerComplexListType\":[{\"stringType\":\"MyStri"
+                        + "ng1\",\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType"
+                        + "\":\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longTy"
+                        + "pe\":500000000,\"precisionType\":5.43,\"objectType\":{\"long2\":1000000000,\"lon"
+                        + "g1\":500000000},\"stringListType\":[\"Item1\",\"Item2\"]},{\"stringType\":\"MySt"
+                        + "ring2\",\"booleanType\":false,\"dateTimeType\":\"1994-11-07T08:49:37Z\",\"dateTy"
+                        + "pe\":\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c89a6\",\"long"
+                        + "Type\":1000000000,\"precisionType\":5.43,\"objectType\":{\"bool1\":true,\"bool2"
+                        + "\":false},\"stringListType\":[\"Item1\",\"Item2\"]}]}}",
+                new TypeReference<Map<String, ComplexType>>() {});
+        return complexType;
     }
 }

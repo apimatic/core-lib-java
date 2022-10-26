@@ -12,56 +12,6 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
  * To hold logging configuration.
  */
 public class ApiLoggingConfiguration implements ReadonlyLogging {
-
-    /**
-     * Level enum to use with level in {@link ApiLoggingConfiguration.Builder}.
-     */
-    public enum Level {
-        /**
-         * To log with logging level 'INFO'.
-         */
-        INFO,
-
-        /**
-         * To log with logging level 'Error'.
-         */
-        ERROR,
-
-        /**
-         * To log with logging level 'WARN'.
-         */
-        WARN,
-
-        /**
-         * To log with logging level 'DEBUG'.
-         */
-        DEBUG,
-
-        /**
-         * To log with logging level 'TRACE'.
-         */
-        TRACE
-    }
-
-    /**
-     * HeaderLoggingPolicy enum to use with headerLoggingPolicy in
-     * {@link ApiLoggingConfiguration.Builder}. It is either used to exclude or include headers
-     * provided in header filters, for various security reasons.
-     */
-    public enum HeaderLoggingPolicy {
-        /**
-         * Policy that only include the headerFilters as headers. So all the headers that are not
-         * provided in header filters will be excluded.
-         */
-        INCLUDE,
-
-        /**
-         * Policy that only exclude the headerFilters from headers. So all the headers that are not
-         * provided in header filters will be included.
-         */
-        EXCLUDE
-    }
-
     private boolean logRequestInfo;
     private boolean logResponseInfo;
     private boolean logRequestHeaders;
@@ -180,35 +130,6 @@ public class ApiLoggingConfiguration implements ReadonlyLogging {
      */
     public Set<String> getHeaderFilters() {
         return headerFilters;
-    }
-
-    /**
-     * Converts this LoggingConfiguration into string format.
-     * 
-     * @return String representation of this class
-     */
-    @Override
-    public String toString() {
-        return "LoggingConfiguration [logRequestInfo=" + logRequestInfo + ", logResponseInfo="
-                + logResponseInfo + ", logRequestHeaders=" + logRequestHeaders
-                + ", logResponseHeaders=" + logResponseHeaders + ", logRequestBody="
-                + logRequestBody + ", logResponseBody=" + logResponseBody + ", prettyPrintLogs="
-                + prettyPrintLogs + ", level=" + level + ", headerLoggingPolicy="
-                + headerLoggingPolicy + ", headerFilters=" + headerFilters + "]";
-    }
-
-    /**
-     * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the instance with the
-     * current state.
-     * 
-     * @return a new {@link ApiLoggingConfiguration.Builder} object
-     */
-    public Builder newBuilder() {
-        return new Builder().logRequestInfo(logRequestInfo).logRequestHeaders(logRequestHeaders)
-                .logRequestBody(logRequestBody).logResponseInfo(logResponseInfo)
-                .logResponseHeaders(logResponseHeaders).logResponseBody(logResponseBody)
-                .prettyPrintLogs(prettyPrintLogs).level(level)
-                .headerLoggingPolicy(headerLoggingPolicy).headerFilters(headerFilters);
     }
 
     /**

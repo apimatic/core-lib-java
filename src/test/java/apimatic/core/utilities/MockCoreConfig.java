@@ -38,7 +38,6 @@ public class MockCoreConfig extends CompatibilityFactoryMock {
         //stubs
         when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
         when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
-        when(mockGlobalConfig.getUserAgent()).thenReturn("APIMATIC3.0");
     }
 
     protected static String getBaseUri(String test) {
