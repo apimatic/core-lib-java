@@ -1,12 +1,14 @@
-name: Update the Code Coverage
+name: Publish Test Coverage Report
 
 on:
-  workflow_dispatch
+  push:
+    branches: [ "main" ]
 
 jobs:
-  coverage:
+  publish-code-coverage-report:
     name: JAVA 
     runs-on: ubuntu-latest
+    if: "! contains(toJSON(github.event.head_commit.message), 'skip ci')"
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 8
