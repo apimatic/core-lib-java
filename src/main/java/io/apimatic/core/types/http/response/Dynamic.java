@@ -133,8 +133,9 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as string.
-     * @throws ParseException Signals if a parse exception occured
+     *
      * @return Parsed value
+     * @throws ParseException Signals if a parse exception occurred
      */
     @Override
     public String parseAsString() throws ParseException {
