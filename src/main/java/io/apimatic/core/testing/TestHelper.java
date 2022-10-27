@@ -445,12 +445,7 @@ public class TestHelper {
      */
     private static boolean isSameInputStream(InputStream input1, InputStream input2)
             throws IOException {
-        if (input1 == input2) {
-            return true;
-        }
-        if (!(input1 instanceof BufferedInputStream)) {
-            input1 = new BufferedInputStream(input1);
-        }
+        input1 = new BufferedInputStream(input1);
         if (!(input2 instanceof BufferedInputStream)) {
             input2 = new BufferedInputStream(input2);
         }

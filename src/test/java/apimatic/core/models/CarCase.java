@@ -23,8 +23,6 @@ public class CarCase {
         this.car = car;
     }
 
-
-
     @JsonCreator
     private CarCase(JsonNode jsonNode) throws IOException {
         this.car = CoreHelper.deserialize(jsonNode, Car.class);

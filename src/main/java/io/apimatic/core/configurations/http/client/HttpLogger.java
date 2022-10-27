@@ -85,6 +85,11 @@ public class HttpLogger implements ApiLogger {
      * @param additionalMessage Any additional message to be logged.
      */
     public void logRequest(Request request, String url, String additionalMessage) {
+        if (request == null) {
+            return;
+        }
+
+
         String requestId = UUID.randomUUID().toString();
         RequestEntry requestEntry = new RequestEntry(requestId, System.nanoTime(), url);
         requestQueue.put(request, requestEntry);
@@ -109,7 +114,7 @@ public class HttpLogger implements ApiLogger {
         }
 
         if (config.isLoggingRequestBody()) {
-            if (request != null && request.getBody() != null) {
+            if (request.getBody() != null) {
                 // As request.getBody() is always a non null serialized string.
                 // Hence we are calling getBody().toString().
                 message.body = CoreHelper.deserializeAsObject(request.getBody().toString());

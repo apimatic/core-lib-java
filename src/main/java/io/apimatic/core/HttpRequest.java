@@ -129,7 +129,7 @@ public class HttpRequest {
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
             Map<String, Object> optionalFormParamaters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
-        if (formParams.isEmpty()) {
+        if (formParams.isEmpty() && optionalFormParamaters.isEmpty()) {
             return null;
         }
         Map<String, Object> formParameters = new HashMap<>();

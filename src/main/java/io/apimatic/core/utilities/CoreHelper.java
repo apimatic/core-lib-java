@@ -70,6 +70,9 @@ public class CoreHelper {
      * A string of user agent
      */
     private static String userAgent;
+    private static final String TSV_FORMAT = "%09";
+    private static final String CSV_FORMAT = ",";
+    private static final String PSV_FORMAT = "%7C";
 
     /**
      * Deserialization of Json data
@@ -490,7 +493,6 @@ public class CoreHelper {
         } catch (JAXBException jaxbException) {
             throw new IOException(jaxbException);
         }
-
     }
 
     /**
@@ -1152,12 +1154,11 @@ public class CoreHelper {
             getAccessorStringFormat(ArraySerializationFormat arraySerializationFormat) {
         switch (arraySerializationFormat) {
             case CSV:
-                return ",";
+                return CSV_FORMAT;
             case PSV:
-                return "%7C";
+                return PSV_FORMAT;
             case TSV:
-                return "%09";
-
+                return TSV_FORMAT;
             default:
                 return "";
         }
