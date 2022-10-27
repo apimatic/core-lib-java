@@ -7,7 +7,6 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
  * A Handler that handles the response asynchronously
- *
  * @param <T> A response that is determined
  * @param <ExceptionType> in case of a problem
  */
@@ -15,7 +14,6 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public interface AsyncResponseHandler<T, ExceptionType extends CoreApiException> {
     /**
      * Handles the response for an endpoint.
-     * 
      * @param httpRequest Request which is made for endpoint
      * @param httpResponse Response which is received after execution
      * @return An object of type T .

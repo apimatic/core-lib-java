@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class XmlZonedDateTimeHelper extends XMLDateHelper{
+public class XmlZonedDateTimeHelper extends XMLDateHelper {
     public static String serializeRfc8601DateTime(ZonedDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
         xmlBlock += ZonedDateTimeHelper.toRfc8601DateTime(dateObj);

@@ -15,16 +15,16 @@ import java.util.NoSuchElementException;
 
 /**
  * Base model for all the models
- *
  */
 public class BaseModel {
 
-    // Map to store additional properties
-    protected Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+    /**
+     * Map to store additional properties.
+     */
+    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
     /**
      * Any GETTER. Needed for serialization of additional properties.
-     * 
      * @return Returns the map of all additional properties
      */
     @JsonAnyGetter
@@ -34,7 +34,6 @@ public class BaseModel {
 
     /**
      * Any SETTER. Needed for deserialization of additional properties.
-     * 
      * @param name The String key
      * @param value The Object value
      */
@@ -46,7 +45,6 @@ public class BaseModel {
     /**
      * Provides access to all properties using property name as key. If the property was not found,
      * additionalProperties map is explored.
-     * 
      * @param key The property name, which may or may not be declared
      * @return property associated with the key
      */
@@ -82,7 +80,6 @@ public class BaseModel {
 
     /**
      * Setter for additional properties.
-     * 
      * @param key The String key
      * @param value The Object value
      */
@@ -116,7 +113,6 @@ public class BaseModel {
 
     /**
      * Attempts to locate a field with matching name.
-     * 
      * @param key A string value to match field name
      * @return Field for its respective key
      */
@@ -133,7 +129,6 @@ public class BaseModel {
 
     /**
      * Attempts to locate a method with matching JsonGetter annotation.
-     * 
      * @param key a string value to match method JsonGetter annotation
      * @param getter true if method is a getter
      * @return Method for its respective key

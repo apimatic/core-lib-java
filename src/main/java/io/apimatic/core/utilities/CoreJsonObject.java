@@ -14,7 +14,6 @@ public class CoreJsonObject {
 
     /**
      * Initialization constructor.
-     * 
      * @param jsonNode The JSON of type JsonNode.
      */
     @JsonCreator
@@ -24,7 +23,6 @@ public class CoreJsonObject {
 
     /**
      * Initializes JsonObject with provided JSON.
-     * 
      * @param jsonString The JSON string.
      * @return The {@link CoreJsonObject} instance.
      * @throws IOException signals that provided JSON string does not contain a valid JSON object.
@@ -42,7 +40,6 @@ public class CoreJsonObject {
 
     /**
      * Getter for stored JSON object.
-     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -51,7 +48,6 @@ public class CoreJsonObject {
 
     /**
      * Converts the JSON into string.
-     * 
      * @return String representation of JSON
      */
     public String toString() {

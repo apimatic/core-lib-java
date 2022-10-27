@@ -8,18 +8,23 @@ import io.apimatic.coreinterfaces.http.request.Request;
 /**
  * HeaderAuth is an implementation of {@link Authentication} that supports HTTP authentication
  * through HTTP Headers.
- *
  */
 public class HeaderAuth implements Authentication {
 
+    /**
+     * A map for authentication parameters
+     */
     private Map<String, String> authParams = new HashMap<>();
 
+    /**
+     * @param authParams
+     */
     public HeaderAuth(Map<String, String> authParams) {
         this.authParams = authParams;
     }
 
     /**
-     * Apply the header authentication
+     * @param httpRequest A request 
      */
     @Override
     public Request apply(Request httpRequest) {

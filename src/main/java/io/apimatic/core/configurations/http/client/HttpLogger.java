@@ -30,18 +30,32 @@ import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 public class HttpLogger implements ApiLogger {
 
+    /**
+     * A request queue
+     */
     private final ConcurrentHashMap<Request, RequestEntry> requestQueue;
+
+    /**
+     * An instance of {@link Logger}
+     */
     private Logger logger;
+
+    /**
+     * An instance of {@link ReadonlyLogging}
+     */
     private ReadonlyLogging config;
+
+    /**
+     * An instance of {@link ObjectWriter}
+     */
     private ObjectWriter writer;
 
     /**
      * Default Constructor.
-     * 
      * @param logger Logger instance for logging.
      * @param config {@link ReadonlyLogging} as logging properties.
      */
-    public HttpLogger(Logger logger, ReadonlyLogging config) {
+    public HttpLogger(final Logger logger, final ReadonlyLogging config) {
         this.requestQueue = new ConcurrentHashMap<Request, RequestEntry>();
         this.logger = logger;
         this.config = config;
@@ -57,7 +71,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log requests.
-     * 
      * @param request HttpRequest to be logged.
      * @param url String request URL.
      */
@@ -67,7 +80,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log requests.
-     * 
      * @param request HttpRequest to be logged.
      * @param url String request URL.
      * @param additionalMessage Any additional message to be logged.
@@ -111,7 +123,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Set error for failed requests.
-     * 
      * @param request HttpRequest that failed.
      * @param error Throwable occurred.
      */
@@ -125,7 +136,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log Responses.
-     * 
      * @param request HttpRequest that completed.
      * @param response HttpResponse to be logged.
      */
@@ -135,7 +145,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log Responses.
-     * 
      * @param request HttpRequest that completed.
      * @param response HttpResponse to be logged.
      * @param additionalMessage Any additional message to be logged.
@@ -205,7 +214,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log provided message according to logging level.
-     * 
      * @param message Message instance to be logged as JSON.
      */
     private void log(Message message, LoggingLevel level, boolean logException) {
@@ -268,33 +276,51 @@ public class HttpLogger implements ApiLogger {
      * Class to hold and write request message.
      */
     private class RequestMessage extends Message {
+        /**
+         * An instance of {@link Method}
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Method method;
+        private Method method;
     }
 
     /**
      * Class to hold and write response message.
      */
     private class ResponseMessage extends Message {
+        /**
+         * A success boolean variable
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        boolean success = true;
+        private boolean success = true;
+        /**
+         * A failure reason string
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String failureReason;
+        private String failureReason;
+        /**
+         * A status code integer
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Integer statusCode;
+        private Integer statusCode;
+        /**
+         * A timeTakenInMilis long variable
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Long timeTakenMillis;
+        private Long timeTakenMillis;
     }
 
     /**
      * Base class to hold and write message.
      */
     private class Message {
+        /**
+         * A logging error string
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         String loggingError;
@@ -322,14 +348,27 @@ public class HttpLogger implements ApiLogger {
      * Class to hold the request info until request completes.
      */
     private class RequestEntry {
-        String requestId;
-        long startTime;
-        String url;
-        Throwable error;
+        /**
+         * A requestId String
+         */
+        private String requestId;
+
+        /**
+         * A start time
+         */
+        private long startTime;
+
+        /**
+         * A request url
+         */
+        private String url;
+        /**
+         * A throwable error
+         */
+        private Throwable error;
 
         /**
          * Default Constructor.
-         * 
          * @param requestId String id assigned to the request.
          * @param startTime long start time of the request.
          * @param url String request URI.

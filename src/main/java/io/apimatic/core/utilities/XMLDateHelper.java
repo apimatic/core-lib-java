@@ -8,7 +8,7 @@ public class XMLDateHelper {
 
     public static String serializeSimpleDate(LocalDate dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
-        xmlBlock +=  dateObj.toString();
+        xmlBlock += dateObj.toString();
         xmlBlock += "</" + rootName + ">";
         return xmlBlock;
     }
@@ -16,7 +16,7 @@ public class XMLDateHelper {
     public static LocalDate deserializeSimpleDate(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
         Matcher patternMatcher = pattern.matcher(xml);
-        
+
         if (!patternMatcher.find()) {
             throw new IllegalArgumentException("Invalid XML");
         }

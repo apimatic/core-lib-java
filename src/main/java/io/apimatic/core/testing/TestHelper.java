@@ -26,18 +26,28 @@ import io.apimatic.core.utilities.CoreHelper;
 
 /**
  * Contains utility methods for comparing objects, arrays and files.
- *
  */
 public class TestHelper {
+
+    private static final int BASE_16 = 16;
+
+    private static final int TO_EXTRACT_HEXADECIMAL = 0x100;
+
+    private static final int HEXADECIMAL_CONVERTOR = 0xff;
+
+    /**
+     * Buffer size
+     */
+    private static final int BUFFER_SIZE = 1024;
+
     /**
      * GUID to represent NUll string.
      */
-    public static final String nullString = "b9cb2f80-1b64-43ee-a6da-71f7ef686fa9";
+    public static final String NULL_STRING = "b9cb2f80-1b64-43ee-a6da-71f7ef686fa9";
 
     /**
      * Modify a json String according to a given TypeReference, ensuring that inner fields are dealt
      * with properly.
-     *
      * @param json The json String to modify
      * @param typeReference The TypeReference to use
      * @param <T> The extended type
@@ -53,7 +63,6 @@ public class TestHelper {
 
     /**
      * Convert an InputStream to a String (utility function).
-     * 
      * @param is Input stream to read from
      * @return All data
      */
@@ -66,7 +75,6 @@ public class TestHelper {
 
     /**
      * Utility to delegate call to suitable method.
-     * 
      * @param leftObject Left array as a JSON string
      * @param rightObject Right array as a JSON string
      * @param checkValues Check primitive values for equality?
@@ -94,7 +102,6 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left tree is a proper subset of the right tree.
-     * 
      * @param leftTree Left tree
      * @param rightTree Right tree
      * @param checkValues Check primitive values for equality?
@@ -189,7 +196,7 @@ public class TestHelper {
                                 return false;
                             }
                         }
-                    } else if (!leftVal.equals((rightTree).get(key)) && leftVal != nullString) {
+                    } else if (!leftVal.equals((rightTree).get(key)) && leftVal != NULL_STRING) {
                         return false;
                     }
                 }
@@ -200,7 +207,6 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left JSON object is a proper subset of the right JSON object.
-     * 
      * @param leftObject Left JSON object as string
      * @param rightObject Right JSON object as string
      * @param checkValues Check primitive values for equality?
@@ -217,7 +223,6 @@ public class TestHelper {
 
     /**
      * Check if left array of array of objects is a subset of right array of array of objects.
-     * 
      * @param leftObject Left array as a JSON string
      * @param rightObject Right array as a JSON string
      * @param checkValues Check primitive values for equality?
@@ -245,7 +250,6 @@ public class TestHelper {
 
     /**
      * Check if left array of array of objects is a subset of right array of array of objects.
-     * 
      * @param left Left array as a JSON string
      * @param right Right array as a JSON string
      * @param checkValues Check primitive values for equality?
@@ -291,7 +295,6 @@ public class TestHelper {
 
     /**
      * Check if left array of objects is a subset of right array.
-     * 
      * @param leftObject Left array as a JSON string
      * @param rightObject Right array as a JSON string
      * @param checkValues Check primitive values for equality?
@@ -351,7 +354,6 @@ public class TestHelper {
 
     /**
      * Check if left array of objects is a subset of right array.
-     * 
      * @param left Left array as a JSON string
      * @param right Right array as a JSON string
      * @param checkValues Check primitive values for equality?
@@ -398,7 +400,6 @@ public class TestHelper {
 
     /**
      * Check whether the a list is a subset of another list.
-     * 
      * @param leftList Expected List
      * @param rightList List to check
      * @param allowExtra Are extras allowed in the list to check?
@@ -421,7 +422,6 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left headers map is a proper subset of the right headers map.
-     * 
      * @param leftTree Left headers map
      * @param rightTree Right headers map
      * @param checkValues Check header values for equality?
@@ -438,7 +438,6 @@ public class TestHelper {
 
     /**
      * Compare two input streams.
-     *
      * @param input1 First stream
      * @param input2 Second stream
      * @return true True if streams contain the same content
@@ -471,7 +470,6 @@ public class TestHelper {
 
     /**
      * Compare the input stream to file byte-by-byte.
-     * 
      * @param file First input
      * @param input Second input
      * @return true True if stream contains the same content as the file
@@ -486,7 +484,6 @@ public class TestHelper {
     /**
      * Downloads a given url and return a path to its local version. Files are cached. Second call
      * for the same URL will return cached version. Files are deleted when VM exits.
-     * 
      * @param urlString URL to download
      * @throws IOException Signals that I/O error occur
      * @return Absolute path to the local downloaded version of file
@@ -504,7 +501,7 @@ public class TestHelper {
             InputStream in = connection.getInputStream();
             f.createNewFile();
             FileOutputStream out = new FileOutputStream(f);
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
             int len;
             while ((len = in.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
@@ -520,7 +517,6 @@ public class TestHelper {
 
     /**
      * Get SHA1 hash of a string.
-     * 
      * @param convertme The string to convert
      * @return SHA1 hash
      */
@@ -537,14 +533,15 @@ public class TestHelper {
 
     /**
      * Convert byte array to the hexadecimal representation in string.
-     * 
      * @param b Byte array
      * @return Hex representation in string
      */
     private static String byteArrayToHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
-            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+            result += Integer
+                    .toString((b[i] & HEXADECIMAL_CONVERTOR) + TO_EXTRACT_HEXADECIMAL, BASE_16)
+                    .substring(1);
         }
         return result;
     }
@@ -552,7 +549,6 @@ public class TestHelper {
     /**
      * Checks actual list against expected list to have same order and count and all corresponding
      * values must be equal.
-     * 
      * @param actual List of BigDecimal
      * @param expected List of BigDecimal
      * @return true if both lists are exactly same
@@ -573,7 +569,6 @@ public class TestHelper {
     /**
      * Checks actual list against expected list, without considering order of elements and actual
      * list must have all the expected elements.
-     * 
      * @param actual List of BigDecimal
      * @param expected List of BigDecimal
      * @return true if actual list is a super set of expected list

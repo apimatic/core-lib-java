@@ -9,28 +9,30 @@ import io.apimatic.coreinterfaces.http.Context;
  * This is the base class for all exceptions that represent an error response from the server.
  */
 public class CoreApiException extends Exception {
-    // UID for serialization
+    /**
+     * UID for serialization
+     */
     private static final long serialVersionUID = 6424174253911720338L;
 
-    // private fields
+    /**
+     * An instance of {@link Context}
+     */
     private Context httpContext;
 
     /**
      * Initialization constructor.
-     * 
      * @param reason The reason for throwing exception
      */
-    public CoreApiException(String reason) {
+    public CoreApiException(final String reason) {
         super(reason);
     }
 
     /**
      * Initialization constructor.
-     * 
      * @param reason The reason for throwing exception
      * @param context The http context of the API exception
      */
-    public CoreApiException(String reason, Context context) {
+    public CoreApiException(final String reason, final Context context) {
         super(reason);
         this.httpContext = context;
 
@@ -56,7 +58,6 @@ public class CoreApiException extends Exception {
 
     /**
      * The HTTP response code from the API request.
-     * 
      * @return Returns the response code for ApiException
      */
     public int getResponseCode() {
@@ -65,7 +66,6 @@ public class CoreApiException extends Exception {
 
     /**
      * The HTTP response body from the API request.
-     * 
      * @return Returns the object of HttpContext for ApiException
      */
     public Context getHttpContext() {

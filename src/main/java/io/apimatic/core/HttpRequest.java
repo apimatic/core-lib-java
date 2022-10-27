@@ -28,34 +28,52 @@ import io.apimatic.coreinterfaces.type.functional.Serializer;
  * method methods. Once all required parameters have been set in the builder, build will return the
  * HttpRequest. Builders can be copied and modified many times in order to build multiple related
  * requests that differ in some parameters.
- *
  */
 public class HttpRequest {
+    /**
+     * An instance of {@link Request}
+     */
     private final Request coreHttpRequest;
+
+    /**
+     * An instance of {@link GlobalConfiguration}
+     */
     private final GlobalConfiguration coreConfig;
+
+    /**
+     * A StringBuilder
+     */
     private final StringBuilder urlBuilder;
+
+    /**
+     * An instance of {@link CompatibilityFactory}
+     */
     private final CompatibilityFactory compatibilityFactory;
 
     /**
+     * @param coreConfig
      * @param server
      * @param path
      * @param httpMethod
-     * @param requiresAuth
+     * @param authenticationKey
      * @param queryParams
      * @param templateParams
      * @param headerParams
      * @param formParams
      * @param body
      * @param bodySerializer
+     * @param bodyParameters
+     * @param arraySerializationFormat
      * @throws IOException
      */
-    private HttpRequest(GlobalConfiguration coreConfig, String server, String path,
-            Method httpMethod, String authenticationKey, Map<String, Object> queryParams,
-            Map<String, SimpleEntry<Object, Boolean>> templateParams,
-            Map<String, List<String>> headerParams, Set<Parameter> formParams,
-            Map<String, Object> formParameters, Object body, Serializer bodySerializer,
-            Map<String, Object> bodyParameters, ArraySerializationFormat arraySerializationFormat)
-            throws IOException {
+    private HttpRequest(final GlobalConfiguration coreConfig, final String server, String path,
+            final Method httpMethod, final String authenticationKey,
+            final Map<String, Object> queryParams,
+            final Map<String, SimpleEntry<Object, Boolean>> templateParams,
+            final Map<String, List<String>> headerParams, Set<Parameter> formParams,
+            final Map<String, Object> formParameters, Object body, final Serializer bodySerializer,
+            final Map<String, Object> bodyParameters,
+            final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
@@ -70,7 +88,6 @@ public class HttpRequest {
     }
 
     /**
-     * 
      * @return the {@link Request} instance which is used for making {@link ApiCall}
      */
     public Request getCoreHttpRequest() {
@@ -106,7 +123,7 @@ public class HttpRequest {
 
     /**
      * @param compatibilityFactory
-     * @return
+     * @return list of form parameters
      * @throws IOException
      */
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
@@ -200,25 +217,79 @@ public class HttpRequest {
     }
 
     public static class Builder {
+        /**
+         * A string of server
+         */
         private String server;
+
+        /**
+         * A string of path
+         */
         private String path;
+
+        /**
+         * A HttpMethod
+         */
         private Method httpMethod;
+
+        /**
+         * A authentication key string
+         */
         private String authenticationKey;
+
+        /**
+         * A map of query parameters
+         */
         private Map<String, Object> queryParams = new HashMap<>();
+
+        /**
+         * A map of template parameters
+         */
         private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<>();
+
+        /**
+         * A map of header parameters
+         */
         private Map<String, List<String>> headerParams = new HashMap<>();
+
+        /**
+         * A set of {@link Parameter}
+         */
         private Set<Parameter> formParams = new HashSet<>();
+
+        /**
+         * A map of form parameters
+         */
         private Map<String, Object> formParamaters = new HashMap<>();
+
+        /**
+         * A body's object
+         */
         private Object body;
+
+        /**
+         * A body {@link Serializer} function
+         */
         private Serializer bodySerializer;
+
+        /**
+         * A map of body parameters
+         */
         private Map<String, Object> bodyParameters;
+
+        /**
+         * A array serialization format
+         */
         private ArraySerializationFormat arraySerializationFormat =
                 ArraySerializationFormat.INDEXED;
+
+        /**
+         * An instance of {@link Parameter.Builder}
+         */
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
         /**
          * Base uri server address
-         * 
          * @param server the base uri address
          * @return Builder
          */
@@ -229,7 +300,6 @@ public class HttpRequest {
 
         /**
          * Endpoint route path
-         * 
          * @param path the endpoint path
          * @return Builder
          */
@@ -240,7 +310,6 @@ public class HttpRequest {
 
         /**
          * Http Request Method
-         *
          * @param httpMethod HttpMethod value for httpMethod
          * @return Builder
          */
@@ -251,7 +320,6 @@ public class HttpRequest {
 
         /**
          * Setter for requiresAuth
-         * 
          * @param authenticationKey string value for authenticationKey
          * @return Builder
          */
@@ -262,7 +330,6 @@ public class HttpRequest {
 
         /**
          * Optional query parameters
-         * 
          * @param queryParameters the optional query parameter
          * @return Builder
          */
@@ -274,7 +341,6 @@ public class HttpRequest {
 
         /**
          * To configure the query paramater
-         * 
          * @param action the query parameter {@link Consumer}
          * @return Builder
          */
@@ -288,7 +354,6 @@ public class HttpRequest {
 
         /**
          * To configure the template parameter
-         * 
          * @param action the template parameter {@link Consumer}
          * @return Builder
          */
@@ -305,7 +370,6 @@ public class HttpRequest {
 
         /**
          * To configure the header parameter
-         * 
          * @param action the header parameter {@link Consumer}
          * @return Builder
          */
@@ -330,7 +394,6 @@ public class HttpRequest {
 
         /**
          * To configure the form parameter
-         * 
          * @param action the form parameter {@link Consumer}
          * @return Builder
          */
@@ -345,7 +408,6 @@ public class HttpRequest {
 
         /**
          * To configure the optional form parameters
-         * 
          * @param formParameters the optional form parameter map
          * @return Builder
          */
@@ -357,7 +419,6 @@ public class HttpRequest {
 
         /**
          * To configure the body parameter
-         * 
          * @param action the body parameter {@link Consumer}
          * @return Builder
          */
@@ -388,7 +449,6 @@ public class HttpRequest {
         }
 
         /**
-         * 
          * @param arraySerializationFormat the serialization format for the array
          * @return Builder
          */
@@ -399,7 +459,6 @@ public class HttpRequest {
 
         /**
          * Initialise the CoreHttpRequest
-         * 
          * @param coreConfig the configuration for the Http request
          * @return {@link Request}
          * @throws IOException Signals that an I/O exception of some sort has occurred.

@@ -7,13 +7,11 @@ import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
  * Executor service for asynchronous HTTP endpoint call
- *
  */
 public class AsyncExecutor {
 
     /**
      * Make an asynchronous HTTP endpoint call.
-     * 
      * @param <ResponseType> The type of the object for response
      * @param <ExceptionType> Server error
      * @param requestSupplier An object of RequestSupplier to supply an instance of HttpRequest
@@ -21,9 +19,10 @@ public class AsyncExecutor {
      * @param responseHandler An object of ResponseHandler to handle the endpoint response
      * @return An object of type CompletableFuture of T
      */
-    public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
-            RequestSupplier requestSupplier, RequestExecutor requestExecutor,
-            AsyncResponseHandler<ResponseType, ExceptionType> responseHandler) {
+    public static <ResponseType, ExceptionType extends CoreApiException>
+            CompletableFuture<ResponseType> makeHttpCallAsync(RequestSupplier requestSupplier,
+                    RequestExecutor requestExecutor,
+                    AsyncResponseHandler<ResponseType, ExceptionType> responseHandler) {
         final Request request;
         try {
             request = requestSupplier.supply();

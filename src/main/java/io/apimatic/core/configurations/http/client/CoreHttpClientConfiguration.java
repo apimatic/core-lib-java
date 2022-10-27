@@ -9,8 +9,18 @@ import io.apimatic.coreinterfaces.http.Method;
 /**
  * Class to hold HTTP Client Configuration.
  */
-public class CoreHttpClientConfiguration implements ClientConfiguration {
+public final class CoreHttpClientConfiguration implements ClientConfiguration {
 
+    private final static int REQUEST_TIMEOUT = 408;
+    private final static int LONG_DATA = 413;
+    private final static int TOO_MANY_REQUEST = 429;
+    private final static int INTERNAL_SERVER_ERROR = 500;
+    private final static int BAD_GATEWAY = 502;
+    private final static int SERVICE_UNAVAILABLE = 503;
+    private final static int GATEWAY_TIMEOUT = 504;
+    private final static int WEB_SERVER_IS_DOWN = 521;
+    private final static int CONNECTION_TIMEOUT = 522;
+    private final static int SERVER_TIMEOUT = 524;
     /**
      * The timeout in seconds to use for making HTTP requests.
      */
@@ -67,14 +77,27 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
      */
     private final boolean skipSslCertVerification;
 
+
+
     /**
-     * Default Constructor.
+     * @param timeout
+     * @param numberOfRetries
+     * @param backOffFactor
+     * @param retryInterval
+     * @param skipSslCertVerification
+     * @param httpStatusCodesToRetry
+     * @param httpMethodsToRetry
+     * @param maximumRetryWaitTime
+     * @param shouldRetryOnTimeout
+     * @param httpClientInstance
+     * @param overrideHttpClientConfigurations
      */
-    private CoreHttpClientConfiguration(long timeout, int numberOfRetries, int backOffFactor,
-            long retryInterval, Set<Integer> httpStatusCodesToRetry, Set<Method> httpMethodsToRetry,
-            long maximumRetryWaitTime, boolean shouldRetryOnTimeout,
-            okhttp3.OkHttpClient httpClientInstance, boolean overrideHttpClientConfigurations,
-            boolean skipSslCertVerification) {
+    private CoreHttpClientConfiguration(final long timeout, final int numberOfRetries,
+            final int backOffFactor, final long retryInterval,
+            final boolean skipSslCertVerification, final Set<Integer> httpStatusCodesToRetry,
+            final Set<Method> httpMethodsToRetry, final long maximumRetryWaitTime,
+            final boolean shouldRetryOnTimeout, final okhttp3.OkHttpClient httpClientInstance,
+            final boolean overrideHttpClientConfigurations) {
         this.timeout = timeout;
         this.numberOfRetries = numberOfRetries;
         this.backOffFactor = backOffFactor;
@@ -90,7 +113,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * The timeout in seconds to use for making HTTP requests.
-     * 
      * @return timeout
      */
     public long getTimeout() {
@@ -99,7 +121,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * The number of retries to make.
-     * 
      * @return numberOfRetries
      */
     public int getNumberOfRetries() {
@@ -108,7 +129,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * To use in calculation of wait time for next request in case of failure.
-     * 
      * @return backOffFactor
      */
     public int getBackOffFactor() {
@@ -117,7 +137,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * To use in calculation of wait time for next request in case of failure.
-     * 
      * @return retryInterval
      */
     public long getRetryInterval() {
@@ -126,7 +145,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * Http status codes to retry against.
-     * 
      * @return httpStatusCodesToRetry
      */
     public Set<Integer> getHttpStatusCodesToRetry() {
@@ -135,7 +153,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * Http methods to retry against.
-     * 
      * @return httpMethodsToRetry
      */
     public Set<Method> getHttpMethodsToRetry() {
@@ -144,7 +161,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * The maximum wait time for overall retrying requests.
-     * 
      * @return maximumRetryWaitTime
      */
     public long getMaximumRetryWaitTime() {
@@ -153,7 +169,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * Whether to retry on request timeout.
-     * 
      * @return shouldRetryOnTimeout
      */
     public boolean shouldRetryOnTimeout() {
@@ -162,7 +177,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * The OkHttpClient instance used to make the HTTP calls.
-     * 
      * @return httpClientInstance
      */
     public okhttp3.OkHttpClient getHttpClientInstance() {
@@ -172,7 +186,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
     /**
      * Allow the SDK to override HTTP client instance's settings used for features like retries,
      * timeouts etc.
-     * 
      * @return overrideHttpClientConfigurations
      */
     public boolean shouldOverrideHttpClientConfigurations() {
@@ -181,7 +194,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * Allow or prevent skipping SSL certificate verification.
-     * 
      * @return skipSslCertVerification
      */
     public boolean skipSslCertVerification() {
@@ -190,7 +202,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
     /**
      * Converts this HttpClientConfiguration into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -207,7 +218,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
     /**
      * Builds a new {@link CoreHttpClientConfiguration.Builder} object. Creates the instance with
      * the current state.
-     * 
      * @return a new {@link CoreHttpClientConfiguration.Builder} object
      */
     public Builder newBuilder() {
@@ -224,7 +234,14 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
      */
     public static class Builder {
 
+        /**
+         * timeout
+         */
         private long timeout = 0;
+
+        /**
+         * number of retries
+         */
         private int numberOfRetries = 0;
         private int backOffFactor = 2;
         private long retryInterval = 1;
@@ -241,14 +258,14 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
          */
         public Builder() {
             // setting default values
-            httpStatusCodesToRetry
-                    .addAll(Arrays.asList(408, 413, 429, 500, 502, 503, 504, 521, 522, 524));
+            httpStatusCodesToRetry.addAll(Arrays.asList(REQUEST_TIMEOUT, LONG_DATA,
+                    TOO_MANY_REQUEST, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE,
+                    GATEWAY_TIMEOUT, WEB_SERVER_IS_DOWN, CONNECTION_TIMEOUT, SERVER_TIMEOUT));
             httpMethodsToRetry.addAll(Arrays.asList(Method.GET, Method.PUT));
         }
 
         /**
          * The timeout in seconds to use for making HTTP requests.
-         * 
          * @param timeout The timeout to set.
          * @return Builder
          */
@@ -261,7 +278,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * The number of retries to make.
-         * 
          * @param numberOfRetries The numberOfRetries to set.
          * @return Builder
          */
@@ -274,7 +290,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * To use in calculation of wait time for next request in case of failure.
-         * 
          * @param backOffFactor The backOffFactor to set.
          * @return Builder
          */
@@ -287,7 +302,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * To use in calculation of wait time for next request in case of failure.
-         * 
          * @param retryInterval The retryInterval to set.
          * @return Builder
          */
@@ -300,7 +314,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * Http status codes to retry against.
-         * 
          * @param httpStatusCodesToRetry The httpStatusCodesToRetry to set.
          * @return Builder
          */
@@ -314,7 +327,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * Http methods to retry against.
-         * 
          * @param httpMethodsToRetry The httpMethodsToRetry to set.
          * @return Builder
          */
@@ -328,7 +340,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * The maximum wait time for overall retrying requests.
-         * 
          * @param maximumRetryWaitTime The maximumRetryWaitTime to set.
          * @return Builder
          */
@@ -341,7 +352,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * Whether to retry on request timeout.
-         * 
          * @param shouldRetryOnTimeout The shouldRetryOnTimeout to set
          * @return Builder
          */
@@ -352,7 +362,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * The OkHttpClient instance used to make the HTTP calls.
-         * 
          * @param httpClientInstance The httpClientInstance to set
          * @return Builder
          */
@@ -363,7 +372,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * The OkHttpClient instance used to make the HTTP calls.
-         * 
          * @param httpClientInstance The httpClientInstance to set
          * @param overrideHttpClientConfigurations The overrideHttpClientConfigurations to set
          * @return Builder
@@ -377,7 +385,6 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * Whether to prevent SSL cert verification or not
-         * 
          * @param skipSslCertVerification The skipSslCertVerification to set
          * @return Builder
          */
@@ -388,14 +395,13 @@ public class CoreHttpClientConfiguration implements ClientConfiguration {
 
         /**
          * Builds a new HttpClientConfiguration object using the set fields.
-         * 
          * @return {@link CoreHttpClientConfiguration}
          */
         public CoreHttpClientConfiguration build() {
             return new CoreHttpClientConfiguration(timeout, numberOfRetries, backOffFactor,
-                    retryInterval, httpStatusCodesToRetry, httpMethodsToRetry, maximumRetryWaitTime,
-                    shouldRetryOnTimeout, httpClientInstance, overrideHttpClientConfigurations,
-                    skipSslCertVerification);
+                    retryInterval, skipSslCertVerification, httpStatusCodesToRetry,
+                    httpMethodsToRetry, maximumRetryWaitTime, shouldRetryOnTimeout,
+                    httpClientInstance, overrideHttpClientConfigurations);
         }
     }
 }

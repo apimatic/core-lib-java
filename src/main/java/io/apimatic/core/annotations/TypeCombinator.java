@@ -12,19 +12,18 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 public interface TypeCombinator {
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface TypeCombinatorCase {
+    @interface TypeCombinatorCase {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public @interface FormSerialize {
+    @interface FormSerialize {
         /**
          * Serializer class to use for serializing contents (elements of a Collection/array, values
          * of Maps) of annotated property. Can only be used on accessors (methods, fields,
          * constructors), to apply to values of {@link java.util.Map}-valued properties; not
          * applicable for value types used as Array elements or {@link java.util.Collection} and
          * {@link java.util.Map} values.
-         * 
          * @return JsonSerializer instance
          */
         public Class<? extends JsonSerializer<?>> contentUsing() default JsonSerializer.None.class;
@@ -32,6 +31,6 @@ public interface TypeCombinator {
 
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface TypeCombinatorStringCase {
+    @interface TypeCombinatorStringCase {
     }
 }

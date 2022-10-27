@@ -15,22 +15,55 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
- *
  */
-public class GlobalConfiguration {
+public final class GlobalConfiguration {
+    /**
+     * An instance of {@link CompatibilityFactory}
+     */
     private CompatibilityFactory compatibilityFactory;
+
+    /**
+     * A string of user agent
+     */
     private String userAgent;
+
+    /**
+     * A map of user agent configuration
+     */
     private Map<String, String> userAgentConfig;
+
+    /**
+     * A map of {@link Authentication}
+     */
     private Map<String, Authentication> authentications;
+
+    /**
+     * An instance of {@link Callback}
+     */
     private Callback callback;
+
+    /**
+     * An instance of {@link HttpClient}
+     */
     private HttpClient httpClient;
+
+    /**
+     * A map of headers
+     */
     private Map<String, List<String>> globalHeaders;
+
+    /**
+     * An instance of {@link HttpHeaders} for the additional headers
+     */
     private HttpHeaders additionalHeaders;
+
+    /**
+     * A function to apply baseUri
+     */
     private Function<String, String> baseUri;
 
     /**
      * A private constructor
-     * 
      * @param compatibilityFactory
      * @param userAgent
      * @param userAgentConfig
@@ -38,12 +71,14 @@ public class GlobalConfiguration {
      * @param callback
      * @param httpClient
      * @param globalHeaders
+     * @param additionalHeaders
      * @param baseUri
      */
-    private GlobalConfiguration(CompatibilityFactory compatibilityFactory, String userAgent,
-            Map<String, String> userAgentConfig, Map<String, Authentication> authentications,
-            Callback callback, HttpClient httpClient, Map<String, List<String>> globalHeaders,
-            HttpHeaders additionalHeaders, Function<String, String> baseUri) {
+    private GlobalConfiguration(final CompatibilityFactory compatibilityFactory,
+            final String userAgent, final Map<String, String> userAgentConfig,
+            final Map<String, Authentication> authentications, final Callback callback,
+            final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
+            final HttpHeaders additionalHeaders, final Function<String, String> baseUri) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -61,7 +96,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the compatibilityFactory instance
      */
     public CompatibilityFactory getCompatibilityFactory() {
@@ -69,7 +103,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the UserAgent string
      */
     public String getUserAgent() {
@@ -84,7 +117,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the map of AuthManager
      */
     public Map<String, Authentication> getAuthentications() {
@@ -92,7 +124,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the callback instance
      */
     public Callback getHttpCallback() {
@@ -100,7 +131,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the httpClient instance
      */
     public HttpClient getHttpClient() {
@@ -108,7 +138,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the Map of global headers
      */
     public Map<String, List<String>> getGlobalHeaders() {
@@ -116,7 +145,6 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the Map of additional headers
      */
     public HttpHeaders getAdditionalHeaders() {
@@ -124,26 +152,59 @@ public class GlobalConfiguration {
     }
 
     /**
-     * 
      * @return the baseUri function
      */
     public Function<String, String> getBaseUri() {
         return baseUri;
     }
-    
+
     public static class Builder {
+        /**
+         * An instance of {@link CompatibilityFactory}
+         */
         private CompatibilityFactory compatibilityFactory;
+
+        /**
+         * A string of userAgent
+         */
         private String userAgent;
+
+        /**
+         * A map of user agent configurations
+         */
         private Map<String, String> userAgentConfig;
+
+        /**
+         * A map of {@link Authentication}
+         */
         private Map<String, Authentication> authentications;
+
+        /**
+         * An instance of {@link Callback}
+         */
         private Callback callback;
+
+        /**
+         * An instance of {@link HttpClient}
+         */
         private HttpClient httpClient;
+
+        /**
+         * A map of global headers
+         */
         private Map<String, List<String>> globalHeaders = new HashMap<>();
+
+        /**
+         * An instance of {@link HttpHeaders}
+         */
         private HttpHeaders additionalheaders;
+
+        /**
+         * A function to retrieve baseUri
+         */
         private Function<String, String> baseUri;
 
         /**
-         * 
          * @param compatibilityFactory value for CompatibilityFactor
          * @return Builder
          */
@@ -153,7 +214,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param userAgent String value for UserAgent
          * @return Builder
          */
@@ -163,7 +223,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param userAgentConfig Map values for userAgentConfig
          * @return Builder
          */
@@ -173,7 +232,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param authentications Map values for authManagers
          * @return Builder
          */
@@ -183,7 +241,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param callback value for callback
          * @return Builder
          */
@@ -193,7 +250,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param httpClient value for
          * @return Builder
          */
@@ -203,7 +259,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param key the global header key
          * @param value the global header value
          * @return Builder
@@ -221,7 +276,6 @@ public class GlobalConfiguration {
 
         /**
          * Additional headers which you can configure other than endpoints headers
-         * 
          * @param additionalHeaders headers which is configured other than endpoints
          * @return Builder
          */
@@ -231,7 +285,6 @@ public class GlobalConfiguration {
         }
 
         /**
-         * 
          * @param baseUri value for BaseUri
          * @return Builder
          */
@@ -242,7 +295,6 @@ public class GlobalConfiguration {
 
         /**
          * Builds a new {@link GlobalConfiguration} object using the set fields.
-         * 
          * @return {@link GlobalConfiguration}
          */
         public GlobalConfiguration build() {

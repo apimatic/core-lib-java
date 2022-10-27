@@ -13,28 +13,41 @@ import io.apimatic.coreinterfaces.http.response.Response;
 /**
  * An API call, or API request, is a message sent to a server asking an API to provide a service or
  * information
- *
  * @param <ResponseType> resource from server
  * @param <ExceptionType> in case of a problem or the connection was aborted
  */
 public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
+    /**
+     * An instance of {@link GlobalConfiguration}
+     */
     private final GlobalConfiguration globalConfig;
+
+    /**
+     * An instance of {@link Request}
+     */
     private final Request request;
+
+    /**
+     * An instance of {@link ResponseHandler.Builder}
+     */
     private final ResponseHandler<ResponseType, ExceptionType> responseHandler;
+
+    /**
+     * An instance of {@link CoreEndpointConfiguration}
+     */
     private final CoreEndpointConfiguration endpointConfiguration;
 
     /**
      * ApiCall constructor
-     * 
      * @param globalConfig the required configuration to built the ApiCall
      * @param coreHttpRequest Http request for the api call
      * @param responseHandler the handler for the response
      * @param coreEndpointConfiguration endPoint configuration
      */
-    private ApiCall(GlobalConfiguration globalConfig, Request coreHttpRequest,
-            ResponseHandler<ResponseType, ExceptionType> responseHandler,
-            CoreEndpointConfiguration coreEndpointConfiguration) {
+    private ApiCall(final GlobalConfiguration globalConfig, final Request coreHttpRequest,
+            final ResponseHandler<ResponseType, ExceptionType> responseHandler,
+            final CoreEndpointConfiguration coreEndpointConfiguration) {
         this.globalConfig = globalConfig;
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
@@ -43,7 +56,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
     /**
      * Execute the ApiCall and returns the expected response
-     * 
      * @return instance of ResponseType
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      * @throws ExceptionType Represents error response from the server.
@@ -56,7 +68,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
     /**
      * Execute the Api call asynchronously and returns the expected response in CompletableFuture
-     * 
      * @return the instance of {@link CompletableFuture}
      */
     public CompletableFuture<ResponseType> executeAsync() {
@@ -68,18 +79,30 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
     }
 
     /**
-     * 
      * Builder class for the {@link ApiCall} class
-     *
      * @param <ResponseType> resource from server
      * @param <ExceptionType> Represents error response from the server.
      */
     public static class Builder<ResponseType, ExceptionType extends CoreApiException> {
+        /**
+         * An instance of {@link GlobalConfiguration}
+         */
         private GlobalConfiguration globalConfig;
+
+        /**
+         * An instance of {@link HttpRequest.Builder}
+         */
         private HttpRequest.Builder requestBuilder = new HttpRequest.Builder();
+
+        /**
+         * An instance of {@link ResponseHandler.Builder}
+         */
         private ResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder =
                 new ResponseHandler.Builder<ResponseType, ExceptionType>();
 
+        /**
+         * An instance of {@link EndpointConfiguration.Builder}
+         */
         private EndpointConfiguration.Builder endpointConfigurationBuilder =
                 new EndpointConfiguration.Builder();
 
@@ -93,7 +116,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
         }
 
         /**
-         * 
          * @param action requestBuilder {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
@@ -105,7 +127,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
         }
 
         /**
-         * 
          * @param action responseHandler {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
@@ -117,7 +138,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
         }
 
         /**
-         * 
          * @param action endpointConfiguration {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
@@ -130,7 +150,6 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
         /**
          * build the {@link ApiCall}
-         * 
          * @return the instance of {@link ApiCall}
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */

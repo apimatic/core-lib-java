@@ -19,7 +19,6 @@ public class CoreJsonValue {
 
     /**
      * Initialization constructor.
-     * 
      * @param value The JSON of type JsonNode.
      */
     @JsonCreator
@@ -29,7 +28,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The string value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -42,7 +40,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The boolean value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -55,7 +52,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The integer value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -68,7 +64,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The long value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -81,7 +76,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The double value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -94,7 +88,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The double value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -107,7 +100,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided list of values.
-     * 
      * @param <T> The list type
      * @param values The list of values of given type.
      * @return The {@link CoreJsonValue} instance.
@@ -121,7 +113,6 @@ public class CoreJsonValue {
 
     /**
      * Getter for stored JSON object.
-     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -130,7 +121,6 @@ public class CoreJsonValue {
 
     /**
      * Converts the JSON into string.
-     * 
      * @return String representation of JSON
      */
     @Override

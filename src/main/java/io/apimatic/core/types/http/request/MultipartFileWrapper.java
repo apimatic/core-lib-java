@@ -10,25 +10,30 @@ import io.apimatic.coreinterfaces.type.CoreFileWrapper;
  */
 public class MultipartFileWrapper implements MultipartFile {
 
+    /**
+     * An instance of {@link CoreFileWrapper}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private CoreFileWrapper fileWrapper;
+
+    /**
+     * An instance of {@link HttpHeaders}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private HttpHeaders headers;
 
     /**
      * Initialization constructor.
-     * 
      * @param fileWrapper FileWrapper instance
      * @param headers Headers for wrapping
      */
-    public MultipartFileWrapper(CoreFileWrapper fileWrapper, HttpHeaders headers) {
+    public MultipartFileWrapper(final CoreFileWrapper fileWrapper, HttpHeaders headers) {
         this.fileWrapper = fileWrapper;
         this.headers = headers;
     }
 
     /**
      * Getter for file wrapper.
-     * 
      * @return FileWrapper instance
      */
     public CoreFileWrapper getFileWrapper() {
@@ -37,7 +42,6 @@ public class MultipartFileWrapper implements MultipartFile {
 
     /**
      * Getter for headers.
-     * 
      * @return Headers
      */
     public HttpHeaders getHeaders() {

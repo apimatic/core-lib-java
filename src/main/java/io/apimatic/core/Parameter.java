@@ -4,28 +4,54 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import io.apimatic.coreinterfaces.http.request.MultipartFile;
 import io.apimatic.coreinterfaces.http.request.MutliPartRequestType;
 import io.apimatic.coreinterfaces.type.functional.Serializer;
 
 /**
  * HTTP parameters consist of a type, a name, and a value. These parameters appear in the header and
  * body of an HTTP request.
- *
  */
-public class Parameter {
+public final class Parameter {
 
+    /**
+     * A parameter key
+     */
     private final String key;
+
+    /**
+     * A parameter value
+     */
     private final Object value;
+
+    /**
+     * A {@link MultipartFile} serializer
+     */
     private final Serializer multipartSerializer;
+
+    /**
+     * boolean to determine it is required or not
+     */
     private final boolean isRequired;
+
+    /**
+     * A boolean variable to encode the template parameter
+     */
     private final boolean shouldEncode;
+    
+    /**
+     * An instance of {@link MutliPartRequestType}
+     */
     private final MutliPartRequestType multiPartRequestType;
+    
+    /**
+     * A map of multipartHeaders
+     */
     private final Map<String, List<String>> multipartHeaders;
 
 
     /**
      * A private constructor
-     * 
      * @param key the parameter key
      * @param value the parameter value
      * @param multipartSerializer the serializer for multipart request
@@ -48,7 +74,6 @@ public class Parameter {
 
     /**
      * Getter for the key
-     * 
      * @return the String key
      */
     public String getKey() {
@@ -57,7 +82,6 @@ public class Parameter {
 
     /**
      * Getter for the shouldEncode
-     * 
      * @return the boolean shouldEncode which determines that should encode the template parameter
      *         or not
      */
@@ -67,7 +91,6 @@ public class Parameter {
 
     /**
      * Getter for the parameter value
-     * 
      * @return the parameter value
      */
     public Object getValue() {
@@ -76,7 +99,6 @@ public class Parameter {
 
     /**
      * Getter for the multipartSerializer
-     * 
      * @return the {@link Serializer} multipartSerializer
      */
     public Serializer getMultipartSerializer() {
@@ -85,7 +107,6 @@ public class Parameter {
 
     /**
      * Getter for the MultipartRequestType
-     * 
      * @return the MultiPartRequestType
      */
     public MutliPartRequestType getMultiPartRequest() {
@@ -94,7 +115,6 @@ public class Parameter {
 
     /**
      * Getter for the multipartHeaders
-     * 
      * @return the Map of headers
      */
     public Map<String, List<String>> getMultipartHeaders() {
@@ -125,7 +145,6 @@ public class Parameter {
 
         /**
          * Setter for the key
-         * 
          * @param key the parameter key
          * @return {@link Parameter.Builder}
          */
@@ -136,7 +155,6 @@ public class Parameter {
 
         /**
          * Setter for the value
-         * 
          * @param value the parameter value
          * @return {@link Parameter.Builder}
          */
@@ -147,7 +165,6 @@ public class Parameter {
 
         /**
          * Setter for the multipartSerializer
-         * 
          * @param multipartSerializer if the request is {@link MutliPartRequestType} MULTI_PART then
          *        configure the multipartSerializer
          * @return {@link Parameter.Builder}
@@ -159,7 +176,6 @@ public class Parameter {
 
         /**
          * Variable determines either we need to validate the parameter
-         *
          * @param isRequired the parameter is required or not
          * @return {@link Parameter.Builder}
          */
@@ -170,7 +186,6 @@ public class Parameter {
 
         /**
          * Setter for the shouldEncode
-         * 
          * @param shouldEncode the template parameter value shouldEncode or not
          * @return {@link Parameter.Builder}
          */
@@ -181,7 +196,6 @@ public class Parameter {
 
         /**
          * Setter for the multipPart request type
-         * 
          * @param multiPartRequestType the type of multipart request
          * @return {@link Parameter.Builder}
          */
@@ -192,7 +206,6 @@ public class Parameter {
 
         /**
          * Add the multi part headers for the multi part request
-         * 
          * @param key the header key
          * @param value the header value
          * @return {@link Parameter.Builder}
@@ -210,7 +223,6 @@ public class Parameter {
 
         /**
          * this method initiates the {@link Parameter}
-         * 
          * @return the instance of {@link Parameter}
          */
         public Parameter build() {
