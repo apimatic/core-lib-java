@@ -1,9 +1,3 @@
-/*
- * TesterLib
- *
- * This file was automatically generated for Stamplay by APIMATIC v3.0 ( https://www.apimatic.io ).
- */
-
 package apimatic.core.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -19,22 +13,16 @@ import io.apimatic.core.types.BaseModel;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 /**
  * This is a model class for Person type.
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "personType",
-        defaultImpl = Person.class,
-        visible = true)
-@JsonSubTypes({
-    @Type(value = Employee.class, name = "Empl"),
-    @Type(value = Boss.class, name = "Boss")
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "personType", defaultImpl = Person.class, visible = true)
+@JsonSubTypes({@Type(value = Employee.class, name = "Empl"),
+        @Type(value = Boss.class, name = "Boss")})
 @JsonInclude(Include.ALWAYS)
-public class Person
-        extends BaseModel {
+public class Person extends BaseModel {
     private String address;
     private long age;
     private LocalDate birthday;
@@ -52,22 +40,17 @@ public class Person
 
     /**
      * Initialization constructor.
-     * @param  address  String value for address.
-     * @param  age  long value for age.
-     * @param  birthday  LocalDate value for birthday.
-     * @param  birthtime  LocalDateTime value for birthtime.
-     * @param  name  String value for name.
-     * @param  uid  String value for uid.
-     * @param  personType  String value for personType.
+     * 
+     * @param address String value for address.
+     * @param age long value for age.
+     * @param birthday LocalDate value for birthday.
+     * @param birthtime LocalDateTime value for birthtime.
+     * @param name String value for name.
+     * @param uid String value for uid.
+     * @param personType String value for personType.
      */
-    public Person(
-            String address,
-            long age,
-            LocalDate birthday,
-            LocalDateTime birthtime,
-            String name,
-            String uid,
-            String personType) {
+    public Person(String address, long age, LocalDate birthday, LocalDateTime birthtime,
+            String name, String uid, String personType) {
         this.address = address;
         this.age = age;
         this.birthday = birthday;
@@ -79,6 +62,7 @@ public class Person
 
     /**
      * Getter for Address.
+     * 
      * @return Returns the String
      */
     @JsonGetter("address")
@@ -88,6 +72,7 @@ public class Person
 
     /**
      * Setter for Address.
+     * 
      * @param address Value for String
      */
     @JsonSetter("address")
@@ -97,6 +82,7 @@ public class Person
 
     /**
      * Getter for Age.
+     * 
      * @return Returns the long
      */
     @JsonGetter("age")
@@ -106,6 +92,7 @@ public class Person
 
     /**
      * Setter for Age.
+     * 
      * @param age Value for long
      */
     @JsonSetter("age")
@@ -115,6 +102,7 @@ public class Person
 
     /**
      * Getter for Birthday.
+     * 
      * @return Returns the LocalDate
      */
     @JsonGetter("birthday")
@@ -125,6 +113,7 @@ public class Person
 
     /**
      * Setter for Birthday.
+     * 
      * @param birthday Value for LocalDate
      */
     @JsonSetter("birthday")
@@ -135,6 +124,7 @@ public class Person
 
     /**
      * Getter for Birthtime.
+     * 
      * @return Returns the LocalDateTime
      */
     @JsonGetter("birthtime")
@@ -145,6 +135,7 @@ public class Person
 
     /**
      * Setter for Birthtime.
+     * 
      * @param birthtime Value for LocalDateTime
      */
     @JsonSetter("birthtime")
@@ -155,6 +146,7 @@ public class Person
 
     /**
      * Getter for Name.
+     * 
      * @return Returns the String
      */
     @JsonGetter("name")
@@ -164,6 +156,7 @@ public class Person
 
     /**
      * Setter for Name.
+     * 
      * @param name Value for String
      */
     @JsonSetter("name")
@@ -173,6 +166,7 @@ public class Person
 
     /**
      * Getter for Uid.
+     * 
      * @return Returns the String
      */
     @JsonGetter("uid")
@@ -182,6 +176,7 @@ public class Person
 
     /**
      * Setter for Uid.
+     * 
      * @param uid Value for String
      */
     @JsonSetter("uid")
@@ -191,6 +186,7 @@ public class Person
 
     /**
      * Getter for PersonType.
+     * 
      * @return Returns the String
      */
     @JsonGetter("personType")
@@ -201,6 +197,7 @@ public class Person
 
     /**
      * Setter for PersonType.
+     * 
      * @param personType Value for String
      */
     @JsonSetter("personType")
@@ -210,6 +207,7 @@ public class Person
 
     /**
      * Converts this Person into string format.
+     * 
      * @return String representation of this class
      */
     @Override
@@ -220,8 +218,9 @@ public class Person
     }
 
     /**
-     * Builds a new {@link Person.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link Person.Builder} object. Creates the instance with the state of the
+     * current model.
+     * 
      * @return a new {@link Person.Builder} object
      */
     public Builder toBuilder() {
@@ -245,17 +244,17 @@ public class Person
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  address  String value for address.
-         * @param  age  long value for age.
-         * @param  birthday  LocalDate value for birthday.
-         * @param  birthtime  LocalDateTime value for birthtime.
-         * @param  name  String value for name.
-         * @param  uid  String value for uid.
+         * 
+         * @param address String value for address.
+         * @param age long value for age.
+         * @param birthday LocalDate value for birthday.
+         * @param birthtime LocalDateTime value for birthtime.
+         * @param name String value for name.
+         * @param uid String value for uid.
          */
         public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
                 String name, String uid) {
@@ -269,7 +268,8 @@ public class Person
 
         /**
          * Setter for address.
-         * @param  address  String value for address.
+         * 
+         * @param address String value for address.
          * @return Builder
          */
         public Builder address(String address) {
@@ -279,7 +279,8 @@ public class Person
 
         /**
          * Setter for age.
-         * @param  age  long value for age.
+         * 
+         * @param age long value for age.
          * @return Builder
          */
         public Builder age(long age) {
@@ -289,7 +290,8 @@ public class Person
 
         /**
          * Setter for birthday.
-         * @param  birthday  LocalDate value for birthday.
+         * 
+         * @param birthday LocalDate value for birthday.
          * @return Builder
          */
         public Builder birthday(LocalDate birthday) {
@@ -299,7 +301,8 @@ public class Person
 
         /**
          * Setter for birthtime.
-         * @param  birthtime  LocalDateTime value for birthtime.
+         * 
+         * @param birthtime LocalDateTime value for birthtime.
          * @return Builder
          */
         public Builder birthtime(LocalDateTime birthtime) {
@@ -309,7 +312,8 @@ public class Person
 
         /**
          * Setter for name.
-         * @param  name  String value for name.
+         * 
+         * @param name String value for name.
          * @return Builder
          */
         public Builder name(String name) {
@@ -319,7 +323,8 @@ public class Person
 
         /**
          * Setter for uid.
-         * @param  uid  String value for uid.
+         * 
+         * @param uid String value for uid.
          * @return Builder
          */
         public Builder uid(String uid) {
@@ -329,7 +334,8 @@ public class Person
 
         /**
          * Setter for personType.
-         * @param  personType  String value for personType.
+         * 
+         * @param personType String value for personType.
          * @return Builder
          */
         public Builder personType(String personType) {
@@ -339,6 +345,7 @@ public class Person
 
         /**
          * Builds a new {@link Person} object using the set fields.
+         * 
          * @return {@link Person}
          */
         public Person build() {

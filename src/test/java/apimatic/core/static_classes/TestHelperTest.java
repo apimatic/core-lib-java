@@ -2,8 +2,12 @@ package apimatic.core.static_classes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -17,6 +21,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.apimatic.core.testing.TestHelper;
 
 public class TestHelperTest {
+
+    private final String TEST_FILE_PATH =
+            "https://gist.githubusercontent.com/asadali214/0a64efec5353d351818475f928c50767/raw/8ad3533799ecb4e01a753aaf04d248e6702d4947/testFile.txt";
 
     @Test
     public void testIsJsonProperSubsetOf() throws IOException {
@@ -144,7 +151,70 @@ public class TestHelperTest {
         assertTrue(actual);
     }
 
+    @Test
+    public void testIsJsonProperSubsetOf2() throws IOException {
+        String leftObject = "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":\"some string\","
+                + "\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":[23,23]},"
+                + "\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
+                + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":"
+                + "[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}]"
+                + ",\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":false,\"key2\":true}"
+                + ",{\"key1\":false,\"key2\":true}],\"key2\":[{\"key1\":"
+                + "{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},"
+                + "\"outerArrayOfMap\":[{\"key1\":{\"NumberOfTyres\":\"4\","
+                + "\"HaveTrunk\":true},\"key2\":\"some string\"},{\"key1\":"
+                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true},\"key2\":"
+                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}}],"
+                + "\"outerArrayOfMap2\":[{\"key1\":[{\"NumberOfTyres\":\"4\","
+                + "\"HaveTrunk\":true},{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],"
+                + "\"key2\":[\"some string\",\"some string\"]},{\"key1\":"
+                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],\"key2\":"
+                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]}],"
+                + "\"outerMapOfArray\":{\"key1\":[{\"name\":\"Shahid Khaliq\","
+                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},12.3],"
+                + "\"key2\":[12.3,12.3]},\"outerMapOfArray2\":{\"key1\":"
+                + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"name\":\"Shahid Khaliq\","
+                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}],"
+                + "\"key2\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
+                + "{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},"
+                + "\"key2\":{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}]}}";
+        String rightObject =
+                "{\"multiAnyOf\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"multiOneOfAnyOf\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"singleInnerMapOfArray\":{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],\"key2\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}]},\"outerMapOfSingleInnerArray\":{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}},\"allInnerArrayOfMap\":[{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}},{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}}],\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}},{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}}],\"key2\":[{\"key1\":{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},\"outerArrayOfMap\":[{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}},{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}}],\"outerArrayOfMap2\":[{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}]},{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}]}],\"outerMapOfArray\":{\"key1\":[{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"},{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}],\"key2\":[{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"},{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}]},\"outerMapOfArray2\":{\"key1\":[{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"}},{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}],\"key2\":[{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}},{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}]}}";
+        boolean actual =
+                TestHelper.isJsonObjectProperSubsetOf(leftObject, rightObject, true, true, false);
+        assertFalse(actual);
+    }
 
+
+    @Test
+    public void testIsJsonObjectProperSubsetOf() throws IOException {
+        String leftObject =
+                "{\"anyOfRequired\":{\"NumberOfElectrons\":2},\"oneOfReqNullable\":{\"NumberOfTyres\":\"2\"},\"anyOfOptNullable\":null}";
+        String rightObject =
+                "{\"anyOfRequired\":{\"NumberOfElectrons\":2},\"oneOfReqNullable\":{\"NumberOfTyres\":\"2\"},\"anyOfOptNullable\":\"test\"}";
+        boolean actual =
+                TestHelper.isJsonObjectProperSubsetOf(leftObject, rightObject, true, false, false);
+        assertFalse(actual);
+    }
+
+    @Test
+    public void testIsJsonObjectProperSubsetOfList() throws IOException {
+        String leftObject =
+                "{\"multiAnyOf\":23,\"multiOneOfAnyOf\":23,\"singleInnerMapOfArray\":{\"key1\":[12.3,12.3],\"key2\":[12.3,12.3]},\"outerMapOfSingleInnerArray\":{\"key1\":[12.3,12.3],\"key2\":12.3},\"allInnerArrayOfMap\":[{\"key1\":12,\"key2\":12},{\"key1\":12,\"key2\":12}],\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":12,\"key2\":12},{\"key1\":12,\"key2\":12}],\"key2\":[{\"key1\":\"some string\",\"key2\":\"some string\"}]},\"outerArrayOfMap\":[{\"key1\":12,\"key2\":\"some string\"},{\"key1\":12,\"key2\":12}],\"outerArrayOfMap2\":[{\"key1\":[12,12],\"key2\":[\"some string\",\"some string\"]},{\"key1\":[12,12],\"key2\":[12,12]}],\"outerMapOfArray\":{\"key1\":[12,true],\"key2\":[false,true]},\"outerMapOfArray2\":{\"key1\":[{\"key1\":12,\"key2\":12},{\"key1\":true,\"key2\":false}],\"key2\":[{\"key1\":12,\"key2\":12},{\"key1\":12,\"key2\":12}]}}";
+        String rightObject =
+                "{\"multiAnyOf\":23,\"multiOneOfAnyOf\":21,\"singleInnerMapOfArray\":{\"key1\":[12.3,12.3],\"key2\":[12.3,12.3]},\"outerMapOfSingleInnerArray\":{\"key1\":[12.3,12.3],\"key2\":12.3},\"allInnerArrayOfMap\":[{\"key1\":12,\"key2\":12},{\"key1\":12,\"key2\":12}],\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":12,\"key2\":12},{\"key1\":12,\"key2\":16}],\"key2\":[{\"key1\":\"some string\",\"key2\":\"some string\"}]},\"outerArrayOfMap\":[{\"key1\":12,\"key2\":\"some string\"},{\"key1\":12,\"key2\":12}],\"outerArrayOfMap2\":[{\"key1\":[12,12],\"key2\":[\"some string\",\"some \"]},{\"key1\":[12,12],\"key2\":[12,12]}],\"outerMapOfArray\":{\"key1\":[12,true],\"key2\":[false,true]},\"outerMapOfArray2\":{\"key1\":[{\"key1\":12,\"key2\":12},{\"key1\":true,\"key2\":false}],\"key2\":[{\"key1\":12,\"key2\":\"some string\"},{\"key1\":12,\"key2\":12}]}}";
+        boolean actual =
+                TestHelper.isJsonObjectProperSubsetOf(leftObject, rightObject, true, true, false);
+        assertFalse(actual);
+    }
 
     @Test
     public void testIsArrayOfJsonObjectsProperSubsetOf() throws IOException {
@@ -460,6 +530,32 @@ public class TestHelperTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testGetFile() throws IOException {
+        File file = TestHelper.getFile(TEST_FILE_PATH);
+        assertNotNull(file);
+    }
+
+    @Test
+    public void testIsSameAsInput() throws IOException {
+        String fileContent = "This test file is created to test CoreFileWrapper functionality";
+        InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes());
+        assertTrue(TestHelper.isSameAsFile(TEST_FILE_PATH, inputStream));
+    }
+
+    @Test
+    public void testIsSameAsInput1() throws IOException {
+        String fileContent = "This test file is created to test CoreFileWrapper functionality";
+        InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes());
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        assertTrue(TestHelper.isSameAsFile(TEST_FILE_PATH, bufferedInputStream));
+    }
+
+    @Test
+    public void testIsSameAsInput3() throws IOException {
+        File file = TestHelper.getFile(TEST_FILE_PATH);
+        assertTrue(TestHelper.isSameAsFile(TEST_FILE_PATH, new FileInputStream(file)));
+    }
 }
 
 

@@ -15,9 +15,6 @@ import io.apimatic.coreinterfaces.http.response.Response;
  */
 public class Dynamic implements DynamicType {
     private Response response;
-    private String responseString;
-
-    public Dynamic() {}
 
     /**
      * Instantiate class.
@@ -136,9 +133,9 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as string.
-     * 
+     *
      * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @throws ParseException Signals if a parse exception occurred
      */
     @Override
     public String parseAsString() throws ParseException {
@@ -192,9 +189,6 @@ public class Dynamic implements DynamicType {
      * @return The Response String
      */
     private String getResponseString() {
-        if (responseString == null) {
-            responseString = response.getBody();
-        }
-        return responseString;
+        return response.getBody();
     }
 }

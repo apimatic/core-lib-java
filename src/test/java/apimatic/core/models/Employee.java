@@ -1,9 +1,3 @@
-/*
- * TesterLib
- *
- * This file was automatically generated for Stamplay by APIMATIC v3.0 ( https://www.apimatic.io ).
- */
-
 package apimatic.core.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -23,18 +17,11 @@ import java.util.List;
 /**
  * This is a model class for Employee type.
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "personType",
-        defaultImpl = Employee.class,
-        visible = true)
-@JsonSubTypes({
-    @Type(value = Boss.class, name = "Boss")
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "personType", defaultImpl = Employee.class, visible = true)
+@JsonSubTypes({@Type(value = Boss.class, name = "Boss")})
 @JsonInclude(Include.ALWAYS)
-public class Employee
-        extends Person {
+public class Employee extends Person {
     private String department;
     private List<Person> dependents;
     private LocalDateTime hiredAt;
@@ -54,35 +41,25 @@ public class Employee
 
     /**
      * Initialization constructor.
-     * @param  address  String value for address.
-     * @param  age  long value for age.
-     * @param  birthday  LocalDate value for birthday.
-     * @param  birthtime  LocalDateTime value for birthtime.
-     * @param  name  String value for name.
-     * @param  uid  String value for uid.
-     * @param  department  String value for department.
-     * @param  dependents  List of Person value for dependents.
-     * @param  hiredAt  LocalDateTime value for hiredAt.
-     * @param  joiningDay  Days value for joiningDay.
-     * @param  salary  int value for salary.
-     * @param  workingDays  List of Days value for workingDays.
-     * @param  boss  Person value for boss.
-     * @param  personType  String value for personType.
+     * 
+     * @param address String value for address.
+     * @param age long value for age.
+     * @param birthday LocalDate value for birthday.
+     * @param birthtime LocalDateTime value for birthtime.
+     * @param name String value for name.
+     * @param uid String value for uid.
+     * @param department String value for department.
+     * @param dependents List of Person value for dependents.
+     * @param hiredAt LocalDateTime value for hiredAt.
+     * @param joiningDay Days value for joiningDay.
+     * @param salary int value for salary.
+     * @param workingDays List of Days value for workingDays.
+     * @param boss Person value for boss.
+     * @param personType String value for personType.
      */
-    public Employee(
-            String address,
-            long age,
-            LocalDate birthday,
-            LocalDateTime birthtime,
-            String name,
-            String uid,
-            String department,
-            List<Person> dependents,
-            LocalDateTime hiredAt,
-            Days joiningDay,
-            int salary,
-            List<Days> workingDays,
-            Person boss,
+    public Employee(String address, long age, LocalDate birthday, LocalDateTime birthtime,
+            String name, String uid, String department, List<Person> dependents,
+            LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays, Person boss,
             String personType) {
         super(address, age, birthday, birthtime, name, uid, personType);
         this.department = department;
@@ -96,6 +73,7 @@ public class Employee
 
     /**
      * Getter for Department.
+     * 
      * @return Returns the String
      */
     @JsonGetter("department")
@@ -105,6 +83,7 @@ public class Employee
 
     /**
      * Setter for Department.
+     * 
      * @param department Value for String
      */
     @JsonSetter("department")
@@ -114,6 +93,7 @@ public class Employee
 
     /**
      * Getter for Dependents.
+     * 
      * @return Returns the List of Person
      */
     @JsonGetter("dependents")
@@ -123,6 +103,7 @@ public class Employee
 
     /**
      * Setter for Dependents.
+     * 
      * @param dependents Value for List of Person
      */
     @JsonSetter("dependents")
@@ -132,6 +113,7 @@ public class Employee
 
     /**
      * Getter for HiredAt.
+     * 
      * @return Returns the LocalDateTime
      */
     @JsonGetter("hiredAt")
@@ -142,6 +124,7 @@ public class Employee
 
     /**
      * Setter for HiredAt.
+     * 
      * @param hiredAt Value for LocalDateTime
      */
     @JsonSetter("hiredAt")
@@ -152,6 +135,7 @@ public class Employee
 
     /**
      * Getter for JoiningDay.
+     * 
      * @return Returns the Days
      */
     @JsonGetter("joiningDay")
@@ -161,6 +145,7 @@ public class Employee
 
     /**
      * Setter for JoiningDay.
+     * 
      * @param joiningDay Value for Days
      */
     @JsonSetter("joiningDay")
@@ -170,6 +155,7 @@ public class Employee
 
     /**
      * Getter for Salary.
+     * 
      * @return Returns the int
      */
     @JsonGetter("salary")
@@ -179,6 +165,7 @@ public class Employee
 
     /**
      * Setter for Salary.
+     * 
      * @param salary Value for int
      */
     @JsonSetter("salary")
@@ -188,6 +175,7 @@ public class Employee
 
     /**
      * Getter for WorkingDays.
+     * 
      * @return Returns the List of Days
      */
     @JsonGetter("workingDays")
@@ -197,6 +185,7 @@ public class Employee
 
     /**
      * Setter for WorkingDays.
+     * 
      * @param workingDays Value for List of Days
      */
     @JsonSetter("workingDays")
@@ -206,6 +195,7 @@ public class Employee
 
     /**
      * Getter for Boss.
+     * 
      * @return Returns the Person
      */
     @JsonGetter("boss")
@@ -215,6 +205,7 @@ public class Employee
 
     /**
      * Setter for Boss.
+     * 
      * @param boss Value for Person
      */
     @JsonSetter("boss")
@@ -224,6 +215,7 @@ public class Employee
 
     /**
      * Converts this Employee into string format.
+     * 
      * @return String representation of this class
      */
     @Override
@@ -237,15 +229,15 @@ public class Employee
     }
 
     /**
-     * Builds a new {@link Employee.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link Employee.Builder} object. Creates the instance with the state of the
+     * current model.
+     * 
      * @return a new {@link Employee.Builder} object
      */
     public Builder toEmployeeBuilder() {
         Builder builder = new Builder(getAddress(), getAge(), getBirthday(), getBirthtime(),
                 getName(), getUid(), department, dependents, hiredAt, joiningDay, salary,
-                workingDays, boss)
-                .personType(getPersonType());
+                workingDays, boss).personType(getPersonType());
         return builder;
     }
 
@@ -271,24 +263,24 @@ public class Employee
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  address  String value for address.
-         * @param  age  long value for age.
-         * @param  birthday  LocalDate value for birthday.
-         * @param  birthtime  LocalDateTime value for birthtime.
-         * @param  name  String value for name.
-         * @param  uid  String value for uid.
-         * @param  department  String value for department.
-         * @param  dependents  List of Person value for dependents.
-         * @param  hiredAt  LocalDateTime value for hiredAt.
-         * @param  joiningDay  Days value for joiningDay.
-         * @param  salary  int value for salary.
-         * @param  workingDays  List of Days value for workingDays.
-         * @param  boss  Person value for boss.
+         * 
+         * @param address String value for address.
+         * @param age long value for age.
+         * @param birthday LocalDate value for birthday.
+         * @param birthtime LocalDateTime value for birthtime.
+         * @param name String value for name.
+         * @param uid String value for uid.
+         * @param department String value for department.
+         * @param dependents List of Person value for dependents.
+         * @param hiredAt LocalDateTime value for hiredAt.
+         * @param joiningDay Days value for joiningDay.
+         * @param salary int value for salary.
+         * @param workingDays List of Days value for workingDays.
+         * @param boss Person value for boss.
          */
         public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
                 String name, String uid, String department, List<Person> dependents,
@@ -311,7 +303,8 @@ public class Employee
 
         /**
          * Setter for address.
-         * @param  address  String value for address.
+         * 
+         * @param address String value for address.
          * @return Builder
          */
         public Builder address(String address) {
@@ -321,7 +314,8 @@ public class Employee
 
         /**
          * Setter for age.
-         * @param  age  long value for age.
+         * 
+         * @param age long value for age.
          * @return Builder
          */
         public Builder age(long age) {
@@ -331,7 +325,8 @@ public class Employee
 
         /**
          * Setter for birthday.
-         * @param  birthday  LocalDate value for birthday.
+         * 
+         * @param birthday LocalDate value for birthday.
          * @return Builder
          */
         public Builder birthday(LocalDate birthday) {
@@ -341,7 +336,8 @@ public class Employee
 
         /**
          * Setter for birthtime.
-         * @param  birthtime  LocalDateTime value for birthtime.
+         * 
+         * @param birthtime LocalDateTime value for birthtime.
          * @return Builder
          */
         public Builder birthtime(LocalDateTime birthtime) {
@@ -351,7 +347,8 @@ public class Employee
 
         /**
          * Setter for name.
-         * @param  name  String value for name.
+         * 
+         * @param name String value for name.
          * @return Builder
          */
         public Builder name(String name) {
@@ -361,7 +358,8 @@ public class Employee
 
         /**
          * Setter for uid.
-         * @param  uid  String value for uid.
+         * 
+         * @param uid String value for uid.
          * @return Builder
          */
         public Builder uid(String uid) {
@@ -371,7 +369,8 @@ public class Employee
 
         /**
          * Setter for department.
-         * @param  department  String value for department.
+         * 
+         * @param department String value for department.
          * @return Builder
          */
         public Builder department(String department) {
@@ -381,7 +380,8 @@ public class Employee
 
         /**
          * Setter for dependents.
-         * @param  dependents  List of Person value for dependents.
+         * 
+         * @param dependents List of Person value for dependents.
          * @return Builder
          */
         public Builder dependents(List<Person> dependents) {
@@ -391,7 +391,8 @@ public class Employee
 
         /**
          * Setter for hiredAt.
-         * @param  hiredAt  LocalDateTime value for hiredAt.
+         * 
+         * @param hiredAt LocalDateTime value for hiredAt.
          * @return Builder
          */
         public Builder hiredAt(LocalDateTime hiredAt) {
@@ -401,7 +402,8 @@ public class Employee
 
         /**
          * Setter for joiningDay.
-         * @param  joiningDay  Days value for joiningDay.
+         * 
+         * @param joiningDay Days value for joiningDay.
          * @return Builder
          */
         public Builder joiningDay(Days joiningDay) {
@@ -411,7 +413,8 @@ public class Employee
 
         /**
          * Setter for salary.
-         * @param  salary  int value for salary.
+         * 
+         * @param salary int value for salary.
          * @return Builder
          */
         public Builder salary(int salary) {
@@ -421,7 +424,8 @@ public class Employee
 
         /**
          * Setter for workingDays.
-         * @param  workingDays  List of Days value for workingDays.
+         * 
+         * @param workingDays List of Days value for workingDays.
          * @return Builder
          */
         public Builder workingDays(List<Days> workingDays) {
@@ -431,7 +435,8 @@ public class Employee
 
         /**
          * Setter for boss.
-         * @param  boss  Person value for boss.
+         * 
+         * @param boss Person value for boss.
          * @return Builder
          */
         public Builder boss(Person boss) {
@@ -441,7 +446,8 @@ public class Employee
 
         /**
          * Setter for personType.
-         * @param  personType  String value for personType.
+         * 
+         * @param personType String value for personType.
          * @return Builder
          */
         public Builder personType(String personType) {
@@ -451,6 +457,7 @@ public class Employee
 
         /**
          * Builds a new {@link Employee} object using the set fields.
+         * 
          * @return {@link Employee}
          */
         public Employee build() {
