@@ -67,6 +67,9 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 public class CoreHelper {
 
     private static String userAgent;
+    private static final String TSV_FORMAT = "%09";
+    private static final String CSV_FORMAT = ",";
+    private static final String PSV_FORMAT = "%7C";
 
     // Deserialization of Json data
     public static ObjectMapper mapper = JsonMapper
@@ -1182,12 +1185,11 @@ public class CoreHelper {
             ArraySerializationFormat arraySerializationFormat) {
         switch (arraySerializationFormat) {
             case CSV:
-                return ",";
+                return CSV_FORMAT;
             case PSV:
-                return "%7C";
+                return PSV_FORMAT;
             case TSV:
-                return "%09";
-
+                return TSV_FORMAT;
             default:
                 return "";
         }
@@ -1329,21 +1331,6 @@ public class CoreHelper {
         }
         return WRAPPER_TYPES.contains(object.getClass()) || object.getClass().isPrimitive()
                 || object.getClass().isEnum();
-    }
-
-    /**
-     * Json Serialization of an ENUM defined under oneOf/anyOf container.
-     * 
-     * @param value The object to serialize into Json String.
-     * @return The serialized Json String representation of the given object.
-     * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
-     */
-    public static String serializeEnumContainer(Object value) throws JsonProcessingException {
-        if (value instanceof String || value instanceof Integer) {
-            return String.valueOf(value);
-        }
-
-        return serialize(value);
     }
 
     /**

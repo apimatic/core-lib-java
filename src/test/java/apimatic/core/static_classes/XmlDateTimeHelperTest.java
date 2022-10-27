@@ -28,4 +28,11 @@ public class XmlDateTimeHelperTest {
         
         assertEquals(actual, expected);
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeUnixSimpleDateInvalidXML() {
+        String dateTime = "<XmlRootName 2000-07-13/>";
+        
+        LocalDate actual = XmlLocalDateTimeHelper.deserializeSimpleDate(dateTime);
+    }
 }

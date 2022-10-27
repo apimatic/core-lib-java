@@ -9,6 +9,7 @@ import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.XmlLocalDateTimeHelper;
 
 public class XmlLocalDateTimeHelperTest {
+
     @Test
     public void testSerializeRfc8601DateTime() {
         LocalDateTime localDateTime = LocalDateTime.of(2000, 7, 13, 6, 10);
@@ -30,6 +31,12 @@ public class XmlLocalDateTimeHelperTest {
         LocalDateTime actual = XmlLocalDateTimeHelper.deserializeRfc8601DateTime(dateTime);
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeRfc8601DateTimeInvalidXml() {
+        String dateTime = "<XmlRootName2000-07-13T06:10ZXmlRootName>";
+        XmlLocalDateTimeHelper.deserializeRfc8601DateTime(dateTime);
     }
 
     @Test
@@ -55,6 +62,12 @@ public class XmlLocalDateTimeHelperTest {
         assertEquals(actual, expected);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeRfc1123DateTimeInvalidXml() {
+        String dateTime = "<Thu, 13 Jul 2000 06:10:00 GMTXmlRootName>";
+        XmlLocalDateTimeHelper.deserializeRfc1123DateTime(dateTime);
+    }
+
     @Test
     public void testSerializeUnixTimeStamp() {
         LocalDateTime localDateTime = TestDateTimeHelper.getLocalDateTimeFromGMT(
@@ -78,5 +91,11 @@ public class XmlLocalDateTimeHelperTest {
         LocalDateTime actual = XmlLocalDateTimeHelper.deserializeUnixTimeStamp(dateTime);
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeserializeUnixTimeStampeInvalidXml() {
+        String dateTime = "</XmlRootName>";
+        XmlLocalDateTimeHelper.deserializeUnixTimeStamp(dateTime);
     }
 }

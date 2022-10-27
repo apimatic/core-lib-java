@@ -148,9 +148,12 @@ public class BaseModel {
                 annotation = method.getAnnotation(JsonSetter.class);
             }
             if (annotation != null) {
-                if ((getter) && ((JsonGetter) annotation).value().equalsIgnoreCase(key)) {
+                String methodName = key;
+                if (getter && ((JsonGetter) annotation).value()
+                        .equalsIgnoreCase(methodName.replace("get", ""))) {
                     return method;
-                } else if ((!getter) && ((JsonSetter) annotation).value().equalsIgnoreCase(key)) {
+                } else if ((!getter) && ((JsonSetter) annotation).value()
+                        .equalsIgnoreCase(methodName.replace("set", ""))) {
                     return method;
                 }
             }
