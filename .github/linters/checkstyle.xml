@@ -105,7 +105,9 @@
     <module name="JavadocMethod"/>
     <module name="JavadocType"/>
     <module name="JavadocVariable"/>
-    <module name="JavadocStyle"/>
+    <module name="JavadocStyle">
+      <property name="checkFirstSentence" value="false"/>
+    </module>
     <module name="MissingJavadocMethod"/>
     <!-- Enables @SuppressWarnings Support                -->
     <module name="SuppressWarningsHolder"/>
