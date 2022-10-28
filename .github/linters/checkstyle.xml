@@ -110,6 +110,7 @@
     </module>
     <module name="MissingJavadocMethod">
       <property name="allowMissingPropertyJavadoc" value="true"/>
+       <property name="allowedAnnotations" value="Override,Deprecated,Test"/>
     </module>
     <!-- Enables @SuppressWarnings Support                -->
     <module name="SuppressWarningsHolder"/>
