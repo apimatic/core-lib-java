@@ -15,13 +15,23 @@ import io.apimatic.coreinterfaces.http.Context;
  * This is a model class for GlobalTestException type.
  */
 public class GlobalTestException extends CoreApiException {
+    /**
+     * A serialVersionUID
+     */
     private static final long serialVersionUID = 5538622956749835538L;
+
+    /**
+     * A server message string
+     */
     private String serverMessage;
+
+    /**
+     * A server response code
+     */
     private int serverCode;
 
     /**
      * Initialization constructor.
-     * 
      * @param reason The reason for throwing exception
      * @param context The http context of the API exception
      */
@@ -32,7 +42,6 @@ public class GlobalTestException extends CoreApiException {
 
     /**
      * Getter for ServerMessage. Represents the server's exception message
-     * 
      * @return Returns the String
      */
     @JsonGetter("ServerMessage")
@@ -42,7 +51,6 @@ public class GlobalTestException extends CoreApiException {
 
     /**
      * Setter for ServerMessage. Represents the server's exception message
-     * 
      * @param serverMessage Value for String
      */
     @JsonSetter("ServerMessage")
@@ -52,7 +60,6 @@ public class GlobalTestException extends CoreApiException {
 
     /**
      * Getter for ServerCode. Represents the server's error code
-     * 
      * @return Returns the int
      */
     @JsonGetter("ServerCode")
@@ -62,7 +69,6 @@ public class GlobalTestException extends CoreApiException {
 
     /**
      * Setter for ServerCode. Represents the server's error code
-     * 
      * @param serverCode Value for int
      */
     @JsonSetter("ServerCode")

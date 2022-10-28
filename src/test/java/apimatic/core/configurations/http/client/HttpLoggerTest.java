@@ -35,25 +35,45 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 public class HttpLoggerTest {
 
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link Logger}
+     */
     @Mock
     private Logger logger;
 
+    /**
+     * Mock of {@link Request}
+     */
     @Mock
     private Request request;
 
+    /**
+     * Mock of {@link Response}
+     */
     @Mock
     private Response response;
 
-
+    /**
+     * Mock of {@link HttpHeaders}
+     */
     @Mock
     private HttpHeaders headers;
 
+    /**
+     * Mock of {@link ReadonlyLogging}
+     */
     @Mock
     private ReadonlyLogging readonlyLogging;
 
+    /**
+     * Mock of {@link HttpLogger}
+     */
     private HttpLogger httpLogger;
 
     @Before
@@ -135,15 +155,15 @@ public class HttpLoggerTest {
     public void testNotExistInHeadersFiltersIncludePolicy() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();
         filteredHeders.put("accept", Arrays.asList("text/plain"));
-        
-       
+
+
         when(headers.asMultimap()).thenReturn(filteredHeders);
-     
+
         when(request.getHeaders()).thenReturn(headers);
         Set<String> setOfHeaders = new HashSet<>();
         setOfHeaders.add("accept");
         when(headers.names()).thenReturn(setOfHeaders);
-        
+
         Set<String> setOfHeaderFilters = new HashSet<>();
         when(readonlyLogging.getHeaderFilters()).thenReturn(setOfHeaderFilters);
         when(readonlyLogging.getHeaderLoggingPolicy()).thenReturn(LoggingPolicy.INCLUDE);
@@ -161,15 +181,15 @@ public class HttpLoggerTest {
     public void testNotExistInHeadersFiltersExcludePolicy() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();
         filteredHeders.put("accept", Arrays.asList("text/plain"));
-        
-       
+
+
         when(headers.asMultimap()).thenReturn(filteredHeders);
-     
+
         when(request.getHeaders()).thenReturn(headers);
         Set<String> setOfHeaders = new HashSet<>();
         setOfHeaders.add("accept");
         when(headers.names()).thenReturn(setOfHeaders);
-        
+
         Set<String> setOfHeaderFilters = new HashSet<>();
         when(readonlyLogging.getHeaderFilters()).thenReturn(setOfHeaderFilters);
         when(readonlyLogging.getHeaderLoggingPolicy()).thenReturn(LoggingPolicy.EXCLUDE);
@@ -183,7 +203,7 @@ public class HttpLoggerTest {
         assertTrue(argumentCaptor.getValue().contains("accept"));
     }
 
-    
+
     @Test
     public void testLogRequestExcludeHeaders() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();

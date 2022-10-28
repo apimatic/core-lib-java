@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,36 +31,69 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class EndToEndTest extends MockCoreConfig {
 
+    /**
+     * Success code status code
+     */
+    private static final int SUCCESS_CODE = 200;
+
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
+
+    /**
+     * Mock of {@link Callback}
+     */
     @Mock
     private Callback callback;
 
+    /**
+     * Mock of {@link Context}
+     */
     @Mock
     private Context context;
 
+    /**
+     * Mock of {@link HttpClient}
+     */
     @Mock
     private HttpClient httpClient;
 
+    /**
+     * Mock of {@link Response}
+     */
     @Mock
     private Response response;
 
-    @Mock
-    private CompletableFuture<Response> completableResponse;
 
+    /**
+     * Mock of {@link Request}
+     */
     @Mock
     private Request coreHttpRequest;
 
+    /**
+     * Mock of {@link CoreEndpointConfiguration}
+     */
     @Mock
     private CoreEndpointConfiguration endpointConfiguration;
 
+    /**
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     */
     @Before
     public void setup() throws IOException {
         prepareStub();
     }
 
+    /**
+     * End to End sync call
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws CoreApiException Exception in api call execution
+     */
     @Test
-    public void EndToEndTestSync() throws IOException, CoreApiException {
+    public void testEndToEndSyncCall() throws IOException, CoreApiException {
         String expected = "Turtle";
         String actual = getApiCall().execute();
         assertEquals(actual, expected);
@@ -90,12 +122,13 @@ public class EndToEndTest extends MockCoreConfig {
 
     private GlobalConfiguration getGlobalConfig() {
         String userAgent = "APIMATIC 3.0";
-        GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
-                .authentication(Collections.emptyMap()).compatibilityFactory(getCompatibilityFactory())
-                .httpClient(httpClient).baseUri(server -> getBaseUri(server)).callback(callback)
-                .userAgent(userAgent).userAgentConfig(Collections.emptyMap())
-                .additionalHeaders(null).globalHeader("version", "0.1")
-                .globalHeader("version", "1.2").build();
+        GlobalConfiguration globalConfig =
+                new GlobalConfiguration.Builder().authentication(Collections.emptyMap())
+                        .compatibilityFactory(getCompatibilityFactory()).httpClient(httpClient)
+                        .baseUri(server -> getBaseUri(server)).callback(callback)
+                        .userAgent(userAgent).userAgentConfig(Collections.emptyMap())
+                        .additionalHeaders(null).globalHeader("version", "0.1")
+                        .globalHeader("version", "1.2").build();
         return globalConfig;
     }
 
@@ -106,13 +139,13 @@ public class EndToEndTest extends MockCoreConfig {
     private void prepareStub() throws IOException {
         when(httpClient.execute(any(Request.class), any(CoreEndpointConfiguration.class)))
                 .thenReturn(response);
-        when(httpClient.executeAsync(any(Request.class), any(CoreEndpointConfiguration.class)))
-                .thenReturn(completableResponse);
         when(getCompatibilityFactory().createHttpHeaders(anyMap())).thenReturn(getHttpHeaders());
-        when(getCompatibilityFactory().createHttpRequest(any(Method.class), any(StringBuilder.class),
-                any(HttpHeaders.class), anyMap(), anyList())).thenReturn(coreHttpRequest);
-        when(getCompatibilityFactory().createHttpContext(coreHttpRequest, response)).thenReturn(context);
+        when(getCompatibilityFactory().createHttpRequest(any(Method.class),
+                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
+                        .thenReturn(coreHttpRequest);
+        when(getCompatibilityFactory().createHttpContext(coreHttpRequest, response))
+                .thenReturn(context);
         when(context.getResponse()).thenReturn(response);
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
     }
 }
