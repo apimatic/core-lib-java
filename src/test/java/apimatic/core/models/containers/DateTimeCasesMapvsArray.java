@@ -37,7 +37,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param dateTime List of LocalDateTime value for dateTime.
      * @return The DateTimeCase object.
      */
@@ -47,7 +46,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param dateTime2 Map of String, value for dateTime2.
      * @return The DateTime2Case object.
      */
@@ -57,7 +55,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Method to match from the provided any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The any-of type cases callback.
      * @return The any-of matched case.
@@ -66,7 +63,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * This is interface for any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
@@ -97,9 +93,10 @@ public abstract class DateTimeCasesMapvsArray {
 
         @JsonCreator
         private DateTimeCase(JsonNode jsonNode) throws IOException {
-            this.dateTime = CoreHelper.deserialize(jsonNode,
-                    new TypeReference<List<LocalDateTime>>() {}, LocalDateTime.class,
-                    new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
+            this.dateTime =
+                    CoreHelper.deserialize(jsonNode, new TypeReference<List<LocalDateTime>>() {},
+                            LocalDateTime.class,
+                            new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
         }
 
         @Override
@@ -141,9 +138,10 @@ public abstract class DateTimeCasesMapvsArray {
 
         @JsonCreator
         private DateTime2Case(JsonNode jsonNode) throws IOException {
-            this.dateTime2 = CoreHelper.deserialize(jsonNode,
-                    new TypeReference<Map<String, LocalDateTime>>() {}, LocalDateTime.class,
-                    new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
+            this.dateTime2 =
+                    CoreHelper.deserialize(jsonNode,
+                            new TypeReference<Map<String, LocalDateTime>>() {}, LocalDateTime.class,
+                            new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
         }
 
         @Override

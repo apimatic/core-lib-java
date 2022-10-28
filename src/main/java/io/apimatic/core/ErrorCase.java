@@ -29,7 +29,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * @param reason the exception reason
      * @param exceptionCreator the exceptionCreator
      */
-    private ErrorCase(String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
+    private ErrorCase(final String reason, final ExceptionCreator<ExceptionType> exceptionCreator) {
         this.reason = reason;
         this.exceptionCreator = exceptionCreator;
     }

@@ -18,7 +18,6 @@ public class Orbit {
 
     /**
      * Initialization constructor.
-     * 
      * @param numberOfElectrons int value for numberOfElectrons.
      */
     @JsonCreator
@@ -28,7 +27,6 @@ public class Orbit {
 
     /**
      * Getter for NumberOfElectrons.
-     * 
      * @return Returns the int
      */
     @JsonGetter("NumberOfElectrons")
@@ -38,7 +36,6 @@ public class Orbit {
 
     /**
      * Setter for NumberOfElectrons.
-     * 
      * @param numberOfElectrons Value for int
      */
     @JsonSetter("NumberOfElectrons")
@@ -48,7 +45,6 @@ public class Orbit {
 
     /**
      * Converts this Orbit into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -59,7 +55,6 @@ public class Orbit {
     /**
      * Builds a new {@link Orbit.Builder} object. Creates the instance with the state of the current
      * model.
-     * 
      * @return a new {@link Orbit.Builder} object
      */
     public Builder toBuilder() {
@@ -80,7 +75,6 @@ public class Orbit {
 
         /**
          * Initialization constructor.
-         * 
          * @param numberOfElectrons int value for numberOfElectrons.
          */
         public Builder(int numberOfElectrons) {
@@ -89,7 +83,6 @@ public class Orbit {
 
         /**
          * Setter for numberOfElectrons.
-         * 
          * @param numberOfElectrons int value for numberOfElectrons.
          * @return Builder
          */
@@ -100,7 +93,6 @@ public class Orbit {
 
         /**
          * Builds a new {@link Orbit} object using the set fields.
-         * 
          * @return {@link Orbit}
          */
         public Orbit build() {

@@ -126,8 +126,8 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
      */
     private ApiLoggingConfiguration(boolean logRequestInfo, boolean logResponseInfo,
             boolean logRequestHeaders, boolean logResponseHeaders, boolean logRequestBody,
-            boolean logResponseBody, boolean prettyPrintLogs, LoggingLevel level,
-            LoggingPolicy headerLoggingPolicy, TreeSet<String> headerFilters) {
+            boolean logResponseBody, boolean prettyPrintLogs, final LoggingLevel level,
+            final LoggingPolicy headerLoggingPolicy, final TreeSet<String> headerFilters) {
         this.logRequestInfo = logRequestInfo;
         this.logResponseInfo = logResponseInfo;
         this.logRequestHeaders = logRequestHeaders;

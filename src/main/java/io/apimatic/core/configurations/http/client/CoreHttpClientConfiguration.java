@@ -40,7 +40,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
      * Service unavailable status code
      */
     private static final int SERVICE_UNAVAILABLE = 503;
-    
+
     /**
      * 
      */

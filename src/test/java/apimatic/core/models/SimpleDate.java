@@ -19,17 +19,14 @@ public class SimpleDate {
     /**
      * Default constructor.
      */
-    public SimpleDate() {
-    }
+    public SimpleDate() {}
 
     /**
      * Initialization constructor.
-     * @param  dateNullable  LocalDate value for dateNullable.
-     * @param  date  LocalDate value for date.
+     * @param dateNullable LocalDate value for dateNullable.
+     * @param date LocalDate value for date.
      */
-    public SimpleDate(
-            LocalDate dateNullable,
-            LocalDate date) {
+    public SimpleDate(LocalDate dateNullable, LocalDate date) {
         this.dateNullable = OptionalNullable.of(dateNullable);
         this.date = date;
     }
@@ -109,13 +106,12 @@ public class SimpleDate {
     }
 
     /**
-     * Builds a new {@link SimpleDate.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link SimpleDate.Builder} object. Creates the instance with the state of the
+     * current model.
      * @return a new {@link SimpleDate.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder()
-                .date(getDate());
+        Builder builder = new Builder().date(getDate());
         builder.dateNullable = internalGetDateNullable();
         return builder;
     }
@@ -131,7 +127,7 @@ public class SimpleDate {
 
         /**
          * Setter for dateNullable.
-         * @param  dateNullable  LocalDate value for dateNullable.
+         * @param dateNullable LocalDate value for dateNullable.
          * @return Builder
          */
         public Builder dateNullable(LocalDate dateNullable) {
@@ -150,7 +146,7 @@ public class SimpleDate {
 
         /**
          * Setter for date.
-         * @param  date  LocalDate value for date.
+         * @param date LocalDate value for date.
          * @return Builder
          */
         public Builder date(LocalDate date) {

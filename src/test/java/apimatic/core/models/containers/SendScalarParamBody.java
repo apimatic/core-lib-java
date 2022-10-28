@@ -30,7 +30,6 @@ public abstract class SendScalarParamBody {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param precision List of Double value for precision.
      * @return The PrecisionCase object.
      */
@@ -40,7 +39,6 @@ public abstract class SendScalarParamBody {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param mString String value for mString.
      * @return The MStringCase object.
      */
@@ -50,7 +48,6 @@ public abstract class SendScalarParamBody {
 
     /**
      * Method to match from the provided any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The any-of type cases callback.
      * @return The any-of matched case.
@@ -59,14 +56,12 @@ public abstract class SendScalarParamBody {
 
     /**
      * Method to get serialized content type of set any-of type.
-     * 
      * @return The String value of content type.
      */
     public abstract String getContentType();
 
     /**
      * This is interface for any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {

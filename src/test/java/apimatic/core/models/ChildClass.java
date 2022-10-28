@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.types.OptionalNullable;
 import java.math.BigDecimal;
 import java.util.List;
+
 /**
  * This is a model class for ChildClass type.
  */
-public class ChildClass
-        extends ParentClass {
+public class ChildClass extends ParentClass {
     private OptionalNullable<String> optionalNullable;
     private OptionalNullable<String> optionalNullableWithDefaultValue;
     private String optional;
@@ -30,41 +30,30 @@ public class ChildClass
 
     /**
      * Initialization constructor.
-     * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-     * @param  grandParentRequired  String value for grandParentRequired.
-     * @param  parentRequiredNullable  String value for parentRequiredNullable.
-     * @param  parentRequired  String value for parentRequired.
-     * @param  requiredNullable  String value for requiredNullable.
-     * @param  required  String value for required.
-     * @param  grandParentOptional  String value for grandParentOptional.
-     * @param  mClass  Integer value for mClass.
-     * @param  precision  Double value for precision.
-     * @param  bigDecimal  BigDecimal value for bigDecimal.
-     * @param  parentOptionalNullableWithDefaultValue  String value for
-     *         parentOptionalNullableWithDefaultValue.
-     * @param  parentOptional  String value for parentOptional.
-     * @param  optionalNullable  String value for optionalNullable.
-     * @param  optionalNullableWithDefaultValue  String value for optionalNullableWithDefaultValue.
-     * @param  optional  String value for optional.
-     * @param  childClassArray  List of ChildClass value for childClassArray.
+     * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+     * @param grandParentRequired String value for grandParentRequired.
+     * @param parentRequiredNullable String value for parentRequiredNullable.
+     * @param parentRequired String value for parentRequired.
+     * @param requiredNullable String value for requiredNullable.
+     * @param required String value for required.
+     * @param grandParentOptional String value for grandParentOptional.
+     * @param mClass Integer value for mClass.
+     * @param precision Double value for precision.
+     * @param bigDecimal BigDecimal value for bigDecimal.
+     * @param parentOptionalNullableWithDefaultValue String value for
+     *        parentOptionalNullableWithDefaultValue.
+     * @param parentOptional String value for parentOptional.
+     * @param optionalNullable String value for optionalNullable.
+     * @param optionalNullableWithDefaultValue String value for optionalNullableWithDefaultValue.
+     * @param optional String value for optional.
+     * @param childClassArray List of ChildClass value for childClassArray.
      */
-    public ChildClass(
-            String grandParentRequiredNullable,
-            String grandParentRequired,
-            String parentRequiredNullable,
-            String parentRequired,
-            String requiredNullable,
-            String required,
-            String grandParentOptional,
-            Integer mClass,
-            Double precision,
-            BigDecimal bigDecimal,
-            String parentOptionalNullableWithDefaultValue,
-            String parentOptional,
-            String optionalNullable,
-            String optionalNullableWithDefaultValue,
-            String optional,
-            List<ChildClass> childClassArray) {
+    public ChildClass(String grandParentRequiredNullable, String grandParentRequired,
+            String parentRequiredNullable, String parentRequired, String requiredNullable,
+            String required, String grandParentOptional, Integer mClass, Double precision,
+            BigDecimal bigDecimal, String parentOptionalNullableWithDefaultValue,
+            String parentOptional, String optionalNullable, String optionalNullableWithDefaultValue,
+            String optional, List<ChildClass> childClassArray) {
         super(grandParentRequiredNullable, grandParentRequired, parentRequiredNullable,
                 parentRequired, grandParentOptional, mClass, precision, bigDecimal,
                 parentOptionalNullableWithDefaultValue, parentOptional);
@@ -159,7 +148,8 @@ public class ChildClass
      */
     @JsonSetter("Optional_Nullable_With_Default_Value")
     public void setOptionalNullableWithDefaultValue(String optionalNullableWithDefaultValue) {
-        this.optionalNullableWithDefaultValue = OptionalNullable.of(optionalNullableWithDefaultValue);
+        this.optionalNullableWithDefaultValue =
+                OptionalNullable.of(optionalNullableWithDefaultValue);
     }
 
     /**
@@ -280,16 +270,17 @@ public class ChildClass
     }
 
     /**
-     * Builds a new {@link ChildClass.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link ChildClass.Builder} object. Creates the instance with the state of the
+     * current model.
      * @return a new {@link ChildClass.Builder} object
      */
     public Builder toChildClassBuilder() {
-        Builder builder = new Builder(getGrandParentRequiredNullable(), getGrandParentRequired(),
-                getParentRequiredNullable(), getParentRequired(), requiredNullable, required)
-                .optional(getOptional())
-                .grandParentOptional(getGrandParentOptional())
-                .parentOptional(getParentOptional());
+        Builder builder =
+                new Builder(getGrandParentRequiredNullable(), getGrandParentRequired(),
+                        getParentRequiredNullable(), getParentRequired(), requiredNullable,
+                        required).optional(getOptional())
+                                .grandParentOptional(getGrandParentOptional())
+                                .parentOptional(getParentOptional());
         builder.optionalNullable = internalGetOptionalNullable();
         builder.optionalNullableWithDefaultValue = internalGetOptionalNullableWithDefaultValue();
         builder.childClassArray = internalGetChildClassArray();
@@ -327,17 +318,16 @@ public class ChildClass
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-         * @param  grandParentRequired  String value for grandParentRequired.
-         * @param  parentRequiredNullable  String value for parentRequiredNullable.
-         * @param  parentRequired  String value for parentRequired.
-         * @param  requiredNullable  String value for requiredNullable.
-         * @param  required  String value for required.
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+         * @param grandParentRequired String value for grandParentRequired.
+         * @param parentRequiredNullable String value for parentRequiredNullable.
+         * @param parentRequired String value for parentRequired.
+         * @param requiredNullable String value for requiredNullable.
+         * @param required String value for required.
          */
         public Builder(String grandParentRequiredNullable, String grandParentRequired,
                 String parentRequiredNullable, String parentRequired, String requiredNullable,
@@ -352,7 +342,7 @@ public class ChildClass
 
         /**
          * Setter for grandParentRequiredNullable.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
          * @return Builder
          */
         public Builder grandParentRequiredNullable(String grandParentRequiredNullable) {
@@ -362,7 +352,7 @@ public class ChildClass
 
         /**
          * Setter for grandParentRequired.
-         * @param  grandParentRequired  String value for grandParentRequired.
+         * @param grandParentRequired String value for grandParentRequired.
          * @return Builder
          */
         public Builder grandParentRequired(String grandParentRequired) {
@@ -372,7 +362,7 @@ public class ChildClass
 
         /**
          * Setter for parentRequiredNullable.
-         * @param  parentRequiredNullable  String value for parentRequiredNullable.
+         * @param parentRequiredNullable String value for parentRequiredNullable.
          * @return Builder
          */
         public Builder parentRequiredNullable(String parentRequiredNullable) {
@@ -382,7 +372,7 @@ public class ChildClass
 
         /**
          * Setter for parentRequired.
-         * @param  parentRequired  String value for parentRequired.
+         * @param parentRequired String value for parentRequired.
          * @return Builder
          */
         public Builder parentRequired(String parentRequired) {
@@ -392,7 +382,7 @@ public class ChildClass
 
         /**
          * Setter for requiredNullable.
-         * @param  requiredNullable  String value for requiredNullable.
+         * @param requiredNullable String value for requiredNullable.
          * @return Builder
          */
         public Builder requiredNullable(String requiredNullable) {
@@ -402,7 +392,7 @@ public class ChildClass
 
         /**
          * Setter for required.
-         * @param  required  String value for required.
+         * @param required String value for required.
          * @return Builder
          */
         public Builder required(String required) {
@@ -412,7 +402,7 @@ public class ChildClass
 
         /**
          * Setter for grandParentOptional.
-         * @param  grandParentOptional  String value for grandParentOptional.
+         * @param grandParentOptional String value for grandParentOptional.
          * @return Builder
          */
         public Builder grandParentOptional(String grandParentOptional) {
@@ -422,7 +412,7 @@ public class ChildClass
 
         /**
          * Setter for mClass.
-         * @param  mClass  Integer value for mClass.
+         * @param mClass Integer value for mClass.
          * @return Builder
          */
         public Builder mClass(Integer mClass) {
@@ -441,7 +431,7 @@ public class ChildClass
 
         /**
          * Setter for precision.
-         * @param  precision  Double value for precision.
+         * @param precision Double value for precision.
          * @return Builder
          */
         public Builder precision(Double precision) {
@@ -460,7 +450,7 @@ public class ChildClass
 
         /**
          * Setter for bigDecimal.
-         * @param  bigDecimal  BigDecimal value for bigDecimal.
+         * @param bigDecimal BigDecimal value for bigDecimal.
          * @return Builder
          */
         public Builder bigDecimal(BigDecimal bigDecimal) {
@@ -479,8 +469,8 @@ public class ChildClass
 
         /**
          * Setter for parentOptionalNullableWithDefaultValue.
-         * @param  parentOptionalNullableWithDefaultValue  String value for
-         *         parentOptionalNullableWithDefaultValue.
+         * @param parentOptionalNullableWithDefaultValue String value for
+         *        parentOptionalNullableWithDefaultValue.
          * @return Builder
          */
         public Builder parentOptionalNullableWithDefaultValue(
@@ -501,7 +491,7 @@ public class ChildClass
 
         /**
          * Setter for parentOptional.
-         * @param  parentOptional  String value for parentOptional.
+         * @param parentOptional String value for parentOptional.
          * @return Builder
          */
         public Builder parentOptional(String parentOptional) {
@@ -511,7 +501,7 @@ public class ChildClass
 
         /**
          * Setter for optionalNullable.
-         * @param  optionalNullable  String value for optionalNullable.
+         * @param optionalNullable String value for optionalNullable.
          * @return Builder
          */
         public Builder optionalNullable(String optionalNullable) {
@@ -530,8 +520,8 @@ public class ChildClass
 
         /**
          * Setter for optionalNullableWithDefaultValue.
-         * @param  optionalNullableWithDefaultValue  String value for
-         *         optionalNullableWithDefaultValue.
+         * @param optionalNullableWithDefaultValue String value for
+         *        optionalNullableWithDefaultValue.
          * @return Builder
          */
         public Builder optionalNullableWithDefaultValue(String optionalNullableWithDefaultValue) {
@@ -551,7 +541,7 @@ public class ChildClass
 
         /**
          * Setter for optional.
-         * @param  optional  String value for optional.
+         * @param optional String value for optional.
          * @return Builder
          */
         public Builder optional(String optional) {
@@ -561,7 +551,7 @@ public class ChildClass
 
         /**
          * Setter for childClassArray.
-         * @param  childClassArray  List of ChildClass value for childClassArray.
+         * @param childClassArray List of ChildClass value for childClassArray.
          * @return Builder
          */
         public Builder childClassArray(List<ChildClass> childClassArray) {

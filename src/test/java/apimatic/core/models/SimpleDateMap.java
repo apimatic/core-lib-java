@@ -20,17 +20,14 @@ public class SimpleDateMap {
     /**
      * Default constructor.
      */
-    public SimpleDateMap() {
-    }
+    public SimpleDateMap() {}
 
     /**
      * Initialization constructor.
-     * @param  date  List of LocalDate value for date.
-     * @param  date1  List of LocalDate value for date1.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateMap(
-            Map<String,LocalDate> date,
-            Map<String,LocalDate> date1) {
+    public SimpleDateMap(Map<String, LocalDate> date, Map<String, LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
@@ -38,14 +35,14 @@ public class SimpleDateMap {
     /**
      * Internal initialization constructor.
      */
-    protected SimpleDateMap(OptionalNullable<Map<String,LocalDate>> date, Map<String,LocalDate> date1) {
+    protected SimpleDateMap(OptionalNullable<Map<String, LocalDate>> date,
+            Map<String, LocalDate> date1) {
         this.date = date;
         this.date1 = date1;
     }
 
     /**
      * Internal Getter for Date.
-     * 
      * @return Returns the Internal List of LocalDate
      */
     @JsonGetter("date")
@@ -57,7 +54,6 @@ public class SimpleDateMap {
 
     /**
      * Getter for Date.
-     * 
      * @return Returns the List of LocalDate
      */
     public Map<String, LocalDate> getDate() {
@@ -66,7 +62,6 @@ public class SimpleDateMap {
 
     /**
      * Setter for Date.
-     * 
      * @param date Value for List of LocalDate
      */
     @JsonSetter("date")
@@ -84,7 +79,6 @@ public class SimpleDateMap {
 
     /**
      * Getter for Date1.
-     * 
      * @return Returns the List of LocalDate
      */
     @JsonGetter("date1")
@@ -96,7 +90,6 @@ public class SimpleDateMap {
 
     /**
      * Setter for Date1.
-     * 
      * @param date1 Value for List of LocalDate
      */
     @JsonSetter("date1")
@@ -107,7 +100,6 @@ public class SimpleDateMap {
 
     /**
      * Converts this SimpleDateArray into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -118,7 +110,6 @@ public class SimpleDateMap {
     /**
      * Builds a new {@link SimpleDateArray.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
      * @return a new {@link SimpleDateArray.Builder} object
      */
     public Builder toBuilder() {
@@ -138,7 +129,6 @@ public class SimpleDateMap {
 
         /**
          * Setter for date.
-         * 
          * @param date List of LocalDate value for date.
          * @return Builder
          */
@@ -149,7 +139,6 @@ public class SimpleDateMap {
 
         /**
          * UnSetter for date.
-         * 
          * @return Builder
          */
         public Builder unsetDate() {
@@ -159,7 +148,6 @@ public class SimpleDateMap {
 
         /**
          * Setter for date1.
-         * 
          * @param date1 List of LocalDate value for date1.
          * @return Builder
          */
@@ -170,7 +158,6 @@ public class SimpleDateMap {
 
         /**
          * Builds a new {@link SimpleDateArray} object using the set fields.
-         * 
          * @return {@link SimpleDateArray}
          */
         public SimpleDateMap build() {

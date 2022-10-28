@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.apimatic.core.annotations.TypeCombinator.TypeCombinatorCase;
 import io.apimatic.core.utilities.CoreHelper;
+
 /**
  * This is a implementation class for AtomCase.
  */
@@ -23,11 +24,10 @@ public class AtomCase {
     AtomCase(Map<String, Atom> atom) {
         this.atom = atom;
     }
-    
+
     @JsonCreator
     private AtomCase(JsonNode jsonNode) throws IOException {
-        this.atom = CoreHelper.deserialize(jsonNode,
-            new TypeReference<Map<String, Atom>>(){});
+        this.atom = CoreHelper.deserialize(jsonNode, new TypeReference<Map<String, Atom>>() {});
     }
 
     @Override

@@ -21,7 +21,6 @@ public class AttributesAndElements {
 
     /**
      * Initialization constructor.
-     * 
      * @param stringAttr String value for stringAttr.
      * @param numberAttr int value for numberAttr.
      * @param stringElement String value for stringElement.
@@ -37,7 +36,6 @@ public class AttributesAndElements {
 
     /**
      * Getter for StringAttr. string attribute (attribute name "string")
-     * 
      * @return Returns the String
      */
     @JsonGetter("string-attr")
@@ -48,7 +46,6 @@ public class AttributesAndElements {
 
     /**
      * Setter for StringAttr. string attribute (attribute name "string")
-     * 
      * @param stringAttr Value for String
      */
     @JsonSetter("string-attr")
@@ -58,7 +55,6 @@ public class AttributesAndElements {
 
     /**
      * Getter for NumberAttr. number attribute (attribute name "number")
-     * 
      * @return Returns the int
      */
     @JsonGetter("number-attr")
@@ -69,7 +65,6 @@ public class AttributesAndElements {
 
     /**
      * Setter for NumberAttr. number attribute (attribute name "number")
-     * 
      * @param numberAttr Value for int
      */
     @JsonSetter("number-attr")
@@ -79,7 +74,6 @@ public class AttributesAndElements {
 
     /**
      * Getter for StringElement. string element (element name "string")
-     * 
      * @return Returns the String
      */
     @JsonGetter("string-element")
@@ -90,7 +84,6 @@ public class AttributesAndElements {
 
     /**
      * Setter for StringElement. string element (element name "string")
-     * 
      * @param stringElement Value for String
      */
     @JsonSetter("string-element")
@@ -100,7 +93,6 @@ public class AttributesAndElements {
 
     /**
      * Getter for NumberElement. number element (element name "number")
-     * 
      * @return Returns the int
      */
     @JsonGetter("number-element")
@@ -111,7 +103,6 @@ public class AttributesAndElements {
 
     /**
      * Setter for NumberElement. number element (element name "number")
-     * 
      * @param numberElement Value for int
      */
     @JsonSetter("number-element")
@@ -121,7 +112,6 @@ public class AttributesAndElements {
 
     /**
      * Converts this AttributesAndElements into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -133,7 +123,6 @@ public class AttributesAndElements {
     /**
      * Builds a new {@link AttributesAndElements.Builder} object. Creates the instance with the
      * state of the current model.
-     * 
      * @return a new {@link AttributesAndElements.Builder} object
      */
     public Builder toBuilder() {
@@ -157,7 +146,6 @@ public class AttributesAndElements {
 
         /**
          * Initialization constructor.
-         * 
          * @param stringAttr String value for stringAttr.
          * @param numberAttr int value for numberAttr.
          * @param stringElement String value for stringElement.
@@ -172,7 +160,6 @@ public class AttributesAndElements {
 
         /**
          * Setter for stringAttr.
-         * 
          * @param stringAttr String value for stringAttr.
          * @return Builder
          */
@@ -183,7 +170,6 @@ public class AttributesAndElements {
 
         /**
          * Setter for numberAttr.
-         * 
          * @param numberAttr int value for numberAttr.
          * @return Builder
          */
@@ -194,7 +180,6 @@ public class AttributesAndElements {
 
         /**
          * Setter for stringElement.
-         * 
          * @param stringElement String value for stringElement.
          * @return Builder
          */
@@ -205,7 +190,6 @@ public class AttributesAndElements {
 
         /**
          * Setter for numberElement.
-         * 
          * @param numberElement int value for numberElement.
          * @return Builder
          */
@@ -216,7 +200,6 @@ public class AttributesAndElements {
 
         /**
          * Builds a new {@link AttributesAndElements} object using the set fields.
-         * 
          * @return {@link AttributesAndElements}
          */
         public AttributesAndElements build() {

@@ -1,10 +1,9 @@
 package apimatic.core.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import io.apimatic.core.types.BaseModel;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * This is a model class for ComplexType type.
@@ -18,21 +17,17 @@ public class ComplexType {
     /**
      * Default constructor.
      */
-    public ComplexType() {
-    }
+    public ComplexType() {}
 
     /**
      * Initialization constructor.
-     * @param  numberListType  List of Integer value for numberListType.
-     * @param  numberMapType  Map of String, value for numberMapType.
-     * @param  innerComplexType  InnerComplexType value for innerComplexType.
-     * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
+     * @param numberListType List of Integer value for numberListType.
+     * @param numberMapType Map of String, value for numberMapType.
+     * @param innerComplexType InnerComplexType value for innerComplexType.
+     * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
      */
-    public ComplexType(
-            List<Integer> numberListType,
-            Map<String, Integer> numberMapType,
-            InnerComplexType innerComplexType,
-            List<InnerComplexType> innerComplexListType) {
+    public ComplexType(List<Integer> numberListType, Map<String, Integer> numberMapType,
+            InnerComplexType innerComplexType, List<InnerComplexType> innerComplexListType) {
         this.numberListType = numberListType;
         this.numberMapType = numberMapType;
         this.innerComplexType = innerComplexType;
@@ -123,13 +118,13 @@ public class ComplexType {
     }
 
     /**
-     * Builds a new {@link ComplexType.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link ComplexType.Builder} object. Creates the instance with the state of the
+     * current model.
      * @return a new {@link ComplexType.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(numberListType, numberMapType, innerComplexType,
-                innerComplexListType);
+        Builder builder =
+                new Builder(numberListType, numberMapType, innerComplexType, innerComplexListType);
         return builder;
     }
 
@@ -145,15 +140,14 @@ public class ComplexType {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  numberListType  List of Integer value for numberListType.
-         * @param  numberMapType  Map of String, value for numberMapType.
-         * @param  innerComplexType  InnerComplexType value for innerComplexType.
-         * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
+         * @param numberListType List of Integer value for numberListType.
+         * @param numberMapType Map of String, value for numberMapType.
+         * @param innerComplexType InnerComplexType value for innerComplexType.
+         * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
          */
         public Builder(List<Integer> numberListType, Map<String, Integer> numberMapType,
                 InnerComplexType innerComplexType, List<InnerComplexType> innerComplexListType) {
@@ -165,7 +159,7 @@ public class ComplexType {
 
         /**
          * Setter for numberListType.
-         * @param  numberListType  List of Integer value for numberListType.
+         * @param numberListType List of Integer value for numberListType.
          * @return Builder
          */
         public Builder numberListType(List<Integer> numberListType) {
@@ -175,7 +169,7 @@ public class ComplexType {
 
         /**
          * Setter for numberMapType.
-         * @param  numberMapType  Map of String, value for numberMapType.
+         * @param numberMapType Map of String, value for numberMapType.
          * @return Builder
          */
         public Builder numberMapType(Map<String, Integer> numberMapType) {
@@ -185,7 +179,7 @@ public class ComplexType {
 
         /**
          * Setter for innerComplexType.
-         * @param  innerComplexType  InnerComplexType value for innerComplexType.
+         * @param innerComplexType InnerComplexType value for innerComplexType.
          * @return Builder
          */
         public Builder innerComplexType(InnerComplexType innerComplexType) {
@@ -195,7 +189,7 @@ public class ComplexType {
 
         /**
          * Setter for innerComplexListType.
-         * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
+         * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
          * @return Builder
          */
         public Builder innerComplexListType(List<InnerComplexType> innerComplexListType) {

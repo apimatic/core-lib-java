@@ -24,7 +24,6 @@ public class Rfc1123DateArray {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
      */
@@ -44,7 +43,6 @@ public class Rfc1123DateArray {
 
     /**
      * Internal Getter for DateTime.
-     * 
      * @return Returns the Internal List of LocalDateTime
      */
     @JsonGetter("dateTime")
@@ -56,7 +54,6 @@ public class Rfc1123DateArray {
 
     /**
      * Getter for DateTime.
-     * 
      * @return Returns the List of LocalDateTime
      */
     public List<LocalDateTime> getDateTime() {
@@ -65,7 +62,6 @@ public class Rfc1123DateArray {
 
     /**
      * Setter for DateTime.
-     * 
      * @param dateTime Value for List of LocalDateTime
      */
     @JsonSetter("dateTime")
@@ -83,7 +79,6 @@ public class Rfc1123DateArray {
 
     /**
      * Getter for DateTime1.
-     * 
      * @return Returns the List of LocalDateTime
      */
     @JsonGetter("dateTime1")
@@ -94,7 +89,6 @@ public class Rfc1123DateArray {
 
     /**
      * Setter for DateTime1.
-     * 
      * @param dateTime1 Value for List of LocalDateTime
      */
     @JsonSetter("dateTime1")
@@ -105,7 +99,6 @@ public class Rfc1123DateArray {
 
     /**
      * Converts this Rfc1123DateArray into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -116,7 +109,6 @@ public class Rfc1123DateArray {
     /**
      * Builds a new {@link Rfc1123DateArray.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
      * @return a new {@link Rfc1123DateArray.Builder} object
      */
     public Builder toBuilder() {
@@ -139,7 +131,6 @@ public class Rfc1123DateArray {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          */
         public Builder(List<LocalDateTime> dateTime1) {
@@ -148,7 +139,6 @@ public class Rfc1123DateArray {
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          * @return Builder
          */
@@ -159,7 +149,6 @@ public class Rfc1123DateArray {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime List of LocalDateTime value for dateTime.
          * @return Builder
          */
@@ -170,7 +159,6 @@ public class Rfc1123DateArray {
 
         /**
          * UnSetter for dateTime.
-         * 
          * @return Builder
          */
         public Builder unsetDateTime() {
@@ -180,7 +168,6 @@ public class Rfc1123DateArray {
 
         /**
          * Builds a new {@link Rfc1123DateArray} object using the set fields.
-         * 
          * @return {@link Rfc1123DateArray}
          */
         public Rfc1123DateArray build() {

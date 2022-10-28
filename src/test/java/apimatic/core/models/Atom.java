@@ -16,28 +16,24 @@ public class Atom {
     /**
      * Default constructor.
      */
-    public Atom() {
-    }
+    public Atom() {}
 
     /**
      * Initialization constructor.
-     * @param  numberOfElectrons  int value for numberOfElectrons.
-     * @param  numberOfProtons  Integer value for numberOfProtons.
+     * @param numberOfElectrons int value for numberOfElectrons.
+     * @param numberOfProtons Integer value for numberOfProtons.
      */
-    public Atom(
-            int numberOfElectrons,
-            Integer numberOfProtons) {
+    public Atom(int numberOfElectrons, Integer numberOfProtons) {
         this.numberOfElectrons = numberOfElectrons;
         this.numberOfProtons = numberOfProtons;
     }
 
     /**
      * Initialization constructor.
-     * @param  numberOfElectrons  int value for numberOfElectrons.
+     * @param numberOfElectrons int value for numberOfElectrons.
      */
     @JsonCreator
-    private Atom(
-            @JsonProperty("NumberOfElectrons") int numberOfElectrons) {
+    private Atom(@JsonProperty("NumberOfElectrons") int numberOfElectrons) {
         this.numberOfElectrons = numberOfElectrons;
     }
 
@@ -89,13 +85,12 @@ public class Atom {
     }
 
     /**
-     * Builds a new {@link Atom.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link Atom.Builder} object. Creates the instance with the state of the current
+     * model.
      * @return a new {@link Atom.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(numberOfElectrons)
-                .numberOfProtons(getNumberOfProtons());
+        Builder builder = new Builder(numberOfElectrons).numberOfProtons(getNumberOfProtons());
         return builder;
     }
 
@@ -109,12 +104,11 @@ public class Atom {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  numberOfElectrons  int value for numberOfElectrons.
+         * @param numberOfElectrons int value for numberOfElectrons.
          */
         public Builder(int numberOfElectrons) {
             this.numberOfElectrons = numberOfElectrons;
@@ -122,7 +116,7 @@ public class Atom {
 
         /**
          * Setter for numberOfElectrons.
-         * @param  numberOfElectrons  int value for numberOfElectrons.
+         * @param numberOfElectrons int value for numberOfElectrons.
          * @return Builder
          */
         public Builder numberOfElectrons(int numberOfElectrons) {
@@ -132,7 +126,7 @@ public class Atom {
 
         /**
          * Setter for numberOfProtons.
-         * @param  numberOfProtons  Integer value for numberOfProtons.
+         * @param numberOfProtons Integer value for numberOfProtons.
          * @return Builder
          */
         public Builder numberOfProtons(Integer numberOfProtons) {

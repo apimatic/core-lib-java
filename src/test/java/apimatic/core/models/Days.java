@@ -62,7 +62,7 @@ public enum Days {
     public String value() {
         return value;
     }
-        
+
     /**
      * Get string representation of this enum.
      */
@@ -86,4 +86,4 @@ public enum Days {
         }
         return convertedValues;
     }
-} 
+}

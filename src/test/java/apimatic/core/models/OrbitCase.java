@@ -14,7 +14,7 @@ import io.apimatic.core.utilities.CoreHelper;
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @TypeCombinatorCase
-public  class OrbitCase {
+public class OrbitCase {
 
     @JsonValue
     private Orbit orbit;
@@ -23,11 +23,10 @@ public  class OrbitCase {
         this.orbit = orbit;
     }
 
- 
+
     @JsonCreator
     private OrbitCase(JsonNode jsonNode) throws IOException {
-        this.orbit = CoreHelper.deserialize(jsonNode,
-            Orbit.class);
+        this.orbit = CoreHelper.deserialize(jsonNode, Orbit.class);
     }
 
     @Override

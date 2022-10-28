@@ -1,5 +1,8 @@
 package apimatic.core.models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -10,9 +13,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * This is a model class for Employee type.
@@ -41,7 +41,6 @@ public class Employee extends Person {
 
     /**
      * Initialization constructor.
-     * 
      * @param address String value for address.
      * @param age long value for age.
      * @param birthday LocalDate value for birthday.
@@ -73,7 +72,6 @@ public class Employee extends Person {
 
     /**
      * Getter for Department.
-     * 
      * @return Returns the String
      */
     @JsonGetter("department")
@@ -83,7 +81,6 @@ public class Employee extends Person {
 
     /**
      * Setter for Department.
-     * 
      * @param department Value for String
      */
     @JsonSetter("department")
@@ -93,7 +90,6 @@ public class Employee extends Person {
 
     /**
      * Getter for Dependents.
-     * 
      * @return Returns the List of Person
      */
     @JsonGetter("dependents")
@@ -103,7 +99,6 @@ public class Employee extends Person {
 
     /**
      * Setter for Dependents.
-     * 
      * @param dependents Value for List of Person
      */
     @JsonSetter("dependents")
@@ -113,7 +108,6 @@ public class Employee extends Person {
 
     /**
      * Getter for HiredAt.
-     * 
      * @return Returns the LocalDateTime
      */
     @JsonGetter("hiredAt")
@@ -124,7 +118,6 @@ public class Employee extends Person {
 
     /**
      * Setter for HiredAt.
-     * 
      * @param hiredAt Value for LocalDateTime
      */
     @JsonSetter("hiredAt")
@@ -135,7 +128,6 @@ public class Employee extends Person {
 
     /**
      * Getter for JoiningDay.
-     * 
      * @return Returns the Days
      */
     @JsonGetter("joiningDay")
@@ -145,7 +137,6 @@ public class Employee extends Person {
 
     /**
      * Setter for JoiningDay.
-     * 
      * @param joiningDay Value for Days
      */
     @JsonSetter("joiningDay")
@@ -155,7 +146,6 @@ public class Employee extends Person {
 
     /**
      * Getter for Salary.
-     * 
      * @return Returns the int
      */
     @JsonGetter("salary")
@@ -165,7 +155,6 @@ public class Employee extends Person {
 
     /**
      * Setter for Salary.
-     * 
      * @param salary Value for int
      */
     @JsonSetter("salary")
@@ -175,7 +164,6 @@ public class Employee extends Person {
 
     /**
      * Getter for WorkingDays.
-     * 
      * @return Returns the List of Days
      */
     @JsonGetter("workingDays")
@@ -185,7 +173,6 @@ public class Employee extends Person {
 
     /**
      * Setter for WorkingDays.
-     * 
      * @param workingDays Value for List of Days
      */
     @JsonSetter("workingDays")
@@ -195,7 +182,6 @@ public class Employee extends Person {
 
     /**
      * Getter for Boss.
-     * 
      * @return Returns the Person
      */
     @JsonGetter("boss")
@@ -205,7 +191,6 @@ public class Employee extends Person {
 
     /**
      * Setter for Boss.
-     * 
      * @param boss Value for Person
      */
     @JsonSetter("boss")
@@ -215,7 +200,6 @@ public class Employee extends Person {
 
     /**
      * Converts this Employee into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -231,13 +215,13 @@ public class Employee extends Person {
     /**
      * Builds a new {@link Employee.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link Employee.Builder} object
      */
     public Builder toEmployeeBuilder() {
-        Builder builder = new Builder(getAddress(), getAge(), getBirthday(), getBirthtime(),
-                getName(), getUid(), department, dependents, hiredAt, joiningDay, salary,
-                workingDays, boss).personType(getPersonType());
+        Builder builder =
+                new Builder(getAddress(), getAge(), getBirthday(), getBirthtime(), getName(),
+                        getUid(), department, dependents, hiredAt, joiningDay, salary, workingDays,
+                        boss).personType(getPersonType());
         return builder;
     }
 
@@ -267,7 +251,6 @@ public class Employee extends Person {
 
         /**
          * Initialization constructor.
-         * 
          * @param address String value for address.
          * @param age long value for age.
          * @param birthday LocalDate value for birthday.
@@ -303,7 +286,6 @@ public class Employee extends Person {
 
         /**
          * Setter for address.
-         * 
          * @param address String value for address.
          * @return Builder
          */
@@ -314,7 +296,6 @@ public class Employee extends Person {
 
         /**
          * Setter for age.
-         * 
          * @param age long value for age.
          * @return Builder
          */
@@ -325,7 +306,6 @@ public class Employee extends Person {
 
         /**
          * Setter for birthday.
-         * 
          * @param birthday LocalDate value for birthday.
          * @return Builder
          */
@@ -336,7 +316,6 @@ public class Employee extends Person {
 
         /**
          * Setter for birthtime.
-         * 
          * @param birthtime LocalDateTime value for birthtime.
          * @return Builder
          */
@@ -347,7 +326,6 @@ public class Employee extends Person {
 
         /**
          * Setter for name.
-         * 
          * @param name String value for name.
          * @return Builder
          */
@@ -358,7 +336,6 @@ public class Employee extends Person {
 
         /**
          * Setter for uid.
-         * 
          * @param uid String value for uid.
          * @return Builder
          */
@@ -369,7 +346,6 @@ public class Employee extends Person {
 
         /**
          * Setter for department.
-         * 
          * @param department String value for department.
          * @return Builder
          */
@@ -380,7 +356,6 @@ public class Employee extends Person {
 
         /**
          * Setter for dependents.
-         * 
          * @param dependents List of Person value for dependents.
          * @return Builder
          */
@@ -391,7 +366,6 @@ public class Employee extends Person {
 
         /**
          * Setter for hiredAt.
-         * 
          * @param hiredAt LocalDateTime value for hiredAt.
          * @return Builder
          */
@@ -402,7 +376,6 @@ public class Employee extends Person {
 
         /**
          * Setter for joiningDay.
-         * 
          * @param joiningDay Days value for joiningDay.
          * @return Builder
          */
@@ -413,7 +386,6 @@ public class Employee extends Person {
 
         /**
          * Setter for salary.
-         * 
          * @param salary int value for salary.
          * @return Builder
          */
@@ -424,7 +396,6 @@ public class Employee extends Person {
 
         /**
          * Setter for workingDays.
-         * 
          * @param workingDays List of Days value for workingDays.
          * @return Builder
          */
@@ -435,7 +406,6 @@ public class Employee extends Person {
 
         /**
          * Setter for boss.
-         * 
          * @param boss Person value for boss.
          * @return Builder
          */
@@ -446,7 +416,6 @@ public class Employee extends Person {
 
         /**
          * Setter for personType.
-         * 
          * @param personType String value for personType.
          * @return Builder
          */
@@ -457,7 +426,6 @@ public class Employee extends Person {
 
         /**
          * Builds a new {@link Employee} object using the set fields.
-         * 
          * @return {@link Employee}
          */
         public Employee build() {

@@ -31,7 +31,6 @@ public class InnerComplexType {
 
     /**
      * Initialization constructor.
-     * 
      * @param stringType String value for stringType.
      * @param booleanType boolean value for booleanType.
      * @param dateTimeType LocalDateTime value for dateTimeType.
@@ -58,7 +57,6 @@ public class InnerComplexType {
 
     /**
      * Getter for StringType.
-     * 
      * @return Returns the String
      */
     @JsonGetter("stringType")
@@ -68,7 +66,6 @@ public class InnerComplexType {
 
     /**
      * Setter for StringType.
-     * 
      * @param stringType Value for String
      */
     @JsonSetter("stringType")
@@ -78,7 +75,6 @@ public class InnerComplexType {
 
     /**
      * Getter for BooleanType.
-     * 
      * @return Returns the boolean
      */
     @JsonGetter("booleanType")
@@ -88,7 +84,6 @@ public class InnerComplexType {
 
     /**
      * Setter for BooleanType.
-     * 
      * @param booleanType Value for boolean
      */
     @JsonSetter("booleanType")
@@ -98,7 +93,6 @@ public class InnerComplexType {
 
     /**
      * Getter for DateTimeType.
-     * 
      * @return Returns the LocalDateTime
      */
     @JsonGetter("dateTimeType")
@@ -109,7 +103,6 @@ public class InnerComplexType {
 
     /**
      * Setter for DateTimeType.
-     * 
      * @param dateTimeType Value for LocalDateTime
      */
     @JsonSetter("dateTimeType")
@@ -120,7 +113,6 @@ public class InnerComplexType {
 
     /**
      * Getter for DateType.
-     * 
      * @return Returns the LocalDate
      */
     @JsonGetter("dateType")
@@ -131,7 +123,6 @@ public class InnerComplexType {
 
     /**
      * Setter for DateType.
-     * 
      * @param dateType Value for LocalDate
      */
     @JsonSetter("dateType")
@@ -142,7 +133,6 @@ public class InnerComplexType {
 
     /**
      * Getter for UuidType.
-     * 
      * @return Returns the UUID
      */
     @JsonGetter("uuidType")
@@ -152,7 +142,6 @@ public class InnerComplexType {
 
     /**
      * Setter for UuidType.
-     * 
      * @param uuidType Value for UUID
      */
     @JsonSetter("uuidType")
@@ -162,7 +151,6 @@ public class InnerComplexType {
 
     /**
      * Getter for LongType.
-     * 
      * @return Returns the long
      */
     @JsonGetter("longType")
@@ -172,7 +160,6 @@ public class InnerComplexType {
 
     /**
      * Setter for LongType.
-     * 
      * @param longType Value for long
      */
     @JsonSetter("longType")
@@ -182,7 +169,6 @@ public class InnerComplexType {
 
     /**
      * Getter for PrecisionType.
-     * 
      * @return Returns the double
      */
     @JsonGetter("precisionType")
@@ -192,7 +178,6 @@ public class InnerComplexType {
 
     /**
      * Setter for PrecisionType.
-     * 
      * @param precisionType Value for double
      */
     @JsonSetter("precisionType")
@@ -202,7 +187,6 @@ public class InnerComplexType {
 
     /**
      * Getter for ObjectType.
-     * 
      * @return Returns the Object
      */
     @JsonGetter("objectType")
@@ -212,7 +196,6 @@ public class InnerComplexType {
 
     /**
      * Setter for ObjectType.
-     * 
      * @param objectType Value for Object
      */
     @JsonSetter("objectType")
@@ -222,7 +205,6 @@ public class InnerComplexType {
 
     /**
      * Getter for StringListType.
-     * 
      * @return Returns the List of String
      */
     @JsonGetter("stringListType")
@@ -232,7 +214,6 @@ public class InnerComplexType {
 
     /**
      * Setter for StringListType.
-     * 
      * @param stringListType Value for List of String
      */
     @JsonSetter("stringListType")
@@ -242,7 +223,6 @@ public class InnerComplexType {
 
     /**
      * Converts this InnerComplexType into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -256,12 +236,12 @@ public class InnerComplexType {
     /**
      * Builds a new {@link InnerComplexType.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
      * @return a new {@link InnerComplexType.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(stringType, booleanType, dateTimeType, dateType, uuidType,
-                longType, precisionType, objectType, stringListType);
+        Builder builder =
+                new Builder(stringType, booleanType, dateTimeType, dateType, uuidType, longType,
+                        precisionType, objectType, stringListType);
         return builder;
     }
 
@@ -286,7 +266,6 @@ public class InnerComplexType {
 
         /**
          * Initialization constructor.
-         * 
          * @param stringType String value for stringType.
          * @param booleanType boolean value for booleanType.
          * @param dateTimeType LocalDateTime value for dateTimeType.
@@ -313,7 +292,6 @@ public class InnerComplexType {
 
         /**
          * Setter for stringType.
-         * 
          * @param stringType String value for stringType.
          * @return Builder
          */
@@ -324,7 +302,6 @@ public class InnerComplexType {
 
         /**
          * Setter for booleanType.
-         * 
          * @param booleanType boolean value for booleanType.
          * @return Builder
          */
@@ -335,7 +312,6 @@ public class InnerComplexType {
 
         /**
          * Setter for dateTimeType.
-         * 
          * @param dateTimeType LocalDateTime value for dateTimeType.
          * @return Builder
          */
@@ -346,7 +322,6 @@ public class InnerComplexType {
 
         /**
          * Setter for dateType.
-         * 
          * @param dateType LocalDate value for dateType.
          * @return Builder
          */
@@ -357,7 +332,6 @@ public class InnerComplexType {
 
         /**
          * Setter for uuidType.
-         * 
          * @param uuidType UUID value for uuidType.
          * @return Builder
          */
@@ -368,7 +342,6 @@ public class InnerComplexType {
 
         /**
          * Setter for longType.
-         * 
          * @param longType long value for longType.
          * @return Builder
          */
@@ -379,7 +352,6 @@ public class InnerComplexType {
 
         /**
          * Setter for precisionType.
-         * 
          * @param precisionType double value for precisionType.
          * @return Builder
          */
@@ -390,7 +362,6 @@ public class InnerComplexType {
 
         /**
          * Setter for objectType.
-         * 
          * @param objectType Object value for objectType.
          * @return Builder
          */
@@ -401,7 +372,6 @@ public class InnerComplexType {
 
         /**
          * Setter for stringListType.
-         * 
          * @param stringListType List of String value for stringListType.
          * @return Builder
          */
@@ -412,7 +382,6 @@ public class InnerComplexType {
 
         /**
          * Builds a new {@link InnerComplexType} object using the set fields.
-         * 
          * @return {@link InnerComplexType}
          */
         public InnerComplexType build() {

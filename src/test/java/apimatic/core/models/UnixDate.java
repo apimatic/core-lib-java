@@ -23,7 +23,6 @@ public class UnixDate {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
      */
@@ -42,7 +41,6 @@ public class UnixDate {
 
     /**
      * Internal Getter for DateTime.
-     * 
      * @return Returns the Internal LocalDateTime
      */
     @JsonGetter("dateTime")
@@ -54,7 +52,6 @@ public class UnixDate {
 
     /**
      * Getter for DateTime.
-     * 
      * @return Returns the LocalDateTime
      */
     public LocalDateTime getDateTime() {
@@ -63,7 +60,6 @@ public class UnixDate {
 
     /**
      * Setter for DateTime.
-     * 
      * @param dateTime Value for LocalDateTime
      */
     @JsonSetter("dateTime")
@@ -81,7 +77,6 @@ public class UnixDate {
 
     /**
      * Getter for DateTime1.
-     * 
      * @return Returns the LocalDateTime
      */
     @JsonGetter("dateTime1")
@@ -92,7 +87,6 @@ public class UnixDate {
 
     /**
      * Setter for DateTime1.
-     * 
      * @param dateTime1 Value for LocalDateTime
      */
     @JsonSetter("dateTime1")
@@ -103,7 +97,6 @@ public class UnixDate {
 
     /**
      * Converts this UnixDate into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -114,7 +107,6 @@ public class UnixDate {
     /**
      * Builds a new {@link UnixDate.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link UnixDate.Builder} object
      */
     public Builder toBuilder() {
@@ -137,7 +129,6 @@ public class UnixDate {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 LocalDateTime value for dateTime1.
          */
         public Builder(LocalDateTime dateTime1) {
@@ -146,7 +137,6 @@ public class UnixDate {
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 LocalDateTime value for dateTime1.
          * @return Builder
          */
@@ -157,7 +147,6 @@ public class UnixDate {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime LocalDateTime value for dateTime.
          * @return Builder
          */
@@ -168,7 +157,6 @@ public class UnixDate {
 
         /**
          * UnSetter for dateTime.
-         * 
          * @return Builder
          */
         public Builder unsetDateTime() {
@@ -178,7 +166,6 @@ public class UnixDate {
 
         /**
          * Builds a new {@link UnixDate} object using the set fields.
-         * 
          * @return {@link UnixDate}
          */
         public UnixDate build() {

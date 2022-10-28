@@ -22,10 +22,6 @@ public class NonScalarModel {
 
     /**
      * Initialization constructor.
-     * 
-     * @param singleInnerMap NonScalarModelSingleInnerMap value for singleInnerMap.
-     * @param allInnerArray NonScalarModelAllInnerArray value for allInnerArray.
-     * @param outerArray List of NonScalarModelOuterArray value for outerArray.
      * @param outerMap Map of String, value for outerMap.
      */
     public NonScalarModel(Map<String, NonScalarModelOuterMap> outerMap) {
@@ -43,7 +39,6 @@ public class NonScalarModel {
 
     /**
      * Internal Getter for OuterMap.
-     * 
      * @return Returns the Internal Map of String, NonScalarModelOuterMap
      */
     @JsonGetter("outerMap")
@@ -55,7 +50,6 @@ public class NonScalarModel {
 
     /**
      * Getter for OuterMap.
-     * 
      * @return Returns the Map of String, NonScalarModelOuterMap
      */
     public Map<String, NonScalarModelOuterMap> getOuterMap() {
@@ -64,7 +58,6 @@ public class NonScalarModel {
 
     /**
      * Setter for OuterMap.
-     * 
      * @param outerMap Value for Map of String, NonScalarModelOuterMap
      */
     @JsonSetter("outerMap")
@@ -81,7 +74,6 @@ public class NonScalarModel {
 
     /**
      * Converts this NonScalarModel into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -92,7 +84,6 @@ public class NonScalarModel {
     /**
      * Builds a new {@link NonScalarModel.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
      * @return a new {@link NonScalarModel.Builder} object
      */
     public Builder toBuilder() {
@@ -117,7 +108,6 @@ public class NonScalarModel {
 
         /**
          * Setter for outerMap.
-         * 
          * @param outerMap Map of String, value for outerMap.
          * @return Builder
          */
@@ -128,7 +118,6 @@ public class NonScalarModel {
 
         /**
          * UnSetter for outerMap.
-         * 
          * @return Builder
          */
         public Builder unsetOuterMap() {
@@ -138,7 +127,6 @@ public class NonScalarModel {
 
         /**
          * Builds a new {@link NonScalarModel} object using the set fields.
-         * 
          * @return {@link NonScalarModel}
          */
         public NonScalarModel build() {

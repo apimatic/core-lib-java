@@ -24,7 +24,6 @@ public class UnixDateMap {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
@@ -44,7 +43,6 @@ public class UnixDateMap {
 
     /**
      * Internal Getter for DateTime.
-     * 
      * @return Returns the Internal Map of String, LocalDateTime
      */
     @JsonGetter("dateTime")
@@ -56,7 +54,6 @@ public class UnixDateMap {
 
     /**
      * Getter for DateTime.
-     * 
      * @return Returns the Map of String, LocalDateTime
      */
     public Map<String, LocalDateTime> getDateTime() {
@@ -65,7 +62,6 @@ public class UnixDateMap {
 
     /**
      * Setter for DateTime.
-     * 
      * @param dateTime Value for Map of String, LocalDateTime
      */
     @JsonSetter("dateTime")
@@ -83,7 +79,6 @@ public class UnixDateMap {
 
     /**
      * Getter for DateTime1.
-     * 
      * @return Returns the Map of String, LocalDateTime
      */
     @JsonGetter("dateTime1")
@@ -94,7 +89,6 @@ public class UnixDateMap {
 
     /**
      * Setter for DateTime1.
-     * 
      * @param dateTime1 Value for Map of String, LocalDateTime
      */
     @JsonSetter("dateTime1")
@@ -105,7 +99,6 @@ public class UnixDateMap {
 
     /**
      * Converts this UnixDateMap into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -116,7 +109,6 @@ public class UnixDateMap {
     /**
      * Builds a new {@link UnixDateMap.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link UnixDateMap.Builder} object
      */
     public Builder toBuilder() {
@@ -139,7 +131,6 @@ public class UnixDateMap {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          */
         public Builder(Map<String, LocalDateTime> dateTime1) {
@@ -148,7 +139,6 @@ public class UnixDateMap {
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          * @return Builder
          */
@@ -159,7 +149,6 @@ public class UnixDateMap {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime Map of String, value for dateTime.
          * @return Builder
          */
@@ -170,7 +159,6 @@ public class UnixDateMap {
 
         /**
          * UnSetter for dateTime.
-         * 
          * @return Builder
          */
         public Builder unsetDateTime() {
@@ -180,7 +168,6 @@ public class UnixDateMap {
 
         /**
          * Builds a new {@link UnixDateMap} object using the set fields.
-         * 
          * @return {@link UnixDateMap}
          */
         public UnixDateMap build() {

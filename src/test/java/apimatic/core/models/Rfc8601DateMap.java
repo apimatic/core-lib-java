@@ -24,7 +24,6 @@ public class Rfc8601DateMap {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
@@ -45,7 +44,6 @@ public class Rfc8601DateMap {
 
     /**
      * Internal Getter for DateTime.
-     * 
      * @return Returns the Internal Map of String, LocalDateTime
      */
     @JsonGetter("dateTime")
@@ -57,7 +55,6 @@ public class Rfc8601DateMap {
 
     /**
      * Getter for DateTime.
-     * 
      * @return Returns the Map of String, LocalDateTime
      */
     public Map<String, LocalDateTime> getDateTime() {
@@ -66,7 +63,6 @@ public class Rfc8601DateMap {
 
     /**
      * Setter for DateTime.
-     * 
      * @param dateTime Value for Map of String, LocalDateTime
      */
     @JsonSetter("dateTime")
@@ -84,7 +80,6 @@ public class Rfc8601DateMap {
 
     /**
      * Getter for DateTime1.
-     * 
      * @return Returns the Map of String, LocalDateTime
      */
     @JsonGetter("dateTime1")
@@ -95,7 +90,6 @@ public class Rfc8601DateMap {
 
     /**
      * Setter for DateTime1.
-     * 
      * @param dateTime1 Value for Map of String, LocalDateTime
      */
     @JsonSetter("dateTime1")
@@ -106,7 +100,6 @@ public class Rfc8601DateMap {
 
     /**
      * Converts this Rfc8601DateMap into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -117,7 +110,6 @@ public class Rfc8601DateMap {
     /**
      * Builds a new {@link Rfc8601DateMap.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
      * @return a new {@link Rfc8601DateMap.Builder} object
      */
     public Builder toBuilder() {
@@ -140,7 +132,6 @@ public class Rfc8601DateMap {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          */
         public Builder(Map<String, LocalDateTime> dateTime1) {
@@ -149,7 +140,6 @@ public class Rfc8601DateMap {
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          * @return Builder
          */
@@ -160,7 +150,6 @@ public class Rfc8601DateMap {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime Map of String, value for dateTime.
          * @return Builder
          */
@@ -171,7 +160,6 @@ public class Rfc8601DateMap {
 
         /**
          * UnSetter for dateTime.
-         * 
          * @return Builder
          */
         public Builder unsetDateTime() {
@@ -181,7 +169,6 @@ public class Rfc8601DateMap {
 
         /**
          * Builds a new {@link Rfc8601DateMap} object using the set fields.
-         * 
          * @return {@link Rfc8601DateMap}
          */
         public Rfc8601DateMap build() {

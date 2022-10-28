@@ -33,7 +33,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     * 
      * @param date LocalDate value for date.
      * @return The DateCase object.
      */
@@ -43,7 +42,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     * 
      * @param dateTime LocalDateTime value for dateTime.
      * @return The DateTimeCase object.
      */
@@ -53,7 +51,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     *
      * @param dateTime2 LocalDateTime value for dateTime2.
      * @return The DateTime2Case object.
      */
@@ -63,7 +60,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * Method to match from the provided one-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The one-of type cases callback.
      * @return The one-of matched case.
@@ -72,7 +68,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * This is interface for one-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {

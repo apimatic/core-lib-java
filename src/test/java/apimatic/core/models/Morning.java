@@ -27,7 +27,6 @@ public class Morning {
 
     /**
      * Initialization constructor.
-     * 
      * @param startsAt String value for startsAt.
      * @param endsAt String value for endsAt.
      * @param offerTeaBreak boolean value for offerTeaBreak.
@@ -42,7 +41,6 @@ public class Morning {
 
     /**
      * Getter for StartsAt. Session start time
-     * 
      * @return Returns the String
      */
     @JsonGetter("startsAt")
@@ -52,7 +50,6 @@ public class Morning {
 
     /**
      * Setter for StartsAt. Session start time
-     * 
      * @param startsAt Value for String
      */
     @JsonSetter("startsAt")
@@ -62,7 +59,6 @@ public class Morning {
 
     /**
      * Getter for EndsAt. Session end time
-     * 
      * @return Returns the String
      */
     @JsonGetter("endsAt")
@@ -72,7 +68,6 @@ public class Morning {
 
     /**
      * Setter for EndsAt. Session end time
-     * 
      * @param endsAt Value for String
      */
     @JsonSetter("endsAt")
@@ -82,7 +77,6 @@ public class Morning {
 
     /**
      * Getter for OfferTeaBreak. Offer tea break during session
-     * 
      * @return Returns the boolean
      */
     @JsonGetter("offerTeaBreak")
@@ -92,7 +86,6 @@ public class Morning {
 
     /**
      * Setter for OfferTeaBreak. Offer tea break during session
-     * 
      * @param offerTeaBreak Value for boolean
      */
     @JsonSetter("offerTeaBreak")
@@ -102,7 +95,6 @@ public class Morning {
 
     /**
      * Getter for SessionType.
-     * 
      * @return Returns the String
      */
     @JsonGetter("sessionType")
@@ -113,7 +105,6 @@ public class Morning {
 
     /**
      * Setter for SessionType.
-     * 
      * @param sessionType Value for String
      */
     @JsonSetter("sessionType")
@@ -123,7 +114,6 @@ public class Morning {
 
     /**
      * Converts this Morning into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -135,7 +125,6 @@ public class Morning {
     /**
      * Builds a new {@link Morning.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link Morning.Builder} object
      */
     public Builder toBuilder() {
@@ -160,7 +149,6 @@ public class Morning {
 
         /**
          * Initialization constructor.
-         * 
          * @param startsAt String value for startsAt.
          * @param endsAt String value for endsAt.
          * @param offerTeaBreak boolean value for offerTeaBreak.
@@ -173,7 +161,6 @@ public class Morning {
 
         /**
          * Setter for startsAt.
-         * 
          * @param startsAt String value for startsAt.
          * @return Builder
          */
@@ -184,7 +171,6 @@ public class Morning {
 
         /**
          * Setter for endsAt.
-         * 
          * @param endsAt String value for endsAt.
          * @return Builder
          */
@@ -195,7 +181,6 @@ public class Morning {
 
         /**
          * Setter for offerTeaBreak.
-         * 
          * @param offerTeaBreak boolean value for offerTeaBreak.
          * @return Builder
          */
@@ -206,7 +191,6 @@ public class Morning {
 
         /**
          * Setter for sessionType.
-         * 
          * @param sessionType String value for sessionType.
          * @return Builder
          */
@@ -217,7 +201,6 @@ public class Morning {
 
         /**
          * Builds a new {@link Morning} object using the set fields.
-         * 
          * @return {@link Morning}
          */
         public Morning build() {

@@ -20,7 +20,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Initialization constructor.
-     * 
      * @param name String value for name.
      * @param field String value for field.
      */
@@ -36,7 +35,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Getter for Name.
-     * 
      * @return Returns the String
      */
     @JsonGetter("name")
@@ -46,7 +44,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Setter for Name.
-     * 
      * @param name Value for String
      */
     @JsonSetter("name")
@@ -56,7 +53,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Getter for Field.
-     * 
      * @return Returns the String
      */
     @JsonGetter("field")
@@ -66,7 +62,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Setter for Field.
-     * 
      * @param field Value for String
      */
     @JsonSetter("field")
@@ -76,7 +71,6 @@ public class TestModel extends BaseModel {
 
     /**
      * Converts this TestModel into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -88,7 +82,6 @@ public class TestModel extends BaseModel {
     /**
      * Builds a new {@link TestModel.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link TestModel.Builder} object
      */
     public Builder toBuilder() {
@@ -111,7 +104,6 @@ public class TestModel extends BaseModel {
 
         /**
          * Initialization constructor.
-         * 
          * @param name String value for name.
          * @param field String value for field.
          */
@@ -123,7 +115,6 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for httpContext.
-         * 
          * @param httpContext {@link Context} value for httpContext.
          * @return Builder
          */
@@ -134,7 +125,6 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for name.
-         * 
          * @param name String value for name.
          * @return Builder
          */
@@ -145,7 +135,6 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for field.
-         * 
          * @param field String value for field.
          * @return Builder
          */
@@ -156,7 +145,6 @@ public class TestModel extends BaseModel {
 
         /**
          * Builds a new {@link TestModel} object using the set fields.
-         * 
          * @return {@link TestModel}
          */
         public TestModel build() {

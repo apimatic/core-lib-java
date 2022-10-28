@@ -20,17 +20,14 @@ public class SimpleDateArray {
     /**
      * Default constructor.
      */
-    public SimpleDateArray() {
-    }
+    public SimpleDateArray() {}
 
     /**
      * Initialization constructor.
-     * @param  date  List of LocalDate value for date.
-     * @param  date1  List of LocalDate value for date1.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateArray(
-            List<LocalDate> date,
-            List<LocalDate> date1) {
+    public SimpleDateArray(List<LocalDate> date, List<LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
@@ -110,13 +107,12 @@ public class SimpleDateArray {
     }
 
     /**
-     * Builds a new {@link SimpleDateArray.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link SimpleDateArray.Builder} object. Creates the instance with the state of
+     * the current model.
      * @return a new {@link SimpleDateArray.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder()
-                .date1(getDate1());
+        Builder builder = new Builder().date1(getDate1());
         builder.date = internalGetDate();
         return builder;
     }
@@ -132,7 +128,7 @@ public class SimpleDateArray {
 
         /**
          * Setter for date.
-         * @param  date  List of LocalDate value for date.
+         * @param date List of LocalDate value for date.
          * @return Builder
          */
         public Builder date(List<LocalDate> date) {
@@ -151,7 +147,7 @@ public class SimpleDateArray {
 
         /**
          * Setter for date1.
-         * @param  date1  List of LocalDate value for date1.
+         * @param date1 List of LocalDate value for date1.
          * @return Builder
          */
         public Builder date1(List<LocalDate> date1) {

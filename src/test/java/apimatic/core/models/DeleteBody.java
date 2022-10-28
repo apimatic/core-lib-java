@@ -4,25 +4,21 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import io.apimatic.core.types.BaseModel;
 
-public class DeleteBody
-        extends BaseModel {
+public class DeleteBody extends BaseModel {
     private String name;
     private String field;
 
     /**
      * Default constructor.
      */
-    public DeleteBody() {
-    }
+    public DeleteBody() {}
 
     /**
      * Initialization constructor.
-     * @param  name  String value for name.
-     * @param  field  String value for field.
+     * @param name String value for name.
+     * @param field String value for field.
      */
-    public DeleteBody(
-            String name,
-            String field) {
+    public DeleteBody(String name, String field) {
         this.name = name;
         this.field = field;
     }
@@ -74,8 +70,8 @@ public class DeleteBody
     }
 
     /**
-     * Builds a new {@link DeleteBody.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link DeleteBody.Builder} object. Creates the instance with the state of the
+     * current model.
      * @return a new {@link DeleteBody.Builder} object
      */
     public Builder toBuilder() {
@@ -93,13 +89,12 @@ public class DeleteBody
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  name  String value for name.
-         * @param  field  String value for field.
+         * @param name String value for name.
+         * @param field String value for field.
          */
         public Builder(String name, String field) {
             this.name = name;
@@ -108,7 +103,7 @@ public class DeleteBody
 
         /**
          * Setter for name.
-         * @param  name  String value for name.
+         * @param name String value for name.
          * @return Builder
          */
         public Builder name(String name) {
@@ -118,7 +113,7 @@ public class DeleteBody
 
         /**
          * Setter for field.
-         * @param  field  String value for field.
+         * @param field String value for field.
          * @return Builder
          */
         public Builder field(String field) {

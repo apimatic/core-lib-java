@@ -21,13 +21,11 @@ public class GrandParentClass {
 
     /**
      * Initialization constructor.
-     * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-     * @param  grandParentRequired  String value for grandParentRequired.
-     * @param  grandParentOptional  String value for grandParentOptional.
+     * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+     * @param grandParentRequired String value for grandParentRequired.
+     * @param grandParentOptional String value for grandParentOptional.
      */
-    public GrandParentClass(
-            String grandParentRequiredNullable,
-            String grandParentRequired,
+    public GrandParentClass(String grandParentRequiredNullable, String grandParentRequired,
             String grandParentOptional) {
         this.grandParentOptional = grandParentOptional;
         this.grandParentRequiredNullable = grandParentRequiredNullable;
@@ -101,13 +99,14 @@ public class GrandParentClass {
     }
 
     /**
-     * Builds a new {@link GrandParentClass.Builder} object.
-     * Creates the instance with the state of the current model.
+     * Builds a new {@link GrandParentClass.Builder} object. Creates the instance with the state of
+     * the current model.
      * @return a new {@link GrandParentClass.Builder} object
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(grandParentRequiredNullable, grandParentRequired)
-                .grandParentOptional(getGrandParentOptional());
+        Builder builder =
+                new Builder(grandParentRequiredNullable, grandParentRequired)
+                        .grandParentOptional(getGrandParentOptional());
         return builder;
     }
 
@@ -122,13 +121,12 @@ public class GrandParentClass {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-         * @param  grandParentRequired  String value for grandParentRequired.
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+         * @param grandParentRequired String value for grandParentRequired.
          */
         public Builder(String grandParentRequiredNullable, String grandParentRequired) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
@@ -137,7 +135,7 @@ public class GrandParentClass {
 
         /**
          * Setter for grandParentRequiredNullable.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
          * @return Builder
          */
         public Builder grandParentRequiredNullable(String grandParentRequiredNullable) {
@@ -147,7 +145,7 @@ public class GrandParentClass {
 
         /**
          * Setter for grandParentRequired.
-         * @param  grandParentRequired  String value for grandParentRequired.
+         * @param grandParentRequired String value for grandParentRequired.
          * @return Builder
          */
         public Builder grandParentRequired(String grandParentRequired) {
@@ -157,7 +155,7 @@ public class GrandParentClass {
 
         /**
          * Setter for grandParentOptional.
-         * @param  grandParentOptional  String value for grandParentOptional.
+         * @param grandParentOptional String value for grandParentOptional.
          * @return Builder
          */
         public Builder grandParentOptional(String grandParentOptional) {

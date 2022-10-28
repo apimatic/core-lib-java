@@ -33,7 +33,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param morning Morning value for morning.
      * @return The MorningCase object.
      */
@@ -43,7 +42,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param evening Evening value for evening.
      * @return The EveningCase object.
      */
@@ -53,7 +51,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param noon Noon value for noon.
      * @return The NoonCase object.
      */
@@ -63,7 +60,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Method to match from the provided any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The any-of type cases callback.
      * @return The any-of matched case.
@@ -72,7 +68,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * This is interface for any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {

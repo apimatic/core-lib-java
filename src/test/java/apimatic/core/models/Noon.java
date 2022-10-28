@@ -27,7 +27,6 @@ public class Noon {
 
     /**
      * Initialization constructor.
-     * 
      * @param startsAt String value for startsAt.
      * @param endsAt String value for endsAt.
      * @param offerLunch boolean value for offerLunch.
@@ -42,7 +41,6 @@ public class Noon {
 
     /**
      * Getter for StartsAt. Session start time
-     * 
      * @return Returns the String
      */
     @JsonGetter("startsAt")
@@ -52,7 +50,6 @@ public class Noon {
 
     /**
      * Setter for StartsAt. Session start time
-     * 
      * @param startsAt Value for String
      */
     @JsonSetter("startsAt")
@@ -62,7 +59,6 @@ public class Noon {
 
     /**
      * Getter for EndsAt. Session end time
-     * 
      * @return Returns the String
      */
     @JsonGetter("endsAt")
@@ -72,7 +68,6 @@ public class Noon {
 
     /**
      * Setter for EndsAt. Session end time
-     * 
      * @param endsAt Value for String
      */
     @JsonSetter("endsAt")
@@ -82,7 +77,6 @@ public class Noon {
 
     /**
      * Getter for OfferLunch. Offer lunch during session
-     * 
      * @return Returns the boolean
      */
     @JsonGetter("offerLunch")
@@ -92,7 +86,6 @@ public class Noon {
 
     /**
      * Setter for OfferLunch. Offer lunch during session
-     * 
      * @param offerLunch Value for boolean
      */
     @JsonSetter("offerLunch")
@@ -102,7 +95,6 @@ public class Noon {
 
     /**
      * Getter for SessionType.
-     * 
      * @return Returns the String
      */
     @JsonGetter("sessionType")
@@ -113,7 +105,6 @@ public class Noon {
 
     /**
      * Setter for SessionType.
-     * 
      * @param sessionType Value for String
      */
     @JsonSetter("sessionType")
@@ -123,7 +114,6 @@ public class Noon {
 
     /**
      * Converts this Noon into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -135,7 +125,6 @@ public class Noon {
     /**
      * Builds a new {@link Noon.Builder} object. Creates the instance with the state of the current
      * model.
-     * 
      * @return a new {@link Noon.Builder} object
      */
     public Builder toBuilder() {
@@ -159,7 +148,6 @@ public class Noon {
 
         /**
          * Initialization constructor.
-         * 
          * @param startsAt String value for startsAt.
          * @param endsAt String value for endsAt.
          * @param offerLunch boolean value for offerLunch.
@@ -172,7 +160,6 @@ public class Noon {
 
         /**
          * Setter for startsAt.
-         * 
          * @param startsAt String value for startsAt.
          * @return Builder
          */
@@ -183,7 +170,6 @@ public class Noon {
 
         /**
          * Setter for endsAt.
-         * 
          * @param endsAt String value for endsAt.
          * @return Builder
          */
@@ -194,7 +180,6 @@ public class Noon {
 
         /**
          * Setter for offerLunch.
-         * 
          * @param offerLunch boolean value for offerLunch.
          * @return Builder
          */
@@ -205,7 +190,6 @@ public class Noon {
 
         /**
          * Setter for sessionType.
-         * 
          * @param sessionType String value for sessionType.
          * @return Builder
          */
@@ -216,7 +200,6 @@ public class Noon {
 
         /**
          * Builds a new {@link Noon} object using the set fields.
-         * 
          * @return {@link Noon}
          */
         public Noon build() {

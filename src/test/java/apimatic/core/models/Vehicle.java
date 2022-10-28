@@ -18,7 +18,6 @@ public class Vehicle {
 
     /**
      * Initialization constructor.
-     * 
      * @param numberOfTyres String value for numberOfTyres.
      */
     @JsonCreator
@@ -28,7 +27,6 @@ public class Vehicle {
 
     /**
      * Getter for NumberOfTyres.
-     * 
      * @return Returns the String
      */
     @JsonGetter("NumberOfTyres")
@@ -38,7 +36,6 @@ public class Vehicle {
 
     /**
      * Setter for NumberOfTyres.
-     * 
      * @param numberOfTyres Value for String
      */
     @JsonSetter("NumberOfTyres")
@@ -48,7 +45,6 @@ public class Vehicle {
 
     /**
      * Converts this Vehicle into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -59,7 +55,6 @@ public class Vehicle {
     /**
      * Builds a new {@link Vehicle.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
      * @return a new {@link Vehicle.Builder} object
      */
     public Builder toBuilder() {
@@ -80,7 +75,6 @@ public class Vehicle {
 
         /**
          * Initialization constructor.
-         * 
          * @param numberOfTyres String value for numberOfTyres.
          */
         public Builder(String numberOfTyres) {
@@ -89,7 +83,6 @@ public class Vehicle {
 
         /**
          * Setter for numberOfTyres.
-         * 
          * @param numberOfTyres String value for numberOfTyres.
          * @return Builder
          */
@@ -100,7 +93,6 @@ public class Vehicle {
 
         /**
          * Builds a new {@link Vehicle} object using the set fields.
-         * 
          * @return {@link Vehicle}
          */
         public Vehicle build() {
