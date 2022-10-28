@@ -71,6 +71,7 @@
   <!-- See https://checkstyle.org/config_sizes.html -->
   <module name="FileLength"/>
   <module name="LineLength">
+    <property name="max" value="100"/>
     <property name="fileExtensions" value="java"/>
   </module>
 
@@ -104,8 +105,13 @@
     <module name="JavadocMethod"/>
     <module name="JavadocType"/>
     <module name="JavadocVariable"/>
-    <module name="JavadocStyle"/>
-    <module name="MissingJavadocMethod"/>
+    <module name="JavadocStyle">
+      <property name="checkFirstSentence" value="false"/>
+    </module>
+    <module name="MissingJavadocMethod">
+      <property name="allowMissingPropertyJavadoc" value="true"/>
+       <property name="allowedAnnotations" value="Override,Deprecated,Test"/>
+    </module>
     <!-- Enables @SuppressWarnings Support                -->
     <module name="SuppressWarningsHolder"/>
 
@@ -134,7 +140,10 @@
     <!-- Checks for Size Violations.                    -->
     <!-- See https://checkstyle.org/config_sizes.html -->
     <module name="MethodLength"/>
-    <module name="ParameterNumber"/>
+    <module name="ParameterNumber">
+      <property name="max" value="16"/>
+      <property name="tokens" value="CTOR_DEF"/>
+    </module>
 
     <!-- Checks for whitespace                               -->
     <!-- See https://checkstyle.org/config_whitespace.html -->
@@ -147,7 +156,13 @@
     <module name="ParenPad"/>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround"/>
+    <module name="WhitespaceAround">
+      <property name="allowEmptyMethods" value="true"/>
+      <property name="allowEmptyConstructors" value="true"/>
+      <property name="allowEmptyCatches" value="true"/>
+    </module>
+        
+
 
     <!-- Modifier Checks                                    -->
     <!-- See https://checkstyle.org/config_modifiers.html -->
@@ -166,7 +181,9 @@
     <!-- See https://checkstyle.org/config_coding.html -->
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
+    <module name="HiddenField">
+      <property name="tokens" value="VARIABLE_DEF"/>
+    </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
@@ -177,16 +194,23 @@
 
     <!-- Checks for class design                         -->
     <!-- See https://checkstyle.org/config_design.html -->
-    <module name="DesignForExtension"/>
+    <module name="DesignForExtension">
+      <property name="ignoredAnnotations" value="Override, Test"/>
+    </module>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
     <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
+    <module name="VisibilityModifier">
+      <property name="allowPublicFinalFields" value="true"/>
+    </module>
 
     <!-- Miscellaneous other checks.                   -->
     <!-- See https://checkstyle.org/config_misc.html -->
     <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters"/>
+    <module name="FinalParameters">
+      <property name="tokens" value="CTOR_DEF"/>
+      <property name="ignorePrimitiveTypes" value="true"/>
+    </module>
     <module name="TodoComment"/>
     <module name="UpperEll"/>
 
