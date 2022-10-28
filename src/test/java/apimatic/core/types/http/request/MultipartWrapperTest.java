@@ -12,9 +12,15 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 
 public class MultipartWrapperTest {
 
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link HttpHeaders}
+     */
     @Mock
     private HttpHeaders httpHeaders;
 

@@ -8,14 +8,13 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import apimatic.core.utilities.MockCoreRequest;
+import apimatic.core.utilities.MockCoreConfig;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.types.CoreApiException;
@@ -31,7 +30,7 @@ import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfigu
 import io.apimatic.coreinterfaces.http.request.configuration.RetryOption;
 import io.apimatic.coreinterfaces.http.response.Response;
 
-public class EndToEndTest extends MockCoreRequest {
+public class EndToEndTest extends MockCoreConfig {
 
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
@@ -67,7 +66,7 @@ public class EndToEndTest extends MockCoreRequest {
         String actual = getApiCall().execute();
         assertEquals(actual, expected);
     }
-  
+
     private ApiCall<String, CoreApiException> getApiCall() throws IOException {
         when(response.getBody()).thenReturn("\"Turtle\"");
         return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
@@ -92,7 +91,7 @@ public class EndToEndTest extends MockCoreRequest {
     private GlobalConfiguration getGlobalConfig() {
         String userAgent = "APIMATIC 3.0";
         GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
-                .authentication(Collections.emptyMap()).compatibilityFactory(compatibilityFactory)
+                .authentication(Collections.emptyMap()).compatibilityFactory(getCompatibilityFactory())
                 .httpClient(httpClient).baseUri(server -> getBaseUri(server)).callback(callback)
                 .userAgent(userAgent).userAgentConfig(Collections.emptyMap())
                 .additionalHeaders(null).globalHeader("version", "0.1")
@@ -109,10 +108,10 @@ public class EndToEndTest extends MockCoreRequest {
                 .thenReturn(response);
         when(httpClient.executeAsync(any(Request.class), any(CoreEndpointConfiguration.class)))
                 .thenReturn(completableResponse);
-        when(compatibilityFactory.createHttpHeaders(anyMap())).thenReturn(httpHeaders);
-        when(compatibilityFactory.createHttpRequest(any(Method.class), any(StringBuilder.class),
+        when(getCompatibilityFactory().createHttpHeaders(anyMap())).thenReturn(getHttpHeaders());
+        when(getCompatibilityFactory().createHttpRequest(any(Method.class), any(StringBuilder.class),
                 any(HttpHeaders.class), anyMap(), anyList())).thenReturn(coreHttpRequest);
-        when(compatibilityFactory.createHttpContext(coreHttpRequest, response)).thenReturn(context);
+        when(getCompatibilityFactory().createHttpContext(coreHttpRequest, response)).thenReturn(context);
         when(context.getResponse()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);
     }

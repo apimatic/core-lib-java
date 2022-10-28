@@ -11,33 +11,53 @@ import io.apimatic.core.GlobalConfiguration;
 
 public class MockCoreConfig extends CompatibilityFactoryMock {
 
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link GlobalConfiguration.Builder}
+     */
     @Mock
-    protected static GlobalConfiguration.Builder mockCoreConfigBuilder;
+    private static GlobalConfiguration.Builder mockCoreConfigBuilder;
 
+    /**
+     * Mock of {@link GlobalConfiguration}
+     */
     @Mock
-    protected static GlobalConfiguration mockGlobalConfig;
+    private static GlobalConfiguration mockGlobalConfig;
 
+    /**
+     * Setup the test setup.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     */
     @Before
     public void setup() throws IOException {
         prepareMockCoreConfigBuilder();
         prepareMockCoreConfig();
     }
 
-    public void prepareMockCoreConfigBuilder() {
+    /**
+     * @return {@link GlobalConfiguration}
+     */
+    public static GlobalConfiguration getMockGlobalConfig() {
+        return mockGlobalConfig;
+    }
+
+    private void prepareMockCoreConfigBuilder() {
         when(mockCoreConfigBuilder.baseUri(test -> getBaseUri(test)))
                 .thenReturn(mockCoreConfigBuilder);
-        when(mockCoreConfigBuilder.compatibilityFactory(compatibilityFactory))
+        when(mockCoreConfigBuilder.compatibilityFactory(getCompatibilityFactory()))
                 .thenReturn(mockCoreConfigBuilder);
         when(mockCoreConfigBuilder.build()).thenReturn(mockGlobalConfig);
     }
 
     private void prepareMockCoreConfig() {
-        //stubs
+        // stubs
         when(mockGlobalConfig.getBaseUri()).thenReturn(test -> getBaseUri(test));
-        when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(compatibilityFactory);
+        when(mockGlobalConfig.getCompatibilityFactory()).thenReturn(getCompatibilityFactory());
     }
 
     protected static String getBaseUri(String test) {

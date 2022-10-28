@@ -16,13 +16,21 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class CoreApiExceptionTest {
 
-
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule();
 
+    /**
+     * Mock of {@link Context}}
+     */
     @Mock
     private Context context;
 
+    /**
+     * Mock of {@link Response}
+     */
     @Mock
     private Response response;
 

@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,17 +19,35 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class DynamicTest {
 
+    private static final double TEST_DOUBLE_NUMBER = 1.5;
+
+    /**
+     * Float number
+     */
+    private static final float FLOAT_NUMBER = 5.9f;
+
+    /**
+     * Test number
+     */
+    private static final int TEST_NUMBER = 5;
+
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule();
 
+    /**
+     * Mock of {@link Response}
+     */
     @Mock
     private Response coreHttpResponse;
 
+    /**
+     * Mock of {@link HttpHeaders}
+     */
     @Mock
     private HttpHeaders headers;
-
-    @Before
-    public void setup() {}
 
     @Test
     public void testParseAsBoolean() throws ParseException {
@@ -69,7 +86,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("1.5");
 
-        Double expected = 1.5;
+        Double expected = TEST_DOUBLE_NUMBER;
         Double actual = dynamic.parseAsDouble();
         assertEquals(actual, expected);
     }
@@ -80,7 +97,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("5");
 
-        byte expected = 5;
+        byte expected = TEST_NUMBER;
         byte actual = dynamic.parseAsByte();
         assertEquals(actual, expected);
     }
@@ -89,10 +106,10 @@ public class DynamicTest {
     public void testParseAsDictionary() throws ParseException {
         Dynamic dynamic = new Dynamic(coreHttpResponse);
 
-        when(coreHttpResponse.getBody()).thenReturn("{\"parsingKey\":123}");
+        when(coreHttpResponse.getBody()).thenReturn("{\"parsingKey\":5}");
 
         Map<String, Object> expected = new HashMap<>();
-        expected.put("parsingKey", 123);
+        expected.put("parsingKey", TEST_NUMBER);
         Map<String, Object> actual = dynamic.parseAsDictionary();
         assertEquals(actual, expected);
     }
@@ -111,7 +128,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("5.9");
 
-        Float expected = 5.9f;
+        Float expected = FLOAT_NUMBER;
         Float actual = dynamic.parseAsFloat();
         assertEquals(actual, expected);
     }
@@ -122,7 +139,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("5");
 
-        Integer expected = 5;
+        Integer expected = TEST_NUMBER;
         Integer actual = dynamic.parseAsInteger();
         assertEquals(actual, expected);
     }
@@ -144,7 +161,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("5");
 
-        short expected = 5;
+        short expected = TEST_NUMBER;
         short actual = dynamic.parseAsShort();
         assertEquals(actual, expected);
     }
@@ -176,7 +193,7 @@ public class DynamicTest {
         Dynamic dynamic = new Dynamic(coreHttpResponse);
         String response = "response string";
         InputStream inputStream = new ByteArrayInputStream(response.getBytes());
-        
+
         when(coreHttpResponse.getRawBody()).thenReturn(inputStream);
         InputStream actual = dynamic.getRawBody();
         assertNotNull(actual);

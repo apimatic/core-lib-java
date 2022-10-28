@@ -19,7 +19,6 @@ public class BaseModelTest {
         assertNotNull(value);
     }
 
-
     @Test
     public void testGetValueUsingField() {
         BaseModel baseModel = new BaseModel();

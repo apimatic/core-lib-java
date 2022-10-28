@@ -12,12 +12,21 @@ import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 public class MultipartFileWrapperTest {
 
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link CoreFileWrapper}
+     */
     @Mock
     private CoreFileWrapper coreFileWrapper;
 
+    /**
+     * Mock of {@link HttpHeaders}
+     */
     @Mock
     private HttpHeaders httpHeaders;
 

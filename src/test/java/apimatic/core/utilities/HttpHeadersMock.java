@@ -8,9 +8,22 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 
 public class HttpHeadersMock {
 
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link HttpHeaders}
+     */
     @Mock
-    protected HttpHeaders httpHeaders;
+    private HttpHeaders httpHeaders;
+
+    /**
+     * @return {@link HttpHeaders}
+     */
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
+    }
 }
