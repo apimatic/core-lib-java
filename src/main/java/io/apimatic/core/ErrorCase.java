@@ -8,7 +8,7 @@ import io.apimatic.coreinterfaces.type.functional.ExceptionCreator;
  * A class is responsible to generate the SDK Exception.
  * @param <ExceptionType> Represents error response from the server.
  */
-public class ErrorCase<ExceptionType extends CoreApiException> {
+public final class ErrorCase<ExceptionType extends CoreApiException> {
     /**
      * A key for the default errors
      */
@@ -53,8 +53,8 @@ public class ErrorCase<ExceptionType extends CoreApiException> {
      *        thrown exception
      * @return {@link ErrorCase}
      */
-    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
-            String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
+    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType>
+            create(String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
         return errorCase;
     }

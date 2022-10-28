@@ -26,7 +26,7 @@ public interface TypeCombinator {
          * {@link java.util.Map} values.
          * @return JsonSerializer instance
          */
-        public Class<? extends JsonSerializer<?>> contentUsing() default JsonSerializer.None.class;
+        Class<? extends JsonSerializer<?>> contentUsing() default JsonSerializer.None.class;
     }
 
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})

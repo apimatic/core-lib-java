@@ -4,6 +4,9 @@ import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a utility class for XML ZonedDateTime operations.
+ */
 public class XmlZonedDateTimeHelper extends XMLDateHelper {
     public static String serializeRfc8601DateTime(ZonedDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";

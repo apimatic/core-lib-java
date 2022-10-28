@@ -11,16 +11,44 @@ import io.apimatic.coreinterfaces.http.Method;
  */
 public final class CoreHttpClientConfiguration implements ClientConfiguration {
 
-    private final static int REQUEST_TIMEOUT = 408;
-    private final static int LONG_DATA = 413;
-    private final static int TOO_MANY_REQUEST = 429;
-    private final static int INTERNAL_SERVER_ERROR = 500;
-    private final static int BAD_GATEWAY = 502;
-    private final static int SERVICE_UNAVAILABLE = 503;
-    private final static int GATEWAY_TIMEOUT = 504;
-    private final static int WEB_SERVER_IS_DOWN = 521;
-    private final static int CONNECTION_TIMEOUT = 522;
-    private final static int SERVER_TIMEOUT = 524;
+    /**
+     * Request timeout status code
+     */
+    private static final int REQUEST_TIMEOUT = 408;
+
+    /**
+     * Long data status code
+     */
+    private static final int LONG_DATA = 413;
+
+    /**
+     * Too many request status code
+     */
+    private static final int TOO_MANY_REQUEST = 429;
+
+    /**
+     * Internal server error status code
+     */
+    private static final int INTERNAL_SERVER_ERROR = 500;
+
+    /**
+     * Bad Gateway status code
+     */
+    private static final int BAD_GATEWAY = 502;
+
+    /**
+     * Service unavailable status code
+     */
+    private static final int SERVICE_UNAVAILABLE = 503;
+    
+    /**
+     * 
+     */
+    private static final int GATEWAY_TIMEOUT = 504;
+    private static final int WEB_SERVER_IS_DOWN = 521;
+    private static final int CONNECTION_TIMEOUT = 522;
+    private static final int SERVER_TIMEOUT = 524;
+
     /**
      * The timeout in seconds to use for making HTTP requests.
      */

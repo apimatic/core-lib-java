@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a utility class for XML LocalDateTime operations.
+ */
 public class XmlLocalDateTimeHelper extends XMLDateHelper {
 
     public static String serializeRfc8601DateTime(LocalDateTime dateObj, String rootName) {

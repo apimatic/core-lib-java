@@ -70,19 +70,31 @@ public class CoreHelper {
      * A string of user agent
      */
     private static String userAgent;
+
+    /**
+     * A tab separated array serialization format
+     */
     private static final String TSV_FORMAT = "%09";
+
+    /**
+     * A comma separated array serialization format
+     */
     private static final String CSV_FORMAT = ",";
+
+    /**
+     * A pipe separated array serialization format
+     */
     private static final String PSV_FORMAT = "%7C";
 
     /**
      * Deserialization of Json data
      */
-    public static ObjectMapper mapper = JsonMapper
-            .builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                    false)
-            .withConfigOverride(BigDecimal.class, mutableConfigOverride -> mutableConfigOverride
-                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
-            .build();
+    public static ObjectMapper mapper =
+            JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .withConfigOverride(BigDecimal.class,
+                            mutableConfigOverride -> mutableConfigOverride
+                                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
+                    .build();
 
     /**
      * Strict Deserialization of Json data
@@ -117,10 +129,11 @@ public class CoreHelper {
      * List of classes that are wrapped directly. This information is needed when traversing object
      * trees for reference matching.
      */
-    private static final Set<Object> WRAPPER_TYPES = new HashSet<Object>(
-            Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, String.class,
-                    Integer.class, Long.class, Float.class, Double.class, BigDecimal.class,
-                    Void.class, File.class, MultipartWrapper.class, MultipartFileWrapper.class));
+    private static final Set<Object> WRAPPER_TYPES =
+            new HashSet<Object>(Arrays.asList(Boolean.class, Character.class, Byte.class,
+                    Short.class, String.class, Integer.class, Long.class, Float.class, Double.class,
+                    BigDecimal.class, Void.class, File.class, MultipartWrapper.class,
+                    MultipartFileWrapper.class));
 
     /**
      * Get a JsonSerializer instance from the provided annotation.
@@ -989,9 +1002,10 @@ public class CoreHelper {
             if (isWrapperType(element)
                     && (arraySerializationFormat == ArraySerializationFormat.UNINDEXED
                             || arraySerializationFormat == ArraySerializationFormat.PLAIN)) {
-                key = arraySerializationFormat == ArraySerializationFormat.UNINDEXED
-                        ? String.format("%s[]", objName)
-                        : objName;
+                key =
+                        arraySerializationFormat == ArraySerializationFormat.UNINDEXED
+                                ? String.format("%s[]", objName)
+                                : objName;
             } else {
                 key = String.format("%s[%d]", objName, index++);
             }
@@ -1177,6 +1191,7 @@ public class CoreHelper {
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
      * @param serializer The serializer for serialize the object
+     * @param arraySerializationFormat The array serialization format
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
      */
     private static void loadKeyValueUsingSerializer(String key, Object value,
@@ -1204,6 +1219,7 @@ public class CoreHelper {
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
      * @param formSerializerAnnotation Annotation for serializer
+     * @param arraySerializationFormat The array serialization format
      */
     private static void loadKeyValuePairForEncoding(String key, Object value,
             List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
@@ -1229,6 +1245,7 @@ public class CoreHelper {
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
+     * @param arraySerializationFormat The array serialization format
      */
     private static void loadKeyValuePairForEncoding(String key, Object value,
             List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
@@ -1263,6 +1280,7 @@ public class CoreHelper {
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
      * @param serializerAnnotation Annotation for serializer
+     * @param arraySerializationFormat The array serialization format
      */
     private static void loadKeyValuePairForEncoding(String key, Object value,
             List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,

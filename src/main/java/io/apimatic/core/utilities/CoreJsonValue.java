@@ -14,15 +14,18 @@ import com.fasterxml.jackson.databind.node.TextNode;
  * Wrapper class for JSON value.
  */
 public class CoreJsonValue {
+    /**
+     * A json value
+     */
     @com.fasterxml.jackson.annotation.JsonValue
-    private JsonNode value;
+    private final JsonNode value;
 
     /**
      * Initialization constructor.
      * @param value The JSON of type JsonNode.
      */
     @JsonCreator
-    protected CoreJsonValue(JsonNode value) {
+    protected CoreJsonValue(final JsonNode value) {
         this.value = value;
     }
 

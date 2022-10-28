@@ -65,8 +65,9 @@ public class HttpLogger implements ApiLogger {
         mapper.addMixIn(MultipartWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartFileWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(HttpHeaders.class, LoggingMixIn.class);
-        this.writer = !config.isPrettyPrinting() ? mapper.writer()
-                : mapper.writerWithDefaultPrettyPrinter();
+        this.writer =
+                !config.isPrettyPrinting() ? mapper.writer()
+                        : mapper.writerWithDefaultPrettyPrinter();
     }
 
     /**
@@ -258,12 +259,22 @@ public class HttpLogger implements ApiLogger {
      * MixIn interface to update how certain fields are shown in the logs.
      */
     private interface LoggingMixIn {
+
+        /**
+         * @return A header string
+         */
         @JsonUnwrapped
         String getHeaders();
 
+        /**
+         * @return Header string
+         */
         @JsonGetter("headers")
         String asMultimap();
 
+        /**
+         * @return File string
+         */
         @JsonIgnore
         String getFile();
 
@@ -328,22 +339,46 @@ public class HttpLogger implements ApiLogger {
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String loggingError;
+         String loggingError;
+
+        /**
+         * A string of message type
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         String type;
+
+        /**
+         * A string of requestId message
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         String requestId;
+
+        /**
+         * A string of url
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         String url;
+
+        /**
+         * A map for headers values
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         Map<String, List<String>> headers;
+
+        /**
+         * A body object
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         Object body;
+
+        /**
+         * A string additional message
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         String additionalMessage;

@@ -16,7 +16,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
  * @param <ResponseType> resource from server
  * @param <ExceptionType> in case of a problem or the connection was aborted
  */
-public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
+public final class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
 
     /**
      * An instance of {@link GlobalConfiguration}
@@ -119,8 +119,8 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
          * @param action requestBuilder {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
-        public Builder<ResponseType, ExceptionType> requestBuilder(
-                Consumer<HttpRequest.Builder> action) {
+        public Builder<ResponseType, ExceptionType>
+                requestBuilder(Consumer<HttpRequest.Builder> action) {
             requestBuilder = new HttpRequest.Builder();
             action.accept(requestBuilder);
             return this;
@@ -141,8 +141,8 @@ public class ApiCall<ResponseType, ExceptionType extends CoreApiException> {
          * @param action endpointConfiguration {@link Consumer}
          * @return {@link ApiCall.Builder}
          */
-        public Builder<ResponseType, ExceptionType> endpointConfiguration(
-                Consumer<EndpointConfiguration.Builder> action) {
+        public Builder<ResponseType, ExceptionType>
+                endpointConfiguration(Consumer<EndpointConfiguration.Builder> action) {
             endpointConfigurationBuilder = new EndpointConfiguration.Builder();
             action.accept(endpointConfigurationBuilder);
             return this;

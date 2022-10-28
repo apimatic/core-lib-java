@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a utility class for XML LocalDate operations.
+ */
 public class XMLDateHelper {
 
     public static String serializeSimpleDate(LocalDate dateObj, String rootName) {

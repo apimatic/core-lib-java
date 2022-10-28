@@ -22,17 +22,18 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
     /**
      * Not found status code
      */
-    private final static int NOT_FOUND_STATUS_CODE = 404;
+    private static final int NOT_FOUND_STATUS_CODE = 404;
 
     /**
      * Success code
      */
-    private final static int SUCCESS_CODE = 200;
+    private static final int SUCCESS_CODE = 200;
 
     /**
      * Already Reported
      */
-    private final static int ALREADY_REPORTED = 208;
+    private static final int ALREADY_REPORTED = 208;
+
     /**
      * A map for end point level errors
      */
@@ -108,8 +109,9 @@ public class ResponseHandler<ResponseType, ExceptionType extends CoreApiExceptio
             GlobalConfiguration globalConfiguration,
             CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
-        Context httpContext = globalConfiguration.getCompatibilityFactory()
-                .createHttpContext(httpRequest, httpResponse);
+        Context httpContext =
+                globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest,
+                        httpResponse);
         // invoke the callback after response if its not null
         if (globalConfiguration.getHttpCallback() != null) {
             globalConfiguration.getHttpCallback().onAfterResponse(httpContext);

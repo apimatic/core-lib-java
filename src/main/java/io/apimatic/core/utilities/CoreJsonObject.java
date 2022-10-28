@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Wrapper class for JSON object.
  */
 public class CoreJsonObject {
+    /**
+     * A json value representation
+     */
     @com.fasterxml.jackson.annotation.JsonValue
     private JsonNode jsonNode;
 
@@ -17,7 +20,7 @@ public class CoreJsonObject {
      * @param jsonNode The JSON of type JsonNode.
      */
     @JsonCreator
-    protected CoreJsonObject(JsonNode jsonNode) {
+    protected CoreJsonObject(final JsonNode jsonNode) {
         this.jsonNode = jsonNode;
     }
 

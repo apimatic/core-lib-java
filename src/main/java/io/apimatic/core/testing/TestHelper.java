@@ -29,10 +29,19 @@ import io.apimatic.core.utilities.CoreHelper;
  */
 public class TestHelper {
 
+    /**
+     * A base value of hexadecimal number
+     */
     private static final int BASE_16 = 16;
 
+    /**
+     * To convert the decimal number into hexadecimal
+     */
     private static final int TO_EXTRACT_HEXADECIMAL = 0x100;
 
+    /**
+     * A hexadecimal number representation of 16
+     */
     private static final int HEXADECIMAL_CONVERTOR = 0xff;
 
     /**
@@ -172,12 +181,14 @@ public class TestHelper {
                                 return false;
                             }
                             // prepare the list of other instances (other than map)
-                            List<Object> remainingLeftList = (List<Object>) leftList.stream()
-                                    .filter(x -> !leftListOfMap.contains(x))
-                                    .collect(Collectors.toList());
-                            List<Object> remainingRightList = (List<Object>) rightList.stream()
-                                    .filter(x -> !rightListOfMap.contains(x))
-                                    .collect(Collectors.toList());
+                            List<Object> remainingLeftList =
+                                    (List<Object>) leftList.stream()
+                                            .filter(x -> !leftListOfMap.contains(x))
+                                            .collect(Collectors.toList());
+                            List<Object> remainingRightList =
+                                    (List<Object>) rightList.stream()
+                                            .filter(x -> !rightListOfMap.contains(x))
+                                            .collect(Collectors.toList());
 
                             if (!isListProperSubsetOf(remainingLeftList, remainingRightList,
                                     allowExtra, isOrdered)) {
@@ -534,9 +545,9 @@ public class TestHelper {
     private static String byteArrayToHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
-            result += Integer
-                    .toString((b[i] & HEXADECIMAL_CONVERTOR) + TO_EXTRACT_HEXADECIMAL, BASE_16)
-                    .substring(1);
+            result +=
+                    Integer.toString((b[i] & HEXADECIMAL_CONVERTOR) + TO_EXTRACT_HEXADECIMAL,
+                            BASE_16).substring(1);
         }
         return result;
     }
