@@ -29,7 +29,7 @@ import io.apimatic.coreinterfaces.type.functional.Serializer;
  * HttpRequest. Builders can be copied and modified many times in order to build multiple related
  * requests that differ in some parameters.
  */
-public class HttpRequest {
+public final class HttpRequest {
     /**
      * An instance of {@link Request}
      */
@@ -61,18 +61,19 @@ public class HttpRequest {
      * @param headerParams
      * @param formParams
      * @param body
+     * @param formParameters
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
      * @throws IOException
      */
-    private HttpRequest(final GlobalConfiguration coreConfig, final String server, String path,
-            final Method httpMethod, final String authenticationKey,
+    private HttpRequest(final GlobalConfiguration coreConfig, final String server,
+            final String path, final Method httpMethod, final String authenticationKey,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
-            final Map<String, List<String>> headerParams, Set<Parameter> formParams,
-            final Map<String, Object> formParameters, Object body, final Serializer bodySerializer,
-            final Map<String, Object> bodyParameters,
+            final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
+            final Map<String, Object> formParameters, Object body,
+            final Serializer bodySerializer, final Map<String, Object> bodyParameters,
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
@@ -82,8 +83,9 @@ public class HttpRequest {
         body = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
                 generateFormFields(formParams, formParameters, arraySerializationFormat);
-        coreHttpRequest = buildRequest(httpMethod, body, addHeaders(headerParams), queryParams,
-                formFields, arraySerializationFormat);
+        coreHttpRequest =
+                buildRequest(httpMethod, body, addHeaders(headerParams), queryParams, formFields,
+                        arraySerializationFormat);
         applyAuthentication(authenticationKey);
     }
 
@@ -122,7 +124,9 @@ public class HttpRequest {
     }
 
     /**
-     * @param compatibilityFactory
+     * @param formParams
+     * @param optionalFormParamaters
+     * @param arraySerializationFormat
      * @return list of form parameters
      * @throws IOException
      */
@@ -362,8 +366,9 @@ public class HttpRequest {
             action.accept(parameterBuilder);
             Parameter templateParameter = parameterBuilder.build();
             templateParameter.validate();
-            SimpleEntry<Object, Boolean> templateEntry = new SimpleEntry<Object, Boolean>(
-                    templateParameter.getValue(), templateParameter.shouldEncode());
+            SimpleEntry<Object, Boolean> templateEntry =
+                    new SimpleEntry<Object, Boolean>(templateParameter.getValue(),
+                            templateParameter.shouldEncode());
             this.templateParams.put(templateParameter.getKey(), templateEntry);
             return this;
         }
@@ -379,8 +384,9 @@ public class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = httpHeaderParameter.getValue() == null ? null
-                    : httpHeaderParameter.getValue().toString();
+            String value =
+                    httpHeaderParameter.getValue() == null ? null
+                            : httpHeaderParameter.getValue().toString();
 
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
@@ -464,9 +470,10 @@ public class HttpRequest {
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
-            HttpRequest coreRequest = new HttpRequest(coreConfig, server, path, httpMethod,
-                    authenticationKey, queryParams, templateParams, headerParams, formParams,
-                    formParamaters, body, bodySerializer, bodyParameters, arraySerializationFormat);
+            HttpRequest coreRequest =
+                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
+                            queryParams, templateParams, headerParams, formParams, formParamaters,
+                            body, bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

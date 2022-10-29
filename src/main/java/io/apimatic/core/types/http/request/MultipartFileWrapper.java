@@ -27,7 +27,7 @@ public class MultipartFileWrapper implements MultipartFile {
      * @param fileWrapper FileWrapper instance
      * @param headers Headers for wrapping
      */
-    public MultipartFileWrapper(final CoreFileWrapper fileWrapper, HttpHeaders headers) {
+    public MultipartFileWrapper(final CoreFileWrapper fileWrapper, final HttpHeaders headers) {
         this.fileWrapper = fileWrapper;
         this.headers = headers;
     }

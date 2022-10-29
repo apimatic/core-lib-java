@@ -24,6 +24,11 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
      */
     private final ArraySerializationFormat arraySerializationFormat;
 
+    /**
+     * @param hasBinary
+     * @param retryOption
+     * @param arraySerializationFormat
+     */
     public EndpointConfiguration(final boolean hasBinary, final RetryOption retryOption,
             final ArraySerializationFormat arraySerializationFormat) {
         this.hasBinaryResponse = hasBinary;

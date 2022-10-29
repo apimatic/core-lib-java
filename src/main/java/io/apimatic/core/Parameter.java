@@ -38,17 +38,14 @@ public final class Parameter {
      * A boolean variable to encode the template parameter
      */
     private final boolean shouldEncode;
-    
     /**
      * An instance of {@link MutliPartRequestType}
      */
     private final MutliPartRequestType multiPartRequestType;
-    
     /**
      * A map of multipartHeaders
      */
     private final Map<String, List<String>> multipartHeaders;
-
 
     /**
      * A private constructor
@@ -60,9 +57,9 @@ public final class Parameter {
      * @param multiPartRequest enum used to determine the multiRequestType
      * @param multipartHeaders the multipart headers
      */
-    private Parameter(String key, Object value, Serializer multipartSerializer, boolean isRequired,
-            boolean shouldEncode, MutliPartRequestType multiPartRequest,
-            Map<String, List<String>> multipartHeaders) {
+    private Parameter(final String key, final Object value, final Serializer multipartSerializer,
+            boolean isRequired, boolean shouldEncode, final MutliPartRequestType multiPartRequest,
+            final Map<String, List<String>> multipartHeaders) {
         this.key = key;
         this.value = value;
         this.multipartSerializer = multipartSerializer;
@@ -135,12 +132,33 @@ public final class Parameter {
     }
 
     public static class Builder {
+        /**
+         * A parameter key
+         */
         private String key;
+        /**
+         * A parameter value
+         */
         private Object value;
+        /**
+         * A parameter seria
+         */
         private Serializer multipartSerializer;
+        /**
+         * A parameter is required ?
+         */
         private boolean isRequired = true;
+        /**
+         * Should encode the parameter
+         */
         private boolean shouldEncode;
+        /**
+         * A parameter multippartRequestType
+         */
         private MutliPartRequestType multiPartRequestType = null;
+        /**
+         * A multipart headers
+         */
         private Map<String, List<String>> multipartHeaders = new HashMap<String, List<String>>();
 
         /**

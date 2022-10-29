@@ -263,22 +263,49 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     public static class Builder {
 
         /**
-         * timeout
+         * Timeout
          */
         private long timeout = 0;
 
         /**
-         * number of retries
+         * Number of retries
          */
         private int numberOfRetries = 0;
+        /**
+         * Back off factor
+         */
         private int backOffFactor = 2;
+        /**
+         * Retry interval
+         */
         private long retryInterval = 1;
+        /**
+         * Set of Status codes to retry
+         */
         private Set<Integer> httpStatusCodesToRetry = new HashSet<>();
+        /**
+         * Set of http methods
+         */
         private Set<Method> httpMethodsToRetry = new HashSet<>();
+        /**
+         * Maximum retry wait time
+         */
         private long maximumRetryWaitTime = 120;
+        /**
+         * Should Retry on timeout
+         */
         private boolean shouldRetryOnTimeout = true;
+        /**
+         * An instance of OkHttpClient
+         */
         private okhttp3.OkHttpClient httpClientInstance;
+        /**
+         * Do need to Override Http client configuration
+         */
         private boolean overrideHttpClientConfigurations = true;
+        /** 
+         * Skip Ssl certification
+         */
         private boolean skipSslCertVerification;
 
         /**

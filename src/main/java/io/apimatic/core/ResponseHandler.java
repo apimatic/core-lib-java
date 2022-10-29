@@ -18,7 +18,7 @@ import io.apimatic.coreinterfaces.type.functional.Deserializer;
  * @param <ResponseType> The response to process
  * @param <ExceptionType> in case of a problem
  */
-public class ResponseHandler<ResponseType, ExceptionType extends CoreApiException> {
+public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiException> {
     /**
      * Not found status code
      */

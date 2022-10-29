@@ -23,7 +23,7 @@ public class Dynamic implements DynamicType {
      * Instantiate class.
      * @param responseBody The object of HttpResponse
      */
-    public Dynamic(Response responseBody) {
+    public Dynamic(final Response responseBody) {
         this.response = responseBody;
     }
 

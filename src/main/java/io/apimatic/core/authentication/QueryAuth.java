@@ -19,7 +19,7 @@ public class QueryAuth implements Authentication {
     /**
      * @param authParams
      */
-    public QueryAuth(Map<String, String> authParams) {
+    public QueryAuth(final Map<String, String> authParams) {
         this.authParams = authParams;
     }
 

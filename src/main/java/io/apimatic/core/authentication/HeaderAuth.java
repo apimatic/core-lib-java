@@ -19,12 +19,12 @@ public class HeaderAuth implements Authentication {
     /**
      * @param authParams
      */
-    public HeaderAuth(Map<String, String> authParams) {
+    public HeaderAuth(final Map<String, String> authParams) {
         this.authParams = authParams;
     }
 
     /**
-     * @param httpRequest A request 
+     * @param httpRequest A request
      */
     @Override
     public Request apply(Request httpRequest) {
