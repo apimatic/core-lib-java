@@ -23,7 +23,7 @@ public class TestModel extends BaseModel {
      * @param name String value for name.
      * @param field String value for field.
      */
-    public TestModel(String name, String field) {
+    public TestModel(final String name, final String field) {
         this.name = name;
         this.field = field;
     }
@@ -107,7 +107,7 @@ public class TestModel extends BaseModel {
          * @param name String value for name.
          * @param field String value for field.
          */
-        public Builder(String name, String field) {
+        public Builder(final String name, final String field) {
             this.name = name;
             this.field = field;
         }

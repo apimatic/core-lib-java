@@ -307,7 +307,7 @@ public class HttpLoggerTest {
         httpLogger.logResponse(request, response);
         // In logged message a random string is being appended so, we cannot check the Equals
         // assertion.
-        verify(logger, times(0)).info(anyString());;
+        verify(logger, times(0)).info(anyString());
     }
 
     @Test

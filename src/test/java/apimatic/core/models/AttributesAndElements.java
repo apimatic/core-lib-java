@@ -26,8 +26,8 @@ public class AttributesAndElements {
      * @param stringElement String value for stringElement.
      * @param numberElement int value for numberElement.
      */
-    public AttributesAndElements(final String stringAttr, int numberAttr, final String stringElement,
-            int numberElement) {
+    public AttributesAndElements(final String stringAttr, int numberAttr,
+            final String stringElement, int numberElement) {
         this.stringAttr = stringAttr;
         this.numberAttr = numberAttr;
         this.stringElement = stringElement;
@@ -151,7 +151,8 @@ public class AttributesAndElements {
          * @param stringElement String value for stringElement.
          * @param numberElement int value for numberElement.
          */
-        public Builder(String stringAttr, int numberAttr, String stringElement, int numberElement) {
+        public Builder(final String stringAttr, int numberAttr, final String stringElement,
+                int numberElement) {
             this.stringAttr = stringAttr;
             this.numberAttr = numberAttr;
             this.stringElement = stringElement;

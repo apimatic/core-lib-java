@@ -41,9 +41,10 @@ public class InnerComplexType {
      * @param objectType Object value for objectType.
      * @param stringListType List of String value for stringListType.
      */
-    public InnerComplexType(String stringType, boolean booleanType, LocalDateTime dateTimeType,
-            LocalDate dateType, UUID uuidType, long longType, double precisionType,
-            Object objectType, List<String> stringListType) {
+    public InnerComplexType(final String stringType, boolean booleanType,
+            final LocalDateTime dateTimeType, final LocalDate dateType, final UUID uuidType,
+            long longType, double precisionType, final Object objectType,
+            final List<String> stringListType) {
         this.stringType = stringType;
         this.booleanType = booleanType;
         this.dateTimeType = dateTimeType;
@@ -276,9 +277,10 @@ public class InnerComplexType {
          * @param objectType Object value for objectType.
          * @param stringListType List of String value for stringListType.
          */
-        public Builder(String stringType, boolean booleanType, LocalDateTime dateTimeType,
-                LocalDate dateType, UUID uuidType, long longType, double precisionType,
-                Object objectType, List<String> stringListType) {
+        public Builder(final String stringType, boolean booleanType,
+                final LocalDateTime dateTimeType, final LocalDate dateType, final UUID uuidType,
+                long longType, double precisionType, final Object objectType,
+                final List<String> stringListType) {
             this.stringType = stringType;
             this.booleanType = booleanType;
             this.dateTimeType = dateTimeType;

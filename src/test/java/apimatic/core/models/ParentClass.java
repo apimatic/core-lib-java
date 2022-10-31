@@ -49,10 +49,11 @@ public class ParentClass extends GrandParentClass {
      *        parentOptionalNullableWithDefaultValue.
      * @param parentOptional String value for parentOptional.
      */
-    public ParentClass(String grandParentRequiredNullable, String grandParentRequired,
-            String parentRequiredNullable, String parentRequired, String grandParentOptional,
-            Integer mClass, Double precision, BigDecimal bigDecimal,
-            String parentOptionalNullableWithDefaultValue, String parentOptional) {
+    public ParentClass(final String grandParentRequiredNullable, final String grandParentRequired,
+            final String parentRequiredNullable, final String parentRequired,
+            final String grandParentOptional, final Integer mClass, final Double precision,
+            final BigDecimal bigDecimal, final String parentOptionalNullableWithDefaultValue,
+            final String parentOptional) {
         super(grandParentRequiredNullable, grandParentRequired, grandParentOptional);
         this.mClass = OptionalNullable.of(mClass);
         this.precision = OptionalNullable.of(precision);
@@ -67,12 +68,13 @@ public class ParentClass extends GrandParentClass {
     /**
      * Internal initialization constructor.
      */
-    protected ParentClass(String grandParentRequiredNullable, String grandParentRequired,
-            String parentRequiredNullable, String parentRequired, String grandParentOptional,
-            OptionalNullable<Integer> mClass, OptionalNullable<Double> precision,
-            OptionalNullable<BigDecimal> bigDecimal,
-            OptionalNullable<String> parentOptionalNullableWithDefaultValue,
-            String parentOptional) {
+    protected ParentClass(final String grandParentRequiredNullable,
+            final String grandParentRequired, final String parentRequiredNullable,
+            final String parentRequired, final String grandParentOptional,
+            final OptionalNullable<Integer> mClass, final OptionalNullable<Double> precision,
+            final OptionalNullable<BigDecimal> bigDecimal,
+            final OptionalNullable<String> parentOptionalNullableWithDefaultValue,
+            final String parentOptional) {
         super(grandParentRequiredNullable, grandParentRequired, grandParentOptional);
         this.mClass = mClass;
         this.precision = precision;
@@ -342,8 +344,8 @@ public class ParentClass extends GrandParentClass {
          * @param parentRequiredNullable String value for parentRequiredNullable.
          * @param parentRequired String value for parentRequired.
          */
-        public Builder(String grandParentRequiredNullable, String grandParentRequired,
-                String parentRequiredNullable, String parentRequired) {
+        public Builder(final String grandParentRequiredNullable, final String grandParentRequired,
+                final String parentRequiredNullable, final String parentRequired) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
             this.grandParentRequired = grandParentRequired;
             this.parentRequiredNullable = parentRequiredNullable;

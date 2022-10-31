@@ -27,8 +27,8 @@ public class Rfc1123DateMap {
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
-    public Rfc1123DateMap(Map<String, LocalDateTime> dateTime1,
-            Map<String, LocalDateTime> dateTime) {
+    public Rfc1123DateMap(final Map<String, LocalDateTime> dateTime1,
+            final Map<String, LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }

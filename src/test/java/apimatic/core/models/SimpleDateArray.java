@@ -27,7 +27,7 @@ public class SimpleDateArray {
      * @param date List of LocalDate value for date.
      * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateArray(List<LocalDate> date, List<LocalDate> date1) {
+    public SimpleDateArray(final List<LocalDate> date, final List<LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
@@ -35,7 +35,8 @@ public class SimpleDateArray {
     /**
      * Internal initialization constructor.
      */
-    protected SimpleDateArray(OptionalNullable<List<LocalDate>> date, List<LocalDate> date1) {
+    protected SimpleDateArray(final OptionalNullable<List<LocalDate>> date,
+            final List<LocalDate> date1) {
         this.date = date;
         this.date1 = date1;
     }

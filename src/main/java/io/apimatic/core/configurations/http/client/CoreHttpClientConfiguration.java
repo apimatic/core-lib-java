@@ -62,6 +62,11 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     private static final int SERVER_TIMEOUT = 524;
 
     /**
+     * Maximum retry wait time
+     */
+    private static final int MAX_WAIT_TIME = 120;
+
+    /**
      * The timeout in seconds to use for making HTTP requests.
      */
     private final long timeout;
@@ -300,7 +305,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
         /**
          * Maximum retry wait time
          */
-        private long maximumRetryWaitTime = 120;
+        private long maximumRetryWaitTime = MAX_WAIT_TIME;
         /**
          * Should Retry on timeout
          */
@@ -317,6 +322,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
          * Skip Ssl certification
          */
         private boolean skipSslCertVerification;
+
         /**
          * Default Constructor to initiate builder with default properties.
          */

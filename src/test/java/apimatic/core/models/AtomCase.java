@@ -26,7 +26,7 @@ public class AtomCase {
     }
 
     @JsonCreator
-    private AtomCase(JsonNode jsonNode) throws IOException {
+    private AtomCase(final JsonNode jsonNode) throws IOException {
         this.atom = CoreHelper.deserialize(jsonNode, new TypeReference<Map<String, Atom>>() {});
     }
 

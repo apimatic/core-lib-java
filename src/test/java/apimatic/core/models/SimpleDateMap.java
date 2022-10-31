@@ -27,7 +27,7 @@ public class SimpleDateMap {
      * @param date List of LocalDate value for date.
      * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateMap(Map<String, LocalDate> date, Map<String, LocalDate> date1) {
+    public SimpleDateMap(final Map<String, LocalDate> date, final Map<String, LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
@@ -35,8 +35,8 @@ public class SimpleDateMap {
     /**
      * Internal initialization constructor.
      */
-    protected SimpleDateMap(OptionalNullable<Map<String, LocalDate>> date,
-            Map<String, LocalDate> date1) {
+    protected SimpleDateMap(final OptionalNullable<Map<String, LocalDate>> date,
+            final Map<String, LocalDate> date1) {
         this.date = date;
         this.date1 = date1;
     }

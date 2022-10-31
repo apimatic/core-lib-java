@@ -32,7 +32,8 @@ public class Evening {
      * @param offerDinner boolean value for offerDinner.
      * @param sessionType String value for sessionType.
      */
-    public Evening(String startsAt, String endsAt, boolean offerDinner, String sessionType) {
+    public Evening(final String startsAt, final String endsAt, boolean offerDinner,
+            final String sessionType) {
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.offerDinner = offerDinner;
@@ -152,7 +153,7 @@ public class Evening {
          * @param endsAt String value for endsAt.
          * @param offerDinner boolean value for offerDinner.
          */
-        public Builder(String startsAt, String endsAt, boolean offerDinner) {
+        public Builder(final String startsAt, final String endsAt, boolean offerDinner) {
             this.startsAt = startsAt;
             this.endsAt = endsAt;
             this.offerDinner = offerDinner;

@@ -48,8 +48,9 @@ public class Person extends BaseModel {
      * @param uid String value for uid.
      * @param personType String value for personType.
      */
-    public Person(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-            String name, String uid, String personType) {
+    public Person(final String address, long age, final LocalDate birthday,
+            final LocalDateTime birthtime, final String name, final String uid,
+            final String personType) {
         this.address = address;
         this.age = age;
         this.birthday = birthday;
@@ -239,8 +240,8 @@ public class Person extends BaseModel {
          * @param name String value for name.
          * @param uid String value for uid.
          */
-        public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-                String name, String uid) {
+        public Builder(final String address, long age, final LocalDate birthday,
+                final LocalDateTime birthtime, final String name, final String uid) {
             this.address = address;
             this.age = age;
             this.birthday = birthday;

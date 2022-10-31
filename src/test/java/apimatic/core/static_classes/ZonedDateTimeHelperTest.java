@@ -487,7 +487,7 @@ public class ZonedDateTimeHelperTest {
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actual = mapper.readValue(dateTime, ZonedDateTime.class);
         ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
-        
+
         assertEquals(actualGMT, expected);
     }
 
@@ -528,7 +528,7 @@ public class ZonedDateTimeHelperTest {
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actual = mapper.readValue(datetime, ZonedDateTime.class);;
         ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
-        
+
         assertEquals(actualGMT, expected);
     }
 

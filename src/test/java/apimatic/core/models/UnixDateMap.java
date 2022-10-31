@@ -27,7 +27,8 @@ public class UnixDateMap {
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
-    public UnixDateMap(Map<String, LocalDateTime> dateTime1, Map<String, LocalDateTime> dateTime) {
+    public UnixDateMap(final Map<String, LocalDateTime> dateTime1,
+            final Map<String, LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
@@ -35,8 +36,8 @@ public class UnixDateMap {
     /**
      * Internal initialization constructor.
      */
-    protected UnixDateMap(Map<String, LocalDateTime> dateTime1,
-            OptionalNullable<Map<String, LocalDateTime>> dateTime) {
+    protected UnixDateMap(final Map<String, LocalDateTime> dateTime1,
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
@@ -133,7 +134,7 @@ public class UnixDateMap {
          * Initialization constructor.
          * @param dateTime1 Map of String, value for dateTime1.
          */
-        public Builder(Map<String, LocalDateTime> dateTime1) {
+        public Builder(final Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

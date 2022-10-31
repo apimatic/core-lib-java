@@ -24,7 +24,7 @@ public class Car extends Vehicle {
      * @param haveTrunk boolean value for haveTrunk.
      */
     @JsonCreator
-    public Car(@JsonProperty("NumberOfTyres") String numberOfTyres,
+    public Car(@JsonProperty("NumberOfTyres") final String numberOfTyres,
             @JsonProperty("HaveTrunk") boolean haveTrunk) {
         super(numberOfTyres);
         this.haveTrunk = haveTrunk;
@@ -84,7 +84,7 @@ public class Car extends Vehicle {
          * @param numberOfTyres String value for numberOfTyres.
          * @param haveTrunk boolean value for haveTrunk.
          */
-        public Builder(String numberOfTyres, boolean haveTrunk) {
+        public Builder(final String numberOfTyres, boolean haveTrunk) {
             this.numberOfTyres = numberOfTyres;
             this.haveTrunk = haveTrunk;
         }

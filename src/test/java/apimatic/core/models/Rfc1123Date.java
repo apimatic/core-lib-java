@@ -26,7 +26,7 @@ public class Rfc1123Date {
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
      */
-    public Rfc1123Date(LocalDateTime dateTime1, LocalDateTime dateTime) {
+    public Rfc1123Date(final LocalDateTime dateTime1, final LocalDateTime dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
@@ -34,7 +34,8 @@ public class Rfc1123Date {
     /**
      * Internal initialization constructor.
      */
-    protected Rfc1123Date(LocalDateTime dateTime1, OptionalNullable<LocalDateTime> dateTime) {
+    protected Rfc1123Date(final LocalDateTime dateTime1,
+            final OptionalNullable<LocalDateTime> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
@@ -131,7 +132,7 @@ public class Rfc1123Date {
          * Initialization constructor.
          * @param dateTime1 LocalDateTime value for dateTime1.
          */
-        public Builder(LocalDateTime dateTime1) {
+        public Builder(final LocalDateTime dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

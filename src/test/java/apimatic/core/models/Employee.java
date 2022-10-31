@@ -56,10 +56,11 @@ public class Employee extends Person {
      * @param boss Person value for boss.
      * @param personType String value for personType.
      */
-    public Employee(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-            String name, String uid, String department, List<Person> dependents,
-            LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays, Person boss,
-            String personType) {
+    public Employee(final String address, long age, final LocalDate birthday,
+            final LocalDateTime birthtime, final String name, final String uid,
+            final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+            final Days joiningDay, int salary, final List<Days> workingDays, final Person boss,
+            final String personType) {
         super(address, age, birthday, birthtime, name, uid, personType);
         this.department = department;
         this.dependents = dependents;
@@ -265,10 +266,11 @@ public class Employee extends Person {
          * @param workingDays List of Days value for workingDays.
          * @param boss Person value for boss.
          */
-        public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-                String name, String uid, String department, List<Person> dependents,
-                LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays,
-                Person boss) {
+        public Builder(final String address, long age, final LocalDate birthday,
+                final LocalDateTime birthtime, final String name, final String uid,
+                final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+                final Days joiningDay, int salary, final List<Days> workingDays,
+                final Person boss) {
             this.address = address;
             this.age = age;
             this.birthday = birthday;

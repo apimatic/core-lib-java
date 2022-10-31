@@ -48,12 +48,13 @@ public class ChildClass extends ParentClass {
      * @param optional String value for optional.
      * @param childClassArray List of ChildClass value for childClassArray.
      */
-    public ChildClass(String grandParentRequiredNullable, String grandParentRequired,
-            String parentRequiredNullable, String parentRequired, String requiredNullable,
-            String required, String grandParentOptional, Integer mClass, Double precision,
-            BigDecimal bigDecimal, String parentOptionalNullableWithDefaultValue,
-            String parentOptional, String optionalNullable, String optionalNullableWithDefaultValue,
-            String optional, List<ChildClass> childClassArray) {
+    public ChildClass(final String grandParentRequiredNullable, final String grandParentRequired,
+            final String parentRequiredNullable, final String parentRequired,
+            final String requiredNullable, final String required, final String grandParentOptional,
+            final Integer mClass, final Double precision, final BigDecimal bigDecimal,
+            final String parentOptionalNullableWithDefaultValue, final String parentOptional,
+            final String optionalNullable, final String optionalNullableWithDefaultValue,
+            final String optional, final List<ChildClass> childClassArray) {
         super(grandParentRequiredNullable, grandParentRequired, parentRequiredNullable,
                 parentRequired, grandParentOptional, mClass, precision, bigDecimal,
                 parentOptionalNullableWithDefaultValue, parentOptional);
@@ -69,14 +70,15 @@ public class ChildClass extends ParentClass {
     /**
      * Internal initialization constructor.
      */
-    protected ChildClass(String grandParentRequiredNullable, String grandParentRequired,
-            String parentRequiredNullable, String parentRequired, String requiredNullable,
-            String required, String grandParentOptional, OptionalNullable<Integer> mClass,
-            OptionalNullable<Double> precision, OptionalNullable<BigDecimal> bigDecimal,
-            OptionalNullable<String> parentOptionalNullableWithDefaultValue, String parentOptional,
-            OptionalNullable<String> optionalNullable,
-            OptionalNullable<String> optionalNullableWithDefaultValue, String optional,
-            OptionalNullable<List<ChildClass>> childClassArray) {
+    protected ChildClass(final String grandParentRequiredNullable, final String grandParentRequired,
+            final String parentRequiredNullable, final String parentRequired,
+            final String requiredNullable, final String required, final String grandParentOptional,
+            final OptionalNullable<Integer> mClass, final OptionalNullable<Double> precision,
+            final OptionalNullable<BigDecimal> bigDecimal,
+            final OptionalNullable<String> parentOptionalNullableWithDefaultValue,
+            final String parentOptional, final OptionalNullable<String> optionalNullable,
+            final OptionalNullable<String> optionalNullableWithDefaultValue, final String optional,
+            final OptionalNullable<List<ChildClass>> childClassArray) {
         super(grandParentRequiredNullable, grandParentRequired, parentRequiredNullable,
                 parentRequired, grandParentOptional, mClass, precision, bigDecimal,
                 parentOptionalNullableWithDefaultValue, parentOptional);
@@ -296,6 +298,10 @@ public class ChildClass extends ParentClass {
      * Class to build instances of {@link ChildClass}.
      */
     public static class Builder {
+        /**
+         * Random number for child class builder
+         */
+        private static final int RANDOM_NUMBER = 23;
         private String grandParentRequiredNullable;
         private String grandParentRequired = "not nullable and required";
         private String parentRequiredNullable;
@@ -303,7 +309,7 @@ public class ChildClass extends ParentClass {
         private String requiredNullable;
         private String required = "not nullable and required";
         private String grandParentOptional;
-        private OptionalNullable<Integer> mClass = OptionalNullable.of(23);
+        private OptionalNullable<Integer> mClass = OptionalNullable.of(RANDOM_NUMBER);
         private OptionalNullable<Double> precision;
         private OptionalNullable<BigDecimal> bigDecimal;
         private OptionalNullable<String> parentOptionalNullableWithDefaultValue =
@@ -329,9 +335,9 @@ public class ChildClass extends ParentClass {
          * @param requiredNullable String value for requiredNullable.
          * @param required String value for required.
          */
-        public Builder(String grandParentRequiredNullable, String grandParentRequired,
-                String parentRequiredNullable, String parentRequired, String requiredNullable,
-                String required) {
+        public Builder(final String grandParentRequiredNullable, final String grandParentRequired,
+                final String parentRequiredNullable, final String parentRequired,
+                final String requiredNullable, final String required) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
             this.grandParentRequired = grandParentRequired;
             this.parentRequiredNullable = parentRequiredNullable;

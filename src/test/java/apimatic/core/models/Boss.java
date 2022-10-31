@@ -49,10 +49,11 @@ public class Boss extends Employee {
      * @param assistant Employee value for assistant.
      * @param personType String value for personType.
      */
-    public Boss(String address, long age, LocalDate birthday, LocalDateTime birthtime, String name,
-            String uid, String department, List<Person> dependents, LocalDateTime hiredAt,
-            Days joiningDay, int salary, List<Days> workingDays, Person boss,
-            LocalDateTime promotedAt, Employee assistant, String personType) {
+    public Boss(final String address, long age, final LocalDate birthday,
+            final LocalDateTime birthtime, final String name, final String uid,
+            final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+            final Days joiningDay, int salary, final List<Days> workingDays, final Person boss,
+            final LocalDateTime promotedAt, final Employee assistant, final String personType) {
         super(address, age, birthday, birthtime, name, uid, department, dependents, hiredAt,
                 joiningDay, salary, workingDays, boss, personType);
         this.promotedAt = promotedAt;
@@ -171,10 +172,11 @@ public class Boss extends Employee {
          * @param promotedAt LocalDateTime value for promotedAt.
          * @param assistant Employee value for assistant.
          */
-        public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-                String name, String uid, String department, List<Person> dependents,
-                LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays,
-                Person boss, LocalDateTime promotedAt, Employee assistant) {
+        public Builder(final String address, long age, final LocalDate birthday,
+                final LocalDateTime birthtime, final String name, final String uid,
+                final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+                final Days joiningDay, int salary, final List<Days> workingDays, final Person boss,
+                final LocalDateTime promotedAt, final Employee assistant) {
             this.address = address;
             this.age = age;
             this.birthday = birthday;

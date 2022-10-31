@@ -25,8 +25,8 @@ public class GrandParentClass {
      * @param grandParentRequired String value for grandParentRequired.
      * @param grandParentOptional String value for grandParentOptional.
      */
-    public GrandParentClass(String grandParentRequiredNullable, String grandParentRequired,
-            String grandParentOptional) {
+    public GrandParentClass(final String grandParentRequiredNullable,
+            final String grandParentRequired, final String grandParentOptional) {
         this.grandParentOptional = grandParentOptional;
         this.grandParentRequiredNullable = grandParentRequiredNullable;
         this.grandParentRequired = grandParentRequired;
@@ -128,7 +128,7 @@ public class GrandParentClass {
          * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
          * @param grandParentRequired String value for grandParentRequired.
          */
-        public Builder(String grandParentRequiredNullable, String grandParentRequired) {
+        public Builder(final String grandParentRequiredNullable, final String grandParentRequired) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
             this.grandParentRequired = grandParentRequired;
         }

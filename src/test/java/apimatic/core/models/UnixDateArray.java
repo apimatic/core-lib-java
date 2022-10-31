@@ -27,7 +27,7 @@ public class UnixDateArray {
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
      */
-    public UnixDateArray(List<LocalDateTime> dateTime1, List<LocalDateTime> dateTime) {
+    public UnixDateArray(final List<LocalDateTime> dateTime1, final List<LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
@@ -35,8 +35,8 @@ public class UnixDateArray {
     /**
      * Internal initialization constructor.
      */
-    protected UnixDateArray(List<LocalDateTime> dateTime1,
-            OptionalNullable<List<LocalDateTime>> dateTime) {
+    protected UnixDateArray(final List<LocalDateTime> dateTime1,
+            final OptionalNullable<List<LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
@@ -133,7 +133,7 @@ public class UnixDateArray {
          * Initialization constructor.
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          */
-        public Builder(List<LocalDateTime> dateTime1) {
+        public Builder(final List<LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

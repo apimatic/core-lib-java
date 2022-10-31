@@ -26,7 +26,7 @@ public class SimpleDate {
      * @param dateNullable LocalDate value for dateNullable.
      * @param date LocalDate value for date.
      */
-    public SimpleDate(LocalDate dateNullable, LocalDate date) {
+    public SimpleDate(final LocalDate dateNullable, final LocalDate date) {
         this.dateNullable = OptionalNullable.of(dateNullable);
         this.date = date;
     }
@@ -34,7 +34,7 @@ public class SimpleDate {
     /**
      * Internal initialization constructor.
      */
-    protected SimpleDate(OptionalNullable<LocalDate> dateNullable, LocalDate date) {
+    protected SimpleDate(final OptionalNullable<LocalDate> dateNullable, final LocalDate date) {
         this.dateNullable = dateNullable;
         this.date = date;
     }

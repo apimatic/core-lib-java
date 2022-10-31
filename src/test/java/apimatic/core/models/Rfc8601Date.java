@@ -26,7 +26,7 @@ public class Rfc8601Date {
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
      */
-    public Rfc8601Date(LocalDateTime dateTime1, LocalDateTime dateTime) {
+    public Rfc8601Date(final LocalDateTime dateTime1, final LocalDateTime dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
@@ -34,7 +34,8 @@ public class Rfc8601Date {
     /**
      * Internal initialization constructor.
      */
-    protected Rfc8601Date(LocalDateTime dateTime1, OptionalNullable<LocalDateTime> dateTime) {
+    protected Rfc8601Date(final LocalDateTime dateTime1,
+            final OptionalNullable<LocalDateTime> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
@@ -132,7 +133,7 @@ public class Rfc8601Date {
          * Initialization constructor.
          * @param dateTime1 LocalDateTime value for dateTime1.
          */
-        public Builder(LocalDateTime dateTime1) {
+        public Builder(final LocalDateTime dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

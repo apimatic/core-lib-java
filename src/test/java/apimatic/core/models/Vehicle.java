@@ -21,7 +21,7 @@ public class Vehicle {
      * @param numberOfTyres String value for numberOfTyres.
      */
     @JsonCreator
-    public Vehicle(@JsonProperty("NumberOfTyres") String numberOfTyres) {
+    public Vehicle(@JsonProperty("NumberOfTyres") final String numberOfTyres) {
         this.numberOfTyres = numberOfTyres;
     }
 
@@ -77,7 +77,7 @@ public class Vehicle {
          * Initialization constructor.
          * @param numberOfTyres String value for numberOfTyres.
          */
-        public Builder(String numberOfTyres) {
+        public Builder(final String numberOfTyres) {
             this.numberOfTyres = numberOfTyres;
         }
 

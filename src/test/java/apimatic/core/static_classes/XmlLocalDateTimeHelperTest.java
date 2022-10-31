@@ -70,8 +70,9 @@ public class XmlLocalDateTimeHelperTest {
 
     @Test
     public void testSerializeUnixTimeStamp() {
-        LocalDateTime localDateTime = TestDateTimeHelper.getLocalDateTimeFromGMT(
-                ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime localDateTime =
+                TestDateTimeHelper.getLocalDateTimeFromGMT(
+                        ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
         String rootName = "XmlRootName";
 
         // stub
@@ -86,8 +87,9 @@ public class XmlLocalDateTimeHelperTest {
         String dateTime = "<XmlRootName>963450600</XmlRootName>";
 
         // stub
-        LocalDateTime expected = TestDateTimeHelper.getLocalDateTimeFromGMT(
-                ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime expected =
+                TestDateTimeHelper.getLocalDateTimeFromGMT(
+                        ZonedDateTime.of(2000, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime actual = XmlLocalDateTimeHelper.deserializeUnixTimeStamp(dateTime);
 
         assertEquals(actual, expected);

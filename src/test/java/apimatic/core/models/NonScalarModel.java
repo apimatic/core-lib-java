@@ -24,14 +24,15 @@ public class NonScalarModel {
      * Initialization constructor.
      * @param outerMap Map of String, value for outerMap.
      */
-    public NonScalarModel(Map<String, NonScalarModelOuterMap> outerMap) {
+    public NonScalarModel(final Map<String, NonScalarModelOuterMap> outerMap) {
         this.outerMap = OptionalNullable.of(outerMap);
     }
 
     /**
      * Internal initialization constructor.
+     * @param outerMap Map of String, value for outerMap.
      */
-    protected NonScalarModel(OptionalNullable<Map<String, NonScalarModelOuterMap>> outerMap) {
+    protected NonScalarModel(final OptionalNullable<Map<String, NonScalarModelOuterMap>> outerMap) {
         this.outerMap = outerMap;
     }
 
@@ -111,7 +112,7 @@ public class NonScalarModel {
          * @param outerMap Map of String, value for outerMap.
          * @return Builder
          */
-        public Builder outerMap(Map<String, NonScalarModelOuterMap> outerMap) {
+        public Builder outerMap(final Map<String, NonScalarModelOuterMap> outerMap) {
             this.outerMap = OptionalNullable.of(outerMap);
             return this;
         }

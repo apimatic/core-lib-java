@@ -20,13 +20,13 @@ public class VehicleCase {
     @JsonValue
     private List<Vehicle> vehicle;
 
-    VehicleCase(List<Vehicle> vehicle) {
+    VehicleCase(final List<Vehicle> vehicle) {
         this.vehicle = vehicle;
     }
 
 
     @JsonCreator
-    private VehicleCase(JsonNode jsonNode) throws IOException {
+    private VehicleCase(final JsonNode jsonNode) throws IOException {
         this.vehicle = CoreHelper.deserializeArray(jsonNode, Vehicle[].class);
     }
 

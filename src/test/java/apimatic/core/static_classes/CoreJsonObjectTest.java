@@ -39,9 +39,10 @@ public class CoreJsonObjectTest {
 
     @Test
     public void testGetStoredObject() throws IOException {
-        String value = "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
-                + "\" : \"090078601\",\"first name\" : \"Adeel\",\"last name\" : \"Ali\","
-                + "\"address_boss\" : \"nust\"}";
+        String value =
+                "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
+                        + "\" : \"090078601\",\"first name\" : \"Adeel\",\"last name\" : \"Ali\","
+                        + "\"address_boss\" : \"nust\"}";
 
         // stub
         String expected =

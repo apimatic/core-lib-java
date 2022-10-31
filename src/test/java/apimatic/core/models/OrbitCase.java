@@ -19,13 +19,13 @@ public class OrbitCase {
     @JsonValue
     private Orbit orbit;
 
-    OrbitCase(Orbit orbit) {
+    OrbitCase(final Orbit orbit) {
         this.orbit = orbit;
     }
 
 
     @JsonCreator
-    private OrbitCase(JsonNode jsonNode) throws IOException {
+    private OrbitCase(final JsonNode jsonNode) throws IOException {
         this.orbit = CoreHelper.deserialize(jsonNode, Orbit.class);
     }
 

@@ -19,7 +19,7 @@ public class DateTimeCases {
     /**
      * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
      */
-    public DateTimeCases(DateTimeCasesMapvsArray mapvsArray) {
+    public DateTimeCases(final DateTimeCasesMapvsArray mapvsArray) {
         this.mapvsArray = mapvsArray;
     }
 
@@ -74,13 +74,9 @@ public class DateTimeCases {
 
         /**
          * Initialization constructor.
-         * @param rfc3339vsString DateTimeCasesRfc3339vsString value for rfc3339vsString.
-         * @param allOneOf DateTimeCasesAllOneOf value for allOneOf.
-         * @param allOuterArray List of DateTimeCasesAllOuterArray value for allOuterArray.
-         * @param datevsArray DateTimeCasesDatevsArray value for datevsArray.
          * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
          */
-        public Builder(DateTimeCasesMapvsArray mapvsArray) {
+        public Builder(final DateTimeCasesMapvsArray mapvsArray) {
             this.mapvsArray = mapvsArray;
         }
 

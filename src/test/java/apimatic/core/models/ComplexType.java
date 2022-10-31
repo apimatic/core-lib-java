@@ -26,8 +26,9 @@ public class ComplexType {
      * @param innerComplexType InnerComplexType value for innerComplexType.
      * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
      */
-    public ComplexType(List<Integer> numberListType, Map<String, Integer> numberMapType,
-            InnerComplexType innerComplexType, List<InnerComplexType> innerComplexListType) {
+    public ComplexType(final List<Integer> numberListType, final Map<String, Integer> numberMapType,
+            final InnerComplexType innerComplexType,
+            final List<InnerComplexType> innerComplexListType) {
         this.numberListType = numberListType;
         this.numberMapType = numberMapType;
         this.innerComplexType = innerComplexType;
@@ -149,8 +150,9 @@ public class ComplexType {
          * @param innerComplexType InnerComplexType value for innerComplexType.
          * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
          */
-        public Builder(List<Integer> numberListType, Map<String, Integer> numberMapType,
-                InnerComplexType innerComplexType, List<InnerComplexType> innerComplexListType) {
+        public Builder(final List<Integer> numberListType, final Map<String, Integer> numberMapType,
+                final InnerComplexType innerComplexType,
+                final List<InnerComplexType> innerComplexListType) {
             this.numberListType = numberListType;
             this.numberMapType = numberMapType;
             this.innerComplexType = innerComplexType;

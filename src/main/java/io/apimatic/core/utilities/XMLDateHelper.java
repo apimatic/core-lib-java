@@ -13,7 +13,7 @@ public class XMLDateHelper {
      * Serialize the simple date
      * @param dateObj An instance of {@link LocalDate}
      * @param rootName The root name of XML block
-     * @return
+     * @return A XML string
      */
     public static String serializeSimpleDate(LocalDate dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";

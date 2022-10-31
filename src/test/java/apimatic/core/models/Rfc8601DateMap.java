@@ -27,8 +27,8 @@ public class Rfc8601DateMap {
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
-    public Rfc8601DateMap(Map<String, LocalDateTime> dateTime1,
-            Map<String, LocalDateTime> dateTime) {
+    public Rfc8601DateMap(final Map<String, LocalDateTime> dateTime1,
+            final Map<String, LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
@@ -36,8 +36,8 @@ public class Rfc8601DateMap {
     /**
      * Internal initialization constructor.
      */
-    protected Rfc8601DateMap(Map<String, LocalDateTime> dateTime1,
-            OptionalNullable<Map<String, LocalDateTime>> dateTime) {
+    protected Rfc8601DateMap(final Map<String, LocalDateTime> dateTime1,
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
@@ -134,7 +134,7 @@ public class Rfc8601DateMap {
          * Initialization constructor.
          * @param dateTime1 Map of String, value for dateTime1.
          */
-        public Builder(Map<String, LocalDateTime> dateTime1) {
+        public Builder(final Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

@@ -18,7 +18,7 @@ public class DeleteBody extends BaseModel {
      * @param name String value for name.
      * @param field String value for field.
      */
-    public DeleteBody(String name, String field) {
+    public DeleteBody(final String name, final String field) {
         this.name = name;
         this.field = field;
     }
@@ -96,7 +96,7 @@ public class DeleteBody extends BaseModel {
          * @param name String value for name.
          * @param field String value for field.
          */
-        public Builder(String name, String field) {
+        public Builder(final String name, final String field) {
             this.name = name;
             this.field = field;
         }

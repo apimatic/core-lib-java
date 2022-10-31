@@ -19,12 +19,12 @@ public class CarCase {
     @JsonValue
     private Car car;
 
-    CarCase(Car car) {
+    CarCase(final Car car) {
         this.car = car;
     }
 
     @JsonCreator
-    private CarCase(JsonNode jsonNode) throws IOException {
+    private CarCase(final JsonNode jsonNode) throws IOException {
         this.car = CoreHelper.deserialize(jsonNode, Car.class);
     }
 

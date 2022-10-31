@@ -8,18 +8,39 @@ import java.util.TreeMap;
  * Days to be used.
  */
 public enum Days {
+    /**
+     * Sunday
+     */
     SUNDAY,
 
+    /**
+     * Monday
+     */
     MONDAY,
 
+    /**
+     * Tuesday
+     */
     TUESDAY,
 
+    /**
+     * Wednesday
+     */
     WEDNESDAY_,
 
+    /**
+     * Thursday
+     */
     THURSDAY,
 
+    /**
+     * Friday
+     */
     FRI_DAY,
 
+    /**
+     * Saturday
+     */
     SATURDAY;
 
 

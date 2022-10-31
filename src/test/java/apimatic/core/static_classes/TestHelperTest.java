@@ -28,12 +28,13 @@ public class TestHelperTest {
     @Test
     public void testIsJsonProperSubsetOf() throws IOException {
         String leftObject = "{\"passed\":true}";
-        String rightObject = "{\"passed\":true,\"message\":\"OK\",\"input\":"
-                + "{\"path\":\"/query/rfc1123datetimearray?datetimes[0]=Sun%2C+06+Nov+1994+08%3A49%3A37+GMT&datetimes[1]="
-                + "Sun%2C+06+Nov+1994+08%3A49%3A37+GMT\",\"query\":{\"datetimes\":[\"Sun, 06 Nov 1994 08:49:37 GMT\","
-                + "\"Sun, 06 Nov 1994 08:49:37 GMT\"]},\"headers\":{\"accept\":\"application/json\","
-                + "\"host\":\"localhost:3000\",\"connection\":\"Keep-Alive\",\"accept-encoding\":\"gzip\","
-                + "\"user-agent\":\"okhttp/4.9.1\"},\"method\":\"GET\",\"body\":{},\"uploadCount\":0}}";
+        String rightObject =
+                "{\"passed\":true,\"message\":\"OK\",\"input\":"
+                        + "{\"path\":\"/query/rfc1123datetimearray?datetimes[0]=Sun%2C+06+Nov+1994+08%3A49%3A37+GMT&datetimes[1]="
+                        + "Sun%2C+06+Nov+1994+08%3A49%3A37+GMT\",\"query\":{\"datetimes\":[\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"]},\"headers\":{\"accept\":\"application/json\","
+                        + "\"host\":\"localhost:3000\",\"connection\":\"Keep-Alive\",\"accept-encoding\":\"gzip\","
+                        + "\"user-agent\":\"okhttp/4.9.1\"},\"method\":\"GET\",\"body\":{},\"uploadCount\":0}}";
         boolean actual =
                 TestHelper.isJsonObjectProperSubsetOf(leftObject, rightObject, true, true, false);
         assertTrue(actual);
@@ -85,67 +86,69 @@ public class TestHelperTest {
 
     @Test
     public void testIsJsonProperSubsetOf1() throws IOException {
-        String leftObject = "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":\"some string\","
-                + "\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":[23,23]},"
-                + "\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
-                + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":"
-                + "[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}]"
-                + ",\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":false,\"key2\":true}"
-                + ",{\"key1\":false,\"key2\":true}],\"key2\":[{\"key1\":"
-                + "{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},"
-                + "\"outerArrayOfMap\":[{\"key1\":{\"NumberOfTyres\":\"4\","
-                + "\"HaveTrunk\":true},\"key2\":\"some string\"},{\"key1\":"
-                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true},\"key2\":"
-                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}}],"
-                + "\"outerArrayOfMap2\":[{\"key1\":[{\"NumberOfTyres\":\"4\","
-                + "\"HaveTrunk\":true},{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],"
-                + "\"key2\":[\"some string\",\"some string\"]},{\"key1\":"
-                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],\"key2\":"
-                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]}],"
-                + "\"outerMapOfArray\":{\"key1\":[{\"name\":\"Shahid Khaliq\","
-                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
-                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
-                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},12.3],"
-                + "\"key2\":[12.3,12.3]},\"outerMapOfArray2\":{\"key1\":"
-                + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"name\":\"Shahid Khaliq\","
-                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
-                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
-                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}],"
-                + "\"key2\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
-                + "{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
-                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
-                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},"
-                + "\"key2\":{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
-                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
-                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}]}}";
-        String rightObject = "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":"
-                + "\"some string\",\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":"
-                + "[23,23]},\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
-                + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":[{\"key1\":false,"
-                + "\"key2\":true},{\"key1\":false,\"key2\":true}],\"allInnerArrayOfMap2\":"
-                + "{\"key1\":[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}],"
-                + "\"key2\":[{\"key1\":{\"NumberOfTyres\":\"4\"},\"key2\":"
-                + "{\"NumberOfTyres\":\"4\"}}]},\"outerArrayOfMap\":[{\"key1\":"
-                + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":\"some string\"},"
-                + "{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":"
-                + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}}],\"outerArrayOfMap2\":"
-                + "[{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},"
-                + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":"
-                + "[\"some string\",\"some string\"]},{\"key1\":[{\"HaveTrunk\":true,"
-                + "\"NumberOfTyres\":\"4\"}],\"key2\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}]}],"
-                + "\"outerMapOfArray\":{\"key1\":[{\"address\":\"H # 531, S # 20\",\"age\":5147483645,"
-                + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"name\":"
-                + "\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"},12.3],\"key2\":[12.3,12.3]},"
-                + "\"outerMapOfArray2\":{\"key1\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
-                + "{\"address\":\"H # 531, S # 20\",\"age\":5147483645,\"birthday\":"
-                + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"name\":"
-                + "\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"}}],\"key2\":"
-                + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"address\":\"H # 531, S # 20\","
-                + "\"age\":5147483645,\"birthday\":\"1994-02-13\",\"birthtime\":"
-                + "\"1994-02-13T14:01:54+00:00\",\"name\":\"Shahid Khaliq\",\"uid\":\"123321\","
-                + "\"personType\":\"Per\"},\"key2\":{\"address\":\"H # 531, S # 20\","
-                + "\"age\":5147483645,\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\","
-                + "\"name\":\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"}}]}}";
+        String leftObject =
+                "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":\"some string\","
+                        + "\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":[23,23]},"
+                        + "\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
+                        + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":"
+                        + "[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}]"
+                        + ",\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":false,\"key2\":true}"
+                        + ",{\"key1\":false,\"key2\":true}],\"key2\":[{\"key1\":"
+                        + "{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},"
+                        + "\"outerArrayOfMap\":[{\"key1\":{\"NumberOfTyres\":\"4\","
+                        + "\"HaveTrunk\":true},\"key2\":\"some string\"},{\"key1\":"
+                        + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true},\"key2\":"
+                        + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}}],"
+                        + "\"outerArrayOfMap2\":[{\"key1\":[{\"NumberOfTyres\":\"4\","
+                        + "\"HaveTrunk\":true},{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],"
+                        + "\"key2\":[\"some string\",\"some string\"]},{\"key1\":"
+                        + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],\"key2\":"
+                        + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]}],"
+                        + "\"outerMapOfArray\":{\"key1\":[{\"name\":\"Shahid Khaliq\","
+                        + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                        + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                        + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},12.3],"
+                        + "\"key2\":[12.3,12.3]},\"outerMapOfArray2\":{\"key1\":"
+                        + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"name\":\"Shahid Khaliq\","
+                        + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                        + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                        + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}],"
+                        + "\"key2\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
+                        + "{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                        + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                        + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},"
+                        + "\"key2\":{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                        + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                        + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}]}}";
+        String rightObject =
+                "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":"
+                        + "\"some string\",\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":"
+                        + "[23,23]},\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
+                        + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":[{\"key1\":false,"
+                        + "\"key2\":true},{\"key1\":false,\"key2\":true}],\"allInnerArrayOfMap2\":"
+                        + "{\"key1\":[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}],"
+                        + "\"key2\":[{\"key1\":{\"NumberOfTyres\":\"4\"},\"key2\":"
+                        + "{\"NumberOfTyres\":\"4\"}}]},\"outerArrayOfMap\":[{\"key1\":"
+                        + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":\"some string\"},"
+                        + "{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":"
+                        + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}}],\"outerArrayOfMap2\":"
+                        + "[{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},"
+                        + "{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":"
+                        + "[\"some string\",\"some string\"]},{\"key1\":[{\"HaveTrunk\":true,"
+                        + "\"NumberOfTyres\":\"4\"}],\"key2\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}]}],"
+                        + "\"outerMapOfArray\":{\"key1\":[{\"address\":\"H # 531, S # 20\",\"age\":5147483645,"
+                        + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"name\":"
+                        + "\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"},12.3],\"key2\":[12.3,12.3]},"
+                        + "\"outerMapOfArray2\":{\"key1\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
+                        + "{\"address\":\"H # 531, S # 20\",\"age\":5147483645,\"birthday\":"
+                        + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"name\":"
+                        + "\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"}}],\"key2\":"
+                        + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"address\":\"H # 531, S # 20\","
+                        + "\"age\":5147483645,\"birthday\":\"1994-02-13\",\"birthtime\":"
+                        + "\"1994-02-13T14:01:54+00:00\",\"name\":\"Shahid Khaliq\",\"uid\":\"123321\","
+                        + "\"personType\":\"Per\"},\"key2\":{\"address\":\"H # 531, S # 20\","
+                        + "\"age\":5147483645,\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54+00:00\","
+                        + "\"name\":\"Shahid Khaliq\",\"uid\":\"123321\",\"personType\":\"Per\"}}]}}";
         boolean actual =
                 TestHelper.isJsonObjectProperSubsetOf(leftObject, rightObject, true, true, false);
         assertTrue(actual);
@@ -153,39 +156,40 @@ public class TestHelperTest {
 
     @Test
     public void testIsJsonProperSubsetOf2() throws IOException {
-        String leftObject = "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":\"some string\","
-                + "\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":[23,23]},"
-                + "\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
-                + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":"
-                + "[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}]"
-                + ",\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":false,\"key2\":true}"
-                + ",{\"key1\":false,\"key2\":true}],\"key2\":[{\"key1\":"
-                + "{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},"
-                + "\"outerArrayOfMap\":[{\"key1\":{\"NumberOfTyres\":\"4\","
-                + "\"HaveTrunk\":true},\"key2\":\"some string\"},{\"key1\":"
-                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true},\"key2\":"
-                + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}}],"
-                + "\"outerArrayOfMap2\":[{\"key1\":[{\"NumberOfTyres\":\"4\","
-                + "\"HaveTrunk\":true},{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],"
-                + "\"key2\":[\"some string\",\"some string\"]},{\"key1\":"
-                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],\"key2\":"
-                + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]}],"
-                + "\"outerMapOfArray\":{\"key1\":[{\"name\":\"Shahid Khaliq\","
-                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
-                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
-                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},12.3],"
-                + "\"key2\":[12.3,12.3]},\"outerMapOfArray2\":{\"key1\":"
-                + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"name\":\"Shahid Khaliq\","
-                + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
-                + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
-                + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}],"
-                + "\"key2\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
-                + "{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
-                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
-                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},"
-                + "\"key2\":{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
-                + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
-                + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}]}}";
+        String leftObject =
+                "{\"multiAnyOf\":\"some string\",\"multiOneOfAnyOf\":\"some string\","
+                        + "\"singleInnerMapOfArray\":{\"key1\":[23,23],\"key2\":[23,23]},"
+                        + "\"outerMapOfSingleInnerArray\":{\"key1\":[23,23],\"key2\":"
+                        + "{\"NumberOfElectrons\":4}},\"allInnerArrayOfMap\":"
+                        + "[{\"key1\":false,\"key2\":true},{\"key1\":false,\"key2\":true}]"
+                        + ",\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":false,\"key2\":true}"
+                        + ",{\"key1\":false,\"key2\":true}],\"key2\":[{\"key1\":"
+                        + "{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},"
+                        + "\"outerArrayOfMap\":[{\"key1\":{\"NumberOfTyres\":\"4\","
+                        + "\"HaveTrunk\":true},\"key2\":\"some string\"},{\"key1\":"
+                        + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true},\"key2\":"
+                        + "{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}}],"
+                        + "\"outerArrayOfMap2\":[{\"key1\":[{\"NumberOfTyres\":\"4\","
+                        + "\"HaveTrunk\":true},{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],"
+                        + "\"key2\":[\"some string\",\"some string\"]},{\"key1\":"
+                        + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}],\"key2\":"
+                        + "[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]}],"
+                        + "\"outerMapOfArray\":{\"key1\":[{\"name\":\"Shahid Khaliq\","
+                        + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                        + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                        + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},12.3],"
+                        + "\"key2\":[12.3,12.3]},\"outerMapOfArray2\":{\"key1\":"
+                        + "[{\"key1\":12.3,\"key2\":12.3},{\"key1\":{\"name\":\"Shahid Khaliq\","
+                        + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
+                        + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
+                        + "\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}],"
+                        + "\"key2\":[{\"key1\":12.3,\"key2\":12.3},{\"key1\":"
+                        + "{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                        + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                        + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"},"
+                        + "\"key2\":{\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
+                        + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
+                        + "\"birthtime\":\"1994-02-13T14:01:54+00:00\",\"personType\":\"Per\"}}]}}";
         String rightObject =
                 "{\"multiAnyOf\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"multiOneOfAnyOf\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"singleInnerMapOfArray\":{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],\"key2\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}]},\"outerMapOfSingleInnerArray\":{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}},\"allInnerArrayOfMap\":[{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}},{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}}],\"allInnerArrayOfMap2\":{\"key1\":[{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}},{\"key1\":{\"NumberOfElectrons\":4},\"key2\":{\"NumberOfElectrons\":4}}],\"key2\":[{\"key1\":{\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfTyres\":\"4\"}}]},\"outerArrayOfMap\":[{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}},{\"key1\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},\"key2\":{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}}],\"outerArrayOfMap2\":[{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}]},{\"key1\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}],\"key2\":[{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"},{\"HaveTrunk\":true,\"NumberOfTyres\":\"4\"}]}],\"outerMapOfArray\":{\"key1\":[{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"},{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}],\"key2\":[{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"},{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}]},\"outerMapOfArray2\":{\"key1\":[{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"}},{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}],\"key2\":[{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerDinner\":true,\"sessionType\":\"Evening\"}},{\"key1\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\",\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}]}}";
         boolean actual =
@@ -247,8 +251,9 @@ public class TestHelperTest {
                         + "\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\","
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"boss\":{\"personType\":\"Boss\",\"name\":\"Zeeshan Ejaz\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
-        boolean actual = TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject,
-                true, true, false);
+        boolean actual =
+                TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, true, true,
+                        false);
         assertTrue(actual);
     }
 
@@ -283,8 +288,9 @@ public class TestHelperTest {
                         + "\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\","
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"boss\":{\"personType\":\"Boss\",\"name\":\"Zeeshan Ejaz\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
-        boolean actual = TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject,
-                false, false, false);
+        boolean actual =
+                TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, false,
+                        false);
         assertTrue(actual);
     }
 
@@ -319,8 +325,9 @@ public class TestHelperTest {
                         + "\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\","
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"boss\":{\"personType\":\"Boss\",\"name\":\"Zeeshan Ejaz\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
-        boolean actual = TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject,
-                false, false, true);
+        boolean actual =
+                TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, false,
+                        true);
         assertTrue(actual);
     }
 
@@ -355,8 +362,9 @@ public class TestHelperTest {
                         + "\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\","
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"boss\":{\"personType\":\"Boss\",\"name\":\"Zeeshan Ejaz\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":\"Software Development\",\"joiningDay\":\"Saturday\",\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
-        boolean actual = TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject,
-                false, true, true);
+        boolean actual =
+                TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, true,
+                        true);
         assertTrue(actual);
     }
 
