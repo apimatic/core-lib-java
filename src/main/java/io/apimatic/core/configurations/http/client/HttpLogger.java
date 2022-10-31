@@ -60,7 +60,7 @@ public class HttpLogger implements ApiLogger {
         this.logger = logger;
         this.config = config;
         @SuppressWarnings("serial")
-        ObjectMapper mapper = new ObjectMapper(CoreHelper.mapper) {};
+        ObjectMapper mapper = new ObjectMapper(CoreHelper.getMapper()) {};
         mapper.addMixIn(CoreFileWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartFileWrapper.class, LoggingMixIn.class);

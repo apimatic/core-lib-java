@@ -66,10 +66,6 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
  */
 public final class CoreHelper {
 
-    private CoreHelper() {
-        throw new IllegalStateException("Utility class");
-    }
-
     /**
      * A string of user agent
      */
@@ -93,7 +89,7 @@ public final class CoreHelper {
     /**
      * Deserialization of Json data
      */
-    public static ObjectMapper mapper =
+    private static ObjectMapper mapper =
             JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .withConfigOverride(BigDecimal.class,
                             mutableConfigOverride -> mutableConfigOverride
@@ -103,7 +99,7 @@ public final class CoreHelper {
     /**
      * Strict Deserialization of Json data
      */
-    public static ObjectMapper strictMapper =
+    private static ObjectMapper strictMapper =
             JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
                     .configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false)
@@ -113,6 +109,9 @@ public final class CoreHelper {
                             mutableConfigOverride -> mutableConfigOverride
                                     .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
                     .build();
+
+    private CoreHelper() {}
+
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
@@ -164,6 +163,24 @@ public final class CoreHelper {
         } catch (Exception e) {
             return null;
         }
+    }
+
+
+    /**
+     * Deserialization of Json data
+     * @return {@link ObjectMapper}
+     */
+    public static ObjectMapper getMapper() {
+        return mapper;
+    }
+
+
+    /**
+     * Strict Deserialization of Json data
+     * @return {@link ObjectMapper}
+     */
+    public static ObjectMapper getStrictMapper() {
+        return strictMapper;
     }
 
     /**

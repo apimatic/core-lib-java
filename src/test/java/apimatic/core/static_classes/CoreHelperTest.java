@@ -84,7 +84,15 @@ public class CoreHelperTest {
                     + "</arrayOfModels>\r\n" + "";
 
     private static final String JSON_OBJECT =
-            "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson.schema.json&operations[$schema]=https%3A%2F%2Fjson-schema.org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations[type]=object&operations[properties][firstName][type]=string&operations[properties][firstName][description]=The+person%27s+first+name.&operations[properties][lastName][type]=string&operations[properties][lastName][description]=The+person%27s+last+name.&operations[properties][age][type]=integer&operations[properties][age][description]=Age+in+years&operations[properties][age][minimum]=0";
+            "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson."
+                    + "schema.json&operations[$schema]=https%3A%2F%2Fjson-schema"
+                    + ".org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations"
+                    + "[type]=object&operations[properties][firstName][type]=string&operations"
+                    + "[properties][firstName][description]=The+person%27s+first+name.&"
+                    + "operations[properties][lastName][type]=string&operations[properties]"
+                    + "[lastName][description]=The+person%27s+last+name.&operations"
+                    + "[properties][age][type]=integer&operations[properties][age][description]"
+                    + "=Age+in+years&operations[properties][age][minimum]=0";
     private static final String JSON_VALUE =
             "https://localhost:3000/query?operations=test-JsonValue";
 
@@ -360,16 +368,25 @@ public class CoreHelperTest {
     public void testptionalNullable() throws IOException {
         ChildClass child =
                 CoreHelper.deserialize(
-                        "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable "
-                                + "and required\",\"class\":23,\"Parent_Optional_Nullable_With_Default_Value\":\"Ha"
-                                + "s default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nu"
-                                + "llable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Defaul"
-                                + "t_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not n"
-                                + "ullable and required\",\"Child_Class_Array\":null}",
+                        "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":"
+                                + "\"not nullable and required\",\"class\":23,\""
+                                + "Parent_Optional_Nullable_With_Default_Value\":"
+                                + "\"Has default value\",\"Parent_Required_Nullable\""
+                                + ":null,\"Parent_Required\":\"not nullable and required\","
+                                + "\"Optional_Nullable\":null,\"Optional_Nullable_"
+                                + "With_Default_Value\":\"With default value\",\""
+                                + "Required_Nullable\":null,\"Required\":\"not "
+                                + "nullable and required\",\"Child_Class_Array\":null}",
                         ChildClass.class);
 
         String expected =
-                "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":\"not nullable and required\",\"Parent_Optional_Nullable_With_Default_Value\":\"Has default value\",\"Parent_Required_Nullable\":null,\"Parent_Required\":\"not nullable and required\",\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":\"With default value\",\"Required_Nullable\":null,\"Required\":\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
+                "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":"
+                        + "\"not nullable and required\",\"Parent_Optional_Nullable_With_"
+                        + "Default_Value\":\"Has default value\",\"Parent_Required_Nullable"
+                        + "\":null,\"Parent_Required\":\"not nullable and required\","
+                        + "\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":"
+                        + "\"With default value\",\"Required_Nullable\":null,\"Required\":"
+                        + "\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
 
         String actual = CoreHelper.serialize(child);
         assertEquals(actual, expected);
@@ -830,7 +847,8 @@ public class CoreHelperTest {
 
     @Test
     public void testUnixTimeStampSerializerNull() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(YEAR1, MONTH1, DAY1, XML_NO_OF_ELEMENT, MINUTES);
+        LocalDateTime localDateTime =
+                LocalDateTime.of(YEAR1, MONTH1, DAY1, XML_NO_OF_ELEMENT, MINUTES);
         JsonSerializer<?> serializer = null;
         String actual = CoreHelper.serialize(localDateTime, serializer);
 
@@ -952,7 +970,8 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeOneOf() throws IOException {
         String json =
-                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
+                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
+                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
 
@@ -1079,7 +1098,8 @@ public class CoreHelperTest {
 
     @Test
     public void testTypeCombinatorSerializationInteger() throws JsonProcessingException {
-        SendScalarParamBody body = SendScalarParamBody.fromPrecision(Arrays.asList(PRECISION_NUMBER));
+        SendScalarParamBody body =
+                SendScalarParamBody.fromPrecision(Arrays.asList(PRECISION_NUMBER));
         String expected = "[1.2]";
         String actual = CoreHelper.serializeTypeCombinator(body);
         assertEquals(actual, expected);
@@ -1245,8 +1265,8 @@ public class CoreHelperTest {
     @Test
     public void testFormSerializationAnnotation() throws IOException {
         List<SendParamsFormDateTime> formDateTime = new ArrayList<>();
-        formDateTime.add(
-                SendParamsFormDateTime.fromDateTime(LocalDateTime.of(YEAR2, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1)));
+        formDateTime.add(SendParamsFormDateTime
+                .fromDateTime(LocalDateTime.of(YEAR2, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1)));
         formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(YEAR3, MONTH2, DAY1)));
         formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(YEAR3, MONTH2, DAY1)));
 
@@ -1261,9 +1281,10 @@ public class CoreHelperTest {
     @Test
     public void testFormSerializationAnnotation1() throws IOException {
         List<Person> formDateTime = new ArrayList<>();
-        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(YEAR3, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
-                .build());
-        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(YEAR2010, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
+        formDateTime.add(new Person.Builder()
+                .birthtime(LocalDateTime.of(YEAR3, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1)).build());
+        formDateTime.add(new Person.Builder()
+                .birthtime(LocalDateTime.of(YEAR2010, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
                 .build());
 
         Map<String, Object> formParameters = new HashMap<>();
@@ -1278,7 +1299,8 @@ public class CoreHelperTest {
     public void testSerializeXMLArray() throws IOException {
         String expected = XML_ARRAY.replace("\r\n", "");
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
+                        XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> attributesAndElements = new ArrayList<>();
         attributesAndElements.add(elements);
         String actual =
@@ -1293,7 +1315,8 @@ public class CoreHelperTest {
     public void testSerializeXML() throws IOException {
         String expected = XML.replace("\r\n", "");
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
+                        XML_NO_OF_ELEMENT).build();
 
         String actual =
                 CoreHelper.serializeXml(elements, "arrayOfModels", AttributesAndElements.class);
@@ -1303,7 +1326,8 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeXML() throws IOException {
         AttributesAndElements expected =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
+                        XML_NO_OF_ELEMENT).build();
 
         AttributesAndElements actual = CoreHelper.deserializeXml(XML, AttributesAndElements.class);
         assertEquals(actual.getNumberAttr(), expected.getNumberAttr());
@@ -1315,7 +1339,8 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeXMLArray() throws IOException {
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
+                        XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> expected = new ArrayList<>();
         expected.add(elements);
 
@@ -1345,12 +1370,14 @@ public class CoreHelperTest {
     public void testJSonObjectDeserialization() throws IOException {
         CoreJsonObject body =
                 CoreJsonObject.fromJsonString(
-                        "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":\"https://json-sch"
-                                + "ema.org/draft/2020-12/schema\",\"title\":\"Person\",\"type\":\"object\",\"proper"
-                                + "ties\":{\"firstName\":{\"type\":\"string\",\"description\":\"The person's first "
-                                + "name.\"},\"lastName\":{\"type\":\"string\",\"description\":\"The person's last n"
-                                + "ame.\",\"test\":null},\"age\":{\"type\":\"integer\",\"description\":\"Age in yea"
-                                + "rs\",\"minimum\":0}}}");
+                        "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":"
+                                + "\"https://json-schema.org/draft/2020-12/schema\",\"title\":"
+                                + "\"Person\",\"type\":\"object\",\"properties\":"
+                                + "{\"firstName\":{\"type\":\"string\",\"description\":"
+                                + "\"The person's first name.\"},\"lastName\":"
+                                + "{\"type\":\"string\",\"description\":\"The person's last n"
+                                + "ame.\",\"test\":null},\"age\":{\"type\":\"integer\","
+                                + "\"description\":\"Age in years\",\"minimum\":0}}}");
         String baseUri = "https://localhost:3000";
         StringBuilder queryBuilder = new StringBuilder(baseUri + "/query");
 
@@ -1383,34 +1410,49 @@ public class CoreHelperTest {
     private Map<String, ComplexType> getComplexType() throws IOException {
         Map<String, ComplexType> complexType =
                 CoreHelper.deserialize(
-                        "{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":{\"num1\":1,\"num3"
-                                + "\":2,\"num2\":3},\"innerComplexType\":{\"stringType\":\"MyString1\",\"booleanTyp"
-                                + "e\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\","
-                                + "\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longType\":500000000,\"p"
-                                + "recisionType\":5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000},"
-                                + "\"stringListType\":[\"Item1\",\"Item2\"]},\"innerComplexListType\":[{\"stringTyp"
-                                + "e\":\"MyString1\",\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z"
-                                + "\",\"dateType\":\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd"
-                                + "8b\",\"longType\":500000000,\"precisionType\":5.43,\"objectType\":{\"long2\":100"
-                                + "0000000,\"long1\":500000000},\"stringListType\":[\"Item1\",\"Item2\"]},{\"string"
-                                + "Type\":\"MyString2\",\"booleanType\":false,\"dateTimeType\":\"1994-11-07T08:49:3"
-                                + "7Z\",\"dateType\":\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c"
-                                + "89a6\",\"longType\":1000000000,\"precisionType\":5.43,\"objectType\":{\"bool1\":"
-                                + "true,\"bool2\":false},\"stringListType\":[\"Item1\",\"Item2\"]}]}, \"key2\": {"
-                                + "\"numberListType\":[555,666,777],\"numberMapType\":{\"num1\":1,\"num3\":2,\"num2"
-                                + "\":3},\"innerComplexType\":{\"stringType\":\"MyString1\",\"booleanType\":true,"
-                                + "\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\",\"uuidType"
-                                + "\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longType\":500000000,\"precisionTy"
-                                + "pe\":5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000},\"stringList"
-                                + "Type\":[\"Item1\",\"Item2\"]},\"innerComplexListType\":[{\"stringType\":\"MyStri"
-                                + "ng1\",\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType"
-                                + "\":\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longTy"
-                                + "pe\":500000000,\"precisionType\":5.43,\"objectType\":{\"long2\":1000000000,\"lon"
-                                + "g1\":500000000},\"stringListType\":[\"Item1\",\"Item2\"]},{\"stringType\":\"MySt"
-                                + "ring2\",\"booleanType\":false,\"dateTimeType\":\"1994-11-07T08:49:37Z\",\"dateTy"
-                                + "pe\":\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c89a6\",\"long"
-                                + "Type\":1000000000,\"precisionType\":5.43,\"objectType\":{\"bool1\":true,\"bool2"
-                                + "\":false},\"stringListType\":[\"Item1\",\"Item2\"]}]}}",
+                        "{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":"
+                                + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType"
+                                + "\":{\"stringType\":\"MyString1\",\"booleanTyp"
+                                + "e\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\""
+                                + ",\"dateType\":\"1994-02-13\",\"uuidType\":"
+                                + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\","
+                                + "\"longType\":500000000,\"precisionType\":5.43,"
+                                + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000},"
+                                + "\"stringListType\":[\"Item1\",\"Item2\"]},"
+                                + "\"innerComplexListType\":[{\"stringTyp"
+                                + "e\":\"MyString1\",\"booleanType\":true,\"dateTimeType\":"
+                                + "\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\","
+                                + "\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd"
+                                + "8b\",\"longType\":500000000,\"precisionType\":5.43,"
+                                + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
+                                + ",\"stringListType\":[\"Item1\",\"Item2\"]},{\"string"
+                                + "Type\":\"MyString2\",\"booleanType\":false,"
+                                + "\"dateTimeType\":\"1994-11-07T08:49:37Z\",\"dateType\":"
+                                + "\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c"
+                                + "89a6\",\"longType\":1000000000,\"precisionType\":5.43,"
+                                + "\"objectType\":{\"bool1\":true,\"bool2\":false},"
+                                + "\"stringListType\":[\"Item1\",\"Item2\"]}]}, \"key2\": {"
+                                + "\"numberListType\":[555,666,777],\"numberMapType\":"
+                                + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType\":"
+                                + "{\"stringType\":\"MyString1\",\"booleanType\":true,"
+                                + "\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":"
+                                + "\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-"
+                                + "a7d844debd8b\",\"longType\":500000000,\"precisionType\":"
+                                + "5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
+                                + ",\"stringListType\":[\"Item1\",\"Item2\"]},"
+                                + "\"innerComplexListType\":[{\"stringType\":\"MyString1\","
+                                + "\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08"
+                                + ":49:37Z\",\"dateType\":\"1994-02-13\",\"uuidType\":"
+                                + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longTy"
+                                + "pe\":500000000,\"precisionType\":5.43,\"objectType\""
+                                + ":{\"long2\":1000000000,\"long1\":500000000},\"stringListType\""
+                                + ":[\"Item1\",\"Item2\"]},{\"stringType\":\"MySt"
+                                + "ring2\",\"booleanType\":false,\"dateTimeType\":"
+                                + "\"1994-11-07T08:49:37Z\",\"dateType\":\"1994-02-12\","
+                                + "\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c89a6\",\"long"
+                                + "Type\":1000000000,\"precisionType\":5.43,\"objectType\":"
+                                + "{\"bool1\":true,\"bool2\":false},\"stringListType\":[\"Item1\","
+                                + "\"Item2\"]}]}}",
                         new TypeReference<Map<String, ComplexType>>() {});
         return complexType;
     }

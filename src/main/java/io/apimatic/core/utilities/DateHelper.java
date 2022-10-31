@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
  */
 public class DateHelper {
 
+    protected DateHelper() {}
+
     /**
      * Parse a simple date string to a LocalDate object.
      * @param date The date string

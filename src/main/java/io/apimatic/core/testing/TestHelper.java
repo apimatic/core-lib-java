@@ -54,6 +54,8 @@ public final class TestHelper {
      */
     public static final String NULL_STRING = "b9cb2f80-1b64-43ee-a6da-71f7ef686fa9";
 
+    private TestHelper() {}
+
     /**
      * Modify a json String according to a given TypeReference, ensuring that inner fields are dealt
      * with properly.
@@ -94,7 +96,7 @@ public final class TestHelper {
      */
     public static boolean isProperSubsetOf(String leftObject, String rightObject,
             boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
-        JsonNode leftNode = CoreHelper.mapper.readTree(leftObject);
+        JsonNode leftNode = CoreHelper.getMapper().readTree(leftObject);
         if (leftNode.isObject()) {
             return isJsonObjectProperSubsetOf(leftObject, rightObject, checkValues, allowExtra,
                     isOrdered);

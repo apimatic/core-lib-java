@@ -34,7 +34,7 @@ public class CoreJsonObject {
         if (jsonString == null) {
             return new CoreJsonObject(null);
         }
-        JsonNode node = CoreHelper.mapper.readTree(jsonString);
+        JsonNode node = CoreHelper.getMapper().readTree(jsonString);
         if (node.isObject()) {
             return new CoreJsonObject(node);
         }
@@ -55,7 +55,7 @@ public class CoreJsonObject {
      */
     public String toString() {
         try {
-            return CoreHelper.mapper.writeValueAsString(jsonNode);
+            return CoreHelper.getMapper().writeValueAsString(jsonNode);
         } catch (JsonProcessingException e) {
             return null;
         }

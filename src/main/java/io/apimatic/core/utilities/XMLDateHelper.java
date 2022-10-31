@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
  */
 public class XMLDateHelper {
 
+    protected XMLDateHelper() {}
+
     /**
      * Serialize the simple date
      * @param dateObj An instance of {@link LocalDate}

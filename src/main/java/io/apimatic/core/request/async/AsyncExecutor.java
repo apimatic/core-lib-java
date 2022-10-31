@@ -10,6 +10,8 @@ import io.apimatic.coreinterfaces.http.request.Request;
  */
 public final class AsyncExecutor {
 
+    private AsyncExecutor() {}
+
     /**
      * Make an asynchronous HTTP endpoint call.
      * @param <ResponseType> The type of the object for response

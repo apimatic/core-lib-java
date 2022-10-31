@@ -98,7 +98,7 @@ public class CoreJsonValue {
         if (value == null) {
             return new CoreJsonValue(null);
         }
-        return new CoreJsonValue(CoreHelper.mapper.valueToTree(value));
+        return new CoreJsonValue(CoreHelper.getMapper().valueToTree(value));
     }
 
     /**
@@ -111,7 +111,7 @@ public class CoreJsonValue {
         if (values == null) {
             return new CoreJsonValue(null);
         }
-        return new CoreJsonValue(CoreHelper.mapper.valueToTree(values));
+        return new CoreJsonValue(CoreHelper.getMapper().valueToTree(values));
     }
 
     /**
@@ -129,7 +129,7 @@ public class CoreJsonValue {
     @Override
     public String toString() {
         try {
-            return CoreHelper.mapper.writeValueAsString(value);
+            return CoreHelper.getMapper().writeValueAsString(value);
         } catch (JsonProcessingException e) {
             return null;
         }

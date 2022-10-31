@@ -15,7 +15,8 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test
     public void testSerializeRfc8601DateTime() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         String rootName = "XmlRootName";
 
         // stub
@@ -30,7 +31,8 @@ public class XmlZonedDateTimeHelperTest {
         String zonedDateTime = "<XmlRootName>1997-07-13T06:10Z[GMT]</XmlRootName>";
 
         // stub
-        ZonedDateTime expected = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeRfc8601DateTime(zonedDateTime);
 
         assertEquals(actual, expected);
@@ -44,7 +46,8 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test
     public void testSerializeRfc1123DateTime() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         String rootName = "XmlRootName";
 
         // stub
@@ -59,7 +62,8 @@ public class XmlZonedDateTimeHelperTest {
         String zonedDateTime = "<XmlRootName>Sun, 13 Jul 1997 06:10:00 GMT</XmlRootName>";
 
         // stub
-        ZonedDateTime expected = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeRfc1123DateTime(zonedDateTime);
 
         assertEquals(actual, expected);
@@ -73,7 +77,8 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test
     public void testSerializeUnixTimeStamp() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         String rootName = "XmlRootName";
 
         // stub
@@ -88,7 +93,8 @@ public class XmlZonedDateTimeHelperTest {
         String zonedDateTime = "<XmlRootName>868774200</XmlRootName>";
 
         // stub
-        ZonedDateTime expected = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeUnixTimeStamp(zonedDateTime);
 
         ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));

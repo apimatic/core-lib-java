@@ -44,10 +44,10 @@ public class CoreApiException extends Exception {
 
         try {
             // Can throw IOException if input has invalid content type.
-            JsonNode jsonNode = CoreHelper.mapper.readTree(context.getResponse().getRawBody());
+            JsonNode jsonNode = CoreHelper.getMapper().readTree(context.getResponse().getRawBody());
             if (!getClass().equals(CoreApiException.class)) {
                 // In case of IOException JsonNode cannot be detected.
-                CoreHelper.mapper.readerForUpdating(this).readValue(jsonNode);
+                CoreHelper.getMapper().readerForUpdating(this).readValue(jsonNode);
             }
         } catch (IOException ioException) {
             // Can throw exception while object mapper tries to:
