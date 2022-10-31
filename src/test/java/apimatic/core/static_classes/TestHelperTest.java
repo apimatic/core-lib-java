@@ -348,8 +348,8 @@ public class TestHelperTest {
                         + "\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],"
                         + "\"boss\":{\"personType\":\"Boss\",\"name\":\"Zeeshan Ejaz\",\"age\":"
                         + "5147483645,\"address\":\"H # 531, S # 20\",\"uid\":\"123321\","
-                        + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\","
-                        + "\"salary\":20000,\"department\":\"Software Development\","
+                        + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54."
+                        + "9571247Z\",\"salary\":20000,\"department\":\"Software Development\","
                         + "\"joiningDay\":\"Saturday\","
                         + "\"workingDays\":[\"Monday\",\"Tuesday\",\"Friday\"],"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
@@ -851,11 +851,13 @@ public class TestHelperTest {
     @Test
     public void testIsProperSubsetOf() throws IOException {
         String leftObject =
-                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],\"key2\":"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         String rightObject =
-                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],"
+                        + "\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         boolean actual = TestHelper.isProperSubsetOf(leftObject, rightObject, true, true, false);
         assertTrue(actual);
     }
@@ -887,11 +889,13 @@ public class TestHelperTest {
     @Test
     public void testIsProperSubsetOf1() throws IOException {
         String leftObject =
-                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],"
+                        + "\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         String rightObject =
-                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],"
+                        + "\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         boolean actual = TestHelper.isProperSubsetOf(leftObject, rightObject, true, true, true);
         assertTrue(actual);
     }
@@ -900,11 +904,13 @@ public class TestHelperTest {
     @Test
     public void testIsProperSubsetOf2() throws IOException {
         String leftObject =
-                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":4,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],"
+                        + "\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         String rightObject =
-                "{\"key1\":[{\"NumberOfElectrons\":2,\"NumberOfProtons\":4},{\"NumberOfElectrons\":4,"
-                        + "\"NumberOfProtons\":4}],\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
+                "{\"key1\":[{\"NumberOfElectrons\":2,\"NumberOfProtons\":4},"
+                        + "{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}],"
+                        + "\"key2\":{\"NumberOfElectrons\":4,\"NumberOfProtons\":4}}";
         boolean actual = TestHelper.isProperSubsetOf(leftObject, rightObject, true, true, true);
         assertFalse(actual);
     }
