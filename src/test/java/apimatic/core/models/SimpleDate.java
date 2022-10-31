@@ -33,6 +33,8 @@ public class SimpleDate {
 
     /**
      * Internal initialization constructor.
+     * @param dateNullable LocalDate value for dateNullable.
+     * @param date LocalDate value for date.
      */
     protected SimpleDate(final OptionalNullable<LocalDate> dateNullable, final LocalDate date) {
         this.dateNullable = dateNullable;

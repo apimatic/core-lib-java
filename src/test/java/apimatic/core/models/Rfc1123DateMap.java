@@ -35,9 +35,11 @@ public class Rfc1123DateMap {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 Map of String, value for dateTime1.
+     * @param dateTime Map of String, value for dateTime.
      */
-    protected Rfc1123DateMap(Map<String, LocalDateTime> dateTime1,
-            OptionalNullable<Map<String, LocalDateTime>> dateTime) {
+    protected Rfc1123DateMap(final Map<String, LocalDateTime> dateTime1,
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }

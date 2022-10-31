@@ -8,6 +8,10 @@ import org.junit.Test;
 import io.apimatic.core.utilities.CoreJsonValue;
 
 public class CoreJsonValueTest {
+    private static final long TEST_LONG_NUMBER = 21L;
+    private static final double TEST_DOUBLE = 5.5;
+    private static final int TEST_INTEGER = 21;
+
     @Test
     public void testFromString() {
         String value = "TestString";
@@ -56,7 +60,7 @@ public class CoreJsonValueTest {
 
     @Test
     public void testFromInteger() {
-        Integer value = 21;
+        Integer value = TEST_INTEGER;
 
         // stub
         String expected = "21";
@@ -79,7 +83,7 @@ public class CoreJsonValueTest {
 
     @Test
     public void testFromLong() {
-        Long value = 21L;
+        Long value = TEST_LONG_NUMBER;
 
         // stub
         String expected = String.format("%s", value);
@@ -102,7 +106,7 @@ public class CoreJsonValueTest {
 
     @Test
     public void testFromDouble() {
-        Double value = 5.5;
+        Double value = TEST_DOUBLE;
 
         // stub
         String expected = "5.5";
@@ -125,7 +129,7 @@ public class CoreJsonValueTest {
 
     @Test
     public void testFromObject() {
-        Object value = 21L;
+        Object value = TEST_LONG_NUMBER;
 
         // stub
         String expected = "21";
@@ -151,10 +155,9 @@ public class CoreJsonValueTest {
         List<Integer> value = new ArrayList<Integer>();
         value.add(1);
         value.add(2);
-        value.add(3);
 
         // stub
-        String expected = "[1,2,3]";
+        String expected = "[1,2]";
         CoreJsonValue jsonValue = CoreJsonValue.fromArray(value);
         String actual = jsonValue.toString();
 
@@ -174,7 +177,7 @@ public class CoreJsonValueTest {
 
     @Test
     public void testGetStoredObject() {
-        Integer value = 21;
+        Integer value = TEST_INTEGER;
 
         // stub
         CoreJsonValue jsonValue = CoreJsonValue.fromInteger(value);

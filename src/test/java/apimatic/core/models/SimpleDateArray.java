@@ -34,6 +34,8 @@ public class SimpleDateArray {
 
     /**
      * Internal initialization constructor.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
     protected SimpleDateArray(final OptionalNullable<List<LocalDate>> date,
             final List<LocalDate> date1) {

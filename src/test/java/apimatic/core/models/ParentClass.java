@@ -17,6 +17,10 @@ import io.apimatic.core.types.OptionalNullable;
  * This is a model class for ParentClass type.
  */
 public class ParentClass extends GrandParentClass {
+    /**
+     * Random number
+     */
+    private static final int RANDOM_NUMBER = 23;
     private OptionalNullable<Integer> mClass;
     private OptionalNullable<Double> precision;
     private OptionalNullable<BigDecimal> bigDecimal;
@@ -31,7 +35,7 @@ public class ParentClass extends GrandParentClass {
     public ParentClass() {
         super();
         parentRequired = "not nullable and required";
-        mClass = OptionalNullable.of(23);
+        mClass = OptionalNullable.of(RANDOM_NUMBER);
         parentOptionalNullableWithDefaultValue = OptionalNullable.of("Has default value");
     }
 
@@ -67,6 +71,16 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal initialization constructor.
+     * @param grandParentRequiredNullable
+     * @param grandParentRequired
+     * @param parentRequiredNullable
+     * @param parentRequired
+     * @param grandParentOptional
+     * @param mClass
+     * @param precision
+     * @param bigDecimal
+     * @param parentOptionalNullableWithDefaultValue
+     * @param parentOptional
      */
     protected ParentClass(final String grandParentRequiredNullable,
             final String grandParentRequired, final String parentRequiredNullable,
@@ -325,7 +339,7 @@ public class ParentClass extends GrandParentClass {
         private String parentRequiredNullable;
         private String parentRequired = "not nullable and required";
         private String grandParentOptional;
-        private OptionalNullable<Integer> mClass = OptionalNullable.of(23);
+        private OptionalNullable<Integer> mClass = OptionalNullable.of(RANDOM_NUMBER);
         private OptionalNullable<Double> precision;
         private OptionalNullable<BigDecimal> bigDecimal;
         private OptionalNullable<String> parentOptionalNullableWithDefaultValue =

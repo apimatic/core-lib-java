@@ -50,22 +50,41 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 
 public class CoreHelperTest {
 
-    private final String XML_ARRAY =
+    private static final int YEAR3 = 2020;
+    private static final int SECONDS1 = 54;
+    private static final int MINUTE = 01;
+    private static final int HOUR2 = 14;
+    private static final int XML_NO_OF_ELEMENT = 6;
+    private static final int XML_NO_OF_ATTRIBUTE = 3;
+    private static final double FLOAT_TEST_NUMBER2 = 2.3;
+    private static final double FLOAT_TEST_NUMBER1 = 1.6;
+    private static final int MONTH2 = 2;
+    private static final int HOUR1 = 1;
+    private static final int MINUTES = 10;
+    private static final int YEAR2 = 1994;
+    private static final int DAY1 = 13;
+    private static final int MONTH1 = 7;
+    private static final int YEAR1 = 1997;
+    private static final long UNIQUE_UUID_NUMBER2 = 87866L;
+    private static final long UNIQUE_UUID_NUMBER1 = 876547L;
+    private static final List<Integer> LIST_OF_INTEGERS = Arrays.asList(1, 2, 3, 4, 5);
+    private static final String XML_ARRAY =
             "<arrayOfModels>\r\n" + "  <item number=\"3\" string=\"XMLRootName\">\r\n"
                     + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n" + "</item>\r\n"
                     + "</arrayOfModels>";
-    private final String INVALID_XML =
+    private static final String INVALID_XML =
             "\r\n" + "  item number=\"3\" string=\"XMLRootName\"\r\n" + "    number>6</number>\r\n"
                     + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
-    private final String XML =
+    private static final String XML =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n"
                     + "<arrayOfModels number=\"3\" string=\"XMLRootName\">\r\n"
                     + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n"
                     + "</arrayOfModels>\r\n" + "";
 
-    private final String JSON_OBJECT =
+    private static final String JSON_OBJECT =
             "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson.schema.json&operations[$schema]=https%3A%2F%2Fjson-schema.org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations[type]=object&operations[properties][firstName][type]=string&operations[properties][firstName][description]=The+person%27s+first+name.&operations[properties][lastName][type]=string&operations[properties][lastName][description]=The+person%27s+last+name.&operations[properties][age][type]=integer&operations[properties][age][description]=Age+in+years&operations[properties][age][minimum]=0";
-    private final String JSON_VALUE = "https://localhost:3000/query?operations=test-JsonValue";
+    private static final String JSON_VALUE =
+            "https://localhost:3000/query?operations=test-JsonValue";
 
     @Test
     public void testSerializeNullObject() throws JsonProcessingException {
@@ -373,7 +392,7 @@ public class CoreHelperTest {
     @Test
     public void testAppendQueryParametersArray() {
         String baseUri = "https://localhost:3000";
-        String[] queryValue = new String[1];
+        String[] queryValue = new String[HOUR1];
         queryValue[0] = "x+y";
         StringBuilder queryBuilder = new StringBuilder(baseUri + "/query");
 
@@ -608,7 +627,7 @@ public class CoreHelperTest {
 
     @Test
     public void testPrepareFormFieldsUUID() {
-        UUID body = new UUID(876547L, 87866L);
+        UUID body = new UUID(UNIQUE_UUID_NUMBER1, UNIQUE_UUID_NUMBER2);
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("body", body);
 
@@ -747,10 +766,8 @@ public class CoreHelperTest {
 
     @Test
     public void testSerializeListOfInteger() throws JsonProcessingException {
-        List<Integer> listOfInteger = Arrays.asList(1, 2, 5, 8);
-
-        String expected = "[1,2,5,8]";
-        String actual = CoreHelper.serialize(listOfInteger);
+        String expected = "[1,2,3,4,5]";
+        String actual = CoreHelper.serialize(LIST_OF_INTEGERS);
         assertEquals(actual, expected);
     }
 
@@ -767,8 +784,8 @@ public class CoreHelperTest {
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
         LocalDateTime localDateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1, MONTH1, DAY1,
+                        HOUR1, MINUTES, 0, 0, ZoneId.of("GMT")));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "868756200";
         String actual = CoreHelper.serialize(localDateTime, serializer);
@@ -780,7 +797,7 @@ public class CoreHelperTest {
     public void testUnixTimeStampSerializerArray() throws JsonProcessingException {
         List<LocalDateTime> localDateTimeArray = new ArrayList<LocalDateTime>();
         localDateTimeArray.add(TestDateTimeHelper.getLocalDateTimeFromGMT(
-                ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"))));
+                ZonedDateTime.of(YEAR1, MONTH1, DAY1, HOUR1, MINUTES, 0, 0, ZoneId.of("GMT"))));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "[868756200]";
         String actual = CoreHelper.serialize(localDateTimeArray, serializer);
@@ -792,7 +809,7 @@ public class CoreHelperTest {
     public void testUnixTimeStampSerializerMap() throws JsonProcessingException {
         Map<String, LocalDateTime> mapOfLocalDateTime = new LinkedHashMap<>();
         mapOfLocalDateTime.put("date", TestDateTimeHelper.getLocalDateTimeFromGMT(
-                ZonedDateTime.of(1997, 7, 13, 1, 10, 0, 0, ZoneId.of("GMT"))));
+                ZonedDateTime.of(YEAR1, MONTH1, DAY1, HOUR1, MINUTES, 0, 0, ZoneId.of("GMT"))));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "{\"date\":868756200}";
         String actual = CoreHelper.serialize(mapOfLocalDateTime, serializer);
@@ -811,7 +828,7 @@ public class CoreHelperTest {
 
     @Test
     public void testUnixTimeStampSerializerNull() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(1997, 7, 13, 6, 10);
+        LocalDateTime localDateTime = LocalDateTime.of(YEAR1, MONTH1, DAY1, XML_NO_OF_ELEMENT, MINUTES);
         JsonSerializer<?> serializer = null;
         String actual = CoreHelper.serialize(localDateTime, serializer);
 
@@ -821,8 +838,8 @@ public class CoreHelperTest {
     @Test
     public void testSimpleDateDeserializer() throws IOException {
         List<LocalDate> expectedDates = new ArrayList<>();
-        expectedDates.add(LocalDate.of(1994, 2, 13));
-        expectedDates.add(LocalDate.of(1994, 2, 13));
+        expectedDates.add(LocalDate.of(YEAR2, MONTH2, DAY1));
+        expectedDates.add(LocalDate.of(YEAR2, MONTH2, DAY1));
         List<LocalDate> actualDates =
                 CoreHelper.deserialize("[\"1994-02-13\",\"1994-02-13\"]",
                         new TypeReference<List<LocalDate>>() {}, LocalDate.class,
@@ -832,7 +849,7 @@ public class CoreHelperTest {
 
     @Test
     public void testDeserializerArray() throws IOException {
-        List<Integer> expected = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> expected = LIST_OF_INTEGERS;
         List<Integer> actual = CoreHelper.deserializeArray("[1,2,3,4,5]", Integer[].class);
         assertEquals(actual, expected);
     }
@@ -1193,7 +1210,7 @@ public class CoreHelperTest {
         String json = "[1.6, 2.3]";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-        List<Double> expectedArray = Arrays.asList(1.6, 2.3);
+        List<Double> expectedArray = Arrays.asList(FLOAT_TEST_NUMBER1, FLOAT_TEST_NUMBER2);
         List<Double> actualArray = CoreHelper.deserializeArray(jsonNode, Double[].class);
         assertEquals(actualArray, expectedArray);
     }
@@ -1211,7 +1228,7 @@ public class CoreHelperTest {
         String json = "1.6";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-        Double expected = 1.6;
+        Double expected = FLOAT_TEST_NUMBER1;
         Double actual = CoreHelper.deserialize(jsonNode, Double.class);
         assertEquals(actual, expected);
     }
@@ -1227,9 +1244,9 @@ public class CoreHelperTest {
     public void testFormSerializationAnnotation() throws IOException {
         List<SendParamsFormDateTime> formDateTime = new ArrayList<>();
         formDateTime.add(
-                SendParamsFormDateTime.fromDateTime(LocalDateTime.of(1994, 2, 13, 14, 01, 54)));
-        formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(2020, 2, 13)));
-        formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(2020, 2, 13)));
+                SendParamsFormDateTime.fromDateTime(LocalDateTime.of(YEAR2, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1)));
+        formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(YEAR3, MONTH2, DAY1)));
+        formDateTime.add(SendParamsFormDateTime.fromDate(LocalDate.of(YEAR3, MONTH2, DAY1)));
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("date", formDateTime);
@@ -1242,10 +1259,10 @@ public class CoreHelperTest {
     @Test
     public void testFormSerializationAnnotation1() throws IOException {
         List<Person> formDateTime = new ArrayList<>();
-        formDateTime.add(
-                new Person.Builder().birthtime(LocalDateTime.of(2020, 2, 13, 14, 01, 54)).build());
-        formDateTime.add(
-                new Person.Builder().birthtime(LocalDateTime.of(2010, 2, 13, 14, 01, 54)).build());
+        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(YEAR3, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
+                .build());
+        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(2010, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
+                .build());
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("date", formDateTime);
@@ -1259,7 +1276,7 @@ public class CoreHelperTest {
     public void testSerializeXMLArray() throws IOException {
         String expected = XML_ARRAY.replace("\r\n", "");
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> attributesAndElements = new ArrayList<>();
         attributesAndElements.add(elements);
         String actual =
@@ -1274,7 +1291,7 @@ public class CoreHelperTest {
     public void testSerializeXML() throws IOException {
         String expected = XML.replace("\r\n", "");
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
 
         String actual =
                 CoreHelper.serializeXml(elements, "arrayOfModels", AttributesAndElements.class);
@@ -1284,7 +1301,7 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeXML() throws IOException {
         AttributesAndElements expected =
-                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
 
         AttributesAndElements actual = CoreHelper.deserializeXml(XML, AttributesAndElements.class);
         assertEquals(actual.getNumberAttr(), expected.getNumberAttr());
@@ -1296,7 +1313,7 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeXMLArray() throws IOException {
         AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", 3, "Data", 6).build();
+                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> expected = new ArrayList<>();
         expected.add(elements);
 

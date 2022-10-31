@@ -33,6 +33,8 @@ public class Rfc1123Date {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 LocalDateTime value for dateTime1.
+     * @param dateTime LocalDateTime value for dateTime.
      */
     protected Rfc1123Date(final LocalDateTime dateTime1,
             final OptionalNullable<LocalDateTime> dateTime) {

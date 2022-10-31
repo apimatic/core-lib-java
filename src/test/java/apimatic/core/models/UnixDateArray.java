@@ -34,6 +34,8 @@ public class UnixDateArray {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 List of LocalDateTime value for dateTime1.
+     * @param dateTime List of LocalDateTime value for dateTime.
      */
     protected UnixDateArray(final List<LocalDateTime> dateTime1,
             final OptionalNullable<List<LocalDateTime>> dateTime) {

@@ -34,6 +34,8 @@ public class SimpleDateMap {
 
     /**
      * Internal initialization constructor.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
     protected SimpleDateMap(final OptionalNullable<Map<String, LocalDate>> date,
             final Map<String, LocalDate> date1) {

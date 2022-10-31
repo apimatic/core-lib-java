@@ -32,7 +32,8 @@ public class Noon {
      * @param offerLunch boolean value for offerLunch.
      * @param sessionType String value for sessionType.
      */
-    public Noon(final String startsAt, final String endsAt, boolean offerLunch, final String sessionType) {
+    public Noon(final String startsAt, final String endsAt, boolean offerLunch,
+            final String sessionType) {
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.offerLunch = offerLunch;

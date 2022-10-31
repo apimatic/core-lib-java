@@ -66,8 +66,18 @@ public abstract class DateTimeCasesMapvsArray {
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
+        /**
+         * Case for the list of local date time
+         * @param dateTime The list of {@link LocalDateTime}
+         * @return R
+         */
         R dateTime(List<LocalDateTime> dateTime);
 
+        /**
+         * Case for the map of local date time
+         * @param dateTime2 The map of {@link LocalDateTime}
+         * @return R
+         */
         R dateTime2(Map<String, LocalDateTime> dateTime2);
     }
 
@@ -82,7 +92,7 @@ public abstract class DateTimeCasesMapvsArray {
         @FormSerialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
         private List<LocalDateTime> dateTime;
 
-        DateTimeCase(List<LocalDateTime> dateTime) {
+        DateTimeCase(final List<LocalDateTime> dateTime) {
             this.dateTime = dateTime;
         }
 
@@ -92,7 +102,7 @@ public abstract class DateTimeCasesMapvsArray {
         }
 
         @JsonCreator
-        private DateTimeCase(JsonNode jsonNode) throws IOException {
+        private DateTimeCase(final JsonNode jsonNode) throws IOException {
             this.dateTime =
                     CoreHelper.deserialize(jsonNode, new TypeReference<List<LocalDateTime>>() {},
                             LocalDateTime.class,
@@ -127,7 +137,7 @@ public abstract class DateTimeCasesMapvsArray {
         @FormSerialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
         private Map<String, LocalDateTime> dateTime2;
 
-        DateTime2Case(Map<String, LocalDateTime> dateTime2) {
+        DateTime2Case(final Map<String, LocalDateTime> dateTime2) {
             this.dateTime2 = dateTime2;
         }
 
@@ -137,7 +147,7 @@ public abstract class DateTimeCasesMapvsArray {
         }
 
         @JsonCreator
-        private DateTime2Case(JsonNode jsonNode) throws IOException {
+        private DateTime2Case(final JsonNode jsonNode) throws IOException {
             this.dateTime2 =
                     CoreHelper.deserialize(jsonNode,
                             new TypeReference<Map<String, LocalDateTime>>() {}, LocalDateTime.class,

@@ -35,6 +35,8 @@ public class Rfc1123DateArray {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 List of LocalDateTime value for dateTime1.
+     * @param dateTime List of LocalDateTime value for dateTime.
      */
     protected Rfc1123DateArray(final List<LocalDateTime> dateTime1,
             final OptionalNullable<List<LocalDateTime>> dateTime) {

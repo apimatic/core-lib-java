@@ -17,9 +17,19 @@ import io.apimatic.core.utilities.DateHelper;
 
 public class DateHelperTest {
 
+    private static final int DAY1 = 1;
+    private static final int DAY13 = 13;
+    private static final int JULY = 7;
+    private static final int YEAR1997 = 1997;
+    private static final int AUGUST = 8;
+    private static final int YEAR2021 = 2021;
+    private static final int DAY2 = 2;
+    private static final int SEPTEMBER = 9;
+    private static final int YEAR2022 = 2022;
+
     @Test
     public void testDateToSimpleDate() {
-        LocalDate date = LocalDate.of(2022, 9, 2);
+        LocalDate date = LocalDate.of(YEAR2022, SEPTEMBER, DAY2);
 
         // stub
         String expected = "2022-09-02";
@@ -35,8 +45,8 @@ public class DateHelperTest {
 
     @Test
     public void testListDateToSimpleDate() {
-        LocalDate date1 = LocalDate.of(2022, 9, 2);
-        LocalDate date2 = LocalDate.of(2021, 8, 1);
+        LocalDate date1 = LocalDate.of(YEAR2022, SEPTEMBER, DAY2);
+        LocalDate date2 = LocalDate.of(YEAR2021, AUGUST, DAY1);
 
         List<LocalDate> dateArray = Arrays.asList(date1, date2);
         List<String> expected = Arrays.asList("2022-09-02", "2021-08-01");
@@ -53,8 +63,8 @@ public class DateHelperTest {
 
     @Test
     public void testMapDateToSimpleDate() {
-        LocalDate date1 = LocalDate.of(2022, 9, 2);
-        LocalDate date2 = LocalDate.of(2021, 8, 1);
+        LocalDate date1 = LocalDate.of(YEAR2022, SEPTEMBER, DAY2);
+        LocalDate date2 = LocalDate.of(YEAR2021, AUGUST, DAY1);
         Map<String, LocalDate> dateMap = new HashMap<>();
         dateMap.put("date1", date1);
         dateMap.put("date2", date2);
@@ -75,8 +85,8 @@ public class DateHelperTest {
 
     @Test
     public void testListOfMapDateToSimpleDate() {
-        LocalDate date1 = LocalDate.of(2022, 9, 2);
-        LocalDate date2 = LocalDate.of(2021, 8, 1);
+        LocalDate date1 = LocalDate.of(YEAR2022, SEPTEMBER, DAY2);
+        LocalDate date2 = LocalDate.of(YEAR2021, AUGUST, DAY1);
 
         Map<String, LocalDate> dateMap = new HashMap<>();
         dateMap.put("date1", date1);
@@ -101,7 +111,7 @@ public class DateHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
-        LocalDate localDate = LocalDate.of(1997, 7, 13);
+        LocalDate localDate = LocalDate.of(YEAR1997, JULY, DAY13);
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new DateHelper.SimpleDateSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -127,7 +137,7 @@ public class DateHelperTest {
         mapper.registerModule(module);
 
         String date = "\"1997-07-13\"";
-        LocalDate expected = LocalDate.of(1997, 7, 13);
+        LocalDate expected = LocalDate.of(YEAR1997, JULY, DAY13);
         LocalDate actual = mapper.readValue(date, LocalDate.class);
 
         assertEquals(actual, expected);

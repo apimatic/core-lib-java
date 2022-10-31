@@ -35,6 +35,8 @@ public class Rfc8601DateMap {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 Map of String, value for dateTime1.
+     * @param dateTime Map of String, value for dateTime.
      */
     protected Rfc8601DateMap(final Map<String, LocalDateTime> dateTime1,
             final OptionalNullable<Map<String, LocalDateTime>> dateTime) {

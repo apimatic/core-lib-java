@@ -6,9 +6,13 @@ import org.junit.Test;
 import io.apimatic.core.utilities.XmlLocalDateTimeHelper;
 
 public class XmlDateTimeHelperTest {
+    private static final int DAY13 = 13;
+    private static final int JULY = 7;
+    private static final int YEAR2000 = 2000;
+
     @Test
     public void testSerializeSimpleDate() {
-        LocalDate localDate = LocalDate.of(2000, 7, 13);
+        LocalDate localDate = LocalDate.of(YEAR2000, JULY, DAY13);
         String rootName = "XmlRootName";
 
         // stub
@@ -23,7 +27,7 @@ public class XmlDateTimeHelperTest {
         String dateTime = "<XmlRootName>2000-07-13</XmlRootName>";
 
         // stub
-        LocalDate expected = LocalDate.of(2000, 7, 13);
+        LocalDate expected = LocalDate.of(YEAR2000, JULY, DAY13);
         LocalDate actual = XmlLocalDateTimeHelper.deserializeSimpleDate(dateTime);
 
         assertEquals(actual, expected);

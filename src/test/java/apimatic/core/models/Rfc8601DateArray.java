@@ -35,6 +35,8 @@ public class Rfc8601DateArray {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 List of LocalDateTime value for dateTime1.
+     * @param dateTime List of LocalDateTime value for dateTime.
      */
     protected Rfc8601DateArray(final List<LocalDateTime> dateTime1,
             final OptionalNullable<List<LocalDateTime>> dateTime) {

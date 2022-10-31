@@ -19,6 +19,8 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class DynamicTest {
 
+    private static final long TEST_LONG_NUMBER = 5L;
+
     private static final double TEST_DOUBLE_NUMBER = 1.5;
 
     /**
@@ -150,7 +152,7 @@ public class DynamicTest {
 
         when(coreHttpResponse.getBody()).thenReturn("5");
 
-        Long expected = 5l;
+        Long expected = TEST_LONG_NUMBER;
         Long actual = dynamic.parseAsLong();
         assertEquals(actual, expected);
     }

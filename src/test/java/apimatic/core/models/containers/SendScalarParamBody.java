@@ -65,8 +65,16 @@ public abstract class SendScalarParamBody {
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
+        /**
+         * @param precision A list of {@link Double}
+         * @return R
+         */
         R precision(List<Double> precision);
 
+        /**
+         * @param mString A string
+         * @return R
+         */
         R mString(String mString);
     }
 
@@ -80,7 +88,7 @@ public abstract class SendScalarParamBody {
         @JsonValue
         private List<Double> precision;
 
-        PrecisionCase(List<Double> precision) {
+        PrecisionCase(final List<Double> precision) {
             this.precision = precision;
         }
 
@@ -95,7 +103,7 @@ public abstract class SendScalarParamBody {
         }
 
         @JsonCreator
-        private PrecisionCase(JsonNode jsonNode) throws IOException {
+        private PrecisionCase(final JsonNode jsonNode) throws IOException {
             this.precision = CoreHelper.deserializeArray(jsonNode, Double[].class);
         }
 
@@ -116,7 +124,7 @@ public abstract class SendScalarParamBody {
         @JsonValue
         private String mString;
 
-        MStringCase(String mString) {
+        MStringCase(final String mString) {
             this.mString = mString;
         }
 
@@ -131,7 +139,7 @@ public abstract class SendScalarParamBody {
         }
 
         @JsonCreator
-        private MStringCase(JsonNode jsonNode) throws IOException {
+        private MStringCase(final JsonNode jsonNode) throws IOException {
             if (jsonNode.isTextual()) {
                 this.mString = CoreHelper.deserialize(jsonNode, String.class);
             } else {

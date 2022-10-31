@@ -28,6 +28,10 @@ public class TestModel extends BaseModel {
         this.field = field;
     }
 
+    /**
+     * Getter for the context
+     * @return {@link Context}
+     */
     @JsonIgnore
     public Context getContext() {
         return context;

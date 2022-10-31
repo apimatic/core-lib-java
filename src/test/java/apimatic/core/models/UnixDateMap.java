@@ -35,6 +35,8 @@ public class UnixDateMap {
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 Map of String, value for dateTime1.
+     * @param dateTime Map of String, value for dateTime.
      */
     protected UnixDateMap(final Map<String, LocalDateTime> dateTime1,
             final OptionalNullable<Map<String, LocalDateTime>> dateTime) {

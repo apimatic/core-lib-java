@@ -64,7 +64,7 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 /**
  * This is a Helper class with commonly used utilities for the SDK.
  */
-public class CoreHelper {
+public final class CoreHelper {
 
     private CoreHelper() {
         throw new IllegalStateException("Utility class");
@@ -204,12 +204,12 @@ public class CoreHelper {
             cls = obj.getClass();
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(cls, serializer);
-        mapper.registerModule(module);
+        objectMapper.registerModule(module);
 
-        return mapper.writeValueAsString(obj);
+        return objectMapper.writeValueAsString(obj);
     }
 
 
