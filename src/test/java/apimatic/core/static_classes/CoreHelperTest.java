@@ -1026,7 +1026,8 @@ public class CoreHelperTest {
     @Test
     public void testDeserializeAnyOf() throws IOException {
         String json =
-                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
+                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
+                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
 
@@ -1198,10 +1199,11 @@ public class CoreHelperTest {
     @Test
     public void testPrepareFormFieldOneOfAnyOf() throws IOException {
         NonScalarModel formNonScalarModel =
-                CoreHelper.deserialize("{\"outerMap"
-                        + "\":{\"key1\":{\"startsAt\":\"15:00\",\"endsAt\":\"21:00\",\"offerLunch\":true,"
-                        + "\"sessionType\":\"Noon\"},\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\","
-                        + "\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}}",
+                CoreHelper.deserialize(
+                        "{\"outerMap" + "\":{\"key1\":{\"startsAt\":\"15:00\",\"endsAt\":"
+                                + "\"21:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"}"
+                                + ",\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\","
+                                + "\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}}",
                         NonScalarModel.class);
 
         Map<String, Object> formParameters = new HashMap<>();
@@ -1215,8 +1217,8 @@ public class CoreHelperTest {
     public void testPrepareFormFieldOneOfAnyOfDateTime() throws IOException {
         DateTimeCases formDateTimeCases =
                 CoreHelper.deserialize(
-                        "{\"mapvsArray\":{\"key1\":\"Sun, 06 Nov 1994 08"
-                                + ":49:37 GMT\",\"key2\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}}",
+                        "{\"mapvsArray\":{\"key1\":" + "\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                                + "\"key2\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}}",
                         DateTimeCases.class);
 
         Map<String, Object> formParameters = new HashMap<>();

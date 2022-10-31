@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 
 public class TestDateTimeHelper {
 
+    private TestDateTimeHelper() {}
+
     /**
      * Utility method to convert the ZonedDateTime to LocalDataTime from GMT zone
      * @param zonedDateTime
