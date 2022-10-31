@@ -102,25 +102,25 @@ public class HttpLogger implements ApiLogger {
         }
 
         RequestMessage message = new RequestMessage();
-        message.type = "Request";
-        message.requestId = requestId;
+        message.setType("Request");
+        message.setRequestId(requestId);
         if (config.isLoggingRequestInfo()) {
             message.method = (Method) request.getHttpMethod();
-            message.url = url;
-            message.additionalMessage = additionalMessage;
+            message.setUrl(url);
+            message.setAdditionalMessage(additionalMessage);
         }
 
         if (config.isLoggingRequestHeaders()) {
-            message.headers = getFilteredHeaders((HttpHeaders) request.getHeaders());
+            message.setHeaders(getFilteredHeaders((HttpHeaders) request.getHeaders()));
         }
 
         if (config.isLoggingRequestBody()) {
             if (request.getBody() != null) {
                 // As request.getBody() is always a non null serialized string.
                 // Hence we are calling getBody().toString().
-                message.body = CoreHelper.deserializeAsObject(request.getBody().toString());
+                message.setBody(CoreHelper.deserializeAsObject(request.getBody().toString()));
             } else if (request.getParameters() != null && !request.getParameters().isEmpty()) {
-                message.body = request.getParameters();
+                message.setBody(request.getParameters());
             }
         }
 
@@ -167,29 +167,29 @@ public class HttpLogger implements ApiLogger {
             return;
         }
         ResponseMessage message = new ResponseMessage();
-        message.type = "Response";
-        message.requestId = requestEntry.requestId;
+        message.setType("Response");
+        message.setRequestId(requestEntry.requestId);
         long timeTaken = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - requestEntry.startTime);
         if (response == null) {
             message.success = false;
             message.failureReason = "HTTP REQUEST FAILED: " + requestEntry.error;
-            message.url = requestEntry.url;
+            message.setUrl(requestEntry.url);
             message.timeTakenMillis = timeTaken;
-            message.additionalMessage = additionalMessage;
+            message.setAdditionalMessage(additionalMessage);
         } else {
             if (config.isLoggingResponseInfo()) {
                 message.statusCode = response.getStatusCode();
-                message.url = requestEntry.url;
+                message.setUrl(requestEntry.url);
                 message.timeTakenMillis = timeTaken;
-                message.additionalMessage = additionalMessage;
+                message.setAdditionalMessage(additionalMessage);
             }
 
             if (config.isLoggingResponseHeaders()) {
-                message.headers = getFilteredHeaders((HttpHeaders) response.getHeaders());
+                message.setHeaders(getFilteredHeaders((HttpHeaders) response.getHeaders()));
             }
 
             if (config.isLoggingResponseBody()) {
-                message.body = CoreHelper.deserializeAsObject(response.getBody());
+                message.setBody(CoreHelper.deserializeAsObject(response.getBody()));
             }
         }
 
@@ -221,6 +221,8 @@ public class HttpLogger implements ApiLogger {
     /**
      * Log provided message according to logging level.
      * @param message Message instance to be logged as JSON.
+     * @param level To provide the LoggingLevelType conversion
+     * @param logException Need to log the exception?
      */
     private void log(Message message, LoggingLevel level, boolean logException) {
         try {
@@ -339,49 +341,91 @@ public class HttpLogger implements ApiLogger {
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-         String loggingError;
+        private String loggingError;
 
         /**
          * A string of message type
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String type;
+        private String type;
 
         /**
          * A string of requestId message
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String requestId;
+        private String requestId;
 
         /**
          * A string of url
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String url;
+        private String url;
 
         /**
          * A map for headers values
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Map<String, List<String>> headers;
+        private Map<String, List<String>> headers;
 
         /**
          * A body object
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Object body;
+        private Object body;
 
         /**
          * A string additional message
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String additionalMessage;
+        private String additionalMessage;
+
+        /**
+         * @param type Message type
+         */
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        /**
+         * @param requestId Message RequestId
+         */
+        public void setRequestId(String requestId) {
+            this.requestId = requestId;
+        }
+
+        /**
+         * @param url Message Url
+         */
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        /**
+         * @param headers Message headers
+         */
+        public void setHeaders(Map<String, List<String>> headers) {
+            this.headers = headers;
+        }
+
+        /**
+         * @param body Message body
+         */
+        public void setBody(Object body) {
+            this.body = body;
+        }
+
+        /**
+         * @param additionalMessage Additional Message
+         */
+        public void setAdditionalMessage(String additionalMessage) {
+            this.additionalMessage = additionalMessage;
+        }
     }
 
     /**
@@ -413,7 +457,7 @@ public class HttpLogger implements ApiLogger {
          * @param startTime long start time of the request.
          * @param url String request URI.
          */
-        public RequestEntry(String requestId, long startTime, String url) {
+        RequestEntry(final String requestId, long startTime, final String url) {
             this.requestId = requestId;
             this.startTime = startTime;
             this.url = url;

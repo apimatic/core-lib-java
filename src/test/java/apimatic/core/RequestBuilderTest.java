@@ -102,7 +102,7 @@ public class RequestBuilderTest extends MockCoreConfig {
      * Argument capture for void methods
      */
     @Captor
-    ArgumentCaptor<Consumer<HttpRequest.Builder>> requestBuilder;
+    private ArgumentCaptor<Consumer<HttpRequest.Builder>> requestBuilder;
 
     /**
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -318,7 +318,6 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertTrue(coreHttpRequest.getHeaders().has("accept"));
     }
 
-
     @Test
     public void testHttpMethodParam() throws IOException {
         // when
@@ -332,7 +331,6 @@ public class RequestBuilderTest extends MockCoreConfig {
         // verify
         assertEquals(coreHttpRequest.getHttpMethod(), Method.POST);
     }
-
 
     @Test(expected = NullPointerException.class)
     public void testFormParamValidation() throws IOException {
@@ -682,7 +680,6 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
-
 
     @Test
     public void testQueryAuthentication() throws IOException {

@@ -72,7 +72,7 @@ public final class HttpRequest {
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
-            final Map<String, Object> formParameters, Object body,
+            final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
@@ -80,12 +80,12 @@ public final class HttpRequest {
         urlBuilder = getStringBuilder(server, path);
 
         processTemplateParams(templateParams);
-        body = buildBody(body, bodySerializer, bodyParameters);
+        Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
                 generateFormFields(formParams, formParameters, arraySerializationFormat);
         coreHttpRequest =
-                buildRequest(httpMethod, body, addHeaders(headerParams), queryParams, formFields,
-                        arraySerializationFormat);
+                buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
+                        formFields, arraySerializationFormat);
         applyAuthentication(authenticationKey);
     }
 

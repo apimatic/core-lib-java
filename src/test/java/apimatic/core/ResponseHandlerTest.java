@@ -40,6 +40,11 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public class ResponseHandlerTest extends MockCoreConfig {
 
     /**
+     * not found status code
+     */
+    private static final int NOT_FOUND_STATUS_CODE = 404;
+
+    /**
      * Internal server error
      */
     private static final int INTERNAL_SERVER_ERROR = 500;
@@ -134,12 +139,21 @@ public class ResponseHandlerTest extends MockCoreConfig {
     @Mock
     private DynamicType dynamicType;
 
+    /**
+     * Mock of {@link ApiResponseType} of String type
+     */
     @Mock
     private ApiResponseType<String> stringApiResponseType;
 
+    /**
+     * Mock of {@link ApiResponseType} of {@link DynamicType}
+     */
     @Mock
     private ApiResponseType<DynamicType> dynamicApiResponseType;
 
+    /**
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     */
     @Before
     public void setup() throws IOException {
         setExpectations();
@@ -279,7 +293,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>().nullify404(true).build();
         // stub
-        when(coreHttpResponse.getStatusCode()).thenReturn(404);
+        when(coreHttpResponse.getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
         when(getCompatibilityFactory().createHttpContext(getCoreHttpRequest(), coreHttpResponse))
                 .thenReturn(context);
 
@@ -295,7 +309,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
                 new ResponseHandler.Builder<String, CoreApiException>().nullify404(false)
                         .globalErrorCase(getGlobalErrorCases()).build();
         // stub
-        when(coreHttpResponse.getStatusCode()).thenReturn(404);
+        when(coreHttpResponse.getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
 
         CoreApiException apiException = assertThrows(CoreApiException.class, () -> {
             coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,

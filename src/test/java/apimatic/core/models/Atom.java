@@ -10,7 +10,13 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * This is a model class for Atom type.
  */
 public class Atom {
+    /**
+     * A number of electrons integer
+     */
     private int numberOfElectrons;
+    /**
+     * A number of protons integer
+     */
     private Integer numberOfProtons;
 
     /**
@@ -23,7 +29,7 @@ public class Atom {
      * @param numberOfElectrons int value for numberOfElectrons.
      * @param numberOfProtons Integer value for numberOfProtons.
      */
-    public Atom(int numberOfElectrons, Integer numberOfProtons) {
+    public Atom(int numberOfElectrons, final Integer numberOfProtons) {
         this.numberOfElectrons = numberOfElectrons;
         this.numberOfProtons = numberOfProtons;
     }
@@ -98,7 +104,13 @@ public class Atom {
      * Class to build instances of {@link Atom}.
      */
     public static class Builder {
+        /**
+         * A number of electrons
+         */
         private int numberOfElectrons;
+        /**
+         * A number of protons
+         */
         private Integer numberOfProtons;
 
         /**

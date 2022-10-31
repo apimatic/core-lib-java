@@ -27,7 +27,7 @@ import io.apimatic.core.utilities.CoreHelper;
 /**
  * Contains utility methods for comparing objects, arrays and files.
  */
-public class TestHelper {
+public final class TestHelper {
 
     /**
      * A base value of hexadecimal number

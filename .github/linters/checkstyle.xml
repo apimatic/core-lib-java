@@ -104,7 +104,9 @@
     <module name="InvalidJavadocPosition"/>
     <module name="JavadocMethod"/>
     <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
+    <module name="JavadocVariable">
+      <property name="scope" value="public"/>
+    </module>
     <module name="JavadocStyle">
       <property name="checkFirstSentence" value="false"/>
     </module>
@@ -158,6 +160,7 @@
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround">
       <property name="allowEmptyMethods" value="true"/>
+      <property name="allowEmptyTypes" value="true"/>
       <property name="allowEmptyConstructors" value="true"/>
       <property name="allowEmptyCatches" value="true"/>
     </module>

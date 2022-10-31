@@ -66,6 +66,10 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
  */
 public class CoreHelper {
 
+    private CoreHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * A string of user agent
      */
@@ -811,6 +815,7 @@ public class CoreHelper {
      * @param discriminator The model's discriminator
      * @param registry The Map containing all discriminators as keys and associated classes as
      *        values
+     * @param <T> The type of the object to deserialize into
      * @return The type to deserialize into
      * @throws IOException Signals if any I/O exception occurred.
      */
@@ -873,6 +878,7 @@ public class CoreHelper {
      * @param name Name of the object.
      * @param obj Raw object sent from caller.
      * @param objBuilder String of elements.
+     * @param arraySerializationFormat The array serialization format
      */
     private static void encodeObjectAsQueryString(String name, Object obj, StringBuilder objBuilder,
             ArraySerializationFormat arraySerializationFormat) {
@@ -894,7 +900,7 @@ public class CoreHelper {
             // Load element value as string
 
 
-            if (accessor.matches(".*?\\[\\d+\\]$") && IsDelimeterFormat(arraySerializationFormat)) {
+            if (accessor.matches(".*?\\[\\d+\\]$") && isDelimeterFormat(arraySerializationFormat)) {
 
                 String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
 
@@ -931,7 +937,9 @@ public class CoreHelper {
 
     /**
      * Flattening a collection of objects into a string.
+     * @param elemName The element name of collection
      * @param array Array of elements to flatten.
+     * @param encode Need to encode?
      * @param fmt Format string to use for array flattening.
      * @param separator Separator to use for string concatenation.
      * @return Representative string made up of array elements.
@@ -982,6 +990,12 @@ public class CoreHelper {
         }
     }
 
+    /**
+     * Responsible to encode into base64 the username and password
+     * @param basicAuthUserName The auth username
+     * @param basicAuthPassword The auth password
+     * @return The base64 encoded String
+     */
     public static String getBase64EncodedCredentials(String basicAuthUserName,
             String basicAuthPassword) {
         String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
@@ -1037,6 +1051,7 @@ public class CoreHelper {
      * @param obj The object to convert into a map.
      * @param objectList The object list to populate.
      * @param processed List of object hashCodes that are already parsed.
+     * @param arraySerializationFormat The array serialization format
      */
     private static void objectToList(String objName, Object obj,
             List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
@@ -1178,7 +1193,7 @@ public class CoreHelper {
         }
     }
 
-    private static boolean IsDelimeterFormat(ArraySerializationFormat arraySerializationFormat) {
+    private static boolean isDelimeterFormat(ArraySerializationFormat arraySerializationFormat) {
         return (arraySerializationFormat == ArraySerializationFormat.CSV
                 || arraySerializationFormat == ArraySerializationFormat.TSV
                 || arraySerializationFormat == ArraySerializationFormat.PSV);

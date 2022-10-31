@@ -42,11 +42,23 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     private static final int SERVICE_UNAVAILABLE = 503;
 
     /**
-     * 
+     * Gateway timeout status code
      */
     private static final int GATEWAY_TIMEOUT = 504;
+
+    /**
+     * Web server is down code
+     */
     private static final int WEB_SERVER_IS_DOWN = 521;
+
+    /**
+     * Connection timeout
+     */
     private static final int CONNECTION_TIMEOUT = 522;
+
+    /**
+     * Server timeout
+     */
     private static final int SERVER_TIMEOUT = 524;
 
     /**
@@ -104,8 +116,6 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
      * Allow or prevent skipping SSL certificate verification.
      */
     private final boolean skipSslCertVerification;
-
-
 
     /**
      * @param timeout
@@ -303,11 +313,10 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
          * Do need to Override Http client configuration
          */
         private boolean overrideHttpClientConfigurations = true;
-        /** 
+        /**
          * Skip Ssl certification
          */
         private boolean skipSslCertVerification;
-
         /**
          * Default Constructor to initiate builder with default properties.
          */

@@ -21,7 +21,7 @@ public class AtomCase {
     @JsonValue
     private Map<String, Atom> atom;
 
-    AtomCase(Map<String, Atom> atom) {
+    AtomCase(final Map<String, Atom> atom) {
         this.atom = atom;
     }
 

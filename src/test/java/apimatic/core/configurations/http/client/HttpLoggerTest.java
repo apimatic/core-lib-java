@@ -36,6 +36,11 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 public class HttpLoggerTest {
 
     /**
+     * Success code
+     */
+    private static final int SUCCESS_CODE = 200;
+
+    /**
      * Initializes mocks annotated with Mock.
      */
     @Rule
@@ -76,6 +81,9 @@ public class HttpLoggerTest {
      */
     private HttpLogger httpLogger;
 
+    /**
+     * Test setup
+     */
     @Before
     public void setup() {
         httpLogger = new HttpLogger(logger, readonlyLogging);
@@ -292,7 +300,7 @@ public class HttpLoggerTest {
 
     @Test
     public void testLogResponseInfoWithoutRequest() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 
@@ -304,7 +312,7 @@ public class HttpLoggerTest {
 
     @Test
     public void testLogResponseInfo() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 
@@ -319,7 +327,7 @@ public class HttpLoggerTest {
 
     @Test
     public void testLogNullResponseInfo() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 

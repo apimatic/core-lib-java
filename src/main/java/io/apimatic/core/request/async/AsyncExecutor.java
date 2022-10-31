@@ -8,7 +8,7 @@ import io.apimatic.coreinterfaces.http.request.Request;
 /**
  * Executor service for asynchronous HTTP endpoint call
  */
-public class AsyncExecutor {
+public final class AsyncExecutor {
 
     /**
      * Make an asynchronous HTTP endpoint call.

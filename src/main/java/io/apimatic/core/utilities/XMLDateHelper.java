@@ -9,6 +9,12 @@ import java.util.regex.Pattern;
  */
 public class XMLDateHelper {
 
+    /**
+     * Serialize the simple date
+     * @param dateObj An instance of {@link LocalDate}
+     * @param rootName The root name of XML block
+     * @return
+     */
     public static String serializeSimpleDate(LocalDate dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
         xmlBlock += dateObj.toString();
@@ -16,6 +22,11 @@ public class XMLDateHelper {
         return xmlBlock;
     }
 
+    /**
+     * Deserialize the simple date string
+     * @param xml The Xml string
+     * @return An instance of {@link LocalDate}
+     */
     public static LocalDate deserializeSimpleDate(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
         Matcher patternMatcher = pattern.matcher(xml);
