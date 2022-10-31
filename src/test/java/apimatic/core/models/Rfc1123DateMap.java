@@ -136,7 +136,7 @@ public class Rfc1123DateMap {
          * Initialization constructor.
          * @param dateTime1 Map of String, value for dateTime1.
          */
-        public Builder(Map<String, LocalDateTime> dateTime1) {
+        public Builder(final Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 

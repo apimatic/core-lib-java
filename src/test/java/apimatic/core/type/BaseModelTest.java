@@ -59,7 +59,7 @@ public class BaseModelTest {
 
         assertEquals(actual, additionalProperties);
     }
-    
+
     @Test
     public void testAdditionalPropertiesSetValue() {
         BaseModel baseModel = new BaseModel();

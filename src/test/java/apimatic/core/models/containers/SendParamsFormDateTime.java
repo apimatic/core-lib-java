@@ -85,7 +85,7 @@ public abstract class SendParamsFormDateTime {
 
         /**
          * @param dateTime2 An instance of {@link LocalDateTime}
-         * @returnR
+         * @return R
          */
         R dateTime2(LocalDateTime dateTime2);
     }

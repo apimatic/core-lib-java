@@ -120,9 +120,7 @@ public class DateHelperTest {
         mapper.registerModule(module);
 
         String expected = "\"1997-07-13\"";
-
-        String actual = mapper.writeValueAsString(localDate);;
-
+        String actual = mapper.writeValueAsString(localDate);
         assertEquals(actual, expected);
     }
 

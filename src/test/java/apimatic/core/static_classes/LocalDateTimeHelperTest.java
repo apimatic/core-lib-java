@@ -21,6 +21,7 @@ import io.apimatic.core.utilities.LocalDateTimeHelper;
 public class LocalDateTimeHelperTest {
 
 
+    private static final long UNIXTIMESTAMP3 = 868756200L;
     private static final long UNITIMESTAMP2 = 1595639400L;
     private static final long UNIXTIMESTAMP1 = 963450600L;
     private static final int DAY25 = 25;
@@ -212,8 +213,8 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testLocalDateTimeToUnixTimeStamp() {
         LocalDateTime dateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         // stub
         String expected = "868756200";
         assertEquals(LocalDateTimeHelper.toUnixTimestamp(dateTime), expected);
@@ -229,11 +230,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testLocalDateTimeListToUnixTimeStamp() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
@@ -253,11 +254,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testLocalDateTimeMapToUnixTimeStamp() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -274,11 +275,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testListOfMapToUnixTimeStamp() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -313,10 +314,10 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testUnixDateTimeLong() {
         LocalDateTime dateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
 
-        Long expectedValue = 868756200L;
+        Long expectedValue = UNIXTIMESTAMP3;
         Long actualValue = LocalDateTimeHelper.toUnixTimestampLong(dateTime);
 
         assertEquals(actualValue, expectedValue);
@@ -326,9 +327,7 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testNullUnixDateTimeLong() {
         LocalDateTime dateTime = null;
-
         Long nullExpected = LocalDateTimeHelper.toUnixTimestampLong(dateTime);
-
         assertNull(nullExpected);
 
     }
@@ -336,11 +335,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testListToUnixTimeLong() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
@@ -359,11 +358,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testLocalDateTimeMapToUnixTimeLong() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -380,11 +379,11 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testListOfMapToUnixTimeLong() {
         LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2020, JULY, DAY25, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -420,8 +419,8 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testFromUnixTimeStampLong() {
         LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         Long date = UNIXTIMESTAMP1;
 
         LocalDateTime actualValue = LocalDateTimeHelper.fromUnixTimestamp(date);
@@ -431,8 +430,8 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testFromUnixTimeStampString() {
         LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         String date = "963450600";
 
         LocalDateTime actualValue = LocalDateTimeHelper.fromUnixTimestamp(date);
@@ -468,7 +467,7 @@ public class LocalDateTimeHelperTest {
 
         String expected = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
 
-        String actual = mapper.writeValueAsString(localDateTime);;
+        String actual = mapper.writeValueAsString(localDateTime);
 
         assertEquals(actual, expected);
     }
@@ -485,8 +484,7 @@ public class LocalDateTimeHelperTest {
 
         String datetime = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
         LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime actual = mapper.readValue(datetime, LocalDateTime.class);;
-
+        LocalDateTime actual = mapper.readValue(datetime, LocalDateTime.class);
         assertEquals(actual, expected);
     }
 
@@ -528,8 +526,8 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
         LocalDateTime localDateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -538,7 +536,7 @@ public class LocalDateTimeHelperTest {
         mapper.registerModule(module);
 
         String expected = "868756200";
-        String actual = mapper.writeValueAsString(localDateTime);;
+        String actual = mapper.writeValueAsString(localDateTime);
         assertEquals(actual, expected);
     }
 
@@ -554,8 +552,8 @@ public class LocalDateTimeHelperTest {
 
         String dateTime = "868756200";
         LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(
-                        ZonedDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
+                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime actual = mapper.readValue(dateTime, LocalDateTime.class);
         assertEquals(actual, expected);
     }

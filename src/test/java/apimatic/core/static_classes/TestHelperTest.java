@@ -22,7 +22,10 @@ import io.apimatic.core.testing.TestHelper;
 
 public class TestHelperTest {
 
-    private final String TEST_FILE_PATH =
+    private static final int BIG_NUMBER3 = 123434556;
+    private static final int BIG_NUMBER2 = 1234526596;
+    private static final int BIG_NUMBER1 = 123456;
+    private static final String TEST_FILE_PATH =
             "https://gist.githubusercontent.com/asadali214/0a64efec5353d351818475f928c50767/raw/8ad3533799ecb4e01a753aaf04d248e6702d4947/testFile.txt";
 
     @Test
@@ -490,9 +493,9 @@ public class TestHelperTest {
     @Test
     public void testContainsBigDecimal() {
         List<BigDecimal> expected = new ArrayList<>();
-        expected.add(new BigDecimal(123456));
+        expected.add(new BigDecimal(BIG_NUMBER1));
         List<BigDecimal> actual = new ArrayList<>();
-        actual.add(new BigDecimal(123456));
+        actual.add(new BigDecimal(BIG_NUMBER1));
         boolean result = TestHelper.containsBigDecimalList(actual, expected);
         assertTrue(result);
     }
@@ -500,7 +503,7 @@ public class TestHelperTest {
     @Test
     public void testContainsBigDecimal1() {
         List<BigDecimal> expected = new ArrayList<>();
-        expected.add(new BigDecimal(123456));
+        expected.add(new BigDecimal(BIG_NUMBER1));
         List<BigDecimal> actual = new ArrayList<>();
         actual.add(new BigDecimal(1234576));
         boolean result = TestHelper.containsBigDecimalList(actual, expected);
@@ -510,9 +513,9 @@ public class TestHelperTest {
     @Test
     public void testEqualsBigDecimalList() {
         List<BigDecimal> expected = new ArrayList<>();
-        expected.add(new BigDecimal(123456));
+        expected.add(new BigDecimal(BIG_NUMBER1));
         List<BigDecimal> actual = new ArrayList<>();
-        actual.add(new BigDecimal(123456));
+        actual.add(new BigDecimal(BIG_NUMBER1));
         boolean result = TestHelper.equalsBigDecimalList(actual, expected);
         assertTrue(result);
     }
@@ -520,9 +523,9 @@ public class TestHelperTest {
     @Test
     public void testEqualsBigDecimalList1() {
         List<BigDecimal> expected = new ArrayList<>();
-        expected.add(new BigDecimal(123456));
+        expected.add(new BigDecimal(BIG_NUMBER1));
         List<BigDecimal> actual = new ArrayList<>();
-        actual.add(new BigDecimal(123434556));
+        actual.add(new BigDecimal(BIG_NUMBER3));
         boolean result = TestHelper.equalsBigDecimalList(actual, expected);
         assertFalse(result);
     }
@@ -530,10 +533,10 @@ public class TestHelperTest {
     @Test
     public void testEqualsBigDecimalList2() {
         List<BigDecimal> expected = new ArrayList<>();
-        expected.add(new BigDecimal(123456));
-        expected.add(new BigDecimal(1234526596));
+        expected.add(new BigDecimal(BIG_NUMBER1));
+        expected.add(new BigDecimal(BIG_NUMBER2));
         List<BigDecimal> actual = new ArrayList<>();
-        actual.add(new BigDecimal(123434556));
+        actual.add(new BigDecimal(BIG_NUMBER3));
         boolean result = TestHelper.equalsBigDecimalList(actual, expected);
         assertFalse(result);
     }

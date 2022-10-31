@@ -50,6 +50,8 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 
 public class CoreHelperTest {
 
+    private static final int YEAR2010 = 2010;
+    private static final double PRECISION_NUMBER = 1.2;
     private static final int YEAR3 = 2020;
     private static final int SECONDS1 = 54;
     private static final int MINUTE = 01;
@@ -1077,7 +1079,7 @@ public class CoreHelperTest {
 
     @Test
     public void testTypeCombinatorSerializationInteger() throws JsonProcessingException {
-        SendScalarParamBody body = SendScalarParamBody.fromPrecision(Arrays.asList(1.2));
+        SendScalarParamBody body = SendScalarParamBody.fromPrecision(Arrays.asList(PRECISION_NUMBER));
         String expected = "[1.2]";
         String actual = CoreHelper.serializeTypeCombinator(body);
         assertEquals(actual, expected);
@@ -1261,7 +1263,7 @@ public class CoreHelperTest {
         List<Person> formDateTime = new ArrayList<>();
         formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(YEAR3, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
                 .build());
-        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(2010, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
+        formDateTime.add(new Person.Builder().birthtime(LocalDateTime.of(YEAR2010, MONTH2, DAY1, HOUR2, MINUTE, SECONDS1))
                 .build());
 
         Map<String, Object> formParameters = new HashMap<>();

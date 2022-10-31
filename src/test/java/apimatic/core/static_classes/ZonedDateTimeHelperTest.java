@@ -35,7 +35,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeToRfc1123() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         // stub
         String expected = "Sun, 13 Jul 1997 06:10:00 GMT";
         String actual = ZonedDateTimeHelper.toRfc1123DateTime(zonedDateTime);
@@ -50,8 +51,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeListToRfc1123() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         List<ZonedDateTime> dateTimeArray = Arrays.asList(zonedDateTime1, zonedDateTime2);
 
         // stub
@@ -71,8 +74,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeMapToRfc1123() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -89,8 +94,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeListOfMapToRfc1123() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -125,7 +132,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeToRfc8601() {
-        ZonedDateTime dateTime = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime dateTime =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         // stub
         String expected = "1997-07-13T06:10Z[GMT]";
         String actual = ZonedDateTimeHelper.toRfc8601DateTime(dateTime);
@@ -141,8 +149,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeListToRfc8601() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
 
         List<ZonedDateTime> dateTimeArray = Arrays.asList(zonedDateTime1, zonedDateTime2);
 
@@ -162,8 +172,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeMapToRfc8601() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -178,8 +190,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeListOfMapToRfc8601() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -231,8 +245,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeListToUnixTimeStamp() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         List<ZonedDateTime> dateTimeArray = Arrays.asList(zonedDateTime1, zonedDateTime2);
 
         // stub
@@ -250,8 +266,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeMapToUnixTimeStamp() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -267,8 +285,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testListOfMapToUnixTimeStamp() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -324,8 +344,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testListToUnixTimeLong() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         List<ZonedDateTime> dateTimeArray = Arrays.asList(zonedDateTime1, zonedDateTime2);
 
         // stub
@@ -343,8 +365,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testZonedDateTimeMapToUnixTimeLong() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -359,8 +383,10 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testListOfMapToUnixTimeLong() {
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime1 =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime zonedDateTime2 =
+                ZonedDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         Map<String, ZonedDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", zonedDateTime1);
         dateTimeMap.put("dateTime2", zonedDateTime2);
@@ -393,7 +419,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromUnixTimeStampLong() {
-        ZonedDateTime expected = ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT"));
 
         Long date = UNIXTIMESTAMP4;
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromUnixTimestamp(date);
@@ -403,7 +430,8 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromUnixTimeStampString() {
-        ZonedDateTime expected = ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR2000, JULY, DAY13, 1, MINUTES10, 0, 0, ZoneId.of("GMT"));
 
         String date = "963450600";
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromUnixTimestamp(date);
@@ -415,7 +443,8 @@ public class ZonedDateTimeHelperTest {
     public void testFromRfc1123String() {
         String date = "Sun, 13 Jul 1997 06:10:00 GMT";
 
-        ZonedDateTime expected = ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
+        ZonedDateTime expected =
+                ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromRfc1123DateTime(date);
         assertEquals(actualValue, expected);
     }
@@ -443,7 +472,7 @@ public class ZonedDateTimeHelperTest {
         mapper.registerModule(module);
 
         String expected = "\"Sun, 13 Jul 1997 01:10:00 GMT\"";
-        String actual = mapper.writeValueAsString(zonedDateTime);;
+        String actual = mapper.writeValueAsString(zonedDateTime);
         assertEquals(actual, expected);
     }
 
@@ -479,7 +508,7 @@ public class ZonedDateTimeHelperTest {
 
         String expected = "\"1997-07-13T01:10Z[GMT]\"";
 
-        String actual = mapper.writeValueAsString(zonedDateTime);;
+        String actual = mapper.writeValueAsString(zonedDateTime);
 
         assertEquals(actual, expected);
     }
@@ -504,8 +533,6 @@ public class ZonedDateTimeHelperTest {
         assertEquals(actualGMT, expected);
     }
 
-
-
     @SuppressWarnings("unchecked")
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
@@ -519,9 +546,7 @@ public class ZonedDateTimeHelperTest {
         mapper.registerModule(module);
 
         String expected = "868756200";
-
-        String actual = mapper.writeValueAsString(zonedDateTime);;
-
+        String actual = mapper.writeValueAsString(zonedDateTime);
         assertEquals(actual, expected);
     }
 
@@ -539,7 +564,7 @@ public class ZonedDateTimeHelperTest {
 
         LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10);
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
-        ZonedDateTime actual = mapper.readValue(datetime, ZonedDateTime.class);;
+        ZonedDateTime actual = mapper.readValue(datetime, ZonedDateTime.class);
         ZonedDateTime actualGMT = ZonedDateTime.ofInstant(actual.toInstant(), ZoneId.of("GMT"));
 
         assertEquals(actualGMT, expected);
