@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -365,6 +366,51 @@ public class ZonedDateTimeHelper extends DateHelper {
         public void serialize(ZonedDateTime value, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
             jgen.writeString(toRfc8601DateTime(value));
+        }
+    }
+    
+    /**
+     * Rfc1123 Date Time adapter utility class
+     */
+    public static class Rfc1123DateTimeAdapter extends XmlAdapter<String, ZonedDateTime> {
+        @Override
+        public String marshal(ZonedDateTime dateTime) {
+            return ZonedDateTimeHelper.toRfc1123DateTime(dateTime);
+        }
+
+        @Override
+        public ZonedDateTime unmarshal(String dateTime) {
+            return ZonedDateTimeHelper.fromRfc1123DateTime(dateTime);
+        }
+    }
+
+    /**
+     * Rfc8601 Date Time adapter utility class
+     */
+    public static class Rfc8601DateTimeAdapter extends XmlAdapter<String, ZonedDateTime> {
+        @Override
+        public String marshal(ZonedDateTime dateTime) {
+            return ZonedDateTimeHelper.toRfc8601DateTime(dateTime);
+        }
+
+        @Override
+        public ZonedDateTime unmarshal(String dateTime) {
+            return ZonedDateTimeHelper.fromRfc8601DateTime(dateTime);
+        }
+    }
+
+    /**
+     * UnixTimestamp adapter utility class
+     */
+    public static class UnixTimestampAdapter extends XmlAdapter<String, ZonedDateTime> {
+        @Override
+        public String marshal(ZonedDateTime dateTime) {
+            return ZonedDateTimeHelper.toUnixTimestamp(dateTime);
+        }
+
+        @Override
+        public ZonedDateTime unmarshal(String dateTime) {
+            return ZonedDateTimeHelper.fromUnixTimestamp(dateTime);
         }
     }
 }

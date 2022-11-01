@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -110,6 +110,21 @@ public class DateHelper {
         public void serialize(LocalDate value, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
             jgen.writeString(toSimpleDate(value));
+        }
+    }
+
+    /**
+     * Simple Adapter utility class
+     */
+    public static class SimpleAdapter extends XmlAdapter<String, LocalDate> {
+        @Override
+        public String marshal(LocalDate date) {
+            return date.toString();
+        }
+
+        @Override
+        public LocalDate unmarshal(String date) {
+            return LocalDate.parse(date);
         }
     }
 }

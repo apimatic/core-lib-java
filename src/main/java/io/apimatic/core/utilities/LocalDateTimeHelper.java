@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -382,6 +383,51 @@ public class LocalDateTimeHelper extends DateHelper {
         public void serialize(LocalDateTime value, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
             jgen.writeString(toRfc8601DateTime(value));
+        }
+    }
+
+    /**
+     * Rfc1123 Date Time adapter utility class
+     */
+    public static class Rfc1123DateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toRfc1123DateTime(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromRfc1123DateTime(dateTime);
+        }
+    }
+
+    /**
+     * Rfc8601 Date Time adapter utility class
+     */
+    public static class Rfc8601DateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toRfc8601DateTime(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromRfc8601DateTime(dateTime);
+        }
+    }
+
+    /**
+     * UnixTimestamp adapter utility class
+     */
+    public static class UnixTimestampAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toUnixTimestamp(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromUnixTimestamp(dateTime);
         }
     }
 }
