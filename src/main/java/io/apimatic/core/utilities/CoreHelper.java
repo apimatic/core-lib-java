@@ -64,7 +64,7 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 /**
  * This is a Helper class with commonly used utilities for the SDK.
  */
-public final class CoreHelper {
+public class CoreHelper {
 
     /**
      * A string of user agent
@@ -110,7 +110,7 @@ public final class CoreHelper {
                                     .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
                     .build();
 
-    private CoreHelper() {}
+    protected CoreHelper() {}
 
 
     /**
