@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +29,7 @@ public class LocalDateTimeHelper extends DateHelper {
     /**
      * Match the pattern for a datetime string in Rfc1123 format.
      */
-    private static final DateTimeFormatter RFC1123_DATE_TIME_FORMATTER = 
+    private static final DateTimeFormatter RFC1123_DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
 
     /**
@@ -69,7 +70,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         List<String> valuesAsString = new ArrayList<>();
-        for (LocalDateTime value: values) {
+        for (LocalDateTime value : values) {
             valuesAsString.add(toUnixTimestamp(value));
         }
         return valuesAsString;
@@ -85,7 +86,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         Map<String, String> valuesAsString = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> value: values.entrySet()) {
+        for (Map.Entry<String, LocalDateTime> value : values.entrySet()) {
             valuesAsString.put(value.getKey(), toUnixTimestamp(value.getValue()));
         }
         return valuesAsString;
@@ -96,8 +97,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert
      * @return The list of map of converted Strings
      */
-    public static List<Map<String, String>> toArrayOfMapOfUnixTimestamp(
-            List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>>
+            toArrayOfMapOfUnixTimestamp(List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -146,7 +147,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         Map<String, Long> valuesAsLong = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> value: values.entrySet()) {
+        for (Map.Entry<String, LocalDateTime> value : values.entrySet()) {
             valuesAsLong.put(value.getKey(), toUnixTimestampLong(value.getValue()));
         }
         return valuesAsLong;
@@ -157,8 +158,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert
      * @return The list of map of converted Longs
      */
-    public static List<Map<String, Long>> toArrayOfMapOfUnixTimestampLong(
-            List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, Long>>
+            toArrayOfMapOfUnixTimestampLong(List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -184,7 +185,7 @@ public class LocalDateTimeHelper extends DateHelper {
      * @return The converted String
      */
     public static String toRfc1123DateTime(LocalDateTime value) {
-         return value == null ? null
+        return value == null ? null
                 : RFC1123_DATE_TIME_FORMATTER.format(value.atZone(ZoneId.of("GMT")));
     }
 
@@ -198,7 +199,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         List<String> valuesAsString = new ArrayList<>();
-        for (LocalDateTime value: values) {
+        for (LocalDateTime value : values) {
             valuesAsString.add(toRfc1123DateTime(value));
         }
         return valuesAsString;
@@ -214,7 +215,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         Map<String, String> valuesAsString = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> value: values.entrySet()) {
+        for (Map.Entry<String, LocalDateTime> value : values.entrySet()) {
             valuesAsString.put(value.getKey(), toRfc1123DateTime(value.getValue()));
         }
         return valuesAsString;
@@ -225,8 +226,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert
      * @return The list of map of converted Strings
      */
-    public static List<Map<String, String>> toArrayOfMapOfRfc1123DateTime(
-            List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>>
+            toArrayOfMapOfRfc1123DateTime(List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -271,7 +272,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         List<String> valuesAsString = new ArrayList<>();
-        for (LocalDateTime value: values) {
+        for (LocalDateTime value : values) {
             valuesAsString.add(toRfc8601DateTime(value));
         }
         return valuesAsString;
@@ -287,7 +288,7 @@ public class LocalDateTimeHelper extends DateHelper {
             return null;
         }
         Map<String, String> valuesAsString = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> value: values.entrySet()) {
+        for (Map.Entry<String, LocalDateTime> value : values.entrySet()) {
             valuesAsString.put(value.getKey(), toRfc8601DateTime(value.getValue()));
         }
         return valuesAsString;
@@ -298,8 +299,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert
      * @return The list of map of converted Strings
      */
-    public static List<Map<String, String>> toArrayOfMapOfRfc8601DateTime(
-            List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>>
+            toArrayOfMapOfRfc8601DateTime(List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -309,9 +310,9 @@ public class LocalDateTimeHelper extends DateHelper {
         }
         return valuesAsString;
     }
-    
-   
-    
+
+
+
     /**
      * A class to handle deserialization of DateTime objects to Unix Timestamps.
      */
@@ -381,6 +382,51 @@ public class LocalDateTimeHelper extends DateHelper {
         public void serialize(LocalDateTime value, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
             jgen.writeString(toRfc8601DateTime(value));
+        }
+    }
+
+    /**
+     * Rfc1123 Date Time adapter utility class
+     */
+    public static class Rfc1123DateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toRfc1123DateTime(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromRfc1123DateTime(dateTime);
+        }
+    }
+
+    /**
+     * Rfc8601 Date Time adapter utility class
+     */
+    public static class Rfc8601DateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toRfc8601DateTime(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromRfc8601DateTime(dateTime);
+        }
+    }
+
+    /**
+     * UnixTimestamp adapter utility class
+     */
+    public static class UnixTimestampAdapter extends XmlAdapter<String, LocalDateTime> {
+        @Override
+        public String marshal(LocalDateTime dateTime) {
+            return LocalDateTimeHelper.toUnixTimestamp(dateTime);
+        }
+
+        @Override
+        public LocalDateTime unmarshal(String dateTime) {
+            return LocalDateTimeHelper.fromUnixTimestamp(dateTime);
         }
     }
 }

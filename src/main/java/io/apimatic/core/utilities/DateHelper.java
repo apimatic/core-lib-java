@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,13 +17,11 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 /**
  * This is a utility class for Date operations.
- *
  */
 public class DateHelper {
 
     /**
      * Parse a simple date string to a LocalDate object.
-     * 
      * @param date The date string
      * @return The parsed LocalDate object
      */
@@ -33,7 +31,6 @@ public class DateHelper {
 
     /**
      * Convert a LocalDate object to a string.
-     * 
      * @param value The LocalDate object to convert
      * @return The converted Strings
      */
@@ -43,7 +40,6 @@ public class DateHelper {
 
     /**
      * Convert a List of LocalDate objects to strings.
-     * 
      * @param values The List of LocalDate objects to convert
      * @return The List of converted Strings
      */
@@ -60,7 +56,6 @@ public class DateHelper {
 
     /**
      * Convert a Map of LocalDate objects to strings.
-     * 
      * @param values The Map of LocalDate objects to convert
      * @return The Map of converted Strings
      */
@@ -77,12 +72,11 @@ public class DateHelper {
 
     /**
      * Convert a List of Map of LocalDate objects to strings.
-     * 
      * @param values The List of Map of LocalDate objects to convert
      * @return The list of map of converted Strings
      */
-    public static List<Map<String, String>> toArrayOfMapOfSimpleDate(
-            List<Map<String, LocalDate>> values) {
+    public static List<Map<String, String>>
+            toArrayOfMapOfSimpleDate(List<Map<String, LocalDate>> values) {
         if (values == null) {
             return null;
         }
@@ -114,6 +108,21 @@ public class DateHelper {
         public void serialize(LocalDate value, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
             jgen.writeString(toSimpleDate(value));
+        }
+    }
+
+    /**
+     * Simple Adapter utility class
+     */
+    public static class SimpleAdapter extends XmlAdapter<String, LocalDate> {
+        @Override
+        public String marshal(LocalDate date) {
+            return date.toString();
+        }
+
+        @Override
+        public LocalDate unmarshal(String date) {
+            return LocalDate.parse(date);
         }
     }
 }
