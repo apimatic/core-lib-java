@@ -368,7 +368,7 @@ public class ZonedDateTimeHelper extends DateHelper {
             jgen.writeString(toRfc8601DateTime(value));
         }
     }
-    
+
     /**
      * Rfc1123 Date Time adapter utility class
      */
