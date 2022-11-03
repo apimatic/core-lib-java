@@ -15,13 +15,13 @@ public class HttpHeadersMock {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link HttpHeaders}
+     * Mock of {@link HttpHeaders}.
      */
     @Mock
     private HttpHeaders httpHeaders;
 
     /**
-     * @return {@link HttpHeaders}
+     * @return {@link HttpHeaders}.
      */
     public HttpHeaders getHttpHeaders() {
         return httpHeaders;

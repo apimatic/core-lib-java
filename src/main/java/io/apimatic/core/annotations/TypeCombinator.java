@@ -24,7 +24,7 @@ public interface TypeCombinator {
          * constructors), to apply to values of {@link java.util.Map}-valued properties; not
          * applicable for value types used as Array elements or {@link java.util.Collection} and
          * {@link java.util.Map} values.
-         * @return JsonSerializer instance
+         * @return JsonSerializer instance.
          */
         Class<? extends JsonSerializer<?>> contentUsing() default JsonSerializer.None.class;
     }
