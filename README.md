@@ -1,6 +1,9 @@
 # APIMatic Core Library for JAVA
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
+[![Lint Code][lint-badge]][lint-url]
+[![Maintainability][maintainability-url]][code-climate-url]
+[![Test Coverage][test-coverage-url]][code-climate-url]
 [![Licence][license-badge]][license-url]
 
 ## Introduction
@@ -59,3 +62,8 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 [maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.2.0
 [test-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml/badge.svg
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
+[code-climate-url]: https://codeclimate.com/github/apimatic/core-lib-java
+[maintainability-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/maintainability
+[test-coverage-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/test_coverage
+[lint-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml/badge.svg
+[lint-url]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml
