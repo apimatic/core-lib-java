@@ -12,15 +12,6 @@ This project contains core logic and the utilities for the APIMatic's Java SDK
 * The JRE flavor requires `JDK 1.8`.
 ## Install the maven package
 Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
-To add a dependency on core library using Maven, use the following:
-```java
-<dependency>
-    <groupId>io.apimatic</groupId>
-    <artifactId>core</artifactId>
-    <version>0.2.2</version>
-</dependency>
-```
-
 
 ## Classes
 | Name                                                                    | Description                                                        |
