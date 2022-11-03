@@ -113,16 +113,16 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     private Set<String> headerFilters;
 
     /**
-     * @param logRequestInfo.
-     * @param logResponseInfo.
-     * @param logRequestHeaders.
-     * @param logResponseHeaders.
-     * @param logRequestBody.
-     * @param logResponseBody.
-     * @param prettyPrintLogs.
-     * @param level.
-     * @param headerLoggingPolicy.
-     * @param headerFilters.
+     * @param logRequestInfo
+     * @param logResponseInfo
+     * @param logRequestHeaders
+     * @param logResponseHeaders
+     * @param logRequestBody
+     * @param logResponseBody
+     * @param prettyPrintLogs
+     * @param level
+     * @param headerLoggingPolicy
+     * @param headerFilters
      */
     private ApiLoggingConfiguration(boolean logRequestInfo, boolean logResponseInfo,
             boolean logRequestHeaders, boolean logResponseHeaders, boolean logRequestBody,

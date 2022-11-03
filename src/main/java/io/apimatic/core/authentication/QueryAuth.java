@@ -17,7 +17,7 @@ public class QueryAuth implements Authentication {
     private Map<String, String> authParams = new HashMap<>();
 
     /**
-     * @param authParams.
+     * @param authParams
      */
     public QueryAuth(final Map<String, String> authParams) {
         this.authParams = authParams;
@@ -25,7 +25,7 @@ public class QueryAuth implements Authentication {
 
     /**
      * Apply the Query authentication.
-     * @param httpRequest.
+     * @param httpRequest
      */
     @Override
     public Request apply(Request httpRequest) {

@@ -64,15 +64,15 @@ public final class GlobalConfiguration {
 
     /**
      * A private constructor.
-     * @param compatibilityFactory.
-     * @param userAgent.
-     * @param userAgentConfig.
-     * @param authentications.
-     * @param callback.
-     * @param httpClient.
-     * @param globalHeaders.
-     * @param additionalHeaders.
-     * @param baseUri.
+     * @param compatibilityFactory
+     * @param userAgent
+     * @param userAgentConfig
+     * @param authentications
+     * @param callback
+     * @param httpClient
+     * @param globalHeaders
+     * @param additionalHeaders
+     * @param baseUri
      */
     private GlobalConfiguration(final CompatibilityFactory compatibilityFactory,
             final String userAgent, final Map<String, String> userAgentConfig,

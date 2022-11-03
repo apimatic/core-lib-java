@@ -51,21 +51,21 @@ public final class HttpRequest {
     private final CompatibilityFactory compatibilityFactory;
 
     /**
-     * @param coreConfig.
-     * @param server.
-     * @param path.
-     * @param httpMethod.
-     * @param authenticationKey.
-     * @param queryParams.
-     * @param templateParams.
-     * @param headerParams.
-     * @param formParams.
-     * @param body.
-     * @param formParameters.
-     * @param bodySerializer.
-     * @param bodyParameters.
-     * @param arraySerializationFormat.
-     * @throws IOException.
+     * @param coreConfig
+     * @param server
+     * @param path
+     * @param httpMethod
+     * @param authenticationKey
+     * @param queryParams
+     * @param templateParams
+     * @param headerParams
+     * @param formParams
+     * @param body
+     * @param formParameters
+     * @param bodySerializer
+     * @param bodyParameters
+     * @param arraySerializationFormat
+     * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
             final String path, final Method httpMethod, final String authenticationKey,
@@ -124,11 +124,11 @@ public final class HttpRequest {
     }
 
     /**
-     * @param formParams.
-     * @param optionalFormParamaters.
-     * @param arraySerializationFormat.
-     * @return list of form parameters.
-     * @throws IOException.
+     * @param formParams
+     * @param optionalFormParamaters
+     * @param arraySerializationFormat
+     * @return list of form parameters
+     * @throws IOException
      */
     private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
             Map<String, Object> optionalFormParamaters,

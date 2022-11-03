@@ -69,22 +69,22 @@ public class ChildClass extends ParentClass {
 
     /**
      * Internal initialization constructor.
-     * @param grandParentRequiredNullable.
-     * @param grandParentRequired.
-     * @param parentRequiredNullable.
-     * @param parentRequired.
-     * @param requiredNullable.
-     * @param required.
-     * @param grandParentOptional.
-     * @param mClass.
-     * @param precision.
-     * @param bigDecimal.
-     * @param parentOptionalNullableWithDefaultValue.
-     * @param parentOptional.
-     * @param optionalNullable.
-     * @param optionalNullableWithDefaultValue.
-     * @param optional.
-     * @param childClassArray.
+     * @param grandParentRequiredNullable
+     * @param grandParentRequired
+     * @param parentRequiredNullable
+     * @param parentRequired
+     * @param requiredNullable
+     * @param required
+     * @param grandParentOptional
+     * @param mClass
+     * @param precision
+     * @param bigDecimal
+     * @param parentOptionalNullableWithDefaultValue
+     * @param parentOptional
+     * @param optionalNullable
+     * @param optionalNullableWithDefaultValue
+     * @param optional
+     * @param childClassArray
      */
     protected ChildClass(final String grandParentRequiredNullable, final String grandParentRequired,
             final String parentRequiredNullable, final String parentRequired,

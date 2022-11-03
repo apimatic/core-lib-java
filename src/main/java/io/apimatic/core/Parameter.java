@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import io.apimatic.coreinterfaces.http.request.MultipartFile;
 import io.apimatic.coreinterfaces.http.request.MutliPartRequestType;
 import io.apimatic.coreinterfaces.type.functional.Serializer;
 

@@ -123,17 +123,17 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     private final boolean skipSslCertVerification;
 
     /**
-     * @param timeout.
-     * @param numberOfRetries.
-     * @param backOffFactor.
-     * @param retryInterval.
-     * @param skipSslCertVerification.
-     * @param httpStatusCodesToRetry.
-     * @param httpMethodsToRetry.
-     * @param maximumRetryWaitTime.
-     * @param shouldRetryOnTimeout.
-     * @param httpClientInstance.
-     * @param overrideHttpClientConfigurations.
+     * @param timeout
+     * @param numberOfRetries
+     * @param backOffFactor
+     * @param retryInterval
+     * @param skipSslCertVerification
+     * @param httpStatusCodesToRetry
+     * @param httpMethodsToRetry
+     * @param maximumRetryWaitTime
+     * @param shouldRetryOnTimeout
+     * @param httpClientInstance
+     * @param overrideHttpClientConfigurations
      */
     private CoreHttpClientConfiguration(final long timeout, final int numberOfRetries,
             final int backOffFactor, final long retryInterval,

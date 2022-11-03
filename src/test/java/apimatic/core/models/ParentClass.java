@@ -71,16 +71,16 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal initialization constructor.
-     * @param grandParentRequiredNullable.
-     * @param grandParentRequired.
-     * @param parentRequiredNullable.
-     * @param parentRequired.
-     * @param grandParentOptional.
-     * @param mClass.
-     * @param precision.
-     * @param bigDecimal.
-     * @param parentOptionalNullableWithDefaultValue.
-     * @param parentOptional.
+     * @param grandParentRequiredNullable
+     * @param grandParentRequired
+     * @param parentRequiredNullable
+     * @param parentRequired
+     * @param grandParentOptional
+     * @param mClass
+     * @param precision
+     * @param bigDecimal
+     * @param parentOptionalNullableWithDefaultValue
+     * @param parentOptional
      */
     protected ParentClass(final String grandParentRequiredNullable,
             final String grandParentRequired, final String parentRequiredNullable,

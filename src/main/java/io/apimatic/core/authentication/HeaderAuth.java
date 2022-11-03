@@ -17,7 +17,7 @@ public class HeaderAuth implements Authentication {
     private Map<String, String> authParams = new HashMap<>();
 
     /**
-     * @param authParams.
+     * @param authParams
      */
     public HeaderAuth(final Map<String, String> authParams) {
         this.authParams = authParams;
