@@ -15,13 +15,13 @@ public class CoreHttpRequestMock extends HttpHeadersMock {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link Request}
+     * Mock of {@link Request}.
      */
     @Mock
     private Request coreHttpRequest;
 
     /**
-     * @return {@link Request}
+     * @return {@link Request}.
      */
     public Request getCoreHttpRequest() {
         return coreHttpRequest;

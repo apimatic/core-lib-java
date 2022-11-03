@@ -18,7 +18,7 @@ import io.apimatic.core.types.OptionalNullable;
  */
 public class ParentClass extends GrandParentClass {
     /**
-     * Random number
+     * Random number.
      */
     private static final int RANDOM_NUMBER = 23;
     private OptionalNullable<Integer> mClass;
@@ -71,16 +71,16 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal initialization constructor.
-     * @param grandParentRequiredNullable
-     * @param grandParentRequired
-     * @param parentRequiredNullable
-     * @param parentRequired
-     * @param grandParentOptional
-     * @param mClass
-     * @param precision
-     * @param bigDecimal
-     * @param parentOptionalNullableWithDefaultValue
-     * @param parentOptional
+     * @param grandParentRequiredNullable.
+     * @param grandParentRequired.
+     * @param parentRequiredNullable.
+     * @param parentRequired.
+     * @param grandParentOptional.
+     * @param mClass.
+     * @param precision.
+     * @param bigDecimal.
+     * @param parentOptionalNullableWithDefaultValue.
+     * @param parentOptional.
      */
     protected ParentClass(final String grandParentRequiredNullable,
             final String grandParentRequired, final String parentRequiredNullable,
@@ -101,7 +101,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal Getter for Class.
-     * @return Returns the Internal Integer
+     * @return Returns the Internal Integer.
      */
     @JsonGetter("class")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -112,7 +112,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for Class.
-     * @return Returns the Integer
+     * @return Returns the Integer.
      */
     public Integer getClassField() {
         return OptionalNullable.getFrom(mClass);
@@ -120,7 +120,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for Class.
-     * @param classField Value for Integer
+     * @param classField Value for Integer.
      */
     @JsonSetter("class")
     public void setClassField(Integer classField) {
@@ -136,7 +136,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal Getter for Precision.
-     * @return Returns the Internal Double
+     * @return Returns the Internal Double.
      */
     @JsonGetter("precision")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -147,7 +147,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for Precision.
-     * @return Returns the Double
+     * @return Returns the Double.
      */
     public Double getPrecision() {
         return OptionalNullable.getFrom(precision);
@@ -155,7 +155,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for Precision.
-     * @param precision Value for Double
+     * @param precision Value for Double.
      */
     @JsonSetter("precision")
     public void setPrecision(Double precision) {
@@ -171,7 +171,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal Getter for BigDecimal.
-     * @return Returns the Internal BigDecimal
+     * @return Returns the Internal BigDecimal.
      */
     @JsonGetter("Big_Decimal")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -182,7 +182,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for BigDecimal.
-     * @return Returns the BigDecimal
+     * @return Returns the BigDecimal.
      */
     public BigDecimal getBigDecimal() {
         return OptionalNullable.getFrom(bigDecimal);
@@ -206,7 +206,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Internal Getter for ParentOptionalNullableWithDefaultValue.
-     * @return Returns the Internal String
+     * @return Returns the Internal String.
      */
     @JsonGetter("Parent_Optional_Nullable_With_Default_Value")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -217,7 +217,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for ParentOptionalNullableWithDefaultValue.
-     * @return Returns the String
+     * @return Returns the String.
      */
     public String getParentOptionalNullableWithDefaultValue() {
         return OptionalNullable.getFrom(parentOptionalNullableWithDefaultValue);
@@ -225,7 +225,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for ParentOptionalNullableWithDefaultValue.
-     * @param parentOptionalNullableWithDefaultValue Value for String
+     * @param parentOptionalNullableWithDefaultValue Value for String.
      */
     @JsonSetter("Parent_Optional_Nullable_With_Default_Value")
     public void setParentOptionalNullableWithDefaultValue(
@@ -243,7 +243,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for ParentOptional.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Parent_Optional")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -253,7 +253,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for ParentOptional.
-     * @param parentOptional Value for String
+     * @param parentOptional Value for String.
      */
     @JsonSetter("Parent_Optional")
     public void setParentOptional(String parentOptional) {
@@ -262,7 +262,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for ParentRequiredNullable.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Parent_Required_Nullable")
     public String getParentRequiredNullable() {
@@ -271,7 +271,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for ParentRequiredNullable.
-     * @param parentRequiredNullable Value for String
+     * @param parentRequiredNullable Value for String.
      */
     @JsonSetter("Parent_Required_Nullable")
     public void setParentRequiredNullable(String parentRequiredNullable) {
@@ -280,7 +280,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Getter for ParentRequired.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Parent_Required")
     public String getParentRequired() {
@@ -289,7 +289,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Setter for ParentRequired.
-     * @param parentRequired Value for String
+     * @param parentRequired Value for String.
      */
     @JsonSetter("Parent_Required")
     public void setParentRequired(String parentRequired) {
@@ -298,7 +298,7 @@ public class ParentClass extends GrandParentClass {
 
     /**
      * Converts this ParentClass into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -315,7 +315,7 @@ public class ParentClass extends GrandParentClass {
     /**
      * Builds a new {@link ParentClass.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link ParentClass.Builder} object
+     * @return a new {@link ParentClass.Builder} object.
      */
     public Builder toParentClassBuilder() {
         Builder builder =
@@ -369,7 +369,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for grandParentRequiredNullable.
          * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
-         * @return Builder
+         * @return Builder.
          */
         public Builder grandParentRequiredNullable(String grandParentRequiredNullable) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
@@ -379,7 +379,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for grandParentRequired.
          * @param grandParentRequired String value for grandParentRequired.
-         * @return Builder
+         * @return Builder.
          */
         public Builder grandParentRequired(String grandParentRequired) {
             this.grandParentRequired = grandParentRequired;
@@ -389,7 +389,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for parentRequiredNullable.
          * @param parentRequiredNullable String value for parentRequiredNullable.
-         * @return Builder
+         * @return Builder.
          */
         public Builder parentRequiredNullable(String parentRequiredNullable) {
             this.parentRequiredNullable = parentRequiredNullable;
@@ -399,7 +399,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for parentRequired.
          * @param parentRequired String value for parentRequired.
-         * @return Builder
+         * @return Builder.
          */
         public Builder parentRequired(String parentRequired) {
             this.parentRequired = parentRequired;
@@ -409,7 +409,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for grandParentOptional.
          * @param grandParentOptional String value for grandParentOptional.
-         * @return Builder
+         * @return Builder.
          */
         public Builder grandParentOptional(String grandParentOptional) {
             this.grandParentOptional = grandParentOptional;
@@ -419,7 +419,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for mClass.
          * @param mClass Integer value for mClass.
-         * @return Builder
+         * @return Builder.
          */
         public Builder mClass(Integer mClass) {
             this.mClass = OptionalNullable.of(mClass);
@@ -428,7 +428,7 @@ public class ParentClass extends GrandParentClass {
 
         /**
          * UnSetter for mClass.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetMClass() {
             mClass = null;
@@ -438,7 +438,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for precision.
          * @param precision Double value for precision.
-         * @return Builder
+         * @return Builder.
          */
         public Builder precision(Double precision) {
             this.precision = OptionalNullable.of(precision);
@@ -447,7 +447,7 @@ public class ParentClass extends GrandParentClass {
 
         /**
          * UnSetter for precision.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetPrecision() {
             precision = null;
@@ -457,7 +457,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for bigDecimal.
          * @param bigDecimal BigDecimal value for bigDecimal.
-         * @return Builder
+         * @return Builder.
          */
         public Builder bigDecimal(BigDecimal bigDecimal) {
             this.bigDecimal = OptionalNullable.of(bigDecimal);
@@ -466,7 +466,7 @@ public class ParentClass extends GrandParentClass {
 
         /**
          * UnSetter for bigDecimal.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetBigDecimal() {
             bigDecimal = null;
@@ -477,7 +477,7 @@ public class ParentClass extends GrandParentClass {
          * Setter for parentOptionalNullableWithDefaultValue.
          * @param parentOptionalNullableWithDefaultValue String value for
          *        parentOptionalNullableWithDefaultValue.
-         * @return Builder
+         * @return Builder.
          */
         public Builder parentOptionalNullableWithDefaultValue(
                 String parentOptionalNullableWithDefaultValue) {
@@ -488,7 +488,7 @@ public class ParentClass extends GrandParentClass {
 
         /**
          * UnSetter for parentOptionalNullableWithDefaultValue.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetParentOptionalNullableWithDefaultValue() {
             parentOptionalNullableWithDefaultValue = null;
@@ -498,7 +498,7 @@ public class ParentClass extends GrandParentClass {
         /**
          * Setter for parentOptional.
          * @param parentOptional String value for parentOptional.
-         * @return Builder
+         * @return Builder.
          */
         public Builder parentOptional(String parentOptional) {
             this.parentOptional = parentOptional;
@@ -507,7 +507,7 @@ public class ParentClass extends GrandParentClass {
 
         /**
          * Builds a new {@link ParentClass} object using the set fields.
-         * @return {@link ParentClass}
+         * @return {@link ParentClass}.
          */
         public ParentClass build() {
             return new ParentClass(grandParentRequiredNullable, grandParentRequired,

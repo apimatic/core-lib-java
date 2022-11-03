@@ -19,13 +19,13 @@ public class MultipartFileWrapperTest {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link CoreFileWrapper}
+     * Mock of {@link CoreFileWrapper}.
      */
     @Mock
     private CoreFileWrapper coreFileWrapper;
 
     /**
-     * Mock of {@link HttpHeaders}
+     * Mock of {@link HttpHeaders}.
      */
     @Mock
     private HttpHeaders httpHeaders;

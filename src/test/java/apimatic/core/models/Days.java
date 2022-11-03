@@ -9,37 +9,37 @@ import java.util.TreeMap;
  */
 public enum Days {
     /**
-     * Sunday
+     * Sunday.
      */
     SUNDAY,
 
     /**
-     * Monday
+     * Monday.
      */
     MONDAY,
 
     /**
-     * Tuesday
+     * Tuesday.
      */
     TUESDAY,
 
     /**
-     * Wednesday
+     * Wednesday.
      */
     WEDNESDAY_,
 
     /**
-     * Thursday
+     * Thursday.
      */
     THURSDAY,
 
     /**
-     * Friday
+     * Friday.
      */
     FRI_DAY,
 
     /**
-     * Saturday
+     * Saturday.
      */
     SATURDAY;
 

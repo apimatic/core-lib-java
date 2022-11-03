@@ -15,13 +15,13 @@ public class CompatibilityFactoryMock extends CoreHttpRequestMock {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link CompatibilityFactory}
+     * Mock of {@link CompatibilityFactory}.
      */
     @Mock
     private CompatibilityFactory compatibilityFactory;
 
     /**
-     * @return {@link CompatibilityFactoryF}
+     * @return {@link CompatibilityFactory}.
      */
     public CompatibilityFactory getCompatibilityFactory() {
         return compatibilityFactory;

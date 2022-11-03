@@ -44,7 +44,7 @@ public class UnixDate {
 
     /**
      * Internal Getter for DateTime.
-     * @return Returns the Internal LocalDateTime
+     * @return Returns the Internal LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -55,7 +55,7 @@ public class UnixDate {
 
     /**
      * Getter for DateTime.
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     public LocalDateTime getDateTime() {
         return OptionalNullable.getFrom(dateTime);
@@ -63,7 +63,7 @@ public class UnixDate {
 
     /**
      * Setter for DateTime.
-     * @param dateTime Value for LocalDateTime
+     * @param dateTime Value for LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(using = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -80,7 +80,7 @@ public class UnixDate {
 
     /**
      * Getter for DateTime1.
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(using = LocalDateTimeHelper.UnixTimestampSerializer.class)
@@ -90,7 +90,7 @@ public class UnixDate {
 
     /**
      * Setter for DateTime1.
-     * @param dateTime1 Value for LocalDateTime
+     * @param dateTime1 Value for LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(using = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -100,7 +100,7 @@ public class UnixDate {
 
     /**
      * Converts this UnixDate into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -110,7 +110,7 @@ public class UnixDate {
     /**
      * Builds a new {@link UnixDate.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link UnixDate.Builder} object
+     * @return a new {@link UnixDate.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -141,7 +141,7 @@ public class UnixDate {
         /**
          * Setter for dateTime1.
          * @param dateTime1 LocalDateTime value for dateTime1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime1(LocalDateTime dateTime1) {
             this.dateTime1 = dateTime1;
@@ -151,7 +151,7 @@ public class UnixDate {
         /**
          * Setter for dateTime.
          * @param dateTime LocalDateTime value for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime(LocalDateTime dateTime) {
             this.dateTime = OptionalNullable.of(dateTime);
@@ -160,7 +160,7 @@ public class UnixDate {
 
         /**
          * UnSetter for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -169,7 +169,7 @@ public class UnixDate {
 
         /**
          * Builds a new {@link UnixDate} object using the set fields.
-         * @return {@link UnixDate}
+         * @return {@link UnixDate}.
          */
         public UnixDate build() {
             return new UnixDate(dateTime1, dateTime);

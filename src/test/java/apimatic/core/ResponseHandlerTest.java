@@ -40,17 +40,17 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public class ResponseHandlerTest extends MockCoreConfig {
 
     /**
-     * not found status code
+     * not found status code.
      */
     private static final int NOT_FOUND_STATUS_CODE = 404;
 
     /**
-     * Internal server error
+     * Internal server error.
      */
     private static final int INTERNAL_SERVER_ERROR = 500;
 
     /**
-     * Information status code
+     * Information status code.
      */
     private static final int INFORMATION_CODE = 199;
 
@@ -60,12 +60,12 @@ public class ResponseHandlerTest extends MockCoreConfig {
     private static final int RECEIVED_STATUS_CODE = 209;
 
     /**
-     * Bad request code
+     * Bad request code.
      */
     private static final int BAD_REQUEST_CODE = 400;
 
     /**
-     * Forbidden status code
+     * Forbidden status code.
      */
     private static final int FORBIDDEN_STATUS_CODE = 403;
 
@@ -75,7 +75,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
     private static final int CREATED_SUCCESS_CODE = 201;
 
     /**
-     * Success code
+     * Success code.
      */
     private static final int SUCCESS_CODE = 200;
 
@@ -86,67 +86,67 @@ public class ResponseHandlerTest extends MockCoreConfig {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link ApiCall.Builder}
+     * Mock of {@link ApiCall.Builder}.
      */
     @Mock
     private ApiCall.Builder<?, ?> mockApiCallBuilder;
 
     /**
-     * Mock of {@link ApiCall}
+     * Mock of {@link ApiCall}.
      */
     @Mock
     private ApiCall<?, ?> mockApiCall;
 
     /**
-     * Mock of {@link HttpClient}
+     * Mock of {@link HttpClient}.
      */
     @Mock
     private HttpClient client;
 
     /**
-     * Mock of {@link CoreEndpointConfiguration}
+     * Mock of {@link CoreEndpointConfiguration}.
      */
     @Mock
     private CoreEndpointConfiguration endpointSetting;
 
     /**
-     * Mock of {@link ResponseHandler}
+     * Mock of {@link ResponseHandler}.
      */
     @Mock
     private ResponseHandler<?, ?> responseHandler;
 
     /**
-     * Mock of {@link Response}
+     * Mock of {@link Response}.
      */
     @Mock
     private Response coreHttpResponse;
 
     /**
-     * Mock of {@link Context}
+     * Mock of {@link Context}.
      */
     @Mock
     private Context context;
 
     /**
-     * Mock of {@link Callback}
+     * Mock of {@link Callback}.
      */
     @Mock
     private Callback httpCallback;
 
     /**
-     * Mock of {@link DynamicType}
+     * Mock of {@link DynamicType}.
      */
     @Mock
     private DynamicType dynamicType;
 
     /**
-     * Mock of {@link ApiResponseType} of String type
+     * Mock of {@link ApiResponseType} of String type.
      */
     @Mock
     private ApiResponseType<String> stringApiResponseType;
 
     /**
-     * Mock of {@link ApiResponseType} of {@link DynamicType}
+     * Mock of {@link ApiResponseType} of {@link DynamicType}.
      */
     @Mock
     private ApiResponseType<DynamicType> dynamicApiResponseType;

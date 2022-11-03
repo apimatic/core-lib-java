@@ -1,17 +1,17 @@
 package io.apimatic.core.types;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import io.apimatic.core.utilities.LocalDateTimeHelper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 /**
- * Class to encapsulate fields which are Optional as well as Nullable. It also provides helper
+ * Class to encapsulate fields which are Optional as well as Nullable. It also provides helper.
  * methods to create OptionalNullable generic type, and to extract value from it.
  * @param <T> Type of the encapsulated field.
  */
@@ -28,7 +28,7 @@ public final class OptionalNullable<T> {
 
     /**
      * Converts this OptionalNullable into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {

@@ -28,25 +28,28 @@ import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
+/**
+ * Class to log the Http api messages.
+ */
 public class HttpLogger implements ApiLogger {
 
     /**
-     * A request queue
+     * A request queue.
      */
     private final ConcurrentHashMap<Request, RequestEntry> requestQueue;
 
     /**
-     * An instance of {@link Logger}
+     * An instance of {@link Logger}.
      */
     private Logger logger;
 
     /**
-     * An instance of {@link ReadonlyLogging}
+     * An instance of {@link ReadonlyLogging}.
      */
     private ReadonlyLogging config;
 
     /**
-     * An instance of {@link ObjectWriter}
+     * An instance of {@link ObjectWriter}.
      */
     private ObjectWriter writer;
 
@@ -221,8 +224,8 @@ public class HttpLogger implements ApiLogger {
     /**
      * Log provided message according to logging level.
      * @param message Message instance to be logged as JSON.
-     * @param level To provide the LoggingLevelType conversion
-     * @param logException Need to log the exception?
+     * @param level To provide the LoggingLevelType conversion.
+     * @param logException Need to log the exception?.
      */
     private void log(Message message, LoggingLevel level, boolean logException) {
         try {
@@ -263,29 +266,38 @@ public class HttpLogger implements ApiLogger {
     private interface LoggingMixIn {
 
         /**
-         * @return A header string
+         * @return A header string.
          */
         @JsonUnwrapped
         String getHeaders();
 
         /**
-         * @return Header string
+         * @return Header string.
          */
         @JsonGetter("headers")
         String asMultimap();
 
         /**
-         * @return File string
+         * @return File string.
          */
         @JsonIgnore
         String getFile();
 
+        /**
+         * @return Loggable file string.
+         */
         @JsonGetter("file")
         String getLoggableFile();
 
+        /**
+         * @return Byte array string.
+         */
         @JsonIgnore
         String getByteArray();
 
+        /**
+         * @return Loggable object string.
+         */
         @JsonGetter("object")
         String getLoggableObject();
     }
@@ -295,7 +307,7 @@ public class HttpLogger implements ApiLogger {
      */
     private class RequestMessage extends Message {
         /**
-         * An instance of {@link Method}
+         * An instance of {@link Method}.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
@@ -307,25 +319,25 @@ public class HttpLogger implements ApiLogger {
      */
     private class ResponseMessage extends Message {
         /**
-         * A success boolean variable
+         * A success boolean variable.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private boolean success = true;
         /**
-         * A failure reason string
+         * A failure reason string.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String failureReason;
         /**
-         * A status code integer
+         * A status code integer.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private Integer statusCode;
         /**
-         * A timeTakenInMilis long variable
+         * A timeTakenInMilis long variable.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
@@ -337,91 +349,91 @@ public class HttpLogger implements ApiLogger {
      */
     private class Message {
         /**
-         * A logging error string
+         * A logging error string.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String loggingError;
 
         /**
-         * A string of message type
+         * A string of message type.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String type;
 
         /**
-         * A string of requestId message
+         * A string of requestId message.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String requestId;
 
         /**
-         * A string of url
+         * A string of url.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String url;
 
         /**
-         * A map for headers values
+         * A map for headers values.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private Map<String, List<String>> headers;
 
         /**
-         * A body object
+         * A body object.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private Object body;
 
         /**
-         * A string additional message
+         * A string additional message.
          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
         private String additionalMessage;
 
         /**
-         * @param type Message type
+         * @param type Message type.
          */
         public void setType(String type) {
             this.type = type;
         }
 
         /**
-         * @param requestId Message RequestId
+         * @param requestId Message RequestId.
          */
         public void setRequestId(String requestId) {
             this.requestId = requestId;
         }
 
         /**
-         * @param url Message Url
+         * @param url Message Url.
          */
         public void setUrl(String url) {
             this.url = url;
         }
 
         /**
-         * @param headers Message headers
+         * @param headers Message headers.
          */
         public void setHeaders(Map<String, List<String>> headers) {
             this.headers = headers;
         }
 
         /**
-         * @param body Message body
+         * @param body Message body.
          */
         public void setBody(Object body) {
             this.body = body;
         }
 
         /**
-         * @param additionalMessage Additional Message
+         * @param additionalMessage Additional Message.
          */
         public void setAdditionalMessage(String additionalMessage) {
             this.additionalMessage = additionalMessage;
@@ -433,21 +445,21 @@ public class HttpLogger implements ApiLogger {
      */
     private class RequestEntry {
         /**
-         * A requestId String
+         * A requestId String.
          */
         private String requestId;
 
         /**
-         * A start time
+         * A start time.
          */
         private long startTime;
 
         /**
-         * A request url
+         * A request url.
          */
         private String url;
         /**
-         * A throwable error
+         * A throwable error.
          */
         private Throwable error;
 

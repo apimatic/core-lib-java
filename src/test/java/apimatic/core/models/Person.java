@@ -62,7 +62,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Address.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("address")
     public String getAddress() {
@@ -71,7 +71,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Address.
-     * @param address Value for String
+     * @param address Value for String.
      */
     @JsonSetter("address")
     public void setAddress(String address) {
@@ -80,7 +80,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Age.
-     * @return Returns the long
+     * @return Returns the long.
      */
     @JsonGetter("age")
     public long getAge() {
@@ -89,7 +89,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Age.
-     * @param age Value for long
+     * @param age Value for long.
      */
     @JsonSetter("age")
     public void setAge(long age) {
@@ -98,7 +98,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Birthday.
-     * @return Returns the LocalDate
+     * @return Returns the LocalDate.
      */
     @JsonGetter("birthday")
     @JsonSerialize(using = LocalDateTimeHelper.SimpleDateSerializer.class)
@@ -108,7 +108,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Birthday.
-     * @param birthday Value for LocalDate
+     * @param birthday Value for LocalDate.
      */
     @JsonSetter("birthday")
     @JsonDeserialize(using = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -118,7 +118,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Birthtime.
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("birthtime")
     @JsonSerialize(using = LocalDateTimeHelper.Rfc8601DateTimeSerializer.class)
@@ -128,7 +128,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Birthtime.
-     * @param birthtime Value for LocalDateTime
+     * @param birthtime Value for LocalDateTime.
      */
     @JsonSetter("birthtime")
     @JsonDeserialize(using = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -138,7 +138,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Name.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("name")
     public String getName() {
@@ -147,7 +147,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Name.
-     * @param name Value for String
+     * @param name Value for String.
      */
     @JsonSetter("name")
     public void setName(String name) {
@@ -156,7 +156,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for Uid.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("uid")
     public String getUid() {
@@ -165,7 +165,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for Uid.
-     * @param uid Value for String
+     * @param uid Value for String.
      */
     @JsonSetter("uid")
     public void setUid(String uid) {
@@ -174,7 +174,7 @@ public class Person extends BaseModel {
 
     /**
      * Getter for PersonType.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("personType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -184,7 +184,7 @@ public class Person extends BaseModel {
 
     /**
      * Setter for PersonType.
-     * @param personType Value for String
+     * @param personType Value for String.
      */
     @JsonSetter("personType")
     public void setPersonType(String personType) {
@@ -193,7 +193,7 @@ public class Person extends BaseModel {
 
     /**
      * Converts this Person into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -205,7 +205,7 @@ public class Person extends BaseModel {
     /**
      * Builds a new {@link Person.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link Person.Builder} object
+     * @return a new {@link Person.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder =
@@ -253,7 +253,7 @@ public class Person extends BaseModel {
         /**
          * Setter for address.
          * @param address String value for address.
-         * @return Builder
+         * @return Builder.
          */
         public Builder address(String address) {
             this.address = address;
@@ -263,7 +263,7 @@ public class Person extends BaseModel {
         /**
          * Setter for age.
          * @param age long value for age.
-         * @return Builder
+         * @return Builder.
          */
         public Builder age(long age) {
             this.age = age;
@@ -273,7 +273,7 @@ public class Person extends BaseModel {
         /**
          * Setter for birthday.
          * @param birthday LocalDate value for birthday.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthday(LocalDate birthday) {
             this.birthday = birthday;
@@ -283,7 +283,7 @@ public class Person extends BaseModel {
         /**
          * Setter for birthtime.
          * @param birthtime LocalDateTime value for birthtime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthtime(LocalDateTime birthtime) {
             this.birthtime = birthtime;
@@ -293,7 +293,7 @@ public class Person extends BaseModel {
         /**
          * Setter for name.
          * @param name String value for name.
-         * @return Builder
+         * @return Builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -303,7 +303,7 @@ public class Person extends BaseModel {
         /**
          * Setter for uid.
          * @param uid String value for uid.
-         * @return Builder
+         * @return Builder.
          */
         public Builder uid(String uid) {
             this.uid = uid;
@@ -313,7 +313,7 @@ public class Person extends BaseModel {
         /**
          * Setter for personType.
          * @param personType String value for personType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder personType(String personType) {
             this.personType = personType;
@@ -322,7 +322,7 @@ public class Person extends BaseModel {
 
         /**
          * Builds a new {@link Person} object using the set fields.
-         * @return {@link Person}
+         * @return {@link Person}.
          */
         public Person build() {
             return new Person(address, age, birthday, birthtime, name, uid, personType);

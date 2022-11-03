@@ -41,8 +41,8 @@ public class Noon {
     }
 
     /**
-     * Getter for StartsAt. Session start time
-     * @return Returns the String
+     * Getter for StartsAt. Session start time.
+     * @return Returns the String.
      */
     @JsonGetter("startsAt")
     public String getStartsAt() {
@@ -50,8 +50,8 @@ public class Noon {
     }
 
     /**
-     * Setter for StartsAt. Session start time
-     * @param startsAt Value for String
+     * Setter for StartsAt. Session start time.
+     * @param startsAt Value for String.
      */
     @JsonSetter("startsAt")
     public void setStartsAt(String startsAt) {
@@ -59,8 +59,8 @@ public class Noon {
     }
 
     /**
-     * Getter for EndsAt. Session end time
-     * @return Returns the String
+     * Getter for EndsAt. Session end time.
+     * @return Returns the String.
      */
     @JsonGetter("endsAt")
     public String getEndsAt() {
@@ -68,8 +68,8 @@ public class Noon {
     }
 
     /**
-     * Setter for EndsAt. Session end time
-     * @param endsAt Value for String
+     * Setter for EndsAt. Session end time.
+     * @param endsAt Value for String.
      */
     @JsonSetter("endsAt")
     public void setEndsAt(String endsAt) {
@@ -77,8 +77,8 @@ public class Noon {
     }
 
     /**
-     * Getter for OfferLunch. Offer lunch during session
-     * @return Returns the boolean
+     * Getter for OfferLunch. Offer lunch during session.
+     * @return Returns the boolean.
      */
     @JsonGetter("offerLunch")
     public boolean getOfferLunch() {
@@ -86,8 +86,8 @@ public class Noon {
     }
 
     /**
-     * Setter for OfferLunch. Offer lunch during session
-     * @param offerLunch Value for boolean
+     * Setter for OfferLunch. Offer lunch during session.
+     * @param offerLunch Value for boolean.
      */
     @JsonSetter("offerLunch")
     public void setOfferLunch(boolean offerLunch) {
@@ -96,7 +96,7 @@ public class Noon {
 
     /**
      * Getter for SessionType.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("sessionType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -106,7 +106,7 @@ public class Noon {
 
     /**
      * Setter for SessionType.
-     * @param sessionType Value for String
+     * @param sessionType Value for String.
      */
     @JsonSetter("sessionType")
     public void setSessionType(String sessionType) {
@@ -115,7 +115,7 @@ public class Noon {
 
     /**
      * Converts this Noon into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -126,7 +126,7 @@ public class Noon {
     /**
      * Builds a new {@link Noon.Builder} object. Creates the instance with the state of the current
      * model.
-     * @return a new {@link Noon.Builder} object
+     * @return a new {@link Noon.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(startsAt, endsAt, offerLunch).sessionType(getSessionType());
@@ -162,7 +162,7 @@ public class Noon {
         /**
          * Setter for startsAt.
          * @param startsAt String value for startsAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder startsAt(String startsAt) {
             this.startsAt = startsAt;
@@ -172,7 +172,7 @@ public class Noon {
         /**
          * Setter for endsAt.
          * @param endsAt String value for endsAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder endsAt(String endsAt) {
             this.endsAt = endsAt;
@@ -182,7 +182,7 @@ public class Noon {
         /**
          * Setter for offerLunch.
          * @param offerLunch boolean value for offerLunch.
-         * @return Builder
+         * @return Builder.
          */
         public Builder offerLunch(boolean offerLunch) {
             this.offerLunch = offerLunch;
@@ -192,7 +192,7 @@ public class Noon {
         /**
          * Setter for sessionType.
          * @param sessionType String value for sessionType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder sessionType(String sessionType) {
             this.sessionType = sessionType;
@@ -201,7 +201,7 @@ public class Noon {
 
         /**
          * Builds a new {@link Noon} object using the set fields.
-         * @return {@link Noon}
+         * @return {@link Noon}.
          */
         public Noon build() {
             return new Noon(startsAt, endsAt, offerLunch, sessionType);

@@ -32,7 +32,7 @@ public class Car extends Vehicle {
 
     /**
      * Getter for HaveTrunk.
-     * @return Returns the boolean
+     * @return Returns the boolean.
      */
     @JsonGetter("HaveTrunk")
     public boolean getHaveTrunk() {
@@ -41,7 +41,7 @@ public class Car extends Vehicle {
 
     /**
      * Setter for HaveTrunk.
-     * @param haveTrunk Value for boolean
+     * @param haveTrunk Value for boolean.
      */
     @JsonSetter("HaveTrunk")
     public void setHaveTrunk(boolean haveTrunk) {
@@ -50,7 +50,7 @@ public class Car extends Vehicle {
 
     /**
      * Converts this Car into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -60,7 +60,7 @@ public class Car extends Vehicle {
     /**
      * Builds a new {@link Car.Builder} object. Creates the instance with the state of the current
      * model.
-     * @return a new {@link Car.Builder} object
+     * @return a new {@link Car.Builder} object.
      */
     public Builder toCarBuilder() {
         Builder builder = new Builder(getNumberOfTyres(), haveTrunk);
@@ -92,7 +92,7 @@ public class Car extends Vehicle {
         /**
          * Setter for numberOfTyres.
          * @param numberOfTyres String value for numberOfTyres.
-         * @return Builder
+         * @return Builder.
          */
         public Builder numberOfTyres(String numberOfTyres) {
             this.numberOfTyres = numberOfTyres;
@@ -102,7 +102,7 @@ public class Car extends Vehicle {
         /**
          * Setter for haveTrunk.
          * @param haveTrunk boolean value for haveTrunk.
-         * @return Builder
+         * @return Builder.
          */
         public Builder haveTrunk(boolean haveTrunk) {
             this.haveTrunk = haveTrunk;
@@ -111,7 +111,7 @@ public class Car extends Vehicle {
 
         /**
          * Builds a new {@link Car} object using the set fields.
-         * @return {@link Car}
+         * @return {@link Car}.
          */
         public Car build() {
             return new Car(numberOfTyres, haveTrunk);

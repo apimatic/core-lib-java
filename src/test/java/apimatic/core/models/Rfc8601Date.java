@@ -44,7 +44,7 @@ public class Rfc8601Date {
 
     /**
      * Internal Getter for DateTime.
-     * @return Returns the Internal LocalDateTime
+     * @return Returns the Internal LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -63,7 +63,7 @@ public class Rfc8601Date {
 
     /**
      * Setter for DateTime.
-     * @param dateTime Value for LocalDateTime
+     * @param dateTime Value for LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(using = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -80,7 +80,7 @@ public class Rfc8601Date {
 
     /**
      * Getter for DateTime1.
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(using = LocalDateTimeHelper.Rfc8601DateTimeSerializer.class)
@@ -90,7 +90,7 @@ public class Rfc8601Date {
 
     /**
      * Setter for DateTime1.
-     * @param dateTime1 Value for LocalDateTime
+     * @param dateTime1 Value for LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(using = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -100,7 +100,7 @@ public class Rfc8601Date {
 
     /**
      * Converts this Rfc8601Date into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -111,7 +111,7 @@ public class Rfc8601Date {
     /**
      * Builds a new {@link Rfc8601Date.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link Rfc8601Date.Builder} object
+     * @return a new {@link Rfc8601Date.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -142,7 +142,7 @@ public class Rfc8601Date {
         /**
          * Setter for dateTime1.
          * @param dateTime1 LocalDateTime value for dateTime1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime1(LocalDateTime dateTime1) {
             this.dateTime1 = dateTime1;
@@ -152,7 +152,7 @@ public class Rfc8601Date {
         /**
          * Setter for dateTime.
          * @param dateTime LocalDateTime value for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime(LocalDateTime dateTime) {
             this.dateTime = OptionalNullable.of(dateTime);
@@ -161,7 +161,7 @@ public class Rfc8601Date {
 
         /**
          * UnSetter for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -170,7 +170,7 @@ public class Rfc8601Date {
 
         /**
          * Builds a new {@link Rfc8601Date} object using the set fields.
-         * @return {@link Rfc8601Date}
+         * @return {@link Rfc8601Date}.
          */
         public Rfc8601Date build() {
             return new Rfc8601Date(dateTime1, dateTime);

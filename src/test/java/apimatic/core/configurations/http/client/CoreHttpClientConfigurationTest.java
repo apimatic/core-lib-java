@@ -13,42 +13,42 @@ import okhttp3.OkHttpClient;
 public class CoreHttpClientConfigurationTest {
 
     /**
-     * Not found status code
+     * Not found status code.
      */
     private static final int NOT_FOUND_STATUS_CODE = 404;
 
     /**
-     * Back off factor
+     * Back off factor.
      */
     private static final int BACK_OFF_FACTOR = 3;
 
     /**
-     * Default back off factor
+     * Default back off factor.
      */
     private static final int DEFAULT_BACK_OFF_FACTOR = 2;
 
     /**
-     * Number of retries
+     * Number of retries.
      */
     private static final int NO_OF_RETRIES = 3;
 
     /**
-     * Timeout
+     * Timeout.
      */
     private static final int TIMEOUT = 3;
 
     /**
-     * Maximum retry wait time
+     * Maximum retry wait time.
      */
     private static final int MAX_RETRY_WAIT_TIME = 30;
 
     /**
-     * Default maximum retry wait time
+     * Default maximum retry wait time.
      */
     private static final int DEFAULT_MAX_RETRY_WAIT_TIME = 120;
 
     /**
-     * Retry Interval
+     * Retry Interval.
      */
     private static final int RETRY_INTERVAL = 5;
 

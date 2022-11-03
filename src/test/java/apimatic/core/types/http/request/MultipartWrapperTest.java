@@ -19,7 +19,7 @@ public class MultipartWrapperTest {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link HttpHeaders}
+     * Mock of {@link HttpHeaders}.
      */
     @Mock
     private HttpHeaders httpHeaders;

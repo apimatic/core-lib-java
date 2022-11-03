@@ -66,14 +66,14 @@ public abstract class SendScalarParamBody {
      */
     public interface Cases<R> {
         /**
-         * @param precision A list of {@link Double}
-         * @return R
+         * @param precision A list of {@link Double}.
+         * @return R.
          */
         R precision(List<Double> precision);
 
         /**
-         * @param mString A string
-         * @return R
+         * @param mString A string.
+         * @return R.
          */
         R mString(String mString);
     }

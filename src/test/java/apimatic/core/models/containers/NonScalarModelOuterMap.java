@@ -72,20 +72,20 @@ public abstract class NonScalarModelOuterMap {
      */
     public interface Cases<R> {
         /**
-         * @param morning An instance of {@link Morning}
-         * @return R
+         * @param morning An instance of {@link Morning}.
+         * @return R.
          */
         R morning(Morning morning);
 
         /**
-         * @param evening An instance of {@link Evening}
-         * @return R
+         * @param evening An instance of {@link Evening}.
+         * @return R.
          */
         R evening(Evening evening);
 
         /**
-         * @param noon An instance of {@link Noon}
-         * @return R
+         * @param noon An instance of {@link Noon}.
+         * @return R.
          */
         R noon(Noon noon);
     }
@@ -198,5 +198,4 @@ public abstract class NonScalarModelOuterMap {
             return CoreHelper.deserialize(jp, ctxt, discriminator, registry, null, false);
         }
     }
-
 }

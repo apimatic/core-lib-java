@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 public class XmlLocalDateTimeHelper extends XMLDateHelper {
 
     /**
-     * Serialize the RFC 8601 date time object
-     * @param dateObj An instance of {@link LocalDateTime}
-     * @param rootName The XML root name
-     * @return A xml string
+     * Serialize the RFC 8601 date time object.
+     * @param dateObj An instance of {@link LocalDateTime}.
+     * @param rootName The XML root name.
+     * @return A xml string.
      */
     public static String serializeRfc8601DateTime(LocalDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -23,9 +23,9 @@ public class XmlLocalDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the RFC 8601 datetime xml string
-     * @param xml A xml string
-     * @return {@link LocalDateTime}
+     * Deserialize the RFC 8601 datetime xml string.
+     * @param xml A xml string.
+     * @return {@link LocalDateTime}.
      */
     public static LocalDateTime deserializeRfc8601DateTime(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
@@ -38,10 +38,10 @@ public class XmlLocalDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Serialize the RFC 1123 date time object
-     * @param dateObj An instance of {@link LocalDateTime}
-     * @param rootName The XML root name
-     * @return A xml string
+     * Serialize the RFC 1123 date time object.
+     * @param dateObj An instance of {@link LocalDateTime}.
+     * @param rootName The XML root name.
+     * @return A xml string.
      */
     public static String serializeRfc1123DateTime(LocalDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -51,9 +51,9 @@ public class XmlLocalDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the RFC 1123 datetime xml string
-     * @param xml A xml string
-     * @return {@link LocalDateTime}
+     * Deserialize the RFC 1123 datetime xml string.
+     * @param xml A xml string.
+     * @return {@link LocalDateTime}.
      */
     public static LocalDateTime deserializeRfc1123DateTime(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
@@ -66,10 +66,10 @@ public class XmlLocalDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Serialize the Unix time stamp object
-     * @param dateObj An instance of {@link LocalDateTime}
-     * @param rootName The XML root name
-     * @return A xml string
+     * Serialize the Unix time stamp object.
+     * @param dateObj An instance of {@link LocalDateTime}.
+     * @param rootName The XML root name.
+     * @return A xml string.
      */
     public static String serializeUnixTimeStamp(LocalDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -79,9 +79,9 @@ public class XmlLocalDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the unix time stamp xml string
-     * @param xml A xml string
-     * @return {@link LocalDateTime}
+     * Deserialize the unix time stamp xml string.
+     * @param xml A xml string.
+     * @return {@link LocalDateTime}.
      */
     public static LocalDateTime deserializeUnixTimeStamp(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");

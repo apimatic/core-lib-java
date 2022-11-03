@@ -32,7 +32,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public class EndToEndTest extends MockCoreConfig {
 
     /**
-     * Success code status code
+     * Success code status code.
      */
     private static final int SUCCESS_CODE = 200;
 
@@ -43,38 +43,38 @@ public class EndToEndTest extends MockCoreConfig {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link Callback}
+     * Mock of {@link Callback}.
      */
     @Mock
     private Callback callback;
 
     /**
-     * Mock of {@link Context}
+     * Mock of {@link Context}.
      */
     @Mock
     private Context context;
 
     /**
-     * Mock of {@link HttpClient}
+     * Mock of {@link HttpClient}.
      */
     @Mock
     private HttpClient httpClient;
 
     /**
-     * Mock of {@link Response}
+     * Mock of {@link Response}.
      */
     @Mock
     private Response response;
 
 
     /**
-     * Mock of {@link Request}
+     * Mock of {@link Request}.
      */
     @Mock
     private Request coreHttpRequest;
 
     /**
-     * Mock of {@link CoreEndpointConfiguration}
+     * Mock of {@link CoreEndpointConfiguration}.
      */
     @Mock
     private CoreEndpointConfiguration endpointConfiguration;
@@ -88,9 +88,9 @@ public class EndToEndTest extends MockCoreConfig {
     }
 
     /**
-     * End to End sync call
+     * End to End sync call.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
-     * @throws CoreApiException Exception in api call execution
+     * @throws CoreApiException Exception in api call execution.
      */
     @Test
     public void testEndToEndSyncCall() throws IOException, CoreApiException {

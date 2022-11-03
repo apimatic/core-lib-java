@@ -63,27 +63,27 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     }
 
     /**
-     * A boolean variable to log the request info
+     * A boolean variable to log the request info.
      */
     private boolean logRequestInfo;
 
     /**
-     * A boolean variable to log the Response info
+     * A boolean variable to log the Response info.
      */
     private boolean logResponseInfo;
 
     /**
-     * A boolean variable to log request headers
+     * A boolean variable to log request headers.
      */
     private boolean logRequestHeaders;
 
     /**
-     * A boolean variable to log response headers
+     * A boolean variable to log response headers.
      */
     private boolean logResponseHeaders;
 
     /**
-     * A boolean variable to log request body
+     * A boolean variable to log request body.
      */
     private boolean logRequestBody;
 
@@ -93,36 +93,36 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     private boolean logResponseBody;
 
     /**
-     * A boolean variable for pretty printing
+     * A boolean variable for pretty printing.
      */
     private boolean prettyPrintLogs;
 
     /**
-     * An instance of {@link LoggingLevel}
+     * An instance of {@link LoggingLevel}.
      */
     private LoggingLevel level;
 
     /**
-     * An instance of {@link LoggingPolicy}
+     * An instance of {@link LoggingPolicy}.
      */
     private LoggingPolicy headerLoggingPolicy;
 
     /**
-     * A set of header filters
+     * A set of header filters.
      */
     private Set<String> headerFilters;
 
     /**
-     * @param logRequestInfo
-     * @param logResponseInfo
-     * @param logRequestHeaders
-     * @param logResponseHeaders
-     * @param logRequestBody
-     * @param logResponseBody
-     * @param prettyPrintLogs
-     * @param level
-     * @param headerLoggingPolicy
-     * @param headerFilters
+     * @param logRequestInfo.
+     * @param logResponseInfo.
+     * @param logRequestHeaders.
+     * @param logResponseHeaders.
+     * @param logRequestBody.
+     * @param logResponseBody.
+     * @param prettyPrintLogs.
+     * @param level.
+     * @param headerLoggingPolicy.
+     * @param headerFilters.
      */
     private ApiLoggingConfiguration(boolean logRequestInfo, boolean logResponseInfo,
             boolean logRequestHeaders, boolean logResponseHeaders, boolean logRequestBody,
@@ -222,7 +222,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
     /**
      * Converts this LoggingConfiguration into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -237,7 +237,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     /**
      * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the instance with the
      * current state.
-     * @return a new {@link ApiLoggingConfiguration.Builder} object
+     * @return a new {@link ApiLoggingConfiguration.Builder} object.
      */
     public Builder newBuilder() {
         return new Builder().logRequestInfo(logRequestInfo).logRequestHeaders(logRequestHeaders)
@@ -253,52 +253,52 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     public static class Builder {
 
         /**
-         * A boolean variable to log the request info
+         * A boolean variable to log the request info.
          */
         private boolean logRequestInfo;
 
         /**
-         * A boolean variable to log the Response info
+         * A boolean variable to log the Response info.
          */
         private boolean logResponseInfo;
 
         /**
-         * A boolean variable to log request headers
+         * A boolean variable to log request headers.
          */
         private boolean logRequestHeaders;
 
         /**
-         * A boolean variable to log response headers
+         * A boolean variable to log response headers.
          */
         private boolean logResponseHeaders;
 
         /**
-         * A boolean variable to log request body
+         * A boolean variable to log request body.
          */
         private boolean logRequestBody;
 
         /**
-         * A boolean variable to log the response body
+         * A boolean variable to log the response body.
          */
         private boolean logResponseBody;
 
         /**
-         * A boolean variable for pretty printing
+         * A boolean variable for pretty printing.
          */
         private boolean prettyPrintLogs;
 
         /**
-         * An instance of {@link LoggingLevel}
+         * An instance of {@link LoggingLevel}.
          */
         private LoggingLevel level = LoggingLevel.INFO;
 
         /**
-         * An instance of {@link LoggingPolicy}
+         * An instance of {@link LoggingPolicy}.
          */
         private LoggingPolicy headerLoggingPolicy = LoggingPolicy.EXCLUDE;
 
         /**
-         * A set of header filters
+         * A set of header filters.
          */
         private TreeSet<String> headerFilters = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
@@ -314,7 +314,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable logging of request info. Request info contains "url" and "method"
          * @param logRequestInfo Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logRequestInfo(boolean logRequestInfo) {
             this.logRequestInfo = logRequestInfo;
@@ -323,9 +323,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Enable or disable logging of response info. Response info contains "statusCode", "url",
-         * and "timeTaken"
+         * and "timeTaken".
          * @param logResponseInfo Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logResponseInfo(boolean logResponseInfo) {
             this.logResponseInfo = logResponseInfo;
@@ -335,7 +335,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable logging of headers for requests.
          * @param logRequestHeaders Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logRequestHeaders(boolean logRequestHeaders) {
             this.logRequestHeaders = logRequestHeaders;
@@ -345,7 +345,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable logging of headers for responses.
          * @param logResponseHeaders Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logResponseHeaders(boolean logResponseHeaders) {
             this.logResponseHeaders = logResponseHeaders;
@@ -355,7 +355,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable logging of request body or form parameters.
          * @param logRequestBody Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logRequestBody(boolean logRequestBody) {
             this.logRequestBody = logRequestBody;
@@ -365,7 +365,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable logging of response body.
          * @param logResponseBody Whether to enable logging.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logResponseBody(boolean logResponseBody) {
             this.logResponseBody = logResponseBody;
@@ -374,7 +374,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Enable all logs.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logEverything() {
             logRequestInfo = true;
@@ -388,7 +388,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Disable all logs.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder logNothing() {
             logRequestInfo = false;
@@ -403,7 +403,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Enable or disable pretty printing for logging.
          * @param prettyPrintLogs Boolean value to enable or disable.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder prettyPrintLogs(boolean prettyPrintLogs) {
             this.prettyPrintLogs = prettyPrintLogs;
@@ -413,7 +413,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Set level for logging.
          * @param level specify level of all logs.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder level(LoggingLevel level) {
             this.level = level;
@@ -423,7 +423,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Set logging policy for headers.
          * @param headerLoggingPolicy specify logging policy for headers.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder headerLoggingPolicy(LoggingPolicy headerLoggingPolicy) {
             this.headerLoggingPolicy = headerLoggingPolicy;
@@ -433,7 +433,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Copy all from given collection to replace and set filters for headers.
          * @param headerFilters Set of string headers.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder headerFilters(Set<String> headerFilters) {
             this.headerFilters.clear();
@@ -443,7 +443,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Clear all filters for headers.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder clearHeaderFilter() {
             headerFilters.clear();
@@ -453,7 +453,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         /**
          * Add given header as a filter for logging headers.
          * @param header String header to be added as filter.
-         * @return {@link ApiLoggingConfiguration.Builder}
+         * @return {@link ApiLoggingConfiguration.Builder}.
          */
         public Builder addHeaderFilter(String header) {
             headerFilters.add(header);
@@ -462,7 +462,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Builds a new LoggingConfiguration object using the set fields.
-         * @return {@link ApiLoggingConfiguration}
+         * @return {@link ApiLoggingConfiguration}.
          */
         public ApiLoggingConfiguration build() {
             return new ApiLoggingConfiguration(logRequestInfo, logResponseInfo, logRequestHeaders,

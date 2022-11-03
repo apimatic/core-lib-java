@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class CoreJsonObject {
     /**
-     * A json value representation
+     * A json value representation.
      */
     @com.fasterxml.jackson.annotation.JsonValue
     private JsonNode jsonNode;
@@ -51,7 +51,7 @@ public class CoreJsonObject {
 
     /**
      * Converts the JSON into string.
-     * @return String representation of JSON
+     * @return String representation of JSON.
      */
     public String toString() {
         try {

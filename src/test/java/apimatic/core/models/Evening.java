@@ -41,8 +41,8 @@ public class Evening {
     }
 
     /**
-     * Getter for StartsAt. Session start time
-     * @return Returns the String
+     * Getter for StartsAt. Session start time.
+     * @return Returns the String.
      */
     @JsonGetter("startsAt")
     public String getStartsAt() {
@@ -50,8 +50,8 @@ public class Evening {
     }
 
     /**
-     * Setter for StartsAt. Session start time
-     * @param startsAt Value for String
+     * Setter for StartsAt. Session start time.
+     * @param startsAt Value for String.
      */
     @JsonSetter("startsAt")
     public void setStartsAt(String startsAt) {
@@ -59,8 +59,8 @@ public class Evening {
     }
 
     /**
-     * Getter for EndsAt. Session end time
-     * @return Returns the String
+     * Getter for EndsAt. Session end time.
+     * @return Returns the String.
      */
     @JsonGetter("endsAt")
     public String getEndsAt() {
@@ -68,8 +68,8 @@ public class Evening {
     }
 
     /**
-     * Setter for EndsAt. Session end time
-     * @param endsAt Value for String
+     * Setter for EndsAt. Session end time.
+     * @param endsAt Value for String.
      */
     @JsonSetter("endsAt")
     public void setEndsAt(String endsAt) {
@@ -77,8 +77,8 @@ public class Evening {
     }
 
     /**
-     * Getter for OfferDinner. Offer dinner during session
-     * @return Returns the boolean
+     * Getter for OfferDinner. Offer dinner during session.
+     * @return Returns the boolean.
      */
     @JsonGetter("offerDinner")
     public boolean getOfferDinner() {
@@ -86,8 +86,8 @@ public class Evening {
     }
 
     /**
-     * Setter for OfferDinner. Offer dinner during session
-     * @param offerDinner Value for boolean
+     * Setter for OfferDinner. Offer dinner during session.
+     * @param offerDinner Value for boolean.
      */
     @JsonSetter("offerDinner")
     public void setOfferDinner(boolean offerDinner) {
@@ -96,7 +96,7 @@ public class Evening {
 
     /**
      * Getter for SessionType.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("sessionType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -106,7 +106,7 @@ public class Evening {
 
     /**
      * Setter for SessionType.
-     * @param sessionType Value for String
+     * @param sessionType Value for String.
      */
     @JsonSetter("sessionType")
     public void setSessionType(String sessionType) {
@@ -115,7 +115,7 @@ public class Evening {
 
     /**
      * Converts this Evening into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -126,7 +126,7 @@ public class Evening {
     /**
      * Builds a new {@link Evening.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link Evening.Builder} object
+     * @return a new {@link Evening.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(startsAt, endsAt, offerDinner).sessionType(getSessionType());
@@ -162,7 +162,7 @@ public class Evening {
         /**
          * Setter for startsAt.
          * @param startsAt String value for startsAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder startsAt(String startsAt) {
             this.startsAt = startsAt;
@@ -172,7 +172,7 @@ public class Evening {
         /**
          * Setter for endsAt.
          * @param endsAt String value for endsAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder endsAt(String endsAt) {
             this.endsAt = endsAt;
@@ -182,7 +182,7 @@ public class Evening {
         /**
          * Setter for offerDinner.
          * @param offerDinner boolean value for offerDinner.
-         * @return Builder
+         * @return Builder.
          */
         public Builder offerDinner(boolean offerDinner) {
             this.offerDinner = offerDinner;
@@ -192,7 +192,7 @@ public class Evening {
         /**
          * Setter for sessionType.
          * @param sessionType String value for sessionType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder sessionType(String sessionType) {
             this.sessionType = sessionType;
@@ -201,7 +201,7 @@ public class Evening {
 
         /**
          * Builds a new {@link Evening} object using the set fields.
-         * @return {@link Evening}
+         * @return {@link Evening}.
          */
         public Evening build() {
             return new Evening(startsAt, endsAt, offerDinner, sessionType);

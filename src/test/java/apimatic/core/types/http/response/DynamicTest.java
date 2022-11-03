@@ -19,17 +19,23 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class DynamicTest {
 
+    /**
+     * Test long number.
+     */
     private static final long TEST_LONG_NUMBER = 5L;
 
+    /**
+     * Test double number.
+     */
     private static final double TEST_DOUBLE_NUMBER = 1.5;
 
     /**
-     * Float number
+     * Float number.
      */
     private static final float FLOAT_NUMBER = 5.9f;
 
     /**
-     * Test number
+     * Test number.
      */
     private static final int TEST_NUMBER = 5;
 
@@ -40,13 +46,13 @@ public class DynamicTest {
     public MockitoRule initRule = MockitoJUnit.rule();
 
     /**
-     * Mock of {@link Response}
+     * Mock of {@link Response}.
      */
     @Mock
     private Response coreHttpResponse;
 
     /**
-     * Mock of {@link HttpHeaders}
+     * Mock of {@link HttpHeaders}.
      */
     @Mock
     private HttpHeaders headers;

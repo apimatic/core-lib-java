@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
  */
 public class CoreJsonValue {
     /**
-     * A json value
+     * A json value.
      */
     @com.fasterxml.jackson.annotation.JsonValue
     private final JsonNode value;
@@ -103,7 +103,7 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided list of values.
-     * @param <T> The list type
+     * @param <T> The list type.
      * @param values The list of values of given type.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -124,7 +124,7 @@ public class CoreJsonValue {
 
     /**
      * Converts the JSON into string.
-     * @return String representation of JSON
+     * @return String representation of JSON.
      */
     @Override
     public String toString() {

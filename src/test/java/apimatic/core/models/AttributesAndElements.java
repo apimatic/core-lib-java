@@ -36,7 +36,7 @@ public class AttributesAndElements {
 
     /**
      * Getter for StringAttr. string attribute (attribute name "string")
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("string-attr")
     @XmlAttribute(name = "string")
@@ -46,7 +46,7 @@ public class AttributesAndElements {
 
     /**
      * Setter for StringAttr. string attribute (attribute name "string")
-     * @param stringAttr Value for String
+     * @param stringAttr Value for String.
      */
     @JsonSetter("string-attr")
     public void setStringAttr(String stringAttr) {
@@ -55,7 +55,7 @@ public class AttributesAndElements {
 
     /**
      * Getter for NumberAttr. number attribute (attribute name "number")
-     * @return Returns the int
+     * @return Returns the int.
      */
     @JsonGetter("number-attr")
     @XmlAttribute(name = "number")
@@ -65,7 +65,7 @@ public class AttributesAndElements {
 
     /**
      * Setter for NumberAttr. number attribute (attribute name "number")
-     * @param numberAttr Value for int
+     * @param numberAttr Value for int.
      */
     @JsonSetter("number-attr")
     public void setNumberAttr(int numberAttr) {
@@ -74,7 +74,7 @@ public class AttributesAndElements {
 
     /**
      * Getter for StringElement. string element (element name "string")
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("string-element")
     @XmlElement(name = "string")
@@ -84,7 +84,7 @@ public class AttributesAndElements {
 
     /**
      * Setter for StringElement. string element (element name "string")
-     * @param stringElement Value for String
+     * @param stringElement Value for String.
      */
     @JsonSetter("string-element")
     public void setStringElement(String stringElement) {
@@ -93,7 +93,7 @@ public class AttributesAndElements {
 
     /**
      * Getter for NumberElement. number element (element name "number")
-     * @return Returns the int
+     * @return Returns the int.
      */
     @JsonGetter("number-element")
     @XmlElement(name = "number")
@@ -103,7 +103,7 @@ public class AttributesAndElements {
 
     /**
      * Setter for NumberElement. number element (element name "number")
-     * @param numberElement Value for int
+     * @param numberElement Value for int.
      */
     @JsonSetter("number-element")
     public void setNumberElement(int numberElement) {
@@ -112,7 +112,7 @@ public class AttributesAndElements {
 
     /**
      * Converts this AttributesAndElements into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -123,7 +123,7 @@ public class AttributesAndElements {
     /**
      * Builds a new {@link AttributesAndElements.Builder} object. Creates the instance with the
      * state of the current model.
-     * @return a new {@link AttributesAndElements.Builder} object
+     * @return a new {@link AttributesAndElements.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(stringAttr, numberAttr, stringElement, numberElement);
@@ -162,7 +162,7 @@ public class AttributesAndElements {
         /**
          * Setter for stringAttr.
          * @param stringAttr String value for stringAttr.
-         * @return Builder
+         * @return Builder.
          */
         public Builder stringAttr(String stringAttr) {
             this.stringAttr = stringAttr;
@@ -172,7 +172,7 @@ public class AttributesAndElements {
         /**
          * Setter for numberAttr.
          * @param numberAttr int value for numberAttr.
-         * @return Builder
+         * @return Builder.
          */
         public Builder numberAttr(int numberAttr) {
             this.numberAttr = numberAttr;
@@ -182,7 +182,7 @@ public class AttributesAndElements {
         /**
          * Setter for stringElement.
          * @param stringElement String value for stringElement.
-         * @return Builder
+         * @return Builder.
          */
         public Builder stringElement(String stringElement) {
             this.stringElement = stringElement;
@@ -192,7 +192,7 @@ public class AttributesAndElements {
         /**
          * Setter for numberElement.
          * @param numberElement int value for numberElement.
-         * @return Builder
+         * @return Builder.
          */
         public Builder numberElement(int numberElement) {
             this.numberElement = numberElement;
@@ -201,7 +201,7 @@ public class AttributesAndElements {
 
         /**
          * Builds a new {@link AttributesAndElements} object using the set fields.
-         * @return {@link AttributesAndElements}
+         * @return {@link AttributesAndElements}.
          */
         public AttributesAndElements build() {
             return new AttributesAndElements(stringAttr, numberAttr, stringElement, numberElement);

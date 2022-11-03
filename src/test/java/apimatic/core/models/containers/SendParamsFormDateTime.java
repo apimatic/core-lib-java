@@ -72,20 +72,20 @@ public abstract class SendParamsFormDateTime {
      */
     public interface Cases<R> {
         /**
-         * @param date An instance of {@link LocalDate}
-         * @return R
+         * @param date An instance of {@link LocalDate}.
+         * @return R.
          */
         R date(LocalDate date);
 
         /**
-         * @param dateTime An instance of {@link LocalDateTime}
-         * @return R
+         * @param dateTime An instance of {@link LocalDateTime}.
+         * @return R.
          */
         R dateTime(LocalDateTime dateTime);
 
         /**
-         * @param dateTime2 An instance of {@link LocalDateTime}
-         * @return R
+         * @param dateTime2 An instance of {@link LocalDateTime}.
+         * @return R.
          */
         R dateTime2(LocalDateTime dateTime2);
     }
@@ -198,5 +198,4 @@ public abstract class SendParamsFormDateTime {
                     Arrays.asList(DateCase.class, DateTimeCase.class, DateTime2Case.class), true);
         }
     }
-
 }

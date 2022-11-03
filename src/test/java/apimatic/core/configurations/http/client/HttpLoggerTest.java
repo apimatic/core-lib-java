@@ -36,7 +36,7 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 public class HttpLoggerTest {
 
     /**
-     * Success code
+     * Success code.
      */
     private static final int SUCCESS_CODE = 200;
 
@@ -47,42 +47,42 @@ public class HttpLoggerTest {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link Logger}
+     * Mock of {@link Logger}.
      */
     @Mock
     private Logger logger;
 
     /**
-     * Mock of {@link Request}
+     * Mock of {@link Request}.
      */
     @Mock
     private Request request;
 
     /**
-     * Mock of {@link Response}
+     * Mock of {@link Response}.
      */
     @Mock
     private Response response;
 
     /**
-     * Mock of {@link HttpHeaders}
+     * Mock of {@link HttpHeaders}.
      */
     @Mock
     private HttpHeaders headers;
 
     /**
-     * Mock of {@link ReadonlyLogging}
+     * Mock of {@link ReadonlyLogging}.
      */
     @Mock
     private ReadonlyLogging readonlyLogging;
 
     /**
-     * Mock of {@link HttpLogger}
+     * Mock of {@link HttpLogger}.
      */
     private HttpLogger httpLogger;
 
     /**
-     * Test setup
+     * Test setup.
      */
     @Before
     public void setup() {

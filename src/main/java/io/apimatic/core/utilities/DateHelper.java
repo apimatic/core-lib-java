@@ -24,8 +24,8 @@ public class DateHelper {
 
     /**
      * Parse a simple date string to a LocalDate object.
-     * @param date The date string
-     * @return The parsed LocalDate object
+     * @param date The date string.
+     * @return The parsed LocalDate object.
      */
     public static LocalDate fromSimpleDate(String date) {
         return LocalDate.parse(date);
@@ -33,8 +33,8 @@ public class DateHelper {
 
     /**
      * Convert a LocalDate object to a string.
-     * @param value The LocalDate object to convert
-     * @return The converted Strings
+     * @param value The LocalDate object to convert.
+     * @return The converted Strings.
      */
     public static String toSimpleDate(LocalDate value) {
         return value == null ? null : value.toString();
@@ -42,8 +42,8 @@ public class DateHelper {
 
     /**
      * Convert a List of LocalDate objects to strings.
-     * @param values The List of LocalDate objects to convert
-     * @return The List of converted Strings
+     * @param values The List of LocalDate objects to convert.
+     * @return The List of converted Strings.
      */
     public static List<String> toSimpleDate(List<LocalDate> values) {
         if (values == null) {
@@ -58,8 +58,8 @@ public class DateHelper {
 
     /**
      * Convert a Map of LocalDate objects to strings.
-     * @param values The Map of LocalDate objects to convert
-     * @return The Map of converted Strings
+     * @param values The Map of LocalDate objects to convert.
+     * @return The Map of converted Strings.
      */
     public static Map<String, String> toSimpleDate(Map<String, LocalDate> values) {
         if (values == null) {
@@ -74,8 +74,8 @@ public class DateHelper {
 
     /**
      * Convert a List of Map of LocalDate objects to strings.
-     * @param values The List of Map of LocalDate objects to convert
-     * @return The list of map of converted Strings
+     * @param values The List of Map of LocalDate objects to convert.
+     * @return The list of map of converted Strings.
      */
     public static List<Map<String, String>>
             toArrayOfMapOfSimpleDate(List<Map<String, LocalDate>> values) {
@@ -114,7 +114,7 @@ public class DateHelper {
     }
 
     /**
-     * Simple Adapter utility class
+     * Simple Adapter utility class.
      */
     public static class SimpleAdapter extends XmlAdapter<String, LocalDate> {
         @Override

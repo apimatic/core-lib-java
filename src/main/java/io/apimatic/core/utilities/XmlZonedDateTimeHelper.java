@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
  */
 public class XmlZonedDateTimeHelper extends XMLDateHelper {
     /**
-     * Serialize the RFC 8601 zoned date time object
-     * @param dateObj An instance of {@link ZonedDateTime}
-     * @param rootName The XML root name
-     * @return A XML string
+     * Serialize the RFC 8601 zoned date time object.
+     * @param dateObj An instance of {@link ZonedDateTime}.
+     * @param rootName The XML root name.
+     * @return A XML string.
      */
     public static String serializeRfc8601DateTime(ZonedDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -22,9 +22,9 @@ public class XmlZonedDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the RFC 8601 zoned date time string
-     * @param xml A XML string
-     * @return {@link ZonedDateTime}
+     * Deserialize the RFC 8601 zoned date time string.
+     * @param xml A XML string.
+     * @return {@link ZonedDateTime}.
      */
     public static ZonedDateTime deserializeRfc8601DateTime(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
@@ -37,10 +37,10 @@ public class XmlZonedDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Serialize the RFC 1123 zoned date time object
-     * @param dateObj An instance of {@link ZonedDateTime}
-     * @param rootName The XML root name
-     * @return A XML string
+     * Serialize the RFC 1123 zoned date time object.
+     * @param dateObj An instance of {@link ZonedDateTime}.
+     * @param rootName The XML root name.
+     * @return A XML string.
      */
     public static String serializeRfc1123DateTime(ZonedDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -50,9 +50,9 @@ public class XmlZonedDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the RFC 1123 zoned date time string
-     * @param xml A XML string
-     * @return {@link ZonedDateTime}
+     * Deserialize the RFC 1123 zoned date time string.
+     * @param xml A XML string.
+     * @return {@link ZonedDateTime}.
      */
     public static ZonedDateTime deserializeRfc1123DateTime(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");
@@ -65,10 +65,10 @@ public class XmlZonedDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Serialize the Unixtime stamp zoned date time object
-     * @param dateObj An instance of {@link ZonedDateTime}
-     * @param rootName The XML root name
-     * @return A XML string
+     * Serialize the Unixtime stamp zoned date time object.
+     * @param dateObj An instance of {@link ZonedDateTime}.
+     * @param rootName The XML root name.
+     * @return A XML string.
      */
     public static String serializeUnixTimeStamp(ZonedDateTime dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -78,9 +78,9 @@ public class XmlZonedDateTimeHelper extends XMLDateHelper {
     }
 
     /**
-     * Deserialize the unix time stamp zoned date time string
-     * @param xml A XML string
-     * @return {@link ZonedDateTime}
+     * Deserialize the unix time stamp zoned date time string.
+     * @param xml A XML string.
+     * @return {@link ZonedDateTime}.
      */
     public static ZonedDateTime deserializeUnixTimeStamp(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");

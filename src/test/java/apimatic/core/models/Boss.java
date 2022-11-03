@@ -62,7 +62,7 @@ public class Boss extends Employee {
 
     /**
      * Getter for PromotedAt.
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("promotedAt")
     @JsonSerialize(using = LocalDateTimeHelper.UnixTimestampSerializer.class)
@@ -72,7 +72,7 @@ public class Boss extends Employee {
 
     /**
      * Setter for PromotedAt.
-     * @param promotedAt Value for LocalDateTime
+     * @param promotedAt Value for LocalDateTime.
      */
     @JsonSetter("promotedAt")
     @JsonDeserialize(using = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -82,7 +82,7 @@ public class Boss extends Employee {
 
     /**
      * Getter for Assistant.
-     * @return Returns the Employee
+     * @return Returns the Employee.
      */
     @JsonGetter("assistant")
     public Employee getAssistant() {
@@ -91,7 +91,7 @@ public class Boss extends Employee {
 
     /**
      * Setter for Assistant.
-     * @param assistant Value for Employee
+     * @param assistant Value for Employee.
      */
     @JsonSetter("assistant")
     public void setAssistant(Employee assistant) {
@@ -100,7 +100,7 @@ public class Boss extends Employee {
 
     /**
      * Converts this Boss into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -117,7 +117,7 @@ public class Boss extends Employee {
     /**
      * Builds a new {@link Boss.Builder} object. Creates the instance with the state of the current
      * model.
-     * @return a new {@link Boss.Builder} object
+     * @return a new {@link Boss.Builder} object.
      */
     public Builder toBossBuilder() {
         Builder builder =
@@ -197,7 +197,7 @@ public class Boss extends Employee {
         /**
          * Setter for address.
          * @param address String value for address.
-         * @return Builder
+         * @return Builder.
          */
         public Builder address(String address) {
             this.address = address;
@@ -207,7 +207,7 @@ public class Boss extends Employee {
         /**
          * Setter for age.
          * @param age long value for age.
-         * @return Builder
+         * @return Builder.
          */
         public Builder age(long age) {
             this.age = age;
@@ -217,7 +217,7 @@ public class Boss extends Employee {
         /**
          * Setter for birthday.
          * @param birthday LocalDate value for birthday.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthday(LocalDate birthday) {
             this.birthday = birthday;
@@ -227,7 +227,7 @@ public class Boss extends Employee {
         /**
          * Setter for birthtime.
          * @param birthtime LocalDateTime value for birthtime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthtime(LocalDateTime birthtime) {
             this.birthtime = birthtime;
@@ -237,7 +237,7 @@ public class Boss extends Employee {
         /**
          * Setter for name.
          * @param name String value for name.
-         * @return Builder
+         * @return Builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -247,7 +247,7 @@ public class Boss extends Employee {
         /**
          * Setter for uid.
          * @param uid String value for uid.
-         * @return Builder
+         * @return Builder.
          */
         public Builder uid(String uid) {
             this.uid = uid;
@@ -257,7 +257,7 @@ public class Boss extends Employee {
         /**
          * Setter for department.
          * @param department String value for department.
-         * @return Builder
+         * @return Builder.
          */
         public Builder department(String department) {
             this.department = department;
@@ -267,7 +267,7 @@ public class Boss extends Employee {
         /**
          * Setter for dependents.
          * @param dependents List of Person value for dependents.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dependents(List<Person> dependents) {
             this.dependents = dependents;
@@ -277,7 +277,7 @@ public class Boss extends Employee {
         /**
          * Setter for hiredAt.
          * @param hiredAt LocalDateTime value for hiredAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder hiredAt(LocalDateTime hiredAt) {
             this.hiredAt = hiredAt;
@@ -287,7 +287,7 @@ public class Boss extends Employee {
         /**
          * Setter for joiningDay.
          * @param joiningDay Days value for joiningDay.
-         * @return Builder
+         * @return Builder.
          */
         public Builder joiningDay(Days joiningDay) {
             this.joiningDay = joiningDay;
@@ -297,7 +297,7 @@ public class Boss extends Employee {
         /**
          * Setter for salary.
          * @param salary int value for salary.
-         * @return Builder
+         * @return Builder.
          */
         public Builder salary(int salary) {
             this.salary = salary;
@@ -307,7 +307,7 @@ public class Boss extends Employee {
         /**
          * Setter for workingDays.
          * @param workingDays List of Days value for workingDays.
-         * @return Builder
+         * @return Builder.
          */
         public Builder workingDays(List<Days> workingDays) {
             this.workingDays = workingDays;
@@ -317,7 +317,7 @@ public class Boss extends Employee {
         /**
          * Setter for boss.
          * @param boss Person value for boss.
-         * @return Builder
+         * @return Builder.
          */
         public Builder boss(Person boss) {
             this.boss = boss;
@@ -327,7 +327,7 @@ public class Boss extends Employee {
         /**
          * Setter for promotedAt.
          * @param promotedAt LocalDateTime value for promotedAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder promotedAt(LocalDateTime promotedAt) {
             this.promotedAt = promotedAt;
@@ -337,7 +337,7 @@ public class Boss extends Employee {
         /**
          * Setter for assistant.
          * @param assistant Employee value for assistant.
-         * @return Builder
+         * @return Builder.
          */
         public Builder assistant(Employee assistant) {
             this.assistant = assistant;
@@ -347,7 +347,7 @@ public class Boss extends Employee {
         /**
          * Setter for personType.
          * @param personType String value for personType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder personType(String personType) {
             this.personType = personType;
@@ -356,7 +356,7 @@ public class Boss extends Employee {
 
         /**
          * Builds a new {@link Boss} object using the set fields.
-         * @return {@link Boss}
+         * @return {@link Boss}.
          */
         public Boss build() {
             return new Boss(address, age, birthday, birthtime, name, uid, department, dependents,

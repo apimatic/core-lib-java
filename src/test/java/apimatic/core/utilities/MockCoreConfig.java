@@ -18,13 +18,13 @@ public class MockCoreConfig extends CompatibilityFactoryMock {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link GlobalConfiguration.Builder}
+     * Mock of {@link GlobalConfiguration.Builder}.
      */
     @Mock
     private static GlobalConfiguration.Builder mockCoreConfigBuilder;
 
     /**
-     * Mock of {@link GlobalConfiguration}
+     * Mock of {@link GlobalConfiguration}.
      */
     @Mock
     private static GlobalConfiguration mockGlobalConfig;
@@ -40,7 +40,7 @@ public class MockCoreConfig extends CompatibilityFactoryMock {
     }
 
     /**
-     * @return {@link GlobalConfiguration}
+     * @return {@link GlobalConfiguration}.
      */
     public static GlobalConfiguration getMockGlobalConfig() {
         return mockGlobalConfig;

@@ -10,13 +10,13 @@ import io.apimatic.coreinterfaces.http.request.Multipart;
 public class MultipartWrapper implements Multipart {
 
     /**
-     * A string of serialized Object
+     * A string of serialized Object.
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String serializedObj;
 
     /**
-     * An instance of {@link HttpHeaders}
+     * An instance of {@link HttpHeaders}.
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private HttpHeaders headers;
@@ -24,7 +24,7 @@ public class MultipartWrapper implements Multipart {
     /**
      * Initialization constructor.
      * @param serializedObj Serialized string of object to be wrapped.
-     * @param headers Headers for wrapping
+     * @param headers Headers for wrapping.
      */
     public MultipartWrapper(final String serializedObj, final HttpHeaders headers) {
         this.serializedObj = serializedObj;
@@ -41,7 +41,7 @@ public class MultipartWrapper implements Multipart {
 
     /**
      * Getter for headers.
-     * @return headers
+     * @return headers.
      */
     public HttpHeaders getHeaders() {
         return headers;

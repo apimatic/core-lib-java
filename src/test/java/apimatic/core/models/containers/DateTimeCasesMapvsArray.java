@@ -67,16 +67,16 @@ public abstract class DateTimeCasesMapvsArray {
      */
     public interface Cases<R> {
         /**
-         * Case for the list of local date time
-         * @param dateTime The list of {@link LocalDateTime}
-         * @return R
+         * Case for the list of local date time.
+         * @param dateTime The list of {@link LocalDateTime}.
+         * @return R.
          */
         R dateTime(List<LocalDateTime> dateTime);
 
         /**
-         * Case for the map of local date time
-         * @param dateTime2 The map of {@link LocalDateTime}
-         * @return R
+         * Case for the map of local date time.
+         * @param dateTime2 The map of {@link LocalDateTime}.
+         * @return R.
          */
         R dateTime2(Map<String, LocalDateTime> dateTime2);
     }

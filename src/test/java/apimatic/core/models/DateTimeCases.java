@@ -26,7 +26,7 @@ public class DateTimeCases {
 
     /**
      * Getter for MapvsArray.
-     * @return Returns the DateTimeCasesMapvsArray
+     * @return Returns the DateTimeCasesMapvsArray.
      */
     @JsonGetter("mapvsArray")
     public DateTimeCasesMapvsArray getMapvsArray() {
@@ -35,7 +35,7 @@ public class DateTimeCases {
 
     /**
      * Setter for MapvsArray.
-     * @param mapvsArray Value for DateTimeCasesMapvsArray
+     * @param mapvsArray Value for DateTimeCasesMapvsArray.
      */
     @JsonSetter("mapvsArray")
     public void setMapvsArray(DateTimeCasesMapvsArray mapvsArray) {
@@ -44,7 +44,7 @@ public class DateTimeCases {
 
     /**
      * Converts this DateTimeCases into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -54,7 +54,7 @@ public class DateTimeCases {
     /**
      * Builds a new {@link DateTimeCases.Builder} object. Creates the instance with the state of the
      * current model.
-     * @return a new {@link DateTimeCases.Builder} object
+     * @return a new {@link DateTimeCases.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(mapvsArray);
@@ -83,7 +83,7 @@ public class DateTimeCases {
         /**
          * Setter for mapvsArray.
          * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
-         * @return Builder
+         * @return Builder.
          */
         public Builder mapvsArray(DateTimeCasesMapvsArray mapvsArray) {
             this.mapvsArray = mapvsArray;
@@ -92,7 +92,7 @@ public class DateTimeCases {
 
         /**
          * Builds a new {@link DateTimeCases} object using the set fields.
-         * @return {@link DateTimeCases}
+         * @return {@link DateTimeCases}.
          */
         public DateTimeCases build() {
             return new DateTimeCases(mapvsArray);

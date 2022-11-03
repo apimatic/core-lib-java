@@ -12,10 +12,10 @@ public class XMLDateHelper {
     protected XMLDateHelper() {}
 
     /**
-     * Serialize the simple date
-     * @param dateObj An instance of {@link LocalDate}
-     * @param rootName The root name of XML block
-     * @return A XML string
+     * Serialize the simple date.
+     * @param dateObj An instance of {@link LocalDate}.
+     * @param rootName The root name of XML block.
+     * @return A XML string.
      */
     public static String serializeSimpleDate(LocalDate dateObj, String rootName) {
         String xmlBlock = "<" + rootName + ">";
@@ -25,9 +25,9 @@ public class XMLDateHelper {
     }
 
     /**
-     * Deserialize the simple date string
-     * @param xml The Xml string
-     * @return An instance of {@link LocalDate}
+     * Deserialize the simple date string.
+     * @param xml The Xml string.
+     * @return An instance of {@link LocalDate}.
      */
     public static LocalDate deserializeSimpleDate(String xml) {
         Pattern pattern = Pattern.compile("<.+?>(.+?)</.+?>");

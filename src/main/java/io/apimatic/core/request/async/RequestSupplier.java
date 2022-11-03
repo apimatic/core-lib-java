@@ -4,13 +4,13 @@ import java.io.IOException;
 import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
- * Request Supplier
+ * Request Supplier.
  */
 @FunctionalInterface
 public interface RequestSupplier {
     /**
      * Supplies the Request object.
-     * @return An object of type Request
+     * @return An object of type Request.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
     Request supply() throws IOException;

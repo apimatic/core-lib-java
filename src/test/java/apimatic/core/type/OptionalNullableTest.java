@@ -28,72 +28,72 @@ public class OptionalNullableTest {
 
 
     /**
-     * Simple date string
+     * Simple date string.
      */
     private static final String SIMPLE_DATE = "{\"dateNullable\":\"2020-01-08\"}";
 
     /**
-     * Simple date array string
+     * Simple date array string.
      */
     private static final String SIMPLE_DATE_ARRAY = "{\"date\":[\"2020-01-08\",\"2020-01-08\"]}";
 
     /**
-     * Simple date map string
+     * Simple date map string.
      */
     private static final String SIMPLE_DATE_MAP = "{\"date\":{\"key\":\"2020-01-08\"}}";
 
     /**
-     * RFC 1123 date string
+     * RFC 1123 date string.
      */
     private static final String RFC1123_DATE =
             "{\"dateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\",\"dateTime1\":null}";
 
     /**
-     * RFC 1123 date array string
+     * RFC 1123 date array string.
      */
     private static final String RFC1123_DATE_ARRAY =
             "{\"dateTime\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
                     + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"dateTime1\":null}";
     /**
-     * RFC 1123 Date array string
+     * RFC 1123 Date array string.
      */
     private static final String RFC1123_DATE_ARRAY1 =
             "{\"dateTime1\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
                     + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"dateTime\":null}";
     /**
-     * RFC 1123 map array
+     * RFC 1123 map array.
      */
     private static final String RFC1123_DATE_MAP =
             "{\"dateTime\":{\"key\":\"Wed, 20 Jan 2021 12:12:41 GMT\"},\"dateTime1\":null}";
 
     /**
-     * RFC 8601 date string
+     * RFC 8601 date string.
      */
     private static final String RFC8601_DATE =
             "{\"dateTime\":\"2021-01-20T12:12:41Z\",\"dateTime1\":null}";
     /**
-     * RFC 8601 date array string
+     * RFC 8601 date array string.
      */
     private static final String RFC8601_DATE_ARRAY =
             "{\"dateTime\":[\"2021-01-20T12:12:41Z\",\"2021-01-20T12:12:41Z\"],"
                     + "\"dateTime1\":null}";
     /**
-     * RFC 8601 date map string
+     * RFC 8601 date map string.
      */
     private static final String RFC8601_DATE_MAP =
             "{\"dateTime\":{\"key\":\"2021-01-20T12:12:41Z\"},\"dateTime1\":null}";
     /**
-     * RFC 8601 map to string
+     * RFC 8601 map to string.
      */
     private static final String RFC8601_DATE_MAP_TO_STRING =
             "Rfc8601DateMap [dateTime1=null, dateTime={key=2021-01-20T12:12:41}]";
     /**
-     * An instance of {@link LocalDateTime}
+     * An instance of {@link LocalDateTime}.
      */
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2021, 1, 20, 12, 12, 41);
 
     /**
-     * An instance of {@link LocalDate}
+     * An instance of {@link LocalDate}.
      */
     private static final LocalDate LOCAL_DATE = LocalDate.of(2020, 1, 8);
 
@@ -257,7 +257,4 @@ public class OptionalNullableTest {
         String actual = rfc8601DateMap.toString();
         assertEquals(actual, expected);
     }
-
-
-
 }

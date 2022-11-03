@@ -51,13 +51,13 @@ public class RequestBuilderTest extends MockCoreConfig {
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     /**
-     * Mock of {@link ApiCall.Builder}
+     * Mock of {@link ApiCall.Builder}.
      */
     @Mock
     private ApiCall.Builder<?, ?> mockApiCallBuilder;
 
     /**
-     * Mock of {@link ApiCall}
+     * Mock of {@link ApiCall}.
      */
     @Mock
     private ApiCall<?, ?> mockApiCall;
@@ -69,37 +69,37 @@ public class RequestBuilderTest extends MockCoreConfig {
     private List<SimpleEntry<String, Object>> parameterList;
 
     /**
-     * Mock of query parameters
+     * Mock of query parameters.
      */
     @Mock
     private Map<String, Object> queryParameters;
 
     /**
-     * Mock of map of {@link Authentication}
+     * Mock of map of {@link Authentication}.
      */
     @Mock
     private Map<String, Authentication> authentications;
 
     /**
-     * Mock of {@link HeaderAuth}
+     * Mock of {@link HeaderAuth}.
      */
     @Mock
     private HeaderAuth authentication;
 
     /**
-     * Mock of {@link Callback}
+     * Mock of {@link Callback}.
      */
     @Mock
     private Callback httpCallback;
 
     /**
-     * Mock of {@link CoreFileWrapper}
+     * Mock of {@link CoreFileWrapper}.
      */
     @Mock
     private CoreFileWrapper fileWrapper;
 
     /**
-     * Argument capture for void methods
+     * Argument capture for void methods.
      */
     @Captor
     private ArgumentCaptor<Consumer<HttpRequest.Builder>> requestBuilder;

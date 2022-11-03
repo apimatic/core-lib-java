@@ -19,7 +19,7 @@ public interface TypeCombinator {
     @Target(ElementType.FIELD)
     @interface FormSerialize {
         /**
-         * Serializer class to use for serializing contents (elements of a Collection/array, values
+         * Serializer class to use for serializing contents (elements of a Collection/array, value.
          * of Maps) of annotated property. Can only be used on accessors (methods, fields,
          * constructors), to apply to values of {@link java.util.Map}-valued properties; not
          * applicable for value types used as Array elements or {@link java.util.Collection} and
