@@ -29,20 +29,6 @@ jobs:
           
       - name: Update version in POM
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.Version }} -DgenerateBackupPoms=false
-      - name: Create tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ github.event.inputs.Version }}
-          tag_prefix: ""
-          
-      - name: Create changelog for the release
-        uses: ncipollo/release-action@v1
-        with: 
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ github.event.inputs.Title }}
-          body: ${{ steps.tag_version.outputs.changelog }}
       - name: Release to Maven Central
         id: release
         uses: samuelmeuli/action-maven-publish@v1
@@ -66,3 +52,19 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+      - name: Create tag
+        if: steps.release.outputs.exit_code == 0
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ github.event.inputs.Version }}
+          tag_prefix: ""
+          
+      - name: Create changelog for the release
+        if: steps.release.outputs.exit_code == 0
+        uses: ncipollo/release-action@v1
+        with: 
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ github.event.inputs.Title }}
+          body: ${{ steps.tag_version.outputs.changelog }}
