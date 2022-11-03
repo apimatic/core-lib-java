@@ -105,8 +105,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @throws ExceptionType Represents error response from the server.
      */
     @SuppressWarnings("unchecked")
-    public ResponseType handle(Request httpRequest, Response httpResponse,
-            GlobalConfiguration globalConfiguration,
+    public ResponseType handle(
+            Request httpRequest, Response httpResponse, GlobalConfiguration globalConfiguration,
             CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
         Context httpContext =
@@ -165,8 +165,9 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private <T> ResponseType createResponseClassType(Response httpResponse,
-            GlobalConfiguration coreConfig, boolean hasBinaryResponse) throws IOException {
+    private <T> ResponseType createResponseClassType(
+            Response httpResponse, GlobalConfiguration coreConfig, boolean hasBinaryResponse)
+            throws IOException {
         CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
         switch (responseClassType) {
             case API_RESPONSE:
@@ -186,8 +187,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseType createDynamicResponse(Response httpResponse,
-            CompatibilityFactory compatibilityFactory) {
+    private ResponseType createDynamicResponse(
+            Response httpResponse, CompatibilityFactory compatibilityFactory) {
         return (ResponseType) compatibilityFactory.createDynamicResponse(httpResponse);
     }
 
@@ -257,8 +258,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param errorCase to generate the SDK Exception.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
-                ErrorCase<ExceptionType> errorCase) {
+        public Builder<ResponseType, ExceptionType> localErrorCase(
+                String statusCode, ErrorCase<ExceptionType> errorCase) {
             if (this.localErrorCases == null) {
                 this.localErrorCases = new HashMap<String, ErrorCase<ExceptionType>>();
             }
@@ -272,8 +273,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param globalErrorCases the global error cases for endpoints.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                globalErrorCase(Map<String, ErrorCase<ExceptionType>> globalErrorCases) {
+        public Builder<ResponseType, ExceptionType> globalErrorCase(
+                Map<String, ErrorCase<ExceptionType>> globalErrorCases) {
             this.globalErrorCases = globalErrorCases;
             return this;
         }
@@ -283,8 +284,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param deserializer to deserialize the server response.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                deserializer(Deserializer<ResponseType> deserializer) {
+        public Builder<ResponseType, ExceptionType> deserializer(
+                Deserializer<ResponseType> deserializer) {
             this.deserializer = deserializer;
             return this;
         }
@@ -296,9 +297,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param <IntermediateResponseType> the intermediate type of api response.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <IntermediateResponseType> Builder<ResponseType, ExceptionType>
-                apiResponseDeserializer(
-                        Deserializer<IntermediateResponseType> intermediateDeserializer) {
+        public <IntermediateResponseType> Builder<ResponseType, ExceptionType> apiResponseDeserializer(
+                Deserializer<IntermediateResponseType> intermediateDeserializer) {
             this.intermediateDeserializer = intermediateDeserializer;
             return this;
         }
@@ -308,8 +308,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param responseClassType specify the response class type for result.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                responseClassType(ResponseClassType responseClassType) {
+        public Builder<ResponseType, ExceptionType> responseClassType(
+                ResponseClassType responseClassType) {
             this.responseClassType = responseClassType;
             return this;
         }
@@ -319,8 +319,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param contextInitializer the context initializer in response models.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                contextInitializer(ContextInitializer<ResponseType> contextInitializer) {
+        public Builder<ResponseType, ExceptionType> contextInitializer(
+                ContextInitializer<ResponseType> contextInitializer) {
             this.contextInitializer = contextInitializer;
             return this;
         }

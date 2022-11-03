@@ -53,8 +53,8 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      *        thrown exception.
      * @return {@link ErrorCase}.
      */
-    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType>
-            create(String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
+    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
+            String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
         return errorCase;
     }

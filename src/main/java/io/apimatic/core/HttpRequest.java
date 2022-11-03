@@ -111,7 +111,8 @@ public final class HttpRequest {
         }
     }
 
-    private Request buildRequest(Method httpMethod, Object body, HttpHeaders headerParams,
+    private Request buildRequest(
+            Method httpMethod, Object body, HttpHeaders headerParams,
             Map<String, Object> queryParams, List<SimpleEntry<String, Object>> formFields,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
@@ -130,8 +131,8 @@ public final class HttpRequest {
      * @return list of form parameters
      * @throws IOException
      */
-    private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
-            Map<String, Object> optionalFormParamaters,
+    private List<SimpleEntry<String, Object>> generateFormFields(
+            Set<Parameter> formParams, Map<String, Object> optionalFormParamaters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (formParams.isEmpty() && optionalFormParamaters.isEmpty()) {
             return null;
@@ -181,8 +182,9 @@ public final class HttpRequest {
         }
     }
 
-    private Object buildBody(Object body, Serializer bodySerializer,
-            Map<String, Object> bodyParameters) throws IOException {
+    private Object buildBody(
+            Object body, Serializer bodySerializer, Map<String, Object> bodyParameters)
+            throws IOException {
         if (body != null) {
             if (bodySerializer != null) {
                 return bodySerializer.supply();

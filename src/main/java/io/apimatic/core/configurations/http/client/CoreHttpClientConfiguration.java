@@ -446,8 +446,8 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
          * @param overrideHttpClientConfigurations The overrideHttpClientConfigurations to set.
          * @return Builder.
          */
-        public Builder httpClientInstance(okhttp3.OkHttpClient httpClientInstance,
-                boolean overrideHttpClientConfigurations) {
+        public Builder httpClientInstance(
+                okhttp3.OkHttpClient httpClientInstance, boolean overrideHttpClientConfigurations) {
             this.httpClientInstance = httpClientInstance;
             this.overrideHttpClientConfigurations = overrideHttpClientConfigurations;
             return this;

@@ -77,8 +77,8 @@ public class DateHelper {
      * @param values The List of Map of LocalDate objects to convert.
      * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfSimpleDate(List<Map<String, LocalDate>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfSimpleDate(
+            List<Map<String, LocalDate>> values) {
         if (values == null) {
             return null;
         }

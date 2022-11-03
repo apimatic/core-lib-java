@@ -18,7 +18,7 @@ import java.util.Map;
 import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.apimatic.core.testing.TestHelper;
+import io.apimatic.core.utilities.TestHelper;
 
 public class TestHelperTest {
 

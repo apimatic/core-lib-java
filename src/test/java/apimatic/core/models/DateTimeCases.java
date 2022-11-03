@@ -23,7 +23,6 @@ public class DateTimeCases {
         this.mapvsArray = mapvsArray;
     }
 
-
     /**
      * Getter for MapvsArray.
      * @return Returns the DateTimeCasesMapvsArray.

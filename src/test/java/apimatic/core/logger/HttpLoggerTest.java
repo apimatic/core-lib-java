@@ -1,4 +1,4 @@
-package apimatic.core.configurations.http.client;
+package apimatic.core.logger;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.slf4j.Logger;
-import io.apimatic.core.configurations.http.client.HttpLogger;
+import io.apimatic.core.logger.HttpLogger;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.LoggingLevel;

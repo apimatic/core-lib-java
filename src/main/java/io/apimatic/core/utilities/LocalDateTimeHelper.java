@@ -98,8 +98,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert.
      * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfUnixTimestamp(List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfUnixTimestamp(
+            List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -159,8 +159,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert.
      * @return The list of map of converted Longs.
      */
-    public static List<Map<String, Long>>
-            toArrayOfMapOfUnixTimestampLong(List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, Long>> toArrayOfMapOfUnixTimestampLong(
+            List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -227,8 +227,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert.
      * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfRfc1123DateTime(List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfRfc1123DateTime(
+            List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -300,8 +300,8 @@ public class LocalDateTimeHelper extends DateHelper {
      * @param values The List of Map of DateTime objects to convert.
      * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfRfc8601DateTime(List<Map<String, LocalDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfRfc8601DateTime(
+            List<Map<String, LocalDateTime>> values) {
         if (values == null) {
             return null;
         }

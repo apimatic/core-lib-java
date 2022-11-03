@@ -1,4 +1,4 @@
-package io.apimatic.core.testing;
+package io.apimatic.core.utilities;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.apimatic.core.utilities.CoreHelper;
 
 /**
  * Contains utility methods for comparing objects, arrays and files.
@@ -67,8 +66,9 @@ public final class TestHelper {
      * @throws IOException if comparison got failed.
      * @return The modified json String.
      */
-    public static <T extends Object> String prepareForComparison(String json,
-            TypeReference<T> typeReference) throws JsonProcessingException, IOException {
+    public static <T extends Object> String prepareForComparison(
+            String json, TypeReference<T> typeReference)
+            throws JsonProcessingException, IOException {
         return CoreHelper.serialize(CoreHelper.deserialize(json, typeReference));
     }
 
@@ -94,8 +94,9 @@ public final class TestHelper {
      * @return True if it is a subset.
      * @throws IOException if deserialization got failed.
      */
-    public static boolean isProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
+    public static boolean isProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         JsonNode leftNode = CoreHelper.getMapper().readTree(leftObject);
         if (leftNode.isObject()) {
             return isJsonObjectProperSubsetOf(leftObject, rightObject, checkValues, allowExtra,
@@ -121,9 +122,9 @@ public final class TestHelper {
      * @return <tt>true</tt> if left left tree is a proper subset of right tree.
      */
     @SuppressWarnings({"unchecked", "rawtypes", "unused"})
-    private static boolean isProperSubsetOf(Map<String, Object> leftTree,
-            Map<String, Object> rightTree, boolean checkValues, boolean allowExtra,
-            boolean isOrdered) {
+    private static boolean isProperSubsetOf(
+            Map<String, Object> leftTree, Map<String, Object> rightTree, boolean checkValues,
+            boolean allowExtra, boolean isOrdered) {
         for (Iterator<String> iterator = leftTree.keySet().iterator(); iterator.hasNext();) {
             String key = iterator.next();
             Object leftVal = leftTree.get(key);
@@ -228,8 +229,9 @@ public final class TestHelper {
      * @throws IOException Signal that I/O errors occur.
      * @return <tt>true</tt> if left left JSON object is a proper subset of right JSON object.
      */
-    public static boolean isJsonObjectProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
+    public static boolean isJsonObjectProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         return isProperSubsetOf(CoreHelper.deserialize(leftObject),
                 CoreHelper.deserialize(rightObject), checkValues, allowExtra, isOrdered);
     }
@@ -244,9 +246,9 @@ public final class TestHelper {
      * @return True if it is a subset.
      * @throws IOException if deserialization got failed.
      */
-    public static boolean isArrayOfArrayOfJsonObjectsProperSubsetOf(String leftObject,
-            String rightObject, boolean checkValues, boolean allowExtra, boolean isOrdered)
-            throws IOException {
+    public static boolean isArrayOfArrayOfJsonObjectsProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         // Deserialize left and right objects from their respective strings
         LinkedList<LinkedList<LinkedHashMap<String, Object>>> obj =
                 new LinkedList<LinkedList<LinkedHashMap<String, Object>>>();
@@ -316,8 +318,9 @@ public final class TestHelper {
      * @return True if it is a subset.
      * @throws IOException if deserialization got failed.
      */
-    public static boolean isArrayOfJsonObjectsProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
+    public static boolean isArrayOfJsonObjectsProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         // Deserialize left and right objects from their respective strings
         LinkedList<LinkedHashMap<String, Object>> obj =
                 new LinkedList<LinkedHashMap<String, Object>>();
@@ -419,8 +422,8 @@ public final class TestHelper {
      * @param isOrdered Should checking be in order?.
      * @return <tt>true</tt> if list is a subset of another list.
      */
-    private static boolean isListProperSubsetOf(List<Object> leftList, List<Object> rightList,
-            boolean allowExtra, boolean isOrdered) {
+    private static boolean isListProperSubsetOf(
+            List<Object> leftList, List<Object> rightList, boolean allowExtra, boolean isOrdered) {
         if (isOrdered && !allowExtra) {
             return rightList.equals(leftList);
         } else if (isOrdered && allowExtra) {
@@ -440,8 +443,8 @@ public final class TestHelper {
      * @param checkValues Check header values for equality?.
      * @return <tt>true</tt> if left headers map is a proper subset of right headers map.
      */
-    public static boolean areHeadersProperSubsetOf(Map<String, String> leftTree,
-            Map<String, String> rightTree, boolean checkValues) {
+    public static boolean areHeadersProperSubsetOf(
+            Map<String, String> leftTree, Map<String, String> rightTree, boolean checkValues) {
         Map<String, Object> l = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
         Map<String, Object> r = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
         l.putAll(leftTree);
@@ -581,8 +584,8 @@ public final class TestHelper {
      * @param expected List of BigDecimal.
      * @return true if actual list is a super set of expected list.
      */
-    public static boolean containsBigDecimalList(List<BigDecimal> actual,
-            List<BigDecimal> expected) {
+    public static boolean containsBigDecimalList(
+            List<BigDecimal> actual, List<BigDecimal> expected) {
         for (BigDecimal expectedValue : expected) {
             boolean found = false;
             for (BigDecimal actualValue : actual) {

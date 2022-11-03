@@ -119,8 +119,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
          * @param action requestBuilder {@link Consumer}.
          * @return {@link ApiCall.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                requestBuilder(Consumer<HttpRequest.Builder> action) {
+        public Builder<ResponseType, ExceptionType> requestBuilder(
+                Consumer<HttpRequest.Builder> action) {
             requestBuilder = new HttpRequest.Builder();
             action.accept(requestBuilder);
             return this;
@@ -141,8 +141,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
          * @param action endpointConfiguration {@link Consumer}.
          * @return {@link ApiCall.Builder}.
          */
-        public Builder<ResponseType, ExceptionType>
-                endpointConfiguration(Consumer<EndpointConfiguration.Builder> action) {
+        public Builder<ResponseType, ExceptionType> endpointConfiguration(
+                Consumer<EndpointConfiguration.Builder> action) {
             endpointConfigurationBuilder = new EndpointConfiguration.Builder();
             action.accept(endpointConfigurationBuilder);
             return this;

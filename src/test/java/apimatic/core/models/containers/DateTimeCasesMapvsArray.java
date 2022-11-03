@@ -119,8 +119,9 @@ public abstract class DateTimeCasesMapvsArray {
          */
         private static class DateTimeCaseSerializer extends JsonSerializer<DateTimeCase> {
             @Override
-            public void serialize(DateTimeCase dateTimeCase, JsonGenerator jgen,
-                    SerializerProvider provider) throws IOException {
+            public void serialize(
+                    DateTimeCase dateTimeCase, JsonGenerator jgen, SerializerProvider provider)
+                    throws IOException {
                 jgen.writeObject(LocalDateTimeHelper.toRfc1123DateTime(dateTimeCase.dateTime));
             }
         }
@@ -164,8 +165,9 @@ public abstract class DateTimeCasesMapvsArray {
          */
         private static class DateTime2CaseSerializer extends JsonSerializer<DateTime2Case> {
             @Override
-            public void serialize(DateTime2Case dateTime2Case, JsonGenerator jgen,
-                    SerializerProvider provider) throws IOException {
+            public void serialize(
+                    DateTime2Case dateTime2Case, JsonGenerator jgen, SerializerProvider provider)
+                    throws IOException {
                 jgen.writeObject(LocalDateTimeHelper.toRfc1123DateTime(dateTime2Case.dateTime2));
             }
         }

@@ -22,6 +22,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`GlobalConfiguration`](./src/main/java/io/apimatic/core/GlobalConfiguration.java)                     | A class which hold the global configuration properties to make a successful Api Call |
 | [`HttpRequest`](./src/main/java/io/apimatic/core/HttpRequest.java)                     | An HTTP request is made by a client, to a named host, which is located on a server |
 | [`ResponseHandler`](./src/main/java/io/apimatic/core/ResponseHandler.java)                     | Handler that encapsulates the process of generating a response object from a Response |
+| [`HttpLogger`](./src/main/java/io/apimatic/core/logger/HttpLogger.java)              | A class to log the Http events. |
 | [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java)              | A class supports HTTP authentication through HTTP Headers |
 | [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java)                | A class supports HTTP authentication through query parameters |
 | [`CoreHttpClientConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/CoreHttpClientConfiguration.java)                     | To hold HTTP Client Configuration |
@@ -42,7 +43,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`XMLZonedDateTimeHelper`](./src/main/java/io/apimatic/core/utilities/XmlZonedDateTimeHelper.java)                     | This is a utility class for XML ZonedDateTime operations |
 | [`CoreJsonObject`](./src/main/java/io/apimatic/core/utilities/CoreJsonObject.java)                     | Wrapper class for JSON object |
 | [`CoreJsonValue`](./src/main/java/io/apimatic/core/utilities/CoreJsonValue.java)                     | Wrapper class for JSON value |
-| [`TestHelper`](./src/main/java/io/apimatic/core/testing/TestHelper.java)                     | Contains utility methods for comparing objects, arrays and files |
+| [`TestHelper`](./src/main/java/io/apimatic/core/utilities/TestHelper.java)                     | Contains utility methods for comparing objects, arrays and files |
 
 ## Interfaces
 | Name                                                                    | Description                                                        |

@@ -61,8 +61,9 @@ public final class OptionalNullable<T> {
      */
     public static class Serializer extends JsonSerializer<OptionalNullable<Object>> {
         @Override
-        public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
-                SerializerProvider provider) throws IOException {
+        public void serialize(
+                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
             jgen.writeObject(object.value);
         }
     }
@@ -73,8 +74,9 @@ public final class OptionalNullable<T> {
     public static class UnixTimestampSerializer extends JsonSerializer<OptionalNullable<Object>> {
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
-                SerializerProvider provider) throws IOException {
+        public void serialize(
+                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(LocalDateTimeHelper
                         .toUnixTimestampLong((List<LocalDateTime>) object.value));
@@ -94,8 +96,9 @@ public final class OptionalNullable<T> {
     public static class Rfc1123DateTimeSerializer extends JsonSerializer<OptionalNullable<Object>> {
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
-                SerializerProvider provider) throws IOException {
+        public void serialize(
+                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(
                         LocalDateTimeHelper.toRfc1123DateTime((List<LocalDateTime>) object.value));
@@ -115,8 +118,9 @@ public final class OptionalNullable<T> {
     public static class Rfc8601DateTimeSerializer extends JsonSerializer<OptionalNullable<Object>> {
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
-                SerializerProvider provider) throws IOException {
+        public void serialize(
+                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(
                         LocalDateTimeHelper.toRfc8601DateTime((List<LocalDateTime>) object.value));
@@ -136,8 +140,9 @@ public final class OptionalNullable<T> {
     public static class SimpleDateSerializer extends JsonSerializer<OptionalNullable<Object>> {
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(OptionalNullable<Object> object, JsonGenerator jgen,
-                SerializerProvider provider) throws IOException {
+        public void serialize(
+                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
             if (object.value instanceof List<?>) {
                 jgen.writeObject(LocalDateTimeHelper.toSimpleDate((List<LocalDate>) object.value));
             } else if (object.value instanceof Map<?, ?>) {

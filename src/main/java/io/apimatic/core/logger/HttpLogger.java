@@ -1,4 +1,4 @@
-package io.apimatic.core.configurations.http.client;
+package io.apimatic.core.logger;
 
 import java.util.List;
 import java.util.Map;

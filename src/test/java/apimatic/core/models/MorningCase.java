@@ -23,7 +23,6 @@ public class MorningCase {
         this.morning = morning;
     }
 
-
     @JsonCreator
     private MorningCase(final JsonNode jsonNode) throws IOException {
         this.morning = CoreHelper.deserialize(jsonNode, Morning.class);
