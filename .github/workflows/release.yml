@@ -1,4 +1,4 @@
-name: Release To Maven
+name: Release To Maven Central
 
 # Run workflow on commits to the `main` branch
 on:
@@ -15,21 +15,21 @@ on:
 
 jobs:
   publish:
-    name: Creating release version
+    name: Publish the Maven package
     runs-on: ubuntu-latest
     environment: Production
     steps:
-      - name: Check out Git repository
+      - name: Check out git repository
         uses: actions/checkout@v2
 
-      - name: Install Java and Maven
+      - name: Install Java and Maven setup
         uses: actions/setup-java@v1
         with:
           java-version: 8
           
-      - name: Update version in pom.xml (Release only)
+      - name: Update version in POM
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.Version }} -DgenerateBackupPoms=false
-      - name: Create Tag
+      - name: Create tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
         with:
@@ -37,13 +37,13 @@ jobs:
           custom_tag: ${{ github.event.inputs.Version }}
           tag_prefix: ""
           
-      - name: Create release
+      - name: Create changelog for the release
         uses: ncipollo/release-action@v1
         with: 
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ github.event.inputs.Title }}
           body: ${{ steps.tag_version.outputs.changelog }}
-      - name: Release Maven package
+      - name: Release to Maven Central
         id: release
         uses: samuelmeuli/action-maven-publish@v1
         with:
@@ -51,7 +51,7 @@ jobs:
           gpg_passphrase: ${{ secrets.OSSRH_GPG_PASSPHRASE  }}
           nexus_username: ${{ secrets.OSSRH_USERNAME  }}
           nexus_password: ${{ secrets.OSSRH_PASSWORD }}
-      - name: Run the commit action
+      - name: Commit the version change
         if: steps.release.outputs.exit_code == 0
         uses: devops-infra/action-commit-push@master
         with:
@@ -60,7 +60,7 @@ jobs:
            commit_message: "ci(release-version): update pom.xml [ci skip]"
            force: false
            target_branch: ${{ github.ref }}
-      - name: Push changes
+      - name: Push the version change
         if: steps.release.outputs.exit_code == 0
         uses: ad-m/github-push-action@master
         with:
