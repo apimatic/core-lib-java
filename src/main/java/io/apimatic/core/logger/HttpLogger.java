@@ -93,7 +93,6 @@ public class HttpLogger implements ApiLogger {
             return;
         }
 
-
         String requestId = UUID.randomUUID().toString();
         RequestEntry requestEntry = new RequestEntry(requestId, System.nanoTime(), url);
         requestQueue.put(request, requestEntry);
@@ -108,13 +107,13 @@ public class HttpLogger implements ApiLogger {
         message.setType("Request");
         message.setRequestId(requestId);
         if (config.isLoggingRequestInfo()) {
-            message.method = (Method) request.getHttpMethod();
+            message.method = request.getHttpMethod();
             message.setUrl(url);
             message.setAdditionalMessage(additionalMessage);
         }
 
         if (config.isLoggingRequestHeaders()) {
-            message.setHeaders(getFilteredHeaders((HttpHeaders) request.getHeaders()));
+            message.setHeaders(getFilteredHeaders(request.getHeaders()));
         }
 
         if (config.isLoggingRequestBody()) {
