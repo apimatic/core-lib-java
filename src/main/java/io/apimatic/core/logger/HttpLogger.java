@@ -187,7 +187,7 @@ public class HttpLogger implements ApiLogger {
             }
 
             if (config.isLoggingResponseHeaders()) {
-                message.setHeaders(getFilteredHeaders((HttpHeaders) response.getHeaders()));
+                message.setHeaders(getFilteredHeaders(response.getHeaders()));
             }
 
             if (config.isLoggingResponseBody()) {
