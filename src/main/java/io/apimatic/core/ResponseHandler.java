@@ -299,7 +299,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          */
         public <IntermediateResponseType> Builder<ResponseType, ExceptionType> 
                 apiResponseDeserializer(Deserializer<IntermediateResponseType> 
-                    intermediateDeserializer) {
+                        intermediateDeserializer) {
             this.intermediateDeserializer = intermediateDeserializer;
             return this;
         }

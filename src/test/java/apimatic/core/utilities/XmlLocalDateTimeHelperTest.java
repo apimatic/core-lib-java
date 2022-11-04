@@ -1,11 +1,11 @@
-package apimatic.core.static_classes;
+package apimatic.core.utilities;
 
 import static org.junit.Assert.assertEquals;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.junit.Test;
-import apimatic.core.utilities.TestDateTimeHelper;
+import apimatic.core.mocks.TestDateTimeHelper;
 import io.apimatic.core.utilities.XmlLocalDateTimeHelper;
 
 public class XmlLocalDateTimeHelperTest {

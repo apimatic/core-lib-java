@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import apimatic.core.utilities.MockCoreConfig;
+import apimatic.core.mocks.MockCoreConfig;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.types.CoreApiException;

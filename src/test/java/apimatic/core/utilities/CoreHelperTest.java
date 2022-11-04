@@ -1,4 +1,4 @@
-package apimatic.core.static_classes;
+package apimatic.core.utilities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import apimatic.core.mocks.TestDateTimeHelper;
 import apimatic.core.models.AtomCase;
 import apimatic.core.models.AttributesAndElements;
 import apimatic.core.models.CarCase;
@@ -40,7 +41,6 @@ import apimatic.core.models.OrbitCase;
 import apimatic.core.models.Person;
 import apimatic.core.models.containers.SendParamsFormDateTime;
 import apimatic.core.models.containers.SendScalarParamBody;
-import apimatic.core.utilities.TestDateTimeHelper;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.CoreJsonObject;
 import io.apimatic.core.utilities.CoreJsonValue;

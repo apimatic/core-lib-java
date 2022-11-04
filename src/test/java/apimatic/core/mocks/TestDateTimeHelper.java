@@ -1,4 +1,4 @@
-package apimatic.core.utilities;
+package apimatic.core.mocks;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

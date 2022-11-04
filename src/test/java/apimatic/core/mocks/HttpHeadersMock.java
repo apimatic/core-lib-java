@@ -1,4 +1,4 @@
-package apimatic.core.utilities;
+package apimatic.core.mocks;
 
 import org.junit.Rule;
 import org.mockito.Mock;

@@ -1,4 +1,4 @@
-package apimatic.core.static_classes;
+package apimatic.core.utilities;
 
 import static org.junit.Assert.assertEquals;
 import java.time.ZoneId;

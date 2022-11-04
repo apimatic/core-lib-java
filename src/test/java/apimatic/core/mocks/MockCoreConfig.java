@@ -1,4 +1,4 @@
-package apimatic.core.utilities;
+package apimatic.core.mocks;
 
 import static org.mockito.Mockito.when;
 import java.io.IOException;
