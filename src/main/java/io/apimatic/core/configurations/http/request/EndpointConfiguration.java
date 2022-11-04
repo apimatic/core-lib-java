@@ -25,9 +25,9 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
     private final ArraySerializationFormat arraySerializationFormat;
 
     /**
-     * @param hasBinary
-     * @param retryOption
-     * @param arraySerializationFormat
+     * @param hasBinary A boolean variable for binary response.
+     * @param retryOption Retry options enumeration for HTTP request.
+     * @param arraySerializationFormat Enumeration for all ArraySerialization formats.
      */
     public EndpointConfiguration(final boolean hasBinary, final RetryOption retryOption,
             final ArraySerializationFormat arraySerializationFormat) {
