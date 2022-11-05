@@ -24,28 +24,28 @@ public class UnixDateArray {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
      */
-    public UnixDateArray(List<LocalDateTime> dateTime1, List<LocalDateTime> dateTime) {
+    public UnixDateArray(final List<LocalDateTime> dateTime1, final List<LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 List of LocalDateTime value for dateTime1.
+     * @param dateTime List of LocalDateTime value for dateTime.
      */
-    protected UnixDateArray(List<LocalDateTime> dateTime1,
-            OptionalNullable<List<LocalDateTime>> dateTime) {
+    protected UnixDateArray(final List<LocalDateTime> dateTime1,
+            final OptionalNullable<List<LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal Getter for DateTime.
-     * 
-     * @return Returns the Internal List of LocalDateTime
+     * @return Returns the Internal List of LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,8 +56,7 @@ public class UnixDateArray {
 
     /**
      * Getter for DateTime.
-     * 
-     * @return Returns the List of LocalDateTime
+     * @return Returns the List of LocalDateTime.
      */
     public List<LocalDateTime> getDateTime() {
         return OptionalNullable.getFrom(dateTime);
@@ -65,8 +64,7 @@ public class UnixDateArray {
 
     /**
      * Setter for DateTime.
-     * 
-     * @param dateTime Value for List of LocalDateTime
+     * @param dateTime Value for List of LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -83,8 +81,7 @@ public class UnixDateArray {
 
     /**
      * Getter for DateTime1.
-     * 
-     * @return Returns the List of LocalDateTime
+     * @return Returns the List of LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(contentUsing = LocalDateTimeHelper.UnixTimestampSerializer.class)
@@ -94,8 +91,7 @@ public class UnixDateArray {
 
     /**
      * Setter for DateTime1.
-     * 
-     * @param dateTime1 Value for List of LocalDateTime
+     * @param dateTime1 Value for List of LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -105,8 +101,7 @@ public class UnixDateArray {
 
     /**
      * Converts this UnixDateArray into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -116,8 +111,7 @@ public class UnixDateArray {
     /**
      * Builds a new {@link UnixDateArray.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link UnixDateArray.Builder} object
+     * @return a new {@link UnixDateArray.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -139,16 +133,14 @@ public class UnixDateArray {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          */
-        public Builder(List<LocalDateTime> dateTime1) {
+        public Builder(final List<LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          * @return Builder
          */
@@ -159,7 +151,6 @@ public class UnixDateArray {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime List of LocalDateTime value for dateTime.
          * @return Builder
          */
@@ -170,8 +161,7 @@ public class UnixDateArray {
 
         /**
          * UnSetter for dateTime.
-         * 
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -180,8 +170,7 @@ public class UnixDateArray {
 
         /**
          * Builds a new {@link UnixDateArray} object using the set fields.
-         * 
-         * @return {@link UnixDateArray}
+         * @return {@link UnixDateArray}.
          */
         public UnixDateArray build() {
             return new UnixDateArray(dateTime1, dateTime);

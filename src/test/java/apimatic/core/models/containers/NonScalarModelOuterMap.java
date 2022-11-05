@@ -33,7 +33,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param morning Morning value for morning.
      * @return The MorningCase object.
      */
@@ -43,7 +42,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param evening Evening value for evening.
      * @return The EveningCase object.
      */
@@ -53,7 +51,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param noon Noon value for noon.
      * @return The NoonCase object.
      */
@@ -63,7 +60,6 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * Method to match from the provided any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The any-of type cases callback.
      * @return The any-of matched case.
@@ -72,14 +68,25 @@ public abstract class NonScalarModelOuterMap {
 
     /**
      * This is interface for any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
+        /**
+         * @param morning An instance of {@link Morning}.
+         * @return R.
+         */
         R morning(Morning morning);
 
+        /**
+         * @param evening An instance of {@link Evening}.
+         * @return R.
+         */
         R evening(Evening evening);
 
+        /**
+         * @param noon An instance of {@link Noon}.
+         * @return R.
+         */
         R noon(Noon noon);
     }
 
@@ -93,7 +100,7 @@ public abstract class NonScalarModelOuterMap {
         @JsonValue
         private Morning morning;
 
-        MorningCase(Morning morning) {
+        MorningCase(final Morning morning) {
             this.morning = morning;
         }
 
@@ -103,7 +110,7 @@ public abstract class NonScalarModelOuterMap {
         }
 
         @JsonCreator
-        private MorningCase(JsonNode jsonNode) throws IOException {
+        private MorningCase(final JsonNode jsonNode) throws IOException {
             this.morning = CoreHelper.deserialize(jsonNode, Morning.class);
         }
 
@@ -123,7 +130,7 @@ public abstract class NonScalarModelOuterMap {
         @JsonValue
         private Evening evening;
 
-        EveningCase(Evening evening) {
+        EveningCase(final Evening evening) {
             this.evening = evening;
         }
 
@@ -133,7 +140,7 @@ public abstract class NonScalarModelOuterMap {
         }
 
         @JsonCreator
-        private EveningCase(JsonNode jsonNode) throws IOException {
+        private EveningCase(final JsonNode jsonNode) throws IOException {
             this.evening = CoreHelper.deserialize(jsonNode, Evening.class);
         }
 
@@ -153,7 +160,7 @@ public abstract class NonScalarModelOuterMap {
         @JsonValue
         private Noon noon;
 
-        NoonCase(Noon noon) {
+        NoonCase(final Noon noon) {
             this.noon = noon;
         }
 
@@ -163,7 +170,7 @@ public abstract class NonScalarModelOuterMap {
         }
 
         @JsonCreator
-        private NoonCase(JsonNode jsonNode) throws IOException {
+        private NoonCase(final JsonNode jsonNode) throws IOException {
             this.noon = CoreHelper.deserialize(jsonNode, Noon.class);
         }
 
@@ -191,5 +198,4 @@ public abstract class NonScalarModelOuterMap {
             return CoreHelper.deserialize(jp, ctxt, discriminator, registry, null, false);
         }
     }
-
 }

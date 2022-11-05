@@ -24,29 +24,29 @@ public class Rfc1123DateMap {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
-    public Rfc1123DateMap(Map<String, LocalDateTime> dateTime1,
-            Map<String, LocalDateTime> dateTime) {
+    public Rfc1123DateMap(final Map<String, LocalDateTime> dateTime1,
+            final Map<String, LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 Map of String, value for dateTime1.
+     * @param dateTime Map of String, value for dateTime.
      */
-    protected Rfc1123DateMap(Map<String, LocalDateTime> dateTime1,
-            OptionalNullable<Map<String, LocalDateTime>> dateTime) {
+    protected Rfc1123DateMap(final Map<String, LocalDateTime> dateTime1,
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal Getter for DateTime.
-     * 
-     * @return Returns the Internal Map of String, LocalDateTime
+     * @return Returns the Internal Map of String, LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -57,8 +57,7 @@ public class Rfc1123DateMap {
 
     /**
      * Getter for DateTime.
-     * 
-     * @return Returns the Map of String, LocalDateTime
+     * @return Returns the Map of String, LocalDateTime.
      */
     public Map<String, LocalDateTime> getDateTime() {
         return OptionalNullable.getFrom(dateTime);
@@ -66,8 +65,7 @@ public class Rfc1123DateMap {
 
     /**
      * Setter for DateTime.
-     * 
-     * @param dateTime Value for Map of String, LocalDateTime
+     * @param dateTime Value for Map of String, LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeDeserializer.class)
@@ -84,8 +82,7 @@ public class Rfc1123DateMap {
 
     /**
      * Getter for DateTime1.
-     * 
-     * @return Returns the Map of String, LocalDateTime
+     * @return Returns the Map of String, LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
@@ -95,8 +92,7 @@ public class Rfc1123DateMap {
 
     /**
      * Setter for DateTime1.
-     * 
-     * @param dateTime1 Value for Map of String, LocalDateTime
+     * @param dateTime1 Value for Map of String, LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeDeserializer.class)
@@ -106,7 +102,6 @@ public class Rfc1123DateMap {
 
     /**
      * Converts this Rfc1123DateMap into string format.
-     * 
      * @return String representation of this class
      */
     @Override
@@ -117,8 +112,7 @@ public class Rfc1123DateMap {
     /**
      * Builds a new {@link Rfc1123DateMap.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
-     * @return a new {@link Rfc1123DateMap.Builder} object
+     * @return a new {@link Rfc1123DateMap.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -140,18 +134,16 @@ public class Rfc1123DateMap {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          */
-        public Builder(Map<String, LocalDateTime> dateTime1) {
+        public Builder(final Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime1(Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
@@ -160,9 +152,8 @@ public class Rfc1123DateMap {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime Map of String, value for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime(Map<String, LocalDateTime> dateTime) {
             this.dateTime = OptionalNullable.of(dateTime);
@@ -171,8 +162,7 @@ public class Rfc1123DateMap {
 
         /**
          * UnSetter for dateTime.
-         * 
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -181,8 +171,7 @@ public class Rfc1123DateMap {
 
         /**
          * Builds a new {@link Rfc1123DateMap} object using the set fields.
-         * 
-         * @return {@link Rfc1123DateMap}
+         * @return {@link Rfc1123DateMap}.
          */
         public Rfc1123DateMap build() {
             return new Rfc1123DateMap(dateTime1, dateTime);

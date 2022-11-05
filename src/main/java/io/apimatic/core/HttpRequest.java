@@ -28,50 +28,69 @@ import io.apimatic.coreinterfaces.type.functional.Serializer;
  * method methods. Once all required parameters have been set in the builder, build will return the
  * HttpRequest. Builders can be copied and modified many times in order to build multiple related
  * requests that differ in some parameters.
- *
  */
-public class HttpRequest {
+public final class HttpRequest {
+    /**
+     * An instance of {@link Request}.
+     */
     private final Request coreHttpRequest;
+
+    /**
+     * An instance of {@link GlobalConfiguration}.
+     */
     private final GlobalConfiguration coreConfig;
+
+    /**
+     * A StringBuilder.
+     */
     private final StringBuilder urlBuilder;
+
+    /**
+     * An instance of {@link CompatibilityFactory}.
+     */
     private final CompatibilityFactory compatibilityFactory;
 
     /**
+     * @param coreConfig
      * @param server
      * @param path
      * @param httpMethod
-     * @param requiresAuth
+     * @param authenticationKey
      * @param queryParams
      * @param templateParams
      * @param headerParams
      * @param formParams
      * @param body
+     * @param formParameters
      * @param bodySerializer
+     * @param bodyParameters
+     * @param arraySerializationFormat
      * @throws IOException
      */
-    private HttpRequest(GlobalConfiguration coreConfig, String server, String path,
-            Method httpMethod, String authenticationKey, Map<String, Object> queryParams,
-            Map<String, SimpleEntry<Object, Boolean>> templateParams,
-            Map<String, List<String>> headerParams, Set<Parameter> formParams,
-            Map<String, Object> formParameters, Object body, Serializer bodySerializer,
-            Map<String, Object> bodyParameters, ArraySerializationFormat arraySerializationFormat)
-            throws IOException {
+    private HttpRequest(final GlobalConfiguration coreConfig, final String server,
+            final String path, final Method httpMethod, final String authenticationKey,
+            final Map<String, Object> queryParams,
+            final Map<String, SimpleEntry<Object, Boolean>> templateParams,
+            final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
+            final Map<String, Object> formParameters, final Object body,
+            final Serializer bodySerializer, final Map<String, Object> bodyParameters,
+            final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
 
         processTemplateParams(templateParams);
-        body = buildBody(body, bodySerializer, bodyParameters);
+        Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
                 generateFormFields(formParams, formParameters, arraySerializationFormat);
-        coreHttpRequest = buildRequest(httpMethod, body, addHeaders(headerParams), queryParams,
-                formFields, arraySerializationFormat);
+        coreHttpRequest =
+                buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
+                        formFields, arraySerializationFormat);
         applyAuthentication(authenticationKey);
     }
 
     /**
-     * 
-     * @return the {@link Request} instance which is used for making {@link ApiCall}
+     * @return the {@link Request} instance which is used for making {@link ApiCall}.
      */
     public Request getCoreHttpRequest() {
         return coreHttpRequest;
@@ -92,7 +111,8 @@ public class HttpRequest {
         }
     }
 
-    private Request buildRequest(Method httpMethod, Object body, HttpHeaders headerParams,
+    private Request buildRequest(
+            Method httpMethod, Object body, HttpHeaders headerParams,
             Map<String, Object> queryParams, List<SimpleEntry<String, Object>> formFields,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
@@ -105,12 +125,14 @@ public class HttpRequest {
     }
 
     /**
-     * @param compatibilityFactory
-     * @return
+     * @param formParams
+     * @param optionalFormParamaters
+     * @param arraySerializationFormat
+     * @return list of form parameters
      * @throws IOException
      */
-    private List<SimpleEntry<String, Object>> generateFormFields(Set<Parameter> formParams,
-            Map<String, Object> optionalFormParamaters,
+    private List<SimpleEntry<String, Object>> generateFormFields(
+            Set<Parameter> formParams, Map<String, Object> optionalFormParamaters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (formParams.isEmpty() && optionalFormParamaters.isEmpty()) {
             return null;
@@ -160,8 +182,9 @@ public class HttpRequest {
         }
     }
 
-    private Object buildBody(Object body, Serializer bodySerializer,
-            Map<String, Object> bodyParameters) throws IOException {
+    private Object buildBody(
+            Object body, Serializer bodySerializer, Map<String, Object> bodyParameters)
+            throws IOException {
         if (body != null) {
             if (bodySerializer != null) {
                 return bodySerializer.supply();
@@ -200,27 +223,81 @@ public class HttpRequest {
     }
 
     public static class Builder {
+        /**
+         * A string of server.
+         */
         private String server;
+
+        /**
+         * A string of path.
+         */
         private String path;
+
+        /**
+         * A HttpMethod.
+         */
         private Method httpMethod;
+
+        /**
+         * A authentication key string.
+         */
         private String authenticationKey;
+
+        /**
+         * A map of query parameters.
+         */
         private Map<String, Object> queryParams = new HashMap<>();
+
+        /**
+         * A map of template parameters.
+         */
         private Map<String, SimpleEntry<Object, Boolean>> templateParams = new HashMap<>();
+
+        /**
+         * A map of header parameters.
+         */
         private Map<String, List<String>> headerParams = new HashMap<>();
+
+        /**
+         * A set of {@link Parameter}.
+         */
         private Set<Parameter> formParams = new HashSet<>();
+
+        /**
+         * A map of form parameters
+         */
         private Map<String, Object> formParamaters = new HashMap<>();
+
+        /**
+         * A body's object.
+         */
         private Object body;
+
+        /**
+         * A body {@link Serializer} function.
+         */
         private Serializer bodySerializer;
+
+        /**
+         * A map of body parameters.
+         */
         private Map<String, Object> bodyParameters;
+
+        /**
+         * A array serialization format.
+         */
         private ArraySerializationFormat arraySerializationFormat =
                 ArraySerializationFormat.INDEXED;
+
+        /**
+         * An instance of {@link Parameter.Builder}.
+         */
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
         /**
-         * Base uri server address
-         * 
-         * @param server the base uri address
-         * @return Builder
+         * Base uri server address.
+         * @param server the base uri address.
+         * @return Builder.
          */
         public Builder server(String server) {
             this.server = server;
@@ -228,10 +305,9 @@ public class HttpRequest {
         }
 
         /**
-         * Endpoint route path
-         * 
-         * @param path the endpoint path
-         * @return Builder
+         * Endpoint route path.
+         * @param path the endpoint path.
+         * @return Builder.
          */
         public Builder path(String path) {
             this.path = path;
@@ -239,10 +315,9 @@ public class HttpRequest {
         }
 
         /**
-         * Http Request Method
-         *
-         * @param httpMethod HttpMethod value for httpMethod
-         * @return Builder
+         * Http Request Method.
+         * @param httpMethod HttpMethod value for httpMethod.
+         * @return Builder.
          */
         public Builder httpMethod(Method httpMethod) {
             this.httpMethod = httpMethod;
@@ -250,10 +325,9 @@ public class HttpRequest {
         }
 
         /**
-         * Setter for requiresAuth
-         * 
-         * @param authenticationKey string value for authenticationKey
-         * @return Builder
+         * Setter for requiresAuth.
+         * @param authenticationKey string value for authenticationKey.
+         * @return Builder.
          */
         public Builder authenticationKey(String authenticationKey) {
             this.authenticationKey = authenticationKey;
@@ -261,10 +335,9 @@ public class HttpRequest {
         }
 
         /**
-         * Optional query parameters
-         * 
-         * @param queryParameters the optional query parameter
-         * @return Builder
+         * Optional query parameters.
+         * @param queryParameters the optional query parameter.
+         * @return Builder.
          */
         public Builder queryParam(Map<String, Object> queryParameters) {
             this.queryParams.putAll(queryParameters);
@@ -273,10 +346,9 @@ public class HttpRequest {
 
 
         /**
-         * To configure the query paramater
-         * 
-         * @param action the query parameter {@link Consumer}
-         * @return Builder
+         * To configure the query paramater.
+         * @param action the query parameter {@link Consumer}.
+         * @return Builder.
          */
         public Builder queryParam(Consumer<Parameter.Builder> action) {
             action.accept(parameterBuilder);
@@ -287,27 +359,26 @@ public class HttpRequest {
         }
 
         /**
-         * To configure the template parameter
-         * 
-         * @param action the template parameter {@link Consumer}
-         * @return Builder
+         * To configure the template parameter.
+         * @param action the template parameter {@link Consumer}.
+         * @return Builder.
          */
         public Builder templateParam(Consumer<Parameter.Builder> action) {
             parameterBuilder = new Parameter.Builder();
             action.accept(parameterBuilder);
             Parameter templateParameter = parameterBuilder.build();
             templateParameter.validate();
-            SimpleEntry<Object, Boolean> templateEntry = new SimpleEntry<Object, Boolean>(
-                    templateParameter.getValue(), templateParameter.shouldEncode());
+            SimpleEntry<Object, Boolean> templateEntry =
+                    new SimpleEntry<Object, Boolean>(templateParameter.getValue(),
+                            templateParameter.shouldEncode());
             this.templateParams.put(templateParameter.getKey(), templateEntry);
             return this;
         }
 
         /**
-         * To configure the header parameter
-         * 
-         * @param action the header parameter {@link Consumer}
-         * @return Builder
+         * To configure the header parameter.
+         * @param action the header parameter {@link Consumer}.
+         * @return Builder.
          */
         public Builder headerParam(Consumer<Parameter.Builder> action) {
             parameterBuilder = new Parameter.Builder();
@@ -315,8 +386,9 @@ public class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = httpHeaderParameter.getValue() == null ? null
-                    : httpHeaderParameter.getValue().toString();
+            String value =
+                    httpHeaderParameter.getValue() == null ? null
+                            : httpHeaderParameter.getValue().toString();
 
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
@@ -329,10 +401,9 @@ public class HttpRequest {
         }
 
         /**
-         * To configure the form parameter
-         * 
-         * @param action the form parameter {@link Consumer}
-         * @return Builder
+         * To configure the form parameter.
+         * @param action the form parameter {@link Consumer}.
+         * @return Builder.
          */
         public Builder formParam(Consumer<Parameter.Builder> action) {
             parameterBuilder = new Parameter.Builder();
@@ -344,10 +415,9 @@ public class HttpRequest {
         }
 
         /**
-         * To configure the optional form parameters
-         * 
-         * @param formParameters the optional form parameter map
-         * @return Builder
+         * To configure the optional form parameters.
+         * @param formParameters the optional form parameter map.
+         * @return Builder.
          */
         public Builder formParam(Map<String, Object> formParameters) {
             this.formParamaters.putAll(formParameters);
@@ -356,10 +426,9 @@ public class HttpRequest {
 
 
         /**
-         * To configure the body parameter
-         * 
-         * @param action the body parameter {@link Consumer}
-         * @return Builder
+         * To configure the body parameter.
+         * @param action the body parameter {@link Consumer}.
+         * @return Builder.
          */
         public Builder bodyParam(Consumer<Parameter.Builder> action) {
             parameterBuilder = new Parameter.Builder();
@@ -379,8 +448,8 @@ public class HttpRequest {
         }
 
         /**
-         * @param bodySerializer Function value for bodySerializer
-         * @return Builder
+         * @param bodySerializer Function value for bodySerializer.
+         * @return Builder.
          */
         public Builder bodySerializer(Serializer bodySerializer) {
             this.bodySerializer = bodySerializer;
@@ -388,9 +457,8 @@ public class HttpRequest {
         }
 
         /**
-         * 
-         * @param arraySerializationFormat the serialization format for the array
-         * @return Builder
+         * @param arraySerializationFormat the serialization format for the array.
+         * @return Builder.
          */
         public Builder arraySerializationFormat(ArraySerializationFormat arraySerializationFormat) {
             this.arraySerializationFormat = arraySerializationFormat;
@@ -398,16 +466,16 @@ public class HttpRequest {
         }
 
         /**
-         * Initialise the CoreHttpRequest
-         * 
-         * @param coreConfig the configuration for the Http request
-         * @return {@link Request}
+         * Initialise the CoreHttpRequest.
+         * @param coreConfig the configuration for the Http request.
+         * @return {@link Request}.
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
-            HttpRequest coreRequest = new HttpRequest(coreConfig, server, path, httpMethod,
-                    authenticationKey, queryParams, templateParams, headerParams, formParams,
-                    formParamaters, body, bodySerializer, bodyParameters, arraySerializationFormat);
+            HttpRequest coreRequest =
+                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
+                            queryParams, templateParams, headerParams, formParams, formParamaters,
+                            body, bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

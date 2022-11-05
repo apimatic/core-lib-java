@@ -8,18 +8,39 @@ import java.util.TreeMap;
  * Days to be used.
  */
 public enum Days {
+    /**
+     * Sunday.
+     */
     SUNDAY,
 
+    /**
+     * Monday.
+     */
     MONDAY,
 
+    /**
+     * Tuesday.
+     */
     TUESDAY,
 
+    /**
+     * Wednesday.
+     */
     WEDNESDAY_,
 
+    /**
+     * Thursday.
+     */
     THURSDAY,
 
+    /**
+     * Friday.
+     */
     FRI_DAY,
 
+    /**
+     * Saturday.
+     */
     SATURDAY;
 
 
@@ -62,7 +83,7 @@ public enum Days {
     public String value() {
         return value;
     }
-        
+
     /**
      * Get string representation of this enum.
      */
@@ -86,4 +107,4 @@ public enum Days {
         }
         return convertedValues;
     }
-} 
+}

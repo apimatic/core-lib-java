@@ -20,32 +20,32 @@ public class SimpleDateArray {
     /**
      * Default constructor.
      */
-    public SimpleDateArray() {
-    }
+    public SimpleDateArray() {}
 
     /**
      * Initialization constructor.
-     * @param  date  List of LocalDate value for date.
-     * @param  date1  List of LocalDate value for date1.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateArray(
-            List<LocalDate> date,
-            List<LocalDate> date1) {
+    public SimpleDateArray(final List<LocalDate> date, final List<LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    protected SimpleDateArray(OptionalNullable<List<LocalDate>> date, List<LocalDate> date1) {
+    protected SimpleDateArray(final OptionalNullable<List<LocalDate>> date,
+            final List<LocalDate> date1) {
         this.date = date;
         this.date1 = date1;
     }
 
     /**
      * Internal Getter for Date.
-     * @return Returns the Internal List of LocalDate
+     * @return Returns the Internal List of LocalDate.
      */
     @JsonGetter("date")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,7 +56,7 @@ public class SimpleDateArray {
 
     /**
      * Getter for Date.
-     * @return Returns the List of LocalDate
+     * @return Returns the List of LocalDate.
      */
     public List<LocalDate> getDate() {
         return OptionalNullable.getFrom(date);
@@ -64,7 +64,7 @@ public class SimpleDateArray {
 
     /**
      * Setter for Date.
-     * @param date Value for List of LocalDate
+     * @param date Value for List of LocalDate.
      */
     @JsonSetter("date")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -81,7 +81,7 @@ public class SimpleDateArray {
 
     /**
      * Getter for Date1.
-     * @return Returns the List of LocalDate
+     * @return Returns the List of LocalDate.
      */
     @JsonGetter("date1")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -92,7 +92,7 @@ public class SimpleDateArray {
 
     /**
      * Setter for Date1.
-     * @param date1 Value for List of LocalDate
+     * @param date1 Value for List of LocalDate.
      */
     @JsonSetter("date1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -102,7 +102,7 @@ public class SimpleDateArray {
 
     /**
      * Converts this SimpleDateArray into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -110,13 +110,12 @@ public class SimpleDateArray {
     }
 
     /**
-     * Builds a new {@link SimpleDateArray.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link SimpleDateArray.Builder} object
+     * Builds a new {@link SimpleDateArray.Builder} object. Creates the instance with the state of
+     * the current model.
+     * @return a new {@link SimpleDateArray.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder()
-                .date1(getDate1());
+        Builder builder = new Builder().date1(getDate1());
         builder.date = internalGetDate();
         return builder;
     }
@@ -132,8 +131,8 @@ public class SimpleDateArray {
 
         /**
          * Setter for date.
-         * @param  date  List of LocalDate value for date.
-         * @return Builder
+         * @param date List of LocalDate value for date.
+         * @return Builder.
          */
         public Builder date(List<LocalDate> date) {
             this.date = OptionalNullable.of(date);
@@ -142,7 +141,7 @@ public class SimpleDateArray {
 
         /**
          * UnSetter for date.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDate() {
             date = null;
@@ -151,8 +150,8 @@ public class SimpleDateArray {
 
         /**
          * Setter for date1.
-         * @param  date1  List of LocalDate value for date1.
-         * @return Builder
+         * @param date1 List of LocalDate value for date1.
+         * @return Builder.
          */
         public Builder date1(List<LocalDate> date1) {
             this.date1 = date1;
@@ -161,7 +160,7 @@ public class SimpleDateArray {
 
         /**
          * Builds a new {@link SimpleDateArray} object using the set fields.
-         * @return {@link SimpleDateArray}
+         * @return {@link SimpleDateArray}.
          */
         public SimpleDateArray build() {
             return new SimpleDateArray(date, date1);

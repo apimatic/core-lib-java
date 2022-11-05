@@ -14,24 +14,25 @@ import io.apimatic.coreinterfaces.http.response.Response;
  * a primitive or a more complex type using parse().
  */
 public class Dynamic implements DynamicType {
+    /**
+     * An instance of {@link Response}.
+     */
     private Response response;
 
     /**
      * Instantiate class.
-     * 
-     * @param responseBody The object of HttpResponse
+     * @param responseBody The object of HttpResponse.
      */
-    public Dynamic(Response responseBody) {
+    public Dynamic(final Response responseBody) {
         this.response = responseBody;
     }
 
     /**
      * Parse response as instance of class cls.
-     * 
-     * @param <T> The type of class to be parsed
-     * @param cls Class to be parsed
-     * @return Object of type T
-     * @throws ParseException Signals if a parse exception occured
+     * @param <T> The type of class to be parsed.
+     * @param cls Class to be parsed.
+     * @return Object of type T.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public <T> T parse(Class<T> cls) throws ParseException {
@@ -45,9 +46,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as boolean.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public boolean parseAsBoolean() throws ParseException {
@@ -56,9 +56,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as boolean.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public byte parseAsByte() throws ParseException {
@@ -67,9 +66,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as character.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public char parseAsCharacter() throws ParseException {
@@ -78,9 +76,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as float.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public float parseAsFloat() throws ParseException {
@@ -89,9 +86,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as integer.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public int parseAsInteger() throws ParseException {
@@ -100,9 +96,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as long.
-     * 
      * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @throws ParseException Signals if a parse exception occurred
      */
     @Override
     public long parseAsLong() throws ParseException {
@@ -111,9 +106,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as short.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public short parseAsShort() throws ParseException {
@@ -122,9 +116,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as double.
-     * 
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public double parseAsDouble() throws ParseException {
@@ -133,9 +126,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as string.
-     *
-     * @return Parsed value
-     * @throws ParseException Signals if a parse exception occurred
+     * @return Parsed value.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public String parseAsString() throws ParseException {
@@ -149,9 +141,8 @@ public class Dynamic implements DynamicType {
 
     /**
      * Parse response as a map of keys and values.
-     * 
-     * @return Parsed map
-     * @throws ParseException Signals if a parse exception occured
+     * @return Parsed map.
+     * @throws ParseException Signals if a parse exception occurred.
      */
     @Override
     public Map<String, Object> parseAsDictionary() throws ParseException {
@@ -165,8 +156,7 @@ public class Dynamic implements DynamicType {
 
     /**
      * Get the raw stream for the response body.
-     * 
-     * @return Raw body
+     * @return Raw body.
      */
     @Override
     public InputStream getRawBody() {
@@ -175,8 +165,7 @@ public class Dynamic implements DynamicType {
 
     /**
      * Get response headers for the HTTP response.
-     * 
-     * @return Headers
+     * @return Headers.
      */
     @Override
     public HttpHeaders getHeaders() {
@@ -185,8 +174,7 @@ public class Dynamic implements DynamicType {
 
     /**
      * Get response as string.
-     * 
-     * @return The Response String
+     * @return The Response String.
      */
     private String getResponseString() {
         return response.getBody();

@@ -24,28 +24,29 @@ public class Rfc8601DateArray {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
      */
-    public Rfc8601DateArray(List<LocalDateTime> dateTime1, List<LocalDateTime> dateTime) {
+    public Rfc8601DateArray(final List<LocalDateTime> dateTime1,
+            final List<LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 List of LocalDateTime value for dateTime1.
+     * @param dateTime List of LocalDateTime value for dateTime.
      */
-    protected Rfc8601DateArray(List<LocalDateTime> dateTime1,
-            OptionalNullable<List<LocalDateTime>> dateTime) {
+    protected Rfc8601DateArray(final List<LocalDateTime> dateTime1,
+            final OptionalNullable<List<LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal Getter for DateTime.
-     * 
-     * @return Returns the Internal List of LocalDateTime
+     * @return Returns the Internal List of LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,8 +57,7 @@ public class Rfc8601DateArray {
 
     /**
      * Getter for DateTime.
-     * 
-     * @return Returns the List of LocalDateTime
+     * @return Returns the List of LocalDateTime.
      */
     public List<LocalDateTime> getDateTime() {
         return OptionalNullable.getFrom(dateTime);
@@ -65,8 +65,7 @@ public class Rfc8601DateArray {
 
     /**
      * Setter for DateTime.
-     * 
-     * @param dateTime Value for List of LocalDateTime
+     * @param dateTime Value for List of LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -83,8 +82,7 @@ public class Rfc8601DateArray {
 
     /**
      * Getter for DateTime1.
-     * 
-     * @return Returns the List of LocalDateTime
+     * @return Returns the List of LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(contentUsing = LocalDateTimeHelper.Rfc8601DateTimeSerializer.class)
@@ -94,8 +92,7 @@ public class Rfc8601DateArray {
 
     /**
      * Setter for DateTime1.
-     * 
-     * @param dateTime1 Value for List of LocalDateTime
+     * @param dateTime1 Value for List of LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -105,8 +102,7 @@ public class Rfc8601DateArray {
 
     /**
      * Converts this Rfc8601DateArray into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -116,8 +112,7 @@ public class Rfc8601DateArray {
     /**
      * Builds a new {@link Rfc8601DateArray.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
-     * @return a new {@link Rfc8601DateArray.Builder} object
+     * @return a new {@link Rfc8601DateArray.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -139,18 +134,16 @@ public class Rfc8601DateArray {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
          */
-        public Builder(List<LocalDateTime> dateTime1) {
+        public Builder(final List<LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 List of LocalDateTime value for dateTime1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime1(List<LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
@@ -159,9 +152,8 @@ public class Rfc8601DateArray {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime List of LocalDateTime value for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime(List<LocalDateTime> dateTime) {
             this.dateTime = OptionalNullable.of(dateTime);
@@ -170,8 +162,7 @@ public class Rfc8601DateArray {
 
         /**
          * UnSetter for dateTime.
-         * 
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -180,8 +171,7 @@ public class Rfc8601DateArray {
 
         /**
          * Builds a new {@link Rfc8601DateArray} object using the set fields.
-         * 
-         * @return {@link Rfc8601DateArray}
+         * @return {@link Rfc8601DateArray}.
          */
         public Rfc8601DateArray build() {
             return new Rfc8601DateArray(dateTime1, dateTime);

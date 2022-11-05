@@ -4,32 +4,28 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import io.apimatic.core.types.BaseModel;
 
-public class DeleteBody
-        extends BaseModel {
+public class DeleteBody extends BaseModel {
     private String name;
     private String field;
 
     /**
      * Default constructor.
      */
-    public DeleteBody() {
-    }
+    public DeleteBody() {}
 
     /**
      * Initialization constructor.
-     * @param  name  String value for name.
-     * @param  field  String value for field.
+     * @param name String value for name.
+     * @param field String value for field.
      */
-    public DeleteBody(
-            String name,
-            String field) {
+    public DeleteBody(final String name, final String field) {
         this.name = name;
         this.field = field;
     }
 
     /**
      * Getter for Name.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("name")
     public String getName() {
@@ -38,7 +34,7 @@ public class DeleteBody
 
     /**
      * Setter for Name.
-     * @param name Value for String
+     * @param name Value for String.
      */
     @JsonSetter("name")
     public void setName(String name) {
@@ -47,7 +43,7 @@ public class DeleteBody
 
     /**
      * Getter for Field.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("field")
     public String getField() {
@@ -56,7 +52,7 @@ public class DeleteBody
 
     /**
      * Setter for Field.
-     * @param field Value for String
+     * @param field Value for String.
      */
     @JsonSetter("field")
     public void setField(String field) {
@@ -65,7 +61,7 @@ public class DeleteBody
 
     /**
      * Converts this DeleteBody into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -74,9 +70,9 @@ public class DeleteBody
     }
 
     /**
-     * Builds a new {@link DeleteBody.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link DeleteBody.Builder} object
+     * Builds a new {@link DeleteBody.Builder} object. Creates the instance with the state of the
+     * current model.
+     * @return a new {@link DeleteBody.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(name, field);
@@ -93,23 +89,22 @@ public class DeleteBody
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  name  String value for name.
-         * @param  field  String value for field.
+         * @param name String value for name.
+         * @param field String value for field.
          */
-        public Builder(String name, String field) {
+        public Builder(final String name, final String field) {
             this.name = name;
             this.field = field;
         }
 
         /**
          * Setter for name.
-         * @param  name  String value for name.
-         * @return Builder
+         * @param name String value for name.
+         * @return Builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -118,8 +113,8 @@ public class DeleteBody
 
         /**
          * Setter for field.
-         * @param  field  String value for field.
-         * @return Builder
+         * @param field String value for field.
+         * @return Builder.
          */
         public Builder field(String field) {
             this.field = field;
@@ -128,7 +123,7 @@ public class DeleteBody
 
         /**
          * Builds a new {@link DeleteBody} object using the set fields.
-         * @return {@link DeleteBody}
+         * @return {@link DeleteBody}.
          */
         public DeleteBody build() {
             return new DeleteBody(name, field);

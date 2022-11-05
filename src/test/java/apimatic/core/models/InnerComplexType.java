@@ -31,7 +31,6 @@ public class InnerComplexType {
 
     /**
      * Initialization constructor.
-     * 
      * @param stringType String value for stringType.
      * @param booleanType boolean value for booleanType.
      * @param dateTimeType LocalDateTime value for dateTimeType.
@@ -42,9 +41,10 @@ public class InnerComplexType {
      * @param objectType Object value for objectType.
      * @param stringListType List of String value for stringListType.
      */
-    public InnerComplexType(String stringType, boolean booleanType, LocalDateTime dateTimeType,
-            LocalDate dateType, UUID uuidType, long longType, double precisionType,
-            Object objectType, List<String> stringListType) {
+    public InnerComplexType(final String stringType, boolean booleanType,
+            final LocalDateTime dateTimeType, final LocalDate dateType, final UUID uuidType,
+            long longType, double precisionType, final Object objectType,
+            final List<String> stringListType) {
         this.stringType = stringType;
         this.booleanType = booleanType;
         this.dateTimeType = dateTimeType;
@@ -58,8 +58,7 @@ public class InnerComplexType {
 
     /**
      * Getter for StringType.
-     * 
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("stringType")
     public String getStringType() {
@@ -68,8 +67,7 @@ public class InnerComplexType {
 
     /**
      * Setter for StringType.
-     * 
-     * @param stringType Value for String
+     * @param stringType Value for String.
      */
     @JsonSetter("stringType")
     public void setStringType(String stringType) {
@@ -78,8 +76,7 @@ public class InnerComplexType {
 
     /**
      * Getter for BooleanType.
-     * 
-     * @return Returns the boolean
+     * @return Returns the boolean.
      */
     @JsonGetter("booleanType")
     public boolean getBooleanType() {
@@ -88,8 +85,7 @@ public class InnerComplexType {
 
     /**
      * Setter for BooleanType.
-     * 
-     * @param booleanType Value for boolean
+     * @param booleanType Value for boolean.
      */
     @JsonSetter("booleanType")
     public void setBooleanType(boolean booleanType) {
@@ -98,8 +94,7 @@ public class InnerComplexType {
 
     /**
      * Getter for DateTimeType.
-     * 
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("dateTimeType")
     @JsonSerialize(using = LocalDateTimeHelper.Rfc8601DateTimeSerializer.class)
@@ -109,8 +104,7 @@ public class InnerComplexType {
 
     /**
      * Setter for DateTimeType.
-     * 
-     * @param dateTimeType Value for LocalDateTime
+     * @param dateTimeType Value for LocalDateTime.
      */
     @JsonSetter("dateTimeType")
     @JsonDeserialize(using = LocalDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -120,8 +114,7 @@ public class InnerComplexType {
 
     /**
      * Getter for DateType.
-     * 
-     * @return Returns the LocalDate
+     * @return Returns the LocalDate.
      */
     @JsonGetter("dateType")
     @JsonSerialize(using = LocalDateTimeHelper.SimpleDateSerializer.class)
@@ -131,8 +124,7 @@ public class InnerComplexType {
 
     /**
      * Setter for DateType.
-     * 
-     * @param dateType Value for LocalDate
+     * @param dateType Value for LocalDate.
      */
     @JsonSetter("dateType")
     @JsonDeserialize(using = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -142,8 +134,7 @@ public class InnerComplexType {
 
     /**
      * Getter for UuidType.
-     * 
-     * @return Returns the UUID
+     * @return Returns the UUID.
      */
     @JsonGetter("uuidType")
     public UUID getUuidType() {
@@ -152,8 +143,7 @@ public class InnerComplexType {
 
     /**
      * Setter for UuidType.
-     * 
-     * @param uuidType Value for UUID
+     * @param uuidType Value for UUID.
      */
     @JsonSetter("uuidType")
     public void setUuidType(UUID uuidType) {
@@ -162,8 +152,7 @@ public class InnerComplexType {
 
     /**
      * Getter for LongType.
-     * 
-     * @return Returns the long
+     * @return Returns the long.
      */
     @JsonGetter("longType")
     public long getLongType() {
@@ -172,8 +161,7 @@ public class InnerComplexType {
 
     /**
      * Setter for LongType.
-     * 
-     * @param longType Value for long
+     * @param longType Value for long.
      */
     @JsonSetter("longType")
     public void setLongType(long longType) {
@@ -182,8 +170,7 @@ public class InnerComplexType {
 
     /**
      * Getter for PrecisionType.
-     * 
-     * @return Returns the double
+     * @return Returns the double.
      */
     @JsonGetter("precisionType")
     public double getPrecisionType() {
@@ -192,8 +179,7 @@ public class InnerComplexType {
 
     /**
      * Setter for PrecisionType.
-     * 
-     * @param precisionType Value for double
+     * @param precisionType Value for double.
      */
     @JsonSetter("precisionType")
     public void setPrecisionType(double precisionType) {
@@ -202,8 +188,7 @@ public class InnerComplexType {
 
     /**
      * Getter for ObjectType.
-     * 
-     * @return Returns the Object
+     * @return Returns the Object.
      */
     @JsonGetter("objectType")
     public Object getObjectType() {
@@ -212,8 +197,7 @@ public class InnerComplexType {
 
     /**
      * Setter for ObjectType.
-     * 
-     * @param objectType Value for Object
+     * @param objectType Value for Object.
      */
     @JsonSetter("objectType")
     public void setObjectType(Object objectType) {
@@ -222,8 +206,7 @@ public class InnerComplexType {
 
     /**
      * Getter for StringListType.
-     * 
-     * @return Returns the List of String
+     * @return Returns the List of String.
      */
     @JsonGetter("stringListType")
     public List<String> getStringListType() {
@@ -232,8 +215,7 @@ public class InnerComplexType {
 
     /**
      * Setter for StringListType.
-     * 
-     * @param stringListType Value for List of String
+     * @param stringListType Value for List of String.
      */
     @JsonSetter("stringListType")
     public void setStringListType(List<String> stringListType) {
@@ -242,8 +224,7 @@ public class InnerComplexType {
 
     /**
      * Converts this InnerComplexType into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -256,12 +237,12 @@ public class InnerComplexType {
     /**
      * Builds a new {@link InnerComplexType.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
-     * @return a new {@link InnerComplexType.Builder} object
+     * @return a new {@link InnerComplexType.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(stringType, booleanType, dateTimeType, dateType, uuidType,
-                longType, precisionType, objectType, stringListType);
+        Builder builder =
+                new Builder(stringType, booleanType, dateTimeType, dateType, uuidType, longType,
+                        precisionType, objectType, stringListType);
         return builder;
     }
 
@@ -286,7 +267,6 @@ public class InnerComplexType {
 
         /**
          * Initialization constructor.
-         * 
          * @param stringType String value for stringType.
          * @param booleanType boolean value for booleanType.
          * @param dateTimeType LocalDateTime value for dateTimeType.
@@ -297,9 +277,10 @@ public class InnerComplexType {
          * @param objectType Object value for objectType.
          * @param stringListType List of String value for stringListType.
          */
-        public Builder(String stringType, boolean booleanType, LocalDateTime dateTimeType,
-                LocalDate dateType, UUID uuidType, long longType, double precisionType,
-                Object objectType, List<String> stringListType) {
+        public Builder(final String stringType, boolean booleanType,
+                final LocalDateTime dateTimeType, final LocalDate dateType, final UUID uuidType,
+                long longType, double precisionType, final Object objectType,
+                final List<String> stringListType) {
             this.stringType = stringType;
             this.booleanType = booleanType;
             this.dateTimeType = dateTimeType;
@@ -313,9 +294,8 @@ public class InnerComplexType {
 
         /**
          * Setter for stringType.
-         * 
          * @param stringType String value for stringType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder stringType(String stringType) {
             this.stringType = stringType;
@@ -324,9 +304,8 @@ public class InnerComplexType {
 
         /**
          * Setter for booleanType.
-         * 
          * @param booleanType boolean value for booleanType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder booleanType(boolean booleanType) {
             this.booleanType = booleanType;
@@ -335,9 +314,8 @@ public class InnerComplexType {
 
         /**
          * Setter for dateTimeType.
-         * 
          * @param dateTimeType LocalDateTime value for dateTimeType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTimeType(LocalDateTime dateTimeType) {
             this.dateTimeType = dateTimeType;
@@ -346,9 +324,8 @@ public class InnerComplexType {
 
         /**
          * Setter for dateType.
-         * 
          * @param dateType LocalDate value for dateType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateType(LocalDate dateType) {
             this.dateType = dateType;
@@ -357,9 +334,8 @@ public class InnerComplexType {
 
         /**
          * Setter for uuidType.
-         * 
          * @param uuidType UUID value for uuidType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder uuidType(UUID uuidType) {
             this.uuidType = uuidType;
@@ -368,9 +344,8 @@ public class InnerComplexType {
 
         /**
          * Setter for longType.
-         * 
          * @param longType long value for longType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder longType(long longType) {
             this.longType = longType;
@@ -379,9 +354,8 @@ public class InnerComplexType {
 
         /**
          * Setter for precisionType.
-         * 
          * @param precisionType double value for precisionType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder precisionType(double precisionType) {
             this.precisionType = precisionType;
@@ -390,9 +364,8 @@ public class InnerComplexType {
 
         /**
          * Setter for objectType.
-         * 
          * @param objectType Object value for objectType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder objectType(Object objectType) {
             this.objectType = objectType;
@@ -401,9 +374,8 @@ public class InnerComplexType {
 
         /**
          * Setter for stringListType.
-         * 
          * @param stringListType List of String value for stringListType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder stringListType(List<String> stringListType) {
             this.stringListType = stringListType;
@@ -412,8 +384,7 @@ public class InnerComplexType {
 
         /**
          * Builds a new {@link InnerComplexType} object using the set fields.
-         * 
-         * @return {@link InnerComplexType}
+         * @return {@link InnerComplexType}.
          */
         public InnerComplexType build() {
             return new InnerComplexType(stringType, booleanType, dateTimeType, dateType, uuidType,

@@ -9,28 +9,30 @@ import io.apimatic.coreinterfaces.http.Context;
  * This is the base class for all exceptions that represent an error response from the server.
  */
 public class CoreApiException extends Exception {
-    // UID for serialization
+    /**
+     * UID for serialization.
+     */
     private static final long serialVersionUID = 6424174253911720338L;
 
-    // private fields
+    /**
+     * An instance of {@link Context}.
+     */
     private Context httpContext;
 
     /**
      * Initialization constructor.
-     * 
-     * @param reason The reason for throwing exception
+     * @param reason The reason for throwing exception.
      */
-    public CoreApiException(String reason) {
+    public CoreApiException(final String reason) {
         super(reason);
     }
 
     /**
      * Initialization constructor.
-     * 
-     * @param reason The reason for throwing exception
-     * @param context The http context of the API exception
+     * @param reason The reason for throwing exception.
+     * @param context The http context of the API exception.
      */
-    public CoreApiException(String reason, Context context) {
+    public CoreApiException(final String reason, final Context context) {
         super(reason);
         this.httpContext = context;
 
@@ -42,10 +44,10 @@ public class CoreApiException extends Exception {
 
         try {
             // Can throw IOException if input has invalid content type.
-            JsonNode jsonNode = CoreHelper.mapper.readTree(context.getResponse().getRawBody());
+            JsonNode jsonNode = CoreHelper.getMapper().readTree(context.getResponse().getRawBody());
             if (!getClass().equals(CoreApiException.class)) {
                 // In case of IOException JsonNode cannot be detected.
-                CoreHelper.mapper.readerForUpdating(this).readValue(jsonNode);
+                CoreHelper.getMapper().readerForUpdating(this).readValue(jsonNode);
             }
         } catch (IOException ioException) {
             // Can throw exception while object mapper tries to:
@@ -56,8 +58,7 @@ public class CoreApiException extends Exception {
 
     /**
      * The HTTP response code from the API request.
-     * 
-     * @return Returns the response code for ApiException
+     * @return Returns the response code for ApiException.
      */
     public int getResponseCode() {
         if (httpContext == null || httpContext.getResponse() == null) {
@@ -69,8 +70,7 @@ public class CoreApiException extends Exception {
 
     /**
      * The HTTP response body from the API request.
-     * 
-     * @return Returns the object of HttpContext for ApiException
+     * @return Returns the object of HttpContext for ApiException.
      */
     public Context getHttpContext() {
         return httpContext;

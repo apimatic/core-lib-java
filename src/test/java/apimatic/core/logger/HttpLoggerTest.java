@@ -1,4 +1,4 @@
-package apimatic.core.configurations.http.client;
+package apimatic.core.logger;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.slf4j.Logger;
-import io.apimatic.core.configurations.http.client.HttpLogger;
+import io.apimatic.core.logger.HttpLogger;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.LoggingLevel;
@@ -35,27 +35,55 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 public class HttpLoggerTest {
 
+    /**
+     * Success code.
+     */
+    private static final int SUCCESS_CODE = 200;
+
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    /**
+     * Mock of {@link Logger}.
+     */
     @Mock
     private Logger logger;
 
+    /**
+     * Mock of {@link Request}.
+     */
     @Mock
     private Request request;
 
+    /**
+     * Mock of {@link Response}.
+     */
     @Mock
     private Response response;
 
-
+    /**
+     * Mock of {@link HttpHeaders}.
+     */
     @Mock
     private HttpHeaders headers;
 
+    /**
+     * Mock of {@link ReadonlyLogging}.
+     */
     @Mock
     private ReadonlyLogging readonlyLogging;
 
+    /**
+     * Mock of {@link HttpLogger}.
+     */
     private HttpLogger httpLogger;
 
+    /**
+     * Test setup.
+     */
     @Before
     public void setup() {
         httpLogger = new HttpLogger(logger, readonlyLogging);
@@ -135,15 +163,15 @@ public class HttpLoggerTest {
     public void testNotExistInHeadersFiltersIncludePolicy() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();
         filteredHeders.put("accept", Arrays.asList("text/plain"));
-        
-       
+
+
         when(headers.asMultimap()).thenReturn(filteredHeders);
-     
+
         when(request.getHeaders()).thenReturn(headers);
         Set<String> setOfHeaders = new HashSet<>();
         setOfHeaders.add("accept");
         when(headers.names()).thenReturn(setOfHeaders);
-        
+
         Set<String> setOfHeaderFilters = new HashSet<>();
         when(readonlyLogging.getHeaderFilters()).thenReturn(setOfHeaderFilters);
         when(readonlyLogging.getHeaderLoggingPolicy()).thenReturn(LoggingPolicy.INCLUDE);
@@ -161,15 +189,15 @@ public class HttpLoggerTest {
     public void testNotExistInHeadersFiltersExcludePolicy() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();
         filteredHeders.put("accept", Arrays.asList("text/plain"));
-        
-       
+
+
         when(headers.asMultimap()).thenReturn(filteredHeders);
-     
+
         when(request.getHeaders()).thenReturn(headers);
         Set<String> setOfHeaders = new HashSet<>();
         setOfHeaders.add("accept");
         when(headers.names()).thenReturn(setOfHeaders);
-        
+
         Set<String> setOfHeaderFilters = new HashSet<>();
         when(readonlyLogging.getHeaderFilters()).thenReturn(setOfHeaderFilters);
         when(readonlyLogging.getHeaderLoggingPolicy()).thenReturn(LoggingPolicy.EXCLUDE);
@@ -183,7 +211,7 @@ public class HttpLoggerTest {
         assertTrue(argumentCaptor.getValue().contains("accept"));
     }
 
-    
+
     @Test
     public void testLogRequestExcludeHeaders() {
         Map<String, List<String>> filteredHeders = new HashMap<String, List<String>>();
@@ -272,19 +300,19 @@ public class HttpLoggerTest {
 
     @Test
     public void testLogResponseInfoWithoutRequest() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 
         httpLogger.logResponse(request, response);
         // In logged message a random string is being appended so, we cannot check the Equals
         // assertion.
-        verify(logger, times(0)).info(anyString());;
+        verify(logger, times(0)).info(anyString());
     }
 
     @Test
     public void testLogResponseInfo() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 
@@ -299,7 +327,7 @@ public class HttpLoggerTest {
 
     @Test
     public void testLogNullResponseInfo() {
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(readonlyLogging.isLoggingResponseInfo()).thenReturn(true);
         when(readonlyLogging.getLevel()).thenReturn(LoggingLevel.INFO);
 

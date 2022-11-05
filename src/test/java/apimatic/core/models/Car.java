@@ -8,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 /**
  * This is a model class for Car type.
  */
-public class Car
-        extends Vehicle {
+public class Car extends Vehicle {
     private boolean haveTrunk;
 
     /**
@@ -21,12 +20,11 @@ public class Car
 
     /**
      * Initialization constructor.
-     * @param  numberOfTyres  String value for numberOfTyres.
-     * @param  haveTrunk  boolean value for haveTrunk.
+     * @param numberOfTyres String value for numberOfTyres.
+     * @param haveTrunk boolean value for haveTrunk.
      */
     @JsonCreator
-    public Car(
-            @JsonProperty("NumberOfTyres") String numberOfTyres,
+    public Car(@JsonProperty("NumberOfTyres") final String numberOfTyres,
             @JsonProperty("HaveTrunk") boolean haveTrunk) {
         super(numberOfTyres);
         this.haveTrunk = haveTrunk;
@@ -34,7 +32,7 @@ public class Car
 
     /**
      * Getter for HaveTrunk.
-     * @return Returns the boolean
+     * @return Returns the boolean.
      */
     @JsonGetter("HaveTrunk")
     public boolean getHaveTrunk() {
@@ -43,7 +41,7 @@ public class Car
 
     /**
      * Setter for HaveTrunk.
-     * @param haveTrunk Value for boolean
+     * @param haveTrunk Value for boolean.
      */
     @JsonSetter("HaveTrunk")
     public void setHaveTrunk(boolean haveTrunk) {
@@ -52,7 +50,7 @@ public class Car
 
     /**
      * Converts this Car into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -60,9 +58,9 @@ public class Car
     }
 
     /**
-     * Builds a new {@link Car.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link Car.Builder} object
+     * Builds a new {@link Car.Builder} object. Creates the instance with the state of the current
+     * model.
+     * @return a new {@link Car.Builder} object.
      */
     public Builder toCarBuilder() {
         Builder builder = new Builder(getNumberOfTyres(), haveTrunk);
@@ -79,23 +77,22 @@ public class Car
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  numberOfTyres  String value for numberOfTyres.
-         * @param  haveTrunk  boolean value for haveTrunk.
+         * @param numberOfTyres String value for numberOfTyres.
+         * @param haveTrunk boolean value for haveTrunk.
          */
-        public Builder(String numberOfTyres, boolean haveTrunk) {
+        public Builder(final String numberOfTyres, boolean haveTrunk) {
             this.numberOfTyres = numberOfTyres;
             this.haveTrunk = haveTrunk;
         }
 
         /**
          * Setter for numberOfTyres.
-         * @param  numberOfTyres  String value for numberOfTyres.
-         * @return Builder
+         * @param numberOfTyres String value for numberOfTyres.
+         * @return Builder.
          */
         public Builder numberOfTyres(String numberOfTyres) {
             this.numberOfTyres = numberOfTyres;
@@ -104,8 +101,8 @@ public class Car
 
         /**
          * Setter for haveTrunk.
-         * @param  haveTrunk  boolean value for haveTrunk.
-         * @return Builder
+         * @param haveTrunk boolean value for haveTrunk.
+         * @return Builder.
          */
         public Builder haveTrunk(boolean haveTrunk) {
             this.haveTrunk = haveTrunk;
@@ -114,7 +111,7 @@ public class Car
 
         /**
          * Builds a new {@link Car} object using the set fields.
-         * @return {@link Car}
+         * @return {@link Car}.
          */
         public Car build() {
             return new Car(numberOfTyres, haveTrunk);

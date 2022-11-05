@@ -20,33 +20,32 @@ public class SimpleDateMap {
     /**
      * Default constructor.
      */
-    public SimpleDateMap() {
-    }
+    public SimpleDateMap() {}
 
     /**
      * Initialization constructor.
-     * @param  date  List of LocalDate value for date.
-     * @param  date1  List of LocalDate value for date1.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    public SimpleDateMap(
-            Map<String,LocalDate> date,
-            Map<String,LocalDate> date1) {
+    public SimpleDateMap(final Map<String, LocalDate> date, final Map<String, LocalDate> date1) {
         this.date = OptionalNullable.of(date);
         this.date1 = date1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param date List of LocalDate value for date.
+     * @param date1 List of LocalDate value for date1.
      */
-    protected SimpleDateMap(OptionalNullable<Map<String,LocalDate>> date, Map<String,LocalDate> date1) {
+    protected SimpleDateMap(final OptionalNullable<Map<String, LocalDate>> date,
+            final Map<String, LocalDate> date1) {
         this.date = date;
         this.date1 = date1;
     }
 
     /**
      * Internal Getter for Date.
-     * 
-     * @return Returns the Internal List of LocalDate
+     * @return Returns the Internal List of LocalDate.
      */
     @JsonGetter("date")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -57,8 +56,7 @@ public class SimpleDateMap {
 
     /**
      * Getter for Date.
-     * 
-     * @return Returns the List of LocalDate
+     * @return Returns the List of LocalDate.
      */
     public Map<String, LocalDate> getDate() {
         return OptionalNullable.getFrom(date);
@@ -66,8 +64,7 @@ public class SimpleDateMap {
 
     /**
      * Setter for Date.
-     * 
-     * @param date Value for List of LocalDate
+     * @param date Value for List of LocalDate.
      */
     @JsonSetter("date")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -84,8 +81,7 @@ public class SimpleDateMap {
 
     /**
      * Getter for Date1.
-     * 
-     * @return Returns the List of LocalDate
+     * @return Returns the List of LocalDate.
      */
     @JsonGetter("date1")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -96,8 +92,7 @@ public class SimpleDateMap {
 
     /**
      * Setter for Date1.
-     * 
-     * @param date1 Value for List of LocalDate
+     * @param date1 Value for List of LocalDate.
      */
     @JsonSetter("date1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -107,8 +102,7 @@ public class SimpleDateMap {
 
     /**
      * Converts this SimpleDateArray into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -118,8 +112,7 @@ public class SimpleDateMap {
     /**
      * Builds a new {@link SimpleDateArray.Builder} object. Creates the instance with the state of
      * the current model.
-     * 
-     * @return a new {@link SimpleDateArray.Builder} object
+     * @return a new {@link SimpleDateArray.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder().date1(getDate1());
@@ -138,9 +131,8 @@ public class SimpleDateMap {
 
         /**
          * Setter for date.
-         * 
          * @param date List of LocalDate value for date.
-         * @return Builder
+         * @return Builder.
          */
         public Builder date(Map<String, LocalDate> date) {
             this.date = OptionalNullable.of(date);
@@ -149,8 +141,7 @@ public class SimpleDateMap {
 
         /**
          * UnSetter for date.
-         * 
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDate() {
             date = null;
@@ -159,9 +150,8 @@ public class SimpleDateMap {
 
         /**
          * Setter for date1.
-         * 
          * @param date1 List of LocalDate value for date1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder date1(Map<String, LocalDate> date1) {
             this.date1 = date1;
@@ -170,8 +160,7 @@ public class SimpleDateMap {
 
         /**
          * Builds a new {@link SimpleDateArray} object using the set fields.
-         * 
-         * @return {@link SimpleDateArray}
+         * @return {@link SimpleDateArray}.
          */
         public SimpleDateMap build() {
             return new SimpleDateMap(date, date1);

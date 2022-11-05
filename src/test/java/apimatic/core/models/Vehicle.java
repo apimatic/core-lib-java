@@ -18,18 +18,16 @@ public class Vehicle {
 
     /**
      * Initialization constructor.
-     * 
      * @param numberOfTyres String value for numberOfTyres.
      */
     @JsonCreator
-    public Vehicle(@JsonProperty("NumberOfTyres") String numberOfTyres) {
+    public Vehicle(@JsonProperty("NumberOfTyres") final String numberOfTyres) {
         this.numberOfTyres = numberOfTyres;
     }
 
     /**
      * Getter for NumberOfTyres.
-     * 
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("NumberOfTyres")
     public String getNumberOfTyres() {
@@ -38,8 +36,7 @@ public class Vehicle {
 
     /**
      * Setter for NumberOfTyres.
-     * 
-     * @param numberOfTyres Value for String
+     * @param numberOfTyres Value for String.
      */
     @JsonSetter("NumberOfTyres")
     public void setNumberOfTyres(String numberOfTyres) {
@@ -48,8 +45,7 @@ public class Vehicle {
 
     /**
      * Converts this Vehicle into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -59,8 +55,7 @@ public class Vehicle {
     /**
      * Builds a new {@link Vehicle.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link Vehicle.Builder} object
+     * @return a new {@link Vehicle.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(numberOfTyres);
@@ -80,18 +75,16 @@ public class Vehicle {
 
         /**
          * Initialization constructor.
-         * 
          * @param numberOfTyres String value for numberOfTyres.
          */
-        public Builder(String numberOfTyres) {
+        public Builder(final String numberOfTyres) {
             this.numberOfTyres = numberOfTyres;
         }
 
         /**
          * Setter for numberOfTyres.
-         * 
          * @param numberOfTyres String value for numberOfTyres.
-         * @return Builder
+         * @return Builder.
          */
         public Builder numberOfTyres(String numberOfTyres) {
             this.numberOfTyres = numberOfTyres;
@@ -100,8 +93,7 @@ public class Vehicle {
 
         /**
          * Builds a new {@link Vehicle} object using the set fields.
-         * 
-         * @return {@link Vehicle}
+         * @return {@link Vehicle}.
          */
         public Vehicle build() {
             return new Vehicle(numberOfTyres);

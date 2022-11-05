@@ -66,21 +66,40 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
  */
 public class CoreHelper {
 
+    /**
+     * A string of user agent.
+     */
     private static String userAgent;
+
+    /**
+     * A tab separated array serialization format.
+     */
     private static final String TSV_FORMAT = "%09";
+
+    /**
+     * A comma separated array serialization format.
+     */
     private static final String CSV_FORMAT = ",";
+
+    /**
+     * A pipe separated array serialization format
+     */
     private static final String PSV_FORMAT = "%7C";
 
-    // Deserialization of Json data
-    public static ObjectMapper mapper = JsonMapper
-            .builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                    false)
-            .withConfigOverride(BigDecimal.class, mutableConfigOverride -> mutableConfigOverride
-                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
-            .build();
+    /**
+     * Deserialization of Json data.
+     */
+    private static ObjectMapper mapper =
+            JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .withConfigOverride(BigDecimal.class,
+                            mutableConfigOverride -> mutableConfigOverride
+                                    .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
+                    .build();
 
-    // Strict Deserialization of Json data
-    public static ObjectMapper strictMapper =
+    /**
+     * Strict Deserialization of Json data.
+     */
+    private static ObjectMapper strictMapper =
             JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
                     .configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false)
@@ -91,9 +110,11 @@ public class CoreHelper {
                                     .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.STRING)))
                     .build();
 
+    protected CoreHelper() {}
+
+
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
-     * 
      * @param serializerAnnotation The Annotation containing information about the custom serializer
      *        of a collection.
      * @return The JsonSerializer instance of the required type.
@@ -111,14 +132,14 @@ public class CoreHelper {
      * List of classes that are wrapped directly. This information is needed when traversing object
      * trees for reference matching.
      */
-    private static final Set<Object> WRAPPER_TYPES = new HashSet<Object>(
-            Arrays.asList(Boolean.class, Character.class, Byte.class, Short.class, String.class,
-                    Integer.class, Long.class, Float.class, Double.class, BigDecimal.class,
-                    Void.class, File.class, MultipartWrapper.class, MultipartFileWrapper.class));
+    private static final Set<Object> WRAPPER_TYPES =
+            new HashSet<Object>(Arrays.asList(Boolean.class, Character.class, Byte.class,
+                    Short.class, String.class, Integer.class, Long.class, Float.class, Double.class,
+                    BigDecimal.class, Void.class, File.class, MultipartWrapper.class,
+                    MultipartFileWrapper.class));
 
     /**
      * Get a JsonSerializer instance from the provided annotation.
-     * 
      * @param serializerAnnotation The Annotation containing information about the serializer.
      * @return The JsonSerializer instance of the required type.
      */
@@ -132,7 +153,6 @@ public class CoreHelper {
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
-     * 
      * @param serializerAnnotation The Annotation containing information about the serializer of a
      *        collection.
      * @return The JsonSerializer instance of the required type.
@@ -145,9 +165,26 @@ public class CoreHelper {
         }
     }
 
+
+    /**
+     * Deserialization of Json data.
+     * @return {@link ObjectMapper}.
+     */
+    public static ObjectMapper getMapper() {
+        return mapper;
+    }
+
+
+    /**
+     * Strict Deserialization of Json data.
+     * @return {@link ObjectMapper}.
+     */
+    public static ObjectMapper getStrictMapper() {
+        return strictMapper;
+    }
+
     /**
      * Json Serialization of a given object.
-     * 
      * @param obj The object to serialize into Json.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
@@ -162,7 +199,6 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given object using a specified JsonSerializer.
-     * 
      * @param obj The object to serialize into Json.
      * @param serializer The instance of JsonSerializer to use.
      * @return The serialized Json string representation of the given object.
@@ -185,28 +221,27 @@ public class CoreHelper {
             cls = obj.getClass();
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(cls, serializer);
-        mapper.registerModule(module);
+        objectMapper.registerModule(module);
 
-        return mapper.writeValueAsString(obj);
+        return objectMapper.writeValueAsString(obj);
     }
 
 
     /**
      * Xml Serialization of a given object list.
-     * 
-     * @param <T> Type of object to be serialized
+     * @param <T> Type of object to be serialized.
      * @param objArray Object Array to be serialized.
-     * @param rootName Root name for the xml
-     * @param nodeName Node name for the array nodes
-     * @param cls Class of object to be serialized
+     * @param rootName Root name for the xml.
+     * @param nodeName Node name for the array nodes.
+     * @param cls Class of object to be serialized.
      * @return The serialized Xml String representation of the given object array.
      * @throws IOException Signals that an IO exception occurred.
      */
-    public static <T> String serializeXmlArray(T[] objArray, String rootName, String nodeName,
-            Class<T> cls) throws IOException {
+    public static <T> String serializeXmlArray(
+            T[] objArray, String rootName, String nodeName, Class<T> cls) throws IOException {
         try {
             JAXBContext context = JAXBContext.newInstance(cls);
             JAXBElement<T> jaxbElement;
@@ -230,12 +265,11 @@ public class CoreHelper {
 
     /**
      * Xml Serialization of a given object.
-     * 
-     * @param <T> Type of object to be serialized
+     * @param <T> Type of object to be serialized.
      * @param obj Object to be serialized.
-     * @param rootName Root name for the xml
-     * @param cls Class of object to be serialized
-     * @return The serialized Xml String representation of the given object
+     * @param rootName Root name for the xml.
+     * @param cls Class of object to be serialized.
+     * @return The serialized Xml String representation of the given object.
      * @throws IOException Signals that an IOException exception occurred.
      */
     public static <T> String serializeXml(T obj, String rootName, Class<T> cls) throws IOException {
@@ -256,7 +290,6 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given container object based on annotation.
-     * 
      * @param obj The object to serialize into Json.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
@@ -278,7 +311,6 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string using a specified JsonDerializer.
-     * 
      * @param jsonNode The JsonNode to deserialize.
      * @param typeReference TypeReference of T1.
      * @param <T1> The type of the object to deserialize into.
@@ -288,8 +320,8 @@ public class CoreHelper {
      * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T1 extends Object, T2 extends Object> T1 deserialize(JsonNode jsonNode,
-            final TypeReference<T1> typeReference, final Class<T2> cls,
+    public static <T1 extends Object, T2 extends Object> T1 deserialize(
+            JsonNode jsonNode, final TypeReference<T1> typeReference, final Class<T2> cls,
             final JsonDeserializer<T2> deserializer) throws IOException {
         if (jsonNode == null) {
             return null;
@@ -301,7 +333,6 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string using a specified JsonDerializer.
-     * 
      * @param json The Json string to deserialize.
      * @param typeReference TypeReference of T1.
      * @param <T1> The type of the object to deserialize into.
@@ -311,8 +342,8 @@ public class CoreHelper {
      * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T1 extends Object, T2 extends Object> T1 deserialize(String json,
-            final TypeReference<T1> typeReference, final Class<T2> cls,
+    public static <T1 extends Object, T2 extends Object> T1 deserialize(
+            String json, final TypeReference<T1> typeReference, final Class<T2> cls,
             final JsonDeserializer<T2> deserializer) throws IOException {
         if (isNullOrWhiteSpace(json)) {
             return null;
@@ -330,11 +361,10 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
-     * @param <T> The type of the object to deserialize into
-     * @param json The Json string to deserialize
-     * @param clazz The type of the object to deserialize into
-     * @return The deserialized object
+     * @param <T> The type of the object to deserialize into.
+     * @param json The Json string to deserialize.
+     * @param clazz The type of the object to deserialize into.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(String json, Class<T> clazz) throws IOException {
@@ -348,7 +378,6 @@ public class CoreHelper {
     /**
      * Strict JSON deserialization of the given JSON string with FAIL_ON_UNKNOWN_PROPERTIES flag as
      * true, used particularly for type combinators.
-     * 
      * @param <T> The type of the object to deserialize into
      * @param json The JsonNode to deserialize
      * @param classes The list of types of the object to deserialize into
@@ -356,8 +385,8 @@ public class CoreHelper {
      * @return The deserialized object
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T> T deserialize(JsonNode json, List<Class<? extends T>> classes,
-            boolean isOneOf) throws IOException {
+    public static <T> T deserialize(
+            JsonNode json, List<Class<? extends T>> classes, boolean isOneOf) throws IOException {
         if (json == null) {
             return null;
         }
@@ -391,9 +420,8 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
-     * @param json The Json string to deserialize
-     * @return The deserialized Json as a Map
+     * @param json The Json string to deserialize.
+     * @return The deserialized Json as a Map.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static LinkedHashMap<String, Object> deserialize(String json) throws IOException {
@@ -408,11 +436,10 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string.
-     * 
-     * @param json The json string to deserialize
-     * @param typeReference TypeReference of T
-     * @param <T> The type of the object to deserialize into
-     * @return The deserialized object
+     * @param json The json string to deserialize.
+     * @param typeReference TypeReference of T.
+     * @param <T> The type of the object to deserialize into.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(String json, TypeReference<T> typeReference)
@@ -426,15 +453,14 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
-     * 
-     * @param jsonNode The Json Node to deserialize
-     * @param typeReference TypeReference of T
-     * @param <T> The type of the object to deserialize into
-     * @return The deserialized object
+     * @param jsonNode The Json Node to deserialize.
+     * @param typeReference TypeReference of T.
+     * @param <T> The type of the object to deserialize into.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T extends Object> T deserialize(JsonNode jsonNode,
-            TypeReference<T> typeReference) throws IOException {
+    public static <T extends Object> T deserialize(
+            JsonNode jsonNode, TypeReference<T> typeReference) throws IOException {
         if (jsonNode == null) {
             return null;
         }
@@ -444,11 +470,10 @@ public class CoreHelper {
 
     /**
      * JSON deserialization of the given JsonNode with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
-     * 
-     * @param <T> The type of the object to deserialize into
-     * @param jsonNode The Json Node to deserialize
-     * @param clazz The type of the object to deserialize into
-     * @return The deserialized object
+     * @param <T> The type of the object to deserialize into.
+     * @param jsonNode The Json Node to deserialize.
+     * @param clazz The type of the object to deserialize into.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserialize(JsonNode jsonNode, Class<T> clazz)
@@ -462,11 +487,10 @@ public class CoreHelper {
 
     /**
      * XML Deserialization of the given xml string.
-     * 
-     * @param <T> The class of the object to deserialize into
-     * @param xml The xml string to deserialize
-     * @param cls The class of the object to deserialize into
-     * @return The deserialized object
+     * @param <T> The class of the object to deserialize into.
+     * @param xml The xml string to deserialize.
+     * @param cls The class of the object to deserialize into.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> T deserializeXml(String xml, Class<T> cls) throws IOException {
@@ -484,11 +508,10 @@ public class CoreHelper {
 
     /**
      * XML Deserialization of the given xml string.
-     * 
-     * @param <T> The class of the object to deserialize into
-     * @param xml The xml string to deserialize
-     * @param cls The class of the object to deserialize into
-     * @return The deserialized object list
+     * @param <T> The class of the object to deserialize into.
+     * @param xml The xml string to deserialize.
+     * @param cls The class of the object to deserialize into.
+     * @return The deserialized object list.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeXmlArray(String xml, Class<T[]> cls)
@@ -504,20 +527,18 @@ public class CoreHelper {
         } catch (JAXBException jaxbException) {
             throw new IOException(jaxbException);
         }
-
     }
 
     /**
      * XML Deserialization of the given xml string for simple types.
-     * 
-     * @param <T> The class of the object to deserialize into
-     * @param xml The xml string to deserialize
-     * @param cls The class of the object to deserialize into
-     * @return The deserialized simple types object list
+     * @param <T> The class of the object to deserialize into.
+     * @param xml The xml string to deserialize.
+     * @param cls The class of the object to deserialize into.
+     * @return The deserialized simple types object list.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T extends Object> List<T> deserializeXmlSimpleTypesArray(String xml,
-            Class<T> cls) throws IOException {
+    public static <T extends Object> List<T> deserializeXmlSimpleTypesArray(
+            String xml, Class<T> cls) throws IOException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(cls);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -538,21 +559,21 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization from custom deserializer based on given discriminator and registry.
-     * 
-     * @param jp Parsed used for reading JSON content
+     * @param jp Parsed used for reading JSON content.
      * @param ctxt Context that can be used to access information about this deserialization
      *        activity.
-     * @param discriminator The model's discriminator
+     * @param discriminator The model's discriminator.
      * @param registry The map containing all discriminators as keys and associated classes as
-     *        values
-     * @param typesWithoutDiscriminator The list containing all types without discriminators
-     * @param isOneOf The boolean flag to validate for oneOf flow
-     * @param <T> the deserialized response type
-     * @return The deserialized object
+     *        values.
+     * @param typesWithoutDiscriminator The list containing all types without discriminators.
+     * @param isOneOf The boolean flag to validate for oneOf flow.
+     * @param <T> the deserialized response type.
+     * @return The deserialized object.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    public static <T> T deserialize(JsonParser jp, DeserializationContext ctxt,
-            String discriminator, List<Map<String, Class<? extends T>>> registry,
+    public static <T> T deserialize(
+            JsonParser jp, DeserializationContext ctxt, String discriminator,
+            List<Map<String, Class<? extends T>>> registry,
             List<Class<? extends T>> typesWithoutDiscriminator, boolean isOneOf)
             throws IOException {
         ObjectCodec oc = jp.getCodec();
@@ -572,9 +593,8 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
-     * @param json The Json string to deserialize
-     * @return The deserialized Json as an Object
+     * @param json The Json string to deserialize.
+     * @return The deserialized Json as an Object.
      */
     public static Object deserializeAsObject(String json) {
         if (isNullOrWhiteSpace(json)) {
@@ -591,12 +611,11 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string.
-     * 
-     * @param <T> The type of the object to deserialize into
-     * @param json The Json string to deserialize
-     * @param classArray The class of the array of objects to deserialize into
-     * @return The deserialized list of objects
-     * @throws IOException Signals if any I/O exception occurred.
+     * @param <T> The type of the object to deserialize into.
+     * @param json The Json string to deserialize.
+     * @param classArray The class of the array of objects to deserialize into.
+     * @return The deserialized list of objects.
+     * @throws IOException Signals if any I/O exception occurred..
      */
     public static <T extends Object> List<T> deserializeArray(String json, Class<T[]> classArray)
             throws IOException {
@@ -611,12 +630,11 @@ public class CoreHelper {
 
     /**
      * Replaces template parameters in the given URL.
-     * 
-     * @param queryBuilder The query string builder to replace the template parameters
-     * @param parameters The parameters to replace in the URL
+     * @param queryBuilder The query string builder to replace the template parameters.
+     * @param parameters The parameters to replace in the URL.
      */
-    public static void appendUrlWithTemplateParameters(StringBuilder queryBuilder,
-            Map<String, SimpleEntry<Object, Boolean>> parameters) {
+    public static void appendUrlWithTemplateParameters(
+            StringBuilder queryBuilder, Map<String, SimpleEntry<Object, Boolean>> parameters) {
         // Perform parameter validation
         if (null == queryBuilder) {
             throw new IllegalArgumentException(
@@ -655,13 +673,13 @@ public class CoreHelper {
 
     /**
      * Appends the given set of parameters to the given query string.
-     * 
      * @param queryBuilder The query URL string to append the parameters.
      * @param parameters The parameters to append.
-     * @param arraySerializationFormat the array serialization format
+     * @param arraySerializationFormat the array serialization format.
      */
-    public static void appendUrlWithQueryParameters(StringBuilder queryBuilder,
-            Map<String, Object> parameters, ArraySerializationFormat arraySerializationFormat) {
+    public static void appendUrlWithQueryParameters(
+            StringBuilder queryBuilder, Map<String, Object> parameters,
+            ArraySerializationFormat arraySerializationFormat) {
         // Perform parameter validation
         if (queryBuilder == null) {
             throw new IllegalArgumentException(
@@ -680,7 +698,6 @@ public class CoreHelper {
 
     /**
      * Validates if the string is null, empty or whitespace.
-     * 
      * @param s The string to validate.
      * @return The result of validation.
      */
@@ -704,13 +721,12 @@ public class CoreHelper {
 
     /**
      * Replaces all occurrences of the given string in the string builder.
-     * 
      * @param stringBuilder The string builder to update with replaced strings.
      * @param toReplace The string to replace in the string builder.
      * @param replaceWith The string to replace with.
      */
-    public static void replaceAll(StringBuilder stringBuilder, String toReplace,
-            String replaceWith) {
+    public static void replaceAll(
+            StringBuilder stringBuilder, String toReplace, String replaceWith) {
         int index = stringBuilder.indexOf(toReplace);
 
         while (index != -1) {
@@ -722,10 +738,9 @@ public class CoreHelper {
 
     /**
      * Updates the user agent header value.
-     * 
-     * @param apiUserAgent the String value of apiUserAgent
-     * @param userAgentConfig the Map of user agent config
-     * @return {@link String}
+     * @param apiUserAgent the String value of apiUserAgent.
+     * @param userAgentConfig the Map of user agent config.
+     * @return {@link String}.
      */
     public static String updateUserAgent(String apiUserAgent, Map<String, String> userAgentConfig) {
         String engineVersion = System.getProperty("java.runtime.version");
@@ -747,7 +762,6 @@ public class CoreHelper {
 
     /**
      * Removes null values from the given map.
-     * 
      * @param map Map of values.
      */
     public static void removeNullValues(Map<String, ?> map) {
@@ -760,7 +774,6 @@ public class CoreHelper {
 
     /**
      * Validates and processes the given URL.
-     * 
      * @param url The given URL to process.
      * @return Pre-process URL as string.
      */
@@ -785,13 +798,12 @@ public class CoreHelper {
 
     /**
      * Prepares Array style form fields from a given array of values.
-     * 
      * @param value Value for the form fields.
-     * @param arraySerializationFormat serialization format
+     * @param arraySerializationFormat serialization format.
      * @return Dictionary of form fields created from array elements.
      */
-    public static List<SimpleEntry<String, Object>> prepareFormFields(Map<?, ?> value,
-            ArraySerializationFormat arraySerializationFormat) {
+    public static List<SimpleEntry<String, Object>> prepareFormFields(
+            Map<?, ?> value, ArraySerializationFormat arraySerializationFormat) {
         List<SimpleEntry<String, Object>> formFields = new ArrayList<>();
         if (value != null) {
             objectToList("", value, formFields, new HashSet<Integer>(), arraySerializationFormat);
@@ -801,11 +813,10 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES flag as true.
-     * 
-     * @param <T> The type of the object to deserialize into
-     * @param json The Json string to deserialize
-     * @param classArray The class of the array of objects to deserialize into
-     * @return The deserialized list of objects
+     * @param <T> The type of the object to deserialize into.
+     * @param json The Json string to deserialize.
+     * @param classArray The class of the array of objects to deserialize into.
+     * @return The deserialized list of objects.
      * @throws IOException Signals if any I/O exception occurred.
      */
     public static <T extends Object> List<T> deserializeArray(JsonNode json, Class<T[]> classArray)
@@ -819,16 +830,17 @@ public class CoreHelper {
 
     /**
      * Deduces the type based on given discriminator and registry.
-     * 
-     * @param jsonNode The json to check against
-     * @param discriminator The model's discriminator
+     * @param jsonNode The json to check against.
+     * @param discriminator The model's discriminator.
      * @param registry The Map containing all discriminators as keys and associated classes as
-     *        values
-     * @return The type to deserialize into
+     *        values.
+     * @param <T> The type of the object to deserialize into.
+     * @return The type to deserialize into.
      * @throws IOException Signals if any I/O exception occurred.
      */
-    private static <T> List<Class<? extends T>> deduceType(JsonNode jsonNode, String discriminator,
-            List<Map<String, Class<? extends T>>> registry) throws IOException {
+    private static <T> List<Class<? extends T>> deduceType(
+            JsonNode jsonNode, String discriminator, List<Map<String, Class<? extends T>>> registry)
+            throws IOException {
         if (jsonNode == null || registry == null) {
             return null;
         }
@@ -857,10 +869,9 @@ public class CoreHelper {
 
     /**
      * Deduces the type from immediate child if exists based on given discriminator.
-     * 
-     * @param jsonNode The json to check against
-     * @param discriminator The model's discriminator
-     * @return The type to deserialize into
+     * @param jsonNode The json to check against.
+     * @param discriminator The model's discriminator.
+     * @return The type to deserialize into.
      * @throws IOException Signals if any I/O exception occurred.
      */
     private static String deduceTypeFromImmidiateChild(JsonNode jsonNode, String discriminator) {
@@ -884,12 +895,13 @@ public class CoreHelper {
 
     /**
      * Encodes a given object to URL encoded string.
-     * 
      * @param name Name of the object.
      * @param obj Raw object sent from caller.
      * @param objBuilder String of elements.
+     * @param arraySerializationFormat The array serialization format.
      */
-    private static void encodeObjectAsQueryString(String name, Object obj, StringBuilder objBuilder,
+    private static void encodeObjectAsQueryString(
+            String name, Object obj, StringBuilder objBuilder,
             ArraySerializationFormat arraySerializationFormat) {
 
         List<SimpleEntry<String, Object>> objectList = new ArrayList<>();
@@ -909,7 +921,7 @@ public class CoreHelper {
             // Load element value as string
 
 
-            if (accessor.matches(".*?\\[\\d+\\]$") && IsDelimeterFormat(arraySerializationFormat)) {
+            if (accessor.matches(".*?\\[\\d+\\]$") && isDelimeterFormat(arraySerializationFormat)) {
 
                 String arrayName = accessor.substring(0, accessor.lastIndexOf('['));
 
@@ -936,8 +948,8 @@ public class CoreHelper {
         }
     }
 
-    private static void appendParamKeyValuePair(String formatString, StringBuilder objBuilder,
-            String accessor, Object value) {
+    private static void appendParamKeyValuePair(
+            String formatString, StringBuilder objBuilder, String accessor, Object value) {
 
         String paramKeyValPair =
                 String.format(formatString, accessor, tryUrlEncode(value.toString(), false));
@@ -946,14 +958,15 @@ public class CoreHelper {
 
     /**
      * Flattening a collection of objects into a string.
-     * 
+     * @param elemName The element name of collection.
      * @param array Array of elements to flatten.
+     * @param encode Need to encode?.
      * @param fmt Format string to use for array flattening.
      * @param separator Separator to use for string concatenation.
      * @return Representative string made up of array elements.
      */
-    private static String flattenCollection(String elemName, Collection<?> array, boolean encode,
-            String fmt, char separator) {
+    private static String flattenCollection(
+            String elemName, Collection<?> array, boolean encode, String fmt, char separator) {
         StringBuilder builder = new StringBuilder();
 
         // Append all elements of the array into a string
@@ -982,7 +995,6 @@ public class CoreHelper {
 
     /**
      * Tries URL encode using UTF-8.
-     * 
      * @param value The value to URL encode.
      * @param spaceAsPercentEncoded The flag get space character as percent encoded.
      * @return Encoded url.
@@ -999,15 +1011,21 @@ public class CoreHelper {
         }
     }
 
-    public static String getBase64EncodedCredentials(String basicAuthUserName,
-            String basicAuthPassword) {
+    /**
+     * Responsible to encode into base64 the username and password
+     * @param basicAuthUserName The auth username
+     * @param basicAuthPassword The auth password
+     * @return The base64 encoded String
+     */
+    public static String getBase64EncodedCredentials(
+            String basicAuthUserName, String basicAuthPassword) {
         String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
         return "Basic " + Base64.getEncoder().encodeToString(authCredentials.getBytes());
     }
 
-    private static void objectToList(String objName, Collection<?> obj,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            ArraySerializationFormat arraySerializationFormat) {
+    private static void objectToList(
+            String objName, Collection<?> obj, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, ArraySerializationFormat arraySerializationFormat) {
 
         Collection<?> array = obj;
         // Append all elements of the array into a string
@@ -1019,9 +1037,10 @@ public class CoreHelper {
             if (isWrapperType(element)
                     && (arraySerializationFormat == ArraySerializationFormat.UNINDEXED
                             || arraySerializationFormat == ArraySerializationFormat.PLAIN)) {
-                key = arraySerializationFormat == ArraySerializationFormat.UNINDEXED
-                        ? String.format("%s[]", objName)
-                        : objName;
+                key =
+                        arraySerializationFormat == ArraySerializationFormat.UNINDEXED
+                                ? String.format("%s[]", objName)
+                                : objName;
             } else {
                 key = String.format("%s[%d]", objName, index++);
             }
@@ -1031,9 +1050,9 @@ public class CoreHelper {
 
     }
 
-    private static void objectToList(String objName, Map<?, ?> obj,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            ArraySerializationFormat arraySerializationFormat) {
+    private static void objectToList(
+            String objName, Map<?, ?> obj, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, ArraySerializationFormat arraySerializationFormat) {
         // Process map
         Map<?, ?> map = obj;
         // Append all elements of the array into a string
@@ -1049,15 +1068,15 @@ public class CoreHelper {
 
     /**
      * Converts a given object to a form encoded map.
-     * 
      * @param objName Name of the object.
      * @param obj The object to convert into a map.
      * @param objectList The object list to populate.
      * @param processed List of object hashCodes that are already parsed.
+     * @param arraySerializationFormat The array serialization format.
      */
-    private static void objectToList(String objName, Object obj,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            ArraySerializationFormat arraySerializationFormat) {
+    private static void objectToList(
+            String objName, Object obj, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, ArraySerializationFormat arraySerializationFormat) {
         // Null values need not to be processed
         if (obj == null) {
             return;
@@ -1195,7 +1214,7 @@ public class CoreHelper {
         }
     }
 
-    private static boolean IsDelimeterFormat(ArraySerializationFormat arraySerializationFormat) {
+    private static boolean isDelimeterFormat(ArraySerializationFormat arraySerializationFormat) {
         return (arraySerializationFormat == ArraySerializationFormat.CSV
                 || arraySerializationFormat == ArraySerializationFormat.TSV
                 || arraySerializationFormat == ArraySerializationFormat.PSV);
@@ -1203,18 +1222,18 @@ public class CoreHelper {
 
     /**
      * Processes the value and load into objectList against key.
-     * 
      * @param key The key to used for creation of key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
-     * @param serializer The serializer for serialize the object
+     * @param serializer The serializer for serialize the object.
+     * @param arraySerializationFormat The array serialization format.
      * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
      */
-    private static void loadKeyValueUsingSerializer(String key, Object value,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            JsonSerializer<?> serializer, ArraySerializationFormat arraySerializationFormat)
-            throws JsonProcessingException {
+    private static void loadKeyValueUsingSerializer(
+            String key, Object value, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, JsonSerializer<?> serializer,
+            ArraySerializationFormat arraySerializationFormat) throws JsonProcessingException {
         value = serialize(value, serializer);
 
         Object obj = deserializeAsObject(value.toString());
@@ -1231,16 +1250,16 @@ public class CoreHelper {
 
     /**
      * While processing objects to map, loads value after serializing.
-     * 
      * @param key The key to used for creation of key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
-     * @param formSerializerAnnotation Annotation for serializer
+     * @param formSerializerAnnotation Annotation for serializer.
+     * @param arraySerializationFormat The array serialization format.
      */
-    private static void loadKeyValuePairForEncoding(String key, Object value,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            FormSerialize formSerializerAnnotation,
+    private static void loadKeyValuePairForEncoding(
+            String key, Object value, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, FormSerialize formSerializerAnnotation,
             ArraySerializationFormat arraySerializationFormat) {
         if (value == null) {
             return;
@@ -1258,15 +1277,15 @@ public class CoreHelper {
 
     /**
      * While processing objects to map, decides whether to perform recursion or load value.
-     * 
      * @param key The key for creating key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
+     * @param arraySerializationFormat The array serialization format.
      */
-    private static void loadKeyValuePairForEncoding(String key, Object value,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            ArraySerializationFormat arraySerializationFormat) {
+    private static void loadKeyValuePairForEncoding(
+            String key, Object value, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, ArraySerializationFormat arraySerializationFormat) {
         if (value == null) {
             return;
         }
@@ -1292,16 +1311,17 @@ public class CoreHelper {
 
     /**
      * While processing objects to map, loads value after serializing.
-     * 
      * @param key The key to used for creation of key value pair.
      * @param value The value to process against the given key.
      * @param objectList The object list to process with key value pair.
      * @param processed List of processed objects hashCodes.
-     * @param serializerAnnotation Annotation for serializer
+     * @param serializerAnnotation Annotation for serializer.
+     * @param arraySerializationFormat The array serialization format.
      */
-    private static void loadKeyValuePairForEncoding(String key, Object value,
-            List<SimpleEntry<String, Object>> objectList, HashSet<Integer> processed,
-            JsonSerialize serializerAnnotation, ArraySerializationFormat arraySerializationFormat) {
+    private static void loadKeyValuePairForEncoding(
+            String key, Object value, List<SimpleEntry<String, Object>> objectList,
+            HashSet<Integer> processed, JsonSerialize serializerAnnotation,
+            ArraySerializationFormat arraySerializationFormat) {
         if (value == null) {
             return;
         }
@@ -1321,7 +1341,6 @@ public class CoreHelper {
 
     /**
      * Check if the given object can be wrapped directly.
-     * 
      * @param object The given object.
      * @return true if the class is an autoboxed class e.g., Integer.
      */
@@ -1331,6 +1350,20 @@ public class CoreHelper {
         }
         return WRAPPER_TYPES.contains(object.getClass()) || object.getClass().isPrimitive()
                 || object.getClass().isEnum();
+    }
+
+    /**
+     * Json Serialization of an ENUM defined under oneOf/anyOf container.
+     * @param value The object to serialize into Json String.
+     * @return The serialized Json String representation of the given object.
+     * @throws JsonProcessingException Signals that a Json Processing Exception has occurred.
+     */
+    public static String serializeEnumContainer(Object value) throws JsonProcessingException {
+        if (value instanceof String || value instanceof Integer) {
+            return String.valueOf(value);
+        }
+
+        return serialize(value);
     }
 
     /**

@@ -21,14 +21,12 @@ public class GrandParentClass {
 
     /**
      * Initialization constructor.
-     * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-     * @param  grandParentRequired  String value for grandParentRequired.
-     * @param  grandParentOptional  String value for grandParentOptional.
+     * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+     * @param grandParentRequired String value for grandParentRequired.
+     * @param grandParentOptional String value for grandParentOptional.
      */
-    public GrandParentClass(
-            String grandParentRequiredNullable,
-            String grandParentRequired,
-            String grandParentOptional) {
+    public GrandParentClass(final String grandParentRequiredNullable,
+            final String grandParentRequired, final String grandParentOptional) {
         this.grandParentOptional = grandParentOptional;
         this.grandParentRequiredNullable = grandParentRequiredNullable;
         this.grandParentRequired = grandParentRequired;
@@ -36,7 +34,7 @@ public class GrandParentClass {
 
     /**
      * Getter for GrandParentOptional.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Grand_Parent_Optional")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -46,7 +44,7 @@ public class GrandParentClass {
 
     /**
      * Setter for GrandParentOptional.
-     * @param grandParentOptional Value for String
+     * @param grandParentOptional Value for String.
      */
     @JsonSetter("Grand_Parent_Optional")
     public void setGrandParentOptional(String grandParentOptional) {
@@ -55,7 +53,7 @@ public class GrandParentClass {
 
     /**
      * Getter for GrandParentRequiredNullable.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Grand_Parent_Required_Nullable")
     public String getGrandParentRequiredNullable() {
@@ -64,7 +62,7 @@ public class GrandParentClass {
 
     /**
      * Setter for GrandParentRequiredNullable.
-     * @param grandParentRequiredNullable Value for String
+     * @param grandParentRequiredNullable Value for String.
      */
     @JsonSetter("Grand_Parent_Required_Nullable")
     public void setGrandParentRequiredNullable(String grandParentRequiredNullable) {
@@ -73,7 +71,7 @@ public class GrandParentClass {
 
     /**
      * Getter for GrandParentRequired.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("Grand_Parent_Required")
     public String getGrandParentRequired() {
@@ -82,7 +80,7 @@ public class GrandParentClass {
 
     /**
      * Setter for GrandParentRequired.
-     * @param grandParentRequired Value for String
+     * @param grandParentRequired Value for String.
      */
     @JsonSetter("Grand_Parent_Required")
     public void setGrandParentRequired(String grandParentRequired) {
@@ -91,7 +89,7 @@ public class GrandParentClass {
 
     /**
      * Converts this GrandParentClass into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -101,13 +99,14 @@ public class GrandParentClass {
     }
 
     /**
-     * Builds a new {@link GrandParentClass.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link GrandParentClass.Builder} object
+     * Builds a new {@link GrandParentClass.Builder} object. Creates the instance with the state of
+     * the current model.
+     * @return a new {@link GrandParentClass.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(grandParentRequiredNullable, grandParentRequired)
-                .grandParentOptional(getGrandParentOptional());
+        Builder builder =
+                new Builder(grandParentRequiredNullable, grandParentRequired)
+                        .grandParentOptional(getGrandParentOptional());
         return builder;
     }
 
@@ -122,23 +121,22 @@ public class GrandParentClass {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-         * @param  grandParentRequired  String value for grandParentRequired.
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+         * @param grandParentRequired String value for grandParentRequired.
          */
-        public Builder(String grandParentRequiredNullable, String grandParentRequired) {
+        public Builder(final String grandParentRequiredNullable, final String grandParentRequired) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
             this.grandParentRequired = grandParentRequired;
         }
 
         /**
          * Setter for grandParentRequiredNullable.
-         * @param  grandParentRequiredNullable  String value for grandParentRequiredNullable.
-         * @return Builder
+         * @param grandParentRequiredNullable String value for grandParentRequiredNullable.
+         * @return Builder.
          */
         public Builder grandParentRequiredNullable(String grandParentRequiredNullable) {
             this.grandParentRequiredNullable = grandParentRequiredNullable;
@@ -147,8 +145,8 @@ public class GrandParentClass {
 
         /**
          * Setter for grandParentRequired.
-         * @param  grandParentRequired  String value for grandParentRequired.
-         * @return Builder
+         * @param grandParentRequired String value for grandParentRequired.
+         * @return Builder.
          */
         public Builder grandParentRequired(String grandParentRequired) {
             this.grandParentRequired = grandParentRequired;
@@ -157,8 +155,8 @@ public class GrandParentClass {
 
         /**
          * Setter for grandParentOptional.
-         * @param  grandParentOptional  String value for grandParentOptional.
-         * @return Builder
+         * @param grandParentOptional String value for grandParentOptional.
+         * @return Builder.
          */
         public Builder grandParentOptional(String grandParentOptional) {
             this.grandParentOptional = grandParentOptional;
@@ -167,7 +165,7 @@ public class GrandParentClass {
 
         /**
          * Builds a new {@link GrandParentClass} object using the set fields.
-         * @return {@link GrandParentClass}
+         * @return {@link GrandParentClass}.
          */
         public GrandParentClass build() {
             return new GrandParentClass(grandParentRequiredNullable, grandParentRequired,

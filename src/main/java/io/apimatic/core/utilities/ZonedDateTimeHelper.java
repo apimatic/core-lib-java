@@ -30,8 +30,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Parse a Unix Timestamp to a DateTime object.
-     * @param date The Unix Timestamp
-     * @return The DateTime object
+     * @param date The Unix Timestamp.
+     * @return The DateTime object.
      */
     public static ZonedDateTime fromUnixTimestamp(Long date) {
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneId.systemDefault());
@@ -39,8 +39,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Parse a Unix Timestamp string to a DateTime object.
-     * @param date The Unix Timestamp as a String
-     * @return The parsed DateTime object
+     * @param date The Unix Timestamp as a String.
+     * @return The parsed DateTime object.
      */
     public static ZonedDateTime fromUnixTimestamp(String date) {
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(date)),
@@ -49,8 +49,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a DateTime object to a Unix Timestamp string.
-     * @param value The DateTime object to convert
-     * @return The converted String
+     * @param value The DateTime object to convert.
+     * @return The converted String.
      */
     public static String toUnixTimestamp(ZonedDateTime value) {
         return value == null ? null : Long.toString(toUnixTimestampLong(value));
@@ -58,8 +58,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of DateTime objects to Unix Timestamp strings.
-     * @param values The List of DateTime objects to convert
-     * @return The list of converted Strings
+     * @param values The List of DateTime objects to convert.
+     * @return The list of converted Strings.
      */
     public static List<String> toUnixTimestamp(List<ZonedDateTime> values) {
         if (values == null) {
@@ -74,8 +74,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a Map of DateTime objects to Unix Timestamp strings.
-     * @param values The Map of DateTime objects to convert
-     * @return The Map of converted Strings
+     * @param values The Map of DateTime objects to convert.
+     * @return The Map of converted Strings.
      */
     public static Map<String, String> toUnixTimestamp(Map<String, ZonedDateTime> values) {
         if (values == null) {
@@ -90,11 +90,11 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of Map of DateTime objects to Unix Timestamp strings.
-     * @param values The List of Map of DateTime objects to convert
-     * @return The list of map of converted Strings
+     * @param values The List of Map of DateTime objects to convert.
+     * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfUnixTimestamp(List<Map<String, ZonedDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfUnixTimestamp(
+            List<Map<String, ZonedDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -107,8 +107,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a DateTime object to a Unix Timestamp Long.
-     * @param value The DateTime object to convert
-     * @return The converted Long
+     * @param value The DateTime object to convert.
+     * @return The converted Long.
      */
     public static Long toUnixTimestampLong(ZonedDateTime value) {
         return value == null ? null : value.toEpochSecond();
@@ -116,7 +116,7 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of DateTime objects to Unix Timestamp Longs.
-     * @param values The List of DateTime objects to convert
+     * @param values The List of DateTime objects to convert.
      * @return The list of converted Longs.
      */
     public static List<Long> toUnixTimestampLong(List<ZonedDateTime> values) {
@@ -132,7 +132,7 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a Map of DateTime objects to Unix Timestamp Longs.
-     * @param values The Map of DateTime objects to convert
+     * @param values The Map of DateTime objects to convert.
      * @return The Map of converted Longs.
      */
     public static Map<String, Long> toUnixTimestampLong(Map<String, ZonedDateTime> values) {
@@ -148,11 +148,11 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of Map of DateTime objects to Unix Timestamp Longs.
-     * @param values The List of Map of DateTime objects to convert
-     * @return The list of map of converted Longs
+     * @param values The List of Map of DateTime objects to convert.
+     * @return The list of map of converted Longs.
      */
-    public static List<Map<String, Long>>
-            toArrayOfMapOfUnixTimestampLong(List<Map<String, ZonedDateTime>> values) {
+    public static List<Map<String, Long>> toArrayOfMapOfUnixTimestampLong(
+            List<Map<String, ZonedDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -165,8 +165,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Parse a datetime string in Rfc1123 format to a DateTime object.
-     * @param date The datetime string in Rfc1123 format
-     * @return The parsed DateTime object
+     * @param date The datetime string in Rfc1123 format.
+     * @return The parsed DateTime object.
      */
     public static ZonedDateTime fromRfc1123DateTime(String date) {
         return ZonedDateTime.parse(date, RFC1123_DATE_TIME_FORMATTER);
@@ -174,8 +174,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a DateTime object to a Rfc1123 formatted string.
-     * @param value The DateTime object to convert
-     * @return The converted String
+     * @param value The DateTime object to convert.
+     * @return The converted String.
      */
     public static String toRfc1123DateTime(ZonedDateTime value) {
         return value == null ? null : RFC1123_DATE_TIME_FORMATTER.format(value);
@@ -183,8 +183,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of DateTime objects to Rfc1123 formatted strings.
-     * @param values The List of DateTime objects to convert
-     * @return The List of converted Strings
+     * @param values The List of DateTime objects to convert.
+     * @return The List of converted Strings.
      */
     public static List<String> toRfc1123DateTime(List<ZonedDateTime> values) {
         if (values == null) {
@@ -199,8 +199,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a Map of DateTime objects to Rfc1123 formatted strings.
-     * @param values The Map of DateTime objects to convert
-     * @return The Map of converted Strings
+     * @param values The Map of DateTime objects to convert.
+     * @return The Map of converted Strings.
      */
     public static Map<String, String> toRfc1123DateTime(Map<String, ZonedDateTime> values) {
         if (values == null) {
@@ -215,11 +215,11 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of Map of DateTime objects to Rfc1123 formatted strings.
-     * @param values The List of Map of DateTime objects to convert
-     * @return The list of map of converted Strings
+     * @param values The List of Map of DateTime objects to convert.
+     * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfRfc1123DateTime(List<Map<String, ZonedDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfRfc1123DateTime(
+            List<Map<String, ZonedDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -232,8 +232,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Parse a datetime string in Rfc8601(Rfc3339) format to a DateTime object.
-     * @param date The datetime string in Rfc8601(Rfc3339) format
-     * @return The parsed DateTime object
+     * @param date The datetime string in Rfc8601(Rfc3339) format.
+     * @return The parsed DateTime object.
      */
     public static ZonedDateTime fromRfc8601DateTime(String date) {
         return ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
@@ -241,8 +241,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a DateTime object to a Rfc8601(Rfc3339) formatted string.
-     * @param value The DateTime object to convert
-     * @return The converted String
+     * @param value The DateTime object to convert.
+     * @return The converted String.
      */
     public static String toRfc8601DateTime(ZonedDateTime value) {
         return value == null ? null : value.toString();
@@ -250,8 +250,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of DateTime objects to Rfc8601(Rfc3339) formatted strings.
-     * @param values The List of DateTime objects to convert
-     * @return The List of converted Strings
+     * @param values The List of DateTime objects to convert.
+     * @return The List of converted Strings.
      */
     public static List<String> toRfc8601DateTime(List<ZonedDateTime> values) {
         if (values == null) {
@@ -266,8 +266,8 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a Map of DateTime objects to Rfc8601(Rfc3339) formatted strings.
-     * @param values The Map of DateTime objects to convert
-     * @return The Map of converted Strings
+     * @param values The Map of DateTime objects to convert.
+     * @return The Map of converted Strings.
      */
     public static Map<String, String> toRfc8601DateTime(Map<String, ZonedDateTime> values) {
         if (values == null) {
@@ -282,11 +282,11 @@ public class ZonedDateTimeHelper extends DateHelper {
 
     /**
      * Convert a List of Map of DateTime objects to Rfc8601(Rfc3339) formatted strings.
-     * @param values The List of Map of DateTime objects to convert
-     * @return The list of map of converted Strings
+     * @param values The List of Map of DateTime objects to convert.
+     * @return The list of map of converted Strings.
      */
-    public static List<Map<String, String>>
-            toArrayOfMapOfRfc8601DateTime(List<Map<String, ZonedDateTime>> values) {
+    public static List<Map<String, String>> toArrayOfMapOfRfc8601DateTime(
+            List<Map<String, ZonedDateTime>> values) {
         if (values == null) {
             return null;
         }
@@ -370,7 +370,7 @@ public class ZonedDateTimeHelper extends DateHelper {
     }
 
     /**
-     * Rfc1123 Date Time adapter utility class
+     * Rfc1123 Date Time adapter utility class.
      */
     public static class Rfc1123DateTimeAdapter extends XmlAdapter<String, ZonedDateTime> {
         @Override
@@ -385,7 +385,7 @@ public class ZonedDateTimeHelper extends DateHelper {
     }
 
     /**
-     * Rfc8601 Date Time adapter utility class
+     * Rfc8601 Date Time adapter utility class.
      */
     public static class Rfc8601DateTimeAdapter extends XmlAdapter<String, ZonedDateTime> {
         @Override
@@ -400,7 +400,7 @@ public class ZonedDateTimeHelper extends DateHelper {
     }
 
     /**
-     * UnixTimestamp adapter utility class
+     * UnixTimestamp adapter utility class.
      */
     public static class UnixTimestampAdapter extends XmlAdapter<String, ZonedDateTime> {
         @Override

@@ -1,4 +1,4 @@
-package io.apimatic.core.configurations.http.client;
+package io.apimatic.core.logger;
 
 import java.util.List;
 import java.util.Map;
@@ -28,36 +28,53 @@ import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
+/**
+ * Class to log the Http api messages.
+ */
 public class HttpLogger implements ApiLogger {
 
+    /**
+     * A request queue.
+     */
     private final ConcurrentHashMap<Request, RequestEntry> requestQueue;
+
+    /**
+     * An instance of {@link Logger}.
+     */
     private Logger logger;
+
+    /**
+     * An instance of {@link ReadonlyLogging}.
+     */
     private ReadonlyLogging config;
+
+    /**
+     * An instance of {@link ObjectWriter}.
+     */
     private ObjectWriter writer;
 
     /**
      * Default Constructor.
-     * 
      * @param logger Logger instance for logging.
      * @param config {@link ReadonlyLogging} as logging properties.
      */
-    public HttpLogger(Logger logger, ReadonlyLogging config) {
+    public HttpLogger(final Logger logger, final ReadonlyLogging config) {
         this.requestQueue = new ConcurrentHashMap<Request, RequestEntry>();
         this.logger = logger;
         this.config = config;
         @SuppressWarnings("serial")
-        ObjectMapper mapper = new ObjectMapper(CoreHelper.mapper) {};
+        ObjectMapper mapper = new ObjectMapper(CoreHelper.getMapper()) {};
         mapper.addMixIn(CoreFileWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartFileWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(HttpHeaders.class, LoggingMixIn.class);
-        this.writer = !config.isPrettyPrinting() ? mapper.writer()
-                : mapper.writerWithDefaultPrettyPrinter();
+        this.writer =
+                !config.isPrettyPrinting() ? mapper.writer()
+                        : mapper.writerWithDefaultPrettyPrinter();
     }
 
     /**
      * Log requests.
-     * 
      * @param request HttpRequest to be logged.
      * @param url String request URL.
      */
@@ -67,7 +84,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log requests.
-     * 
      * @param request HttpRequest to be logged.
      * @param url String request URL.
      * @param additionalMessage Any additional message to be logged.
@@ -76,7 +92,6 @@ public class HttpLogger implements ApiLogger {
         if (request == null) {
             return;
         }
-
 
         String requestId = UUID.randomUUID().toString();
         RequestEntry requestEntry = new RequestEntry(requestId, System.nanoTime(), url);
@@ -89,25 +104,25 @@ public class HttpLogger implements ApiLogger {
         }
 
         RequestMessage message = new RequestMessage();
-        message.type = "Request";
-        message.requestId = requestId;
+        message.setType("Request");
+        message.setRequestId(requestId);
         if (config.isLoggingRequestInfo()) {
-            message.method = (Method) request.getHttpMethod();
-            message.url = url;
-            message.additionalMessage = additionalMessage;
+            message.method = request.getHttpMethod();
+            message.setUrl(url);
+            message.setAdditionalMessage(additionalMessage);
         }
 
         if (config.isLoggingRequestHeaders()) {
-            message.headers = getFilteredHeaders((HttpHeaders) request.getHeaders());
+            message.setHeaders(getFilteredHeaders(request.getHeaders()));
         }
 
         if (config.isLoggingRequestBody()) {
             if (request.getBody() != null) {
                 // As request.getBody() is always a non null serialized string.
                 // Hence we are calling getBody().toString().
-                message.body = CoreHelper.deserializeAsObject(request.getBody().toString());
+                message.setBody(CoreHelper.deserializeAsObject(request.getBody().toString()));
             } else if (request.getParameters() != null && !request.getParameters().isEmpty()) {
-                message.body = request.getParameters();
+                message.setBody(request.getParameters());
             }
         }
 
@@ -116,7 +131,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Set error for failed requests.
-     * 
      * @param request HttpRequest that failed.
      * @param error Throwable occurred.
      */
@@ -130,7 +144,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log Responses.
-     * 
      * @param request HttpRequest that completed.
      * @param response HttpResponse to be logged.
      */
@@ -140,7 +153,6 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log Responses.
-     * 
      * @param request HttpRequest that completed.
      * @param response HttpResponse to be logged.
      * @param additionalMessage Any additional message to be logged.
@@ -157,29 +169,29 @@ public class HttpLogger implements ApiLogger {
             return;
         }
         ResponseMessage message = new ResponseMessage();
-        message.type = "Response";
-        message.requestId = requestEntry.requestId;
+        message.setType("Response");
+        message.setRequestId(requestEntry.requestId);
         long timeTaken = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - requestEntry.startTime);
         if (response == null) {
             message.success = false;
             message.failureReason = "HTTP REQUEST FAILED: " + requestEntry.error;
-            message.url = requestEntry.url;
+            message.setUrl(requestEntry.url);
             message.timeTakenMillis = timeTaken;
-            message.additionalMessage = additionalMessage;
+            message.setAdditionalMessage(additionalMessage);
         } else {
             if (config.isLoggingResponseInfo()) {
                 message.statusCode = response.getStatusCode();
-                message.url = requestEntry.url;
+                message.setUrl(requestEntry.url);
                 message.timeTakenMillis = timeTaken;
-                message.additionalMessage = additionalMessage;
+                message.setAdditionalMessage(additionalMessage);
             }
 
             if (config.isLoggingResponseHeaders()) {
-                message.headers = getFilteredHeaders((HttpHeaders) response.getHeaders());
+                message.setHeaders(getFilteredHeaders(response.getHeaders()));
             }
 
             if (config.isLoggingResponseBody()) {
-                message.body = CoreHelper.deserializeAsObject(response.getBody());
+                message.setBody(CoreHelper.deserializeAsObject(response.getBody()));
             }
         }
 
@@ -210,8 +222,9 @@ public class HttpLogger implements ApiLogger {
 
     /**
      * Log provided message according to logging level.
-     * 
      * @param message Message instance to be logged as JSON.
+     * @param level To provide the LoggingLevelType conversion.
+     * @param logException Need to log the exception?.
      */
     private void log(Message message, LoggingLevel level, boolean logException) {
         try {
@@ -250,21 +263,40 @@ public class HttpLogger implements ApiLogger {
      * MixIn interface to update how certain fields are shown in the logs.
      */
     private interface LoggingMixIn {
+
+        /**
+         * @return A header string.
+         */
         @JsonUnwrapped
         String getHeaders();
 
+        /**
+         * @return Header string.
+         */
         @JsonGetter("headers")
         String asMultimap();
 
+        /**
+         * @return File string.
+         */
         @JsonIgnore
         String getFile();
 
+        /**
+         * @return Loggable file string.
+         */
         @JsonGetter("file")
         String getLoggableFile();
 
+        /**
+         * @return Byte array string.
+         */
         @JsonIgnore
         String getByteArray();
 
+        /**
+         * @return Loggable object string.
+         */
         @JsonGetter("object")
         String getLoggableObject();
     }
@@ -273,73 +305,170 @@ public class HttpLogger implements ApiLogger {
      * Class to hold and write request message.
      */
     private class RequestMessage extends Message {
+        /**
+         * An instance of {@link Method}.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Method method;
+        private Method method;
     }
 
     /**
      * Class to hold and write response message.
      */
     private class ResponseMessage extends Message {
+        /**
+         * A success boolean variable.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        boolean success = true;
+        private boolean success = true;
+        /**
+         * A failure reason string.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String failureReason;
+        private String failureReason;
+        /**
+         * A status code integer.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Integer statusCode;
+        private Integer statusCode;
+        /**
+         * A timeTakenInMilis long variable.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Long timeTakenMillis;
+        private Long timeTakenMillis;
     }
 
     /**
      * Base class to hold and write message.
      */
     private class Message {
+        /**
+         * A logging error string.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String loggingError;
+        private String loggingError;
+
+        /**
+         * A string of message type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String type;
+        private String type;
+
+        /**
+         * A string of requestId message.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String requestId;
+        private String requestId;
+
+        /**
+         * A string of url.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String url;
+        private String url;
+
+        /**
+         * A map for headers values.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Map<String, List<String>> headers;
+        private Map<String, List<String>> headers;
+
+        /**
+         * A body object.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        Object body;
+        private Object body;
+
+        /**
+         * A string additional message.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonProperty
-        String additionalMessage;
+        private String additionalMessage;
+
+        /**
+         * @param type Message type.
+         */
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        /**
+         * @param requestId Message RequestId.
+         */
+        public void setRequestId(String requestId) {
+            this.requestId = requestId;
+        }
+
+        /**
+         * @param url Message Url.
+         */
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        /**
+         * @param headers Message headers.
+         */
+        public void setHeaders(Map<String, List<String>> headers) {
+            this.headers = headers;
+        }
+
+        /**
+         * @param body Message body.
+         */
+        public void setBody(Object body) {
+            this.body = body;
+        }
+
+        /**
+         * @param additionalMessage Additional Message.
+         */
+        public void setAdditionalMessage(String additionalMessage) {
+            this.additionalMessage = additionalMessage;
+        }
     }
 
     /**
      * Class to hold the request info until request completes.
      */
     private class RequestEntry {
-        String requestId;
-        long startTime;
-        String url;
-        Throwable error;
+        /**
+         * A requestId String.
+         */
+        private String requestId;
+
+        /**
+         * A start time.
+         */
+        private long startTime;
+
+        /**
+         * A request url.
+         */
+        private String url;
+        /**
+         * A throwable error.
+         */
+        private Throwable error;
 
         /**
          * Default Constructor.
-         * 
          * @param requestId String id assigned to the request.
          * @param startTime long start time of the request.
          * @param url String request URI.
          */
-        public RequestEntry(String requestId, long startTime, String url) {
+        RequestEntry(final String requestId, long startTime, final String url) {
             this.requestId = requestId;
             this.startTime = startTime;
             this.url = url;

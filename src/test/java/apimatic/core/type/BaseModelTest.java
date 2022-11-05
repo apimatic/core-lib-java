@@ -19,7 +19,6 @@ public class BaseModelTest {
         assertNotNull(value);
     }
 
-
     @Test
     public void testGetValueUsingField() {
         BaseModel baseModel = new BaseModel();
@@ -60,7 +59,7 @@ public class BaseModelTest {
 
         assertEquals(actual, additionalProperties);
     }
-    
+
     @Test
     public void testAdditionalPropertiesSetValue() {
         BaseModel baseModel = new BaseModel();

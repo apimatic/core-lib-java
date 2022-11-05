@@ -10,8 +10,9 @@ public class EndpointConfigurationTest {
 
     @Test
     public void testEndpointConfiguration() {
-        EndpointConfiguration configuration = new EndpointConfiguration(false, RetryOption.DEFAULT,
-                ArraySerializationFormat.INDEXED);
+        EndpointConfiguration configuration =
+                new EndpointConfiguration(false, RetryOption.DEFAULT,
+                        ArraySerializationFormat.INDEXED);
         assertEquals(configuration.getArraySerializationFormat(), ArraySerializationFormat.INDEXED);
         assertEquals(configuration.getRetryOption(), RetryOption.DEFAULT);
         assertEquals(configuration.hasBinaryResponse(), false);

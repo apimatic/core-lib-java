@@ -1,10 +1,9 @@
 package apimatic.core.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import io.apimatic.core.types.BaseModel;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * This is a model class for ComplexType type.
@@ -18,21 +17,18 @@ public class ComplexType {
     /**
      * Default constructor.
      */
-    public ComplexType() {
-    }
+    public ComplexType() {}
 
     /**
      * Initialization constructor.
-     * @param  numberListType  List of Integer value for numberListType.
-     * @param  numberMapType  Map of String, value for numberMapType.
-     * @param  innerComplexType  InnerComplexType value for innerComplexType.
-     * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
+     * @param numberListType List of Integer value for numberListType.
+     * @param numberMapType Map of String, value for numberMapType.
+     * @param innerComplexType InnerComplexType value for innerComplexType.
+     * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
      */
-    public ComplexType(
-            List<Integer> numberListType,
-            Map<String, Integer> numberMapType,
-            InnerComplexType innerComplexType,
-            List<InnerComplexType> innerComplexListType) {
+    public ComplexType(final List<Integer> numberListType, final Map<String, Integer> numberMapType,
+            final InnerComplexType innerComplexType,
+            final List<InnerComplexType> innerComplexListType) {
         this.numberListType = numberListType;
         this.numberMapType = numberMapType;
         this.innerComplexType = innerComplexType;
@@ -41,7 +37,7 @@ public class ComplexType {
 
     /**
      * Getter for NumberListType.
-     * @return Returns the List of Integer
+     * @return Returns the List of Integer.
      */
     @JsonGetter("numberListType")
     public List<Integer> getNumberListType() {
@@ -50,7 +46,7 @@ public class ComplexType {
 
     /**
      * Setter for NumberListType.
-     * @param numberListType Value for List of Integer
+     * @param numberListType Value for List of Integer.
      */
     @JsonSetter("numberListType")
     public void setNumberListType(List<Integer> numberListType) {
@@ -59,7 +55,7 @@ public class ComplexType {
 
     /**
      * Getter for NumberMapType.
-     * @return Returns the Map of String, Integer
+     * @return Returns the Map of String, Integer.
      */
     @JsonGetter("numberMapType")
     public Map<String, Integer> getNumberMapType() {
@@ -68,7 +64,7 @@ public class ComplexType {
 
     /**
      * Setter for NumberMapType.
-     * @param numberMapType Value for Map of String, Integer
+     * @param numberMapType Value for Map of String, Integer.
      */
     @JsonSetter("numberMapType")
     public void setNumberMapType(Map<String, Integer> numberMapType) {
@@ -77,7 +73,7 @@ public class ComplexType {
 
     /**
      * Getter for InnerComplexType.
-     * @return Returns the InnerComplexType
+     * @return Returns the InnerComplexType.
      */
     @JsonGetter("innerComplexType")
     public InnerComplexType getInnerComplexType() {
@@ -86,7 +82,7 @@ public class ComplexType {
 
     /**
      * Setter for InnerComplexType.
-     * @param innerComplexType Value for InnerComplexType
+     * @param innerComplexType Value for InnerComplexType.
      */
     @JsonSetter("innerComplexType")
     public void setInnerComplexType(InnerComplexType innerComplexType) {
@@ -95,7 +91,7 @@ public class ComplexType {
 
     /**
      * Getter for InnerComplexListType.
-     * @return Returns the List of InnerComplexType
+     * @return Returns the List of InnerComplexType.
      */
     @JsonGetter("innerComplexListType")
     public List<InnerComplexType> getInnerComplexListType() {
@@ -104,7 +100,7 @@ public class ComplexType {
 
     /**
      * Setter for InnerComplexListType.
-     * @param innerComplexListType Value for List of InnerComplexType
+     * @param innerComplexListType Value for List of InnerComplexType.
      */
     @JsonSetter("innerComplexListType")
     public void setInnerComplexListType(List<InnerComplexType> innerComplexListType) {
@@ -113,7 +109,7 @@ public class ComplexType {
 
     /**
      * Converts this ComplexType into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -123,13 +119,13 @@ public class ComplexType {
     }
 
     /**
-     * Builds a new {@link ComplexType.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link ComplexType.Builder} object
+     * Builds a new {@link ComplexType.Builder} object. Creates the instance with the state of the
+     * current model.
+     * @return a new {@link ComplexType.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(numberListType, numberMapType, innerComplexType,
-                innerComplexListType);
+        Builder builder =
+                new Builder(numberListType, numberMapType, innerComplexType, innerComplexListType);
         return builder;
     }
 
@@ -145,18 +141,18 @@ public class ComplexType {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  numberListType  List of Integer value for numberListType.
-         * @param  numberMapType  Map of String, value for numberMapType.
-         * @param  innerComplexType  InnerComplexType value for innerComplexType.
-         * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
+         * @param numberListType List of Integer value for numberListType.
+         * @param numberMapType Map of String, value for numberMapType.
+         * @param innerComplexType InnerComplexType value for innerComplexType.
+         * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
          */
-        public Builder(List<Integer> numberListType, Map<String, Integer> numberMapType,
-                InnerComplexType innerComplexType, List<InnerComplexType> innerComplexListType) {
+        public Builder(final List<Integer> numberListType, final Map<String, Integer> numberMapType,
+                final InnerComplexType innerComplexType,
+                final List<InnerComplexType> innerComplexListType) {
             this.numberListType = numberListType;
             this.numberMapType = numberMapType;
             this.innerComplexType = innerComplexType;
@@ -165,8 +161,8 @@ public class ComplexType {
 
         /**
          * Setter for numberListType.
-         * @param  numberListType  List of Integer value for numberListType.
-         * @return Builder
+         * @param numberListType List of Integer value for numberListType.
+         * @return Builder.
          */
         public Builder numberListType(List<Integer> numberListType) {
             this.numberListType = numberListType;
@@ -175,8 +171,8 @@ public class ComplexType {
 
         /**
          * Setter for numberMapType.
-         * @param  numberMapType  Map of String, value for numberMapType.
-         * @return Builder
+         * @param numberMapType Map of String, value for numberMapType.
+         * @return Builder.
          */
         public Builder numberMapType(Map<String, Integer> numberMapType) {
             this.numberMapType = numberMapType;
@@ -185,7 +181,7 @@ public class ComplexType {
 
         /**
          * Setter for innerComplexType.
-         * @param  innerComplexType  InnerComplexType value for innerComplexType.
+         * @param innerComplexType InnerComplexType value for innerComplexType.
          * @return Builder
          */
         public Builder innerComplexType(InnerComplexType innerComplexType) {
@@ -195,8 +191,8 @@ public class ComplexType {
 
         /**
          * Setter for innerComplexListType.
-         * @param  innerComplexListType  List of InnerComplexType value for innerComplexListType.
-         * @return Builder
+         * @param innerComplexListType List of InnerComplexType value for innerComplexListType.
+         * @return Builder.
          */
         public Builder innerComplexListType(List<InnerComplexType> innerComplexListType) {
             this.innerComplexListType = innerComplexListType;
@@ -205,7 +201,7 @@ public class ComplexType {
 
         /**
          * Builds a new {@link ComplexType} object using the set fields.
-         * @return {@link ComplexType}
+         * @return {@link ComplexType}.
          */
         public ComplexType build() {
             return new ComplexType(numberListType, numberMapType, innerComplexType,

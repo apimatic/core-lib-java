@@ -10,40 +10,42 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * This is a model class for Atom type.
  */
 public class Atom {
+    /**
+     * A number of electrons integer.
+     */
     private int numberOfElectrons;
+    /**
+     * A number of protons integer.
+     */
     private Integer numberOfProtons;
 
     /**
      * Default constructor.
      */
-    public Atom() {
-    }
+    public Atom() {}
 
     /**
      * Initialization constructor.
-     * @param  numberOfElectrons  int value for numberOfElectrons.
-     * @param  numberOfProtons  Integer value for numberOfProtons.
+     * @param numberOfElectrons int value for numberOfElectrons.
+     * @param numberOfProtons Integer value for numberOfProtons.
      */
-    public Atom(
-            int numberOfElectrons,
-            Integer numberOfProtons) {
+    public Atom(int numberOfElectrons, final Integer numberOfProtons) {
         this.numberOfElectrons = numberOfElectrons;
         this.numberOfProtons = numberOfProtons;
     }
 
     /**
      * Initialization constructor.
-     * @param  numberOfElectrons  int value for numberOfElectrons.
+     * @param numberOfElectrons int value for numberOfElectrons.
      */
     @JsonCreator
-    private Atom(
-            @JsonProperty("NumberOfElectrons") int numberOfElectrons) {
+    private Atom(@JsonProperty("NumberOfElectrons") int numberOfElectrons) {
         this.numberOfElectrons = numberOfElectrons;
     }
 
     /**
      * Getter for NumberOfElectrons.
-     * @return Returns the int
+     * @return Returns the int.
      */
     @JsonGetter("NumberOfElectrons")
     public int getNumberOfElectrons() {
@@ -52,7 +54,7 @@ public class Atom {
 
     /**
      * Setter for NumberOfElectrons.
-     * @param numberOfElectrons Value for int
+     * @param numberOfElectrons Value for int.
      */
     @JsonSetter("NumberOfElectrons")
     public void setNumberOfElectrons(int numberOfElectrons) {
@@ -61,7 +63,7 @@ public class Atom {
 
     /**
      * Getter for NumberOfProtons.
-     * @return Returns the Integer
+     * @return Returns the Integer.
      */
     @JsonGetter("NumberOfProtons")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -71,7 +73,7 @@ public class Atom {
 
     /**
      * Setter for NumberOfProtons.
-     * @param numberOfProtons Value for Integer
+     * @param numberOfProtons Value for Integer.
      */
     @JsonSetter("NumberOfProtons")
     public void setNumberOfProtons(Integer numberOfProtons) {
@@ -80,7 +82,7 @@ public class Atom {
 
     /**
      * Converts this Atom into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -89,13 +91,12 @@ public class Atom {
     }
 
     /**
-     * Builds a new {@link Atom.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link Atom.Builder} object
+     * Builds a new {@link Atom.Builder} object. Creates the instance with the state of the current
+     * model.
+     * @return a new {@link Atom.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(numberOfElectrons)
-                .numberOfProtons(getNumberOfProtons());
+        Builder builder = new Builder(numberOfElectrons).numberOfProtons(getNumberOfProtons());
         return builder;
     }
 
@@ -103,18 +104,23 @@ public class Atom {
      * Class to build instances of {@link Atom}.
      */
     public static class Builder {
+        /**
+         * A number of electrons.
+         */
         private int numberOfElectrons;
+        /**
+         * A number of protons.
+         */
         private Integer numberOfProtons;
 
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  numberOfElectrons  int value for numberOfElectrons.
+         * @param numberOfElectrons int value for numberOfElectrons.
          */
         public Builder(int numberOfElectrons) {
             this.numberOfElectrons = numberOfElectrons;
@@ -122,8 +128,8 @@ public class Atom {
 
         /**
          * Setter for numberOfElectrons.
-         * @param  numberOfElectrons  int value for numberOfElectrons.
-         * @return Builder
+         * @param numberOfElectrons int value for numberOfElectrons.
+         * @return Builder.
          */
         public Builder numberOfElectrons(int numberOfElectrons) {
             this.numberOfElectrons = numberOfElectrons;
@@ -132,8 +138,8 @@ public class Atom {
 
         /**
          * Setter for numberOfProtons.
-         * @param  numberOfProtons  Integer value for numberOfProtons.
-         * @return Builder
+         * @param numberOfProtons Integer value for numberOfProtons.
+         * @return Builder.
          */
         public Builder numberOfProtons(Integer numberOfProtons) {
             this.numberOfProtons = numberOfProtons;
@@ -142,7 +148,7 @@ public class Atom {
 
         /**
          * Builds a new {@link Atom} object using the set fields.
-         * @return {@link Atom}
+         * @return {@link Atom}.
          */
         public Atom build() {
             return new Atom(numberOfElectrons, numberOfProtons);

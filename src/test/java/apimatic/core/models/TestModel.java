@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import io.apimatic.core.types.BaseModel;
 import io.apimatic.coreinterfaces.http.Context;
 
-
-
+/**
+ * A test model for test cases.
+ */
 public class TestModel extends BaseModel {
     private Context context;
     private String name;
@@ -20,15 +21,18 @@ public class TestModel extends BaseModel {
 
     /**
      * Initialization constructor.
-     * 
      * @param name String value for name.
      * @param field String value for field.
      */
-    public TestModel(String name, String field) {
+    public TestModel(final String name, final String field) {
         this.name = name;
         this.field = field;
     }
 
+    /**
+     * Getter for the context.
+     * @return {@link Context}.
+     */
     @JsonIgnore
     public Context getContext() {
         return context;
@@ -36,8 +40,7 @@ public class TestModel extends BaseModel {
 
     /**
      * Getter for Name.
-     * 
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("name")
     public String getName() {
@@ -46,8 +49,7 @@ public class TestModel extends BaseModel {
 
     /**
      * Setter for Name.
-     * 
-     * @param name Value for String
+     * @param name Value for String.
      */
     @JsonSetter("name")
     public void setName(String name) {
@@ -56,8 +58,7 @@ public class TestModel extends BaseModel {
 
     /**
      * Getter for Field.
-     * 
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("field")
     public String getField() {
@@ -66,8 +67,7 @@ public class TestModel extends BaseModel {
 
     /**
      * Setter for Field.
-     * 
-     * @param field Value for String
+     * @param field Value for String.
      */
     @JsonSetter("field")
     public void setField(String field) {
@@ -76,8 +76,7 @@ public class TestModel extends BaseModel {
 
     /**
      * Converts this TestModel into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -88,8 +87,7 @@ public class TestModel extends BaseModel {
     /**
      * Builds a new {@link TestModel.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link TestModel.Builder} object
+     * @return a new {@link TestModel.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(name, field);
@@ -111,11 +109,10 @@ public class TestModel extends BaseModel {
 
         /**
          * Initialization constructor.
-         * 
          * @param name String value for name.
          * @param field String value for field.
          */
-        public Builder(String name, String field) {
+        public Builder(final String name, final String field) {
             this.name = name;
             this.field = field;
         }
@@ -123,9 +120,8 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for httpContext.
-         * 
          * @param httpContext {@link Context} value for httpContext.
-         * @return Builder
+         * @return Builder.
          */
         public Builder httpContext(Context httpContext) {
             this.context = httpContext;
@@ -134,9 +130,8 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for name.
-         * 
          * @param name String value for name.
-         * @return Builder
+         * @return Builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -145,9 +140,8 @@ public class TestModel extends BaseModel {
 
         /**
          * Setter for field.
-         * 
          * @param field String value for field.
-         * @return Builder
+         * @return Builder.
          */
         public Builder field(String field) {
             this.field = field;
@@ -156,8 +150,7 @@ public class TestModel extends BaseModel {
 
         /**
          * Builds a new {@link TestModel} object using the set fields.
-         * 
-         * @return {@link TestModel}
+         * @return {@link TestModel}.
          */
         public TestModel build() {
             TestModel model = new TestModel(name, field);

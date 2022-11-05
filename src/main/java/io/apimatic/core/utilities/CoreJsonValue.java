@@ -14,22 +14,23 @@ import com.fasterxml.jackson.databind.node.TextNode;
  * Wrapper class for JSON value.
  */
 public class CoreJsonValue {
+    /**
+     * A json value.
+     */
     @com.fasterxml.jackson.annotation.JsonValue
-    private JsonNode value;
+    private final JsonNode value;
 
     /**
      * Initialization constructor.
-     * 
      * @param value The JSON of type JsonNode.
      */
     @JsonCreator
-    protected CoreJsonValue(JsonNode value) {
+    protected CoreJsonValue(final JsonNode value) {
         this.value = value;
     }
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The string value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -42,7 +43,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The boolean value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -55,7 +55,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The integer value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -68,7 +67,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The long value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -81,7 +79,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The double value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -94,7 +91,6 @@ public class CoreJsonValue {
 
     /**
      * Initializes JsonValue instance with provided value.
-     * 
      * @param value The double value to initialize with.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -102,13 +98,12 @@ public class CoreJsonValue {
         if (value == null) {
             return new CoreJsonValue(null);
         }
-        return new CoreJsonValue(CoreHelper.mapper.valueToTree(value));
+        return new CoreJsonValue(CoreHelper.getMapper().valueToTree(value));
     }
 
     /**
      * Initializes JsonValue instance with provided list of values.
-     * 
-     * @param <T> The list type
+     * @param <T> The list type.
      * @param values The list of values of given type.
      * @return The {@link CoreJsonValue} instance.
      */
@@ -116,12 +111,11 @@ public class CoreJsonValue {
         if (values == null) {
             return new CoreJsonValue(null);
         }
-        return new CoreJsonValue(CoreHelper.mapper.valueToTree(values));
+        return new CoreJsonValue(CoreHelper.getMapper().valueToTree(values));
     }
 
     /**
      * Getter for stored JSON object.
-     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -130,13 +124,12 @@ public class CoreJsonValue {
 
     /**
      * Converts the JSON into string.
-     * 
-     * @return String representation of JSON
+     * @return String representation of JSON.
      */
     @Override
     public String toString() {
         try {
-            return CoreHelper.mapper.writeValueAsString(value);
+            return CoreHelper.getMapper().writeValueAsString(value);
         } catch (JsonProcessingException e) {
             return null;
         }

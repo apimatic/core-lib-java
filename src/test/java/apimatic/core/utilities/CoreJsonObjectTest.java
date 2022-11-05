@@ -1,4 +1,4 @@
-package apimatic.core.static_classes;
+package apimatic.core.utilities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -39,13 +39,15 @@ public class CoreJsonObjectTest {
 
     @Test
     public void testGetStoredObject() throws IOException {
-        String value = "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
-                + "\" : \"090078601\",\"first name\" : \"Adeel\",\"last name\" : \"Ali\","
-                + "\"address_boss\" : \"nust\"}";
+        String value =
+                "{\"company name\" : \"APIMatic\",\"address\" : \"nust\",\"cell number"
+                        + "\" : \"090078601\",\"first name\" : \"Adeel\",\"last name\" : \"Ali\","
+                        + "\"address_boss\" : \"nust\"}";
 
         // stub
         String expected =
-                "{company name=APIMatic, address=nust, cell number=090078601, first name=Adeel, last name=Ali, address_boss=nust}";
+                "{company name=APIMatic, address=nust, cell number=090078601, "
+                        + "first name=Adeel, last name=Ali, address_boss=nust}";
 
         CoreJsonObject jsonObject = CoreJsonObject.fromJsonString(value);
         String actual = String.valueOf(jsonObject.getStoredObject());

@@ -19,32 +19,31 @@ public class SimpleDate {
     /**
      * Default constructor.
      */
-    public SimpleDate() {
-    }
+    public SimpleDate() {}
 
     /**
      * Initialization constructor.
-     * @param  dateNullable  LocalDate value for dateNullable.
-     * @param  date  LocalDate value for date.
+     * @param dateNullable LocalDate value for dateNullable.
+     * @param date LocalDate value for date.
      */
-    public SimpleDate(
-            LocalDate dateNullable,
-            LocalDate date) {
+    public SimpleDate(final LocalDate dateNullable, final LocalDate date) {
         this.dateNullable = OptionalNullable.of(dateNullable);
         this.date = date;
     }
 
     /**
      * Internal initialization constructor.
+     * @param dateNullable LocalDate value for dateNullable.
+     * @param date LocalDate value for date.
      */
-    protected SimpleDate(OptionalNullable<LocalDate> dateNullable, LocalDate date) {
+    protected SimpleDate(final OptionalNullable<LocalDate> dateNullable, final LocalDate date) {
         this.dateNullable = dateNullable;
         this.date = date;
     }
 
     /**
      * Internal Getter for DateNullable.
-     * @return Returns the Internal LocalDate
+     * @return Returns the Internal LocalDate.
      */
     @JsonGetter("dateNullable")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -55,7 +54,7 @@ public class SimpleDate {
 
     /**
      * Getter for DateNullable.
-     * @return Returns the LocalDate
+     * @return Returns the LocalDate.
      */
     public LocalDate getDateNullable() {
         return OptionalNullable.getFrom(dateNullable);
@@ -63,7 +62,7 @@ public class SimpleDate {
 
     /**
      * Setter for DateNullable.
-     * @param dateNullable Value for LocalDate
+     * @param dateNullable Value for LocalDate.
      */
     @JsonSetter("dateNullable")
     @JsonDeserialize(using = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -80,7 +79,7 @@ public class SimpleDate {
 
     /**
      * Getter for Date.
-     * @return Returns the LocalDate
+     * @return Returns the LocalDate.
      */
     @JsonGetter("date")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -91,7 +90,7 @@ public class SimpleDate {
 
     /**
      * Setter for Date.
-     * @param date Value for LocalDate
+     * @param date Value for LocalDate.
      */
     @JsonSetter("date")
     @JsonDeserialize(using = LocalDateTimeHelper.SimpleDateDeserializer.class)
@@ -101,7 +100,7 @@ public class SimpleDate {
 
     /**
      * Converts this SimpleDate into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -109,13 +108,12 @@ public class SimpleDate {
     }
 
     /**
-     * Builds a new {@link SimpleDate.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link SimpleDate.Builder} object
+     * Builds a new {@link SimpleDate.Builder} object. Creates the instance with the state of the
+     * current model.
+     * @return a new {@link SimpleDate.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder()
-                .date(getDate());
+        Builder builder = new Builder().date(getDate());
         builder.dateNullable = internalGetDateNullable();
         return builder;
     }
@@ -131,8 +129,8 @@ public class SimpleDate {
 
         /**
          * Setter for dateNullable.
-         * @param  dateNullable  LocalDate value for dateNullable.
-         * @return Builder
+         * @param dateNullable LocalDate value for dateNullable.
+         * @return Builder.
          */
         public Builder dateNullable(LocalDate dateNullable) {
             this.dateNullable = OptionalNullable.of(dateNullable);
@@ -141,7 +139,7 @@ public class SimpleDate {
 
         /**
          * UnSetter for dateNullable.
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateNullable() {
             dateNullable = null;
@@ -150,8 +148,8 @@ public class SimpleDate {
 
         /**
          * Setter for date.
-         * @param  date  LocalDate value for date.
-         * @return Builder
+         * @param date LocalDate value for date.
+         * @return Builder.
          */
         public Builder date(LocalDate date) {
             this.date = date;
@@ -160,7 +158,7 @@ public class SimpleDate {
 
         /**
          * Builds a new {@link SimpleDate} object using the set fields.
-         * @return {@link SimpleDate}
+         * @return {@link SimpleDate}.
          */
         public SimpleDate build() {
             return new SimpleDate(dateNullable, date);

@@ -17,23 +17,15 @@ public class DateTimeCases {
     public DateTimeCases() {}
 
     /**
-     * Initialization constructor.
-     * 
-     * @param rfc3339vsString DateTimeCasesRfc3339vsString value for rfc3339vsString.
-     * @param allOneOf DateTimeCasesAllOneOf value for allOneOf.
-     * @param allOuterArray List of DateTimeCasesAllOuterArray value for allOuterArray.
-     * @param datevsArray DateTimeCasesDatevsArray value for datevsArray.
      * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
      */
-    public DateTimeCases(DateTimeCasesMapvsArray mapvsArray) {
+    public DateTimeCases(final DateTimeCasesMapvsArray mapvsArray) {
         this.mapvsArray = mapvsArray;
     }
 
-
     /**
      * Getter for MapvsArray.
-     * 
-     * @return Returns the DateTimeCasesMapvsArray
+     * @return Returns the DateTimeCasesMapvsArray.
      */
     @JsonGetter("mapvsArray")
     public DateTimeCasesMapvsArray getMapvsArray() {
@@ -42,8 +34,7 @@ public class DateTimeCases {
 
     /**
      * Setter for MapvsArray.
-     * 
-     * @param mapvsArray Value for DateTimeCasesMapvsArray
+     * @param mapvsArray Value for DateTimeCasesMapvsArray.
      */
     @JsonSetter("mapvsArray")
     public void setMapvsArray(DateTimeCasesMapvsArray mapvsArray) {
@@ -52,8 +43,7 @@ public class DateTimeCases {
 
     /**
      * Converts this DateTimeCases into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -63,8 +53,7 @@ public class DateTimeCases {
     /**
      * Builds a new {@link DateTimeCases.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link DateTimeCases.Builder} object
+     * @return a new {@link DateTimeCases.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(mapvsArray);
@@ -84,22 +73,16 @@ public class DateTimeCases {
 
         /**
          * Initialization constructor.
-         * 
-         * @param rfc3339vsString DateTimeCasesRfc3339vsString value for rfc3339vsString.
-         * @param allOneOf DateTimeCasesAllOneOf value for allOneOf.
-         * @param allOuterArray List of DateTimeCasesAllOuterArray value for allOuterArray.
-         * @param datevsArray DateTimeCasesDatevsArray value for datevsArray.
          * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
          */
-        public Builder(DateTimeCasesMapvsArray mapvsArray) {
+        public Builder(final DateTimeCasesMapvsArray mapvsArray) {
             this.mapvsArray = mapvsArray;
         }
 
         /**
          * Setter for mapvsArray.
-         * 
          * @param mapvsArray DateTimeCasesMapvsArray value for mapvsArray.
-         * @return Builder
+         * @return Builder.
          */
         public Builder mapvsArray(DateTimeCasesMapvsArray mapvsArray) {
             this.mapvsArray = mapvsArray;
@@ -108,8 +91,7 @@ public class DateTimeCases {
 
         /**
          * Builds a new {@link DateTimeCases} object using the set fields.
-         * 
-         * @return {@link DateTimeCases}
+         * @return {@link DateTimeCases}.
          */
         public DateTimeCases build() {
             return new DateTimeCases(mapvsArray);

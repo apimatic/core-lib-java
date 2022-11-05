@@ -9,12 +9,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 /**
  * This is a model class for Evening type.
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "sessionType",
-        defaultImpl = Evening.class,
-        visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "sessionType", defaultImpl = Evening.class, visible = true)
 @JsonInclude(Include.ALWAYS)
 public class Evening {
     private String startsAt;
@@ -31,16 +27,13 @@ public class Evening {
 
     /**
      * Initialization constructor.
-     * @param  startsAt  String value for startsAt.
-     * @param  endsAt  String value for endsAt.
-     * @param  offerDinner  boolean value for offerDinner.
-     * @param  sessionType  String value for sessionType.
+     * @param startsAt String value for startsAt.
+     * @param endsAt String value for endsAt.
+     * @param offerDinner boolean value for offerDinner.
+     * @param sessionType String value for sessionType.
      */
-    public Evening(
-            String startsAt,
-            String endsAt,
-            boolean offerDinner,
-            String sessionType) {
+    public Evening(final String startsAt, final String endsAt, boolean offerDinner,
+            final String sessionType) {
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.offerDinner = offerDinner;
@@ -48,9 +41,8 @@ public class Evening {
     }
 
     /**
-     * Getter for StartsAt.
-     * Session start time
-     * @return Returns the String
+     * Getter for StartsAt. Session start time.
+     * @return Returns the String.
      */
     @JsonGetter("startsAt")
     public String getStartsAt() {
@@ -58,9 +50,8 @@ public class Evening {
     }
 
     /**
-     * Setter for StartsAt.
-     * Session start time
-     * @param startsAt Value for String
+     * Setter for StartsAt. Session start time.
+     * @param startsAt Value for String.
      */
     @JsonSetter("startsAt")
     public void setStartsAt(String startsAt) {
@@ -68,9 +59,8 @@ public class Evening {
     }
 
     /**
-     * Getter for EndsAt.
-     * Session end time
-     * @return Returns the String
+     * Getter for EndsAt. Session end time.
+     * @return Returns the String.
      */
     @JsonGetter("endsAt")
     public String getEndsAt() {
@@ -78,9 +68,8 @@ public class Evening {
     }
 
     /**
-     * Setter for EndsAt.
-     * Session end time
-     * @param endsAt Value for String
+     * Setter for EndsAt. Session end time.
+     * @param endsAt Value for String.
      */
     @JsonSetter("endsAt")
     public void setEndsAt(String endsAt) {
@@ -88,9 +77,8 @@ public class Evening {
     }
 
     /**
-     * Getter for OfferDinner.
-     * Offer dinner during session
-     * @return Returns the boolean
+     * Getter for OfferDinner. Offer dinner during session.
+     * @return Returns the boolean.
      */
     @JsonGetter("offerDinner")
     public boolean getOfferDinner() {
@@ -98,9 +86,8 @@ public class Evening {
     }
 
     /**
-     * Setter for OfferDinner.
-     * Offer dinner during session
-     * @param offerDinner Value for boolean
+     * Setter for OfferDinner. Offer dinner during session.
+     * @param offerDinner Value for boolean.
      */
     @JsonSetter("offerDinner")
     public void setOfferDinner(boolean offerDinner) {
@@ -109,7 +96,7 @@ public class Evening {
 
     /**
      * Getter for SessionType.
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("sessionType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -119,7 +106,7 @@ public class Evening {
 
     /**
      * Setter for SessionType.
-     * @param sessionType Value for String
+     * @param sessionType Value for String.
      */
     @JsonSetter("sessionType")
     public void setSessionType(String sessionType) {
@@ -128,7 +115,7 @@ public class Evening {
 
     /**
      * Converts this Evening into string format.
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -137,13 +124,12 @@ public class Evening {
     }
 
     /**
-     * Builds a new {@link Evening.Builder} object.
-     * Creates the instance with the state of the current model.
-     * @return a new {@link Evening.Builder} object
+     * Builds a new {@link Evening.Builder} object. Creates the instance with the state of the
+     * current model.
+     * @return a new {@link Evening.Builder} object.
      */
     public Builder toBuilder() {
-        Builder builder = new Builder(startsAt, endsAt, offerDinner)
-                .sessionType(getSessionType());
+        Builder builder = new Builder(startsAt, endsAt, offerDinner).sessionType(getSessionType());
         return builder;
     }
 
@@ -159,16 +145,15 @@ public class Evening {
         /**
          * Initialization constructor.
          */
-        public Builder() {
-        }
+        public Builder() {}
 
         /**
          * Initialization constructor.
-         * @param  startsAt  String value for startsAt.
-         * @param  endsAt  String value for endsAt.
-         * @param  offerDinner  boolean value for offerDinner.
+         * @param startsAt String value for startsAt.
+         * @param endsAt String value for endsAt.
+         * @param offerDinner boolean value for offerDinner.
          */
-        public Builder(String startsAt, String endsAt, boolean offerDinner) {
+        public Builder(final String startsAt, final String endsAt, boolean offerDinner) {
             this.startsAt = startsAt;
             this.endsAt = endsAt;
             this.offerDinner = offerDinner;
@@ -176,8 +161,8 @@ public class Evening {
 
         /**
          * Setter for startsAt.
-         * @param  startsAt  String value for startsAt.
-         * @return Builder
+         * @param startsAt String value for startsAt.
+         * @return Builder.
          */
         public Builder startsAt(String startsAt) {
             this.startsAt = startsAt;
@@ -186,8 +171,8 @@ public class Evening {
 
         /**
          * Setter for endsAt.
-         * @param  endsAt  String value for endsAt.
-         * @return Builder
+         * @param endsAt String value for endsAt.
+         * @return Builder.
          */
         public Builder endsAt(String endsAt) {
             this.endsAt = endsAt;
@@ -196,8 +181,8 @@ public class Evening {
 
         /**
          * Setter for offerDinner.
-         * @param  offerDinner  boolean value for offerDinner.
-         * @return Builder
+         * @param offerDinner boolean value for offerDinner.
+         * @return Builder.
          */
         public Builder offerDinner(boolean offerDinner) {
             this.offerDinner = offerDinner;
@@ -206,8 +191,8 @@ public class Evening {
 
         /**
          * Setter for sessionType.
-         * @param  sessionType  String value for sessionType.
-         * @return Builder
+         * @param sessionType String value for sessionType.
+         * @return Builder.
          */
         public Builder sessionType(String sessionType) {
             this.sessionType = sessionType;
@@ -216,7 +201,7 @@ public class Evening {
 
         /**
          * Builds a new {@link Evening} object using the set fields.
-         * @return {@link Evening}
+         * @return {@link Evening}.
          */
         public Evening build() {
             return new Evening(startsAt, endsAt, offerDinner, sessionType);

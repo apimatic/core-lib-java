@@ -7,19 +7,25 @@ import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
  * QueryAuth is an implementation of {@link Authentication} that supports HTTP authentication
- * through Query parameters
- *
+ * through Query parameters.
  */
 public class QueryAuth implements Authentication {
 
+    /**
+     * A map of authentication parameters.
+     */
     private Map<String, String> authParams = new HashMap<>();
 
-    public QueryAuth(Map<String, String> authParams) {
+    /**
+     * @param authParams Map of authentication parameters.
+     */
+    public QueryAuth(final Map<String, String> authParams) {
         this.authParams = authParams;
     }
 
     /**
-     * Apply the Query authentication
+     * Apply the Query authentication.
+     * @param httpRequest A httpRequest
      */
     @Override
     public Request apply(Request httpRequest) {
@@ -28,9 +34,9 @@ public class QueryAuth implements Authentication {
         });
         return httpRequest;
     }
-    
+
     /**
-     * Validate the query authentication
+     * Validate the query authentication.
      */
     @Override
     public void validate() {

@@ -24,28 +24,29 @@ public class UnixDateMap {
 
     /**
      * Initialization constructor.
-     * 
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
      */
-    public UnixDateMap(Map<String, LocalDateTime> dateTime1, Map<String, LocalDateTime> dateTime) {
+    public UnixDateMap(final Map<String, LocalDateTime> dateTime1,
+            final Map<String, LocalDateTime> dateTime) {
         this.dateTime = OptionalNullable.of(dateTime);
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal initialization constructor.
+     * @param dateTime1 Map of String, value for dateTime1.
+     * @param dateTime Map of String, value for dateTime.
      */
-    protected UnixDateMap(Map<String, LocalDateTime> dateTime1,
-            OptionalNullable<Map<String, LocalDateTime>> dateTime) {
+    protected UnixDateMap(final Map<String, LocalDateTime> dateTime1,
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
         this.dateTime = dateTime;
         this.dateTime1 = dateTime1;
     }
 
     /**
      * Internal Getter for DateTime.
-     * 
-     * @return Returns the Internal Map of String, LocalDateTime
+     * @return Returns the Internal Map of String, LocalDateTime.
      */
     @JsonGetter("dateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,8 +57,7 @@ public class UnixDateMap {
 
     /**
      * Getter for DateTime.
-     * 
-     * @return Returns the Map of String, LocalDateTime
+     * @return Returns the Map of String, LocalDateTime.
      */
     public Map<String, LocalDateTime> getDateTime() {
         return OptionalNullable.getFrom(dateTime);
@@ -65,8 +65,7 @@ public class UnixDateMap {
 
     /**
      * Setter for DateTime.
-     * 
-     * @param dateTime Value for Map of String, LocalDateTime
+     * @param dateTime Value for Map of String, LocalDateTime.
      */
     @JsonSetter("dateTime")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -83,8 +82,7 @@ public class UnixDateMap {
 
     /**
      * Getter for DateTime1.
-     * 
-     * @return Returns the Map of String, LocalDateTime
+     * @return Returns the Map of String, LocalDateTime.
      */
     @JsonGetter("dateTime1")
     @JsonSerialize(contentUsing = LocalDateTimeHelper.UnixTimestampSerializer.class)
@@ -94,8 +92,7 @@ public class UnixDateMap {
 
     /**
      * Setter for DateTime1.
-     * 
-     * @param dateTime1 Value for Map of String, LocalDateTime
+     * @param dateTime1 Value for Map of String, LocalDateTime.
      */
     @JsonSetter("dateTime1")
     @JsonDeserialize(contentUsing = LocalDateTimeHelper.UnixTimestampDeserializer.class)
@@ -105,8 +102,7 @@ public class UnixDateMap {
 
     /**
      * Converts this UnixDateMap into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -116,8 +112,7 @@ public class UnixDateMap {
     /**
      * Builds a new {@link UnixDateMap.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link UnixDateMap.Builder} object
+     * @return a new {@link UnixDateMap.Builder} object.
      */
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
@@ -139,18 +134,16 @@ public class UnixDateMap {
 
         /**
          * Initialization constructor.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
          */
-        public Builder(Map<String, LocalDateTime> dateTime1) {
+        public Builder(final Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
         }
 
         /**
          * Setter for dateTime1.
-         * 
          * @param dateTime1 Map of String, value for dateTime1.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime1(Map<String, LocalDateTime> dateTime1) {
             this.dateTime1 = dateTime1;
@@ -159,9 +152,8 @@ public class UnixDateMap {
 
         /**
          * Setter for dateTime.
-         * 
          * @param dateTime Map of String, value for dateTime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dateTime(Map<String, LocalDateTime> dateTime) {
             this.dateTime = OptionalNullable.of(dateTime);
@@ -170,8 +162,7 @@ public class UnixDateMap {
 
         /**
          * UnSetter for dateTime.
-         * 
-         * @return Builder
+         * @return Builder.
          */
         public Builder unsetDateTime() {
             dateTime = null;
@@ -180,8 +171,7 @@ public class UnixDateMap {
 
         /**
          * Builds a new {@link UnixDateMap} object using the set fields.
-         * 
-         * @return {@link UnixDateMap}
+         * @return {@link UnixDateMap}.
          */
         public UnixDateMap build() {
             return new UnixDateMap(dateTime1, dateTime);

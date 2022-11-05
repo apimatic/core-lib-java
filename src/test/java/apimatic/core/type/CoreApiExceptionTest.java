@@ -16,13 +16,21 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class CoreApiExceptionTest {
 
-
+    /**
+     * Initializes mocks annotated with Mock.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule();
 
+    /**
+     * Mock of {@link Context}.
+     */
     @Mock
     private Context context;
 
+    /**
+     * Mock of {@link Response}.
+     */
     @Mock
     private Response response;
 
@@ -36,8 +44,9 @@ public class CoreApiExceptionTest {
     public void testCoreApiExceptionContext() {
         String excpetionMessage = "Http Response Not OK";
 
-        InputStream inputStream = new ByteArrayInputStream(
-                new CoreApiException(excpetionMessage).toString().getBytes());
+        InputStream inputStream =
+                new ByteArrayInputStream(
+                        new CoreApiException(excpetionMessage).toString().getBytes());
 
         when(context.getResponse()).thenReturn(response);
         when(response.getRawBody()).thenReturn(inputStream);

@@ -9,22 +9,23 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Wrapper class for JSON object.
  */
 public class CoreJsonObject {
+    /**
+     * A json value representation.
+     */
     @com.fasterxml.jackson.annotation.JsonValue
     private JsonNode jsonNode;
 
     /**
      * Initialization constructor.
-     * 
      * @param jsonNode The JSON of type JsonNode.
      */
     @JsonCreator
-    protected CoreJsonObject(JsonNode jsonNode) {
+    protected CoreJsonObject(final JsonNode jsonNode) {
         this.jsonNode = jsonNode;
     }
 
     /**
      * Initializes JsonObject with provided JSON.
-     * 
      * @param jsonString The JSON string.
      * @return The {@link CoreJsonObject} instance.
      * @throws IOException signals that provided JSON string does not contain a valid JSON object.
@@ -33,7 +34,7 @@ public class CoreJsonObject {
         if (jsonString == null) {
             return new CoreJsonObject(null);
         }
-        JsonNode node = CoreHelper.mapper.readTree(jsonString);
+        JsonNode node = CoreHelper.getMapper().readTree(jsonString);
         if (node.isObject()) {
             return new CoreJsonObject(node);
         }
@@ -42,7 +43,6 @@ public class CoreJsonObject {
 
     /**
      * Getter for stored JSON object.
-     * 
      * @return The stored JSON as Object.
      */
     public Object getStoredObject() {
@@ -51,12 +51,11 @@ public class CoreJsonObject {
 
     /**
      * Converts the JSON into string.
-     * 
-     * @return String representation of JSON
+     * @return String representation of JSON.
      */
     public String toString() {
         try {
-            return CoreHelper.mapper.writeValueAsString(jsonNode);
+            return CoreHelper.getMapper().writeValueAsString(jsonNode);
         } catch (JsonProcessingException e) {
             return null;
         }

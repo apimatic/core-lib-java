@@ -33,7 +33,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     * 
      * @param date LocalDate value for date.
      * @return The DateCase object.
      */
@@ -43,7 +42,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     * 
      * @param dateTime LocalDateTime value for dateTime.
      * @return The DateTimeCase object.
      */
@@ -53,7 +51,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * One-of type initialization method.
-     *
      * @param dateTime2 LocalDateTime value for dateTime2.
      * @return The DateTime2Case object.
      */
@@ -63,7 +60,6 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * Method to match from the provided one-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The one-of type cases callback.
      * @return The one-of matched case.
@@ -72,14 +68,25 @@ public abstract class SendParamsFormDateTime {
 
     /**
      * This is interface for one-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
+        /**
+         * @param date An instance of {@link LocalDate}.
+         * @return R.
+         */
         R date(LocalDate date);
 
+        /**
+         * @param dateTime An instance of {@link LocalDateTime}.
+         * @return R.
+         */
         R dateTime(LocalDateTime dateTime);
 
+        /**
+         * @param dateTime2 An instance of {@link LocalDateTime}.
+         * @return R.
+         */
         R dateTime2(LocalDateTime dateTime2);
     }
 
@@ -94,7 +101,7 @@ public abstract class SendParamsFormDateTime {
         @JsonSerialize(using = DateHelper.SimpleDateSerializer.class)
         private LocalDate date;
 
-        DateCase(LocalDate date) {
+        DateCase(final LocalDate date) {
             this.date = date;
         }
 
@@ -104,7 +111,7 @@ public abstract class SendParamsFormDateTime {
         }
 
         @JsonCreator
-        private DateCase(JsonNode jsonNode) throws IOException {
+        private DateCase(final JsonNode jsonNode) throws IOException {
             this.date = DateHelper.fromSimpleDate(jsonNode.asText());
         }
 
@@ -125,7 +132,7 @@ public abstract class SendParamsFormDateTime {
         @JsonSerialize(using = LocalDateTimeHelper.UnixTimestampSerializer.class)
         private LocalDateTime dateTime;
 
-        DateTimeCase(LocalDateTime dateTime) {
+        DateTimeCase(final LocalDateTime dateTime) {
             this.dateTime = dateTime;
         }
 
@@ -135,7 +142,7 @@ public abstract class SendParamsFormDateTime {
         }
 
         @JsonCreator
-        private DateTimeCase(JsonNode jsonNode) throws IOException {
+        private DateTimeCase(final JsonNode jsonNode) throws IOException {
             this.dateTime = LocalDateTimeHelper.fromUnixTimestamp(jsonNode.asText());
         }
 
@@ -156,7 +163,7 @@ public abstract class SendParamsFormDateTime {
         @JsonSerialize(using = LocalDateTimeHelper.Rfc8601DateTimeSerializer.class)
         private LocalDateTime dateTime2;
 
-        DateTime2Case(LocalDateTime dateTime2) {
+        DateTime2Case(final LocalDateTime dateTime2) {
             this.dateTime2 = dateTime2;
         }
 
@@ -166,7 +173,7 @@ public abstract class SendParamsFormDateTime {
         }
 
         @JsonCreator
-        private DateTime2Case(JsonNode jsonNode) throws IOException {
+        private DateTime2Case(final JsonNode jsonNode) throws IOException {
             this.dateTime2 = LocalDateTimeHelper.fromRfc8601DateTime(jsonNode.asText());
         }
 
@@ -191,5 +198,4 @@ public abstract class SendParamsFormDateTime {
                     Arrays.asList(DateCase.class, DateTimeCase.class, DateTime2Case.class), true);
         }
     }
-
 }

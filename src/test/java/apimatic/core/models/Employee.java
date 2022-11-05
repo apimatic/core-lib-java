@@ -1,5 +1,8 @@
 package apimatic.core.models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -10,9 +13,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * This is a model class for Employee type.
@@ -41,7 +41,6 @@ public class Employee extends Person {
 
     /**
      * Initialization constructor.
-     * 
      * @param address String value for address.
      * @param age long value for age.
      * @param birthday LocalDate value for birthday.
@@ -57,10 +56,11 @@ public class Employee extends Person {
      * @param boss Person value for boss.
      * @param personType String value for personType.
      */
-    public Employee(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-            String name, String uid, String department, List<Person> dependents,
-            LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays, Person boss,
-            String personType) {
+    public Employee(final String address, long age, final LocalDate birthday,
+            final LocalDateTime birthtime, final String name, final String uid,
+            final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+            final Days joiningDay, int salary, final List<Days> workingDays, final Person boss,
+            final String personType) {
         super(address, age, birthday, birthtime, name, uid, personType);
         this.department = department;
         this.dependents = dependents;
@@ -73,8 +73,7 @@ public class Employee extends Person {
 
     /**
      * Getter for Department.
-     * 
-     * @return Returns the String
+     * @return Returns the String.
      */
     @JsonGetter("department")
     public String getDepartment() {
@@ -83,8 +82,7 @@ public class Employee extends Person {
 
     /**
      * Setter for Department.
-     * 
-     * @param department Value for String
+     * @param department Value for String.
      */
     @JsonSetter("department")
     public void setDepartment(String department) {
@@ -93,8 +91,7 @@ public class Employee extends Person {
 
     /**
      * Getter for Dependents.
-     * 
-     * @return Returns the List of Person
+     * @return Returns the List of Person.
      */
     @JsonGetter("dependents")
     public List<Person> getDependents() {
@@ -103,8 +100,7 @@ public class Employee extends Person {
 
     /**
      * Setter for Dependents.
-     * 
-     * @param dependents Value for List of Person
+     * @param dependents Value for List of Person.
      */
     @JsonSetter("dependents")
     public void setDependents(List<Person> dependents) {
@@ -113,8 +109,7 @@ public class Employee extends Person {
 
     /**
      * Getter for HiredAt.
-     * 
-     * @return Returns the LocalDateTime
+     * @return Returns the LocalDateTime.
      */
     @JsonGetter("hiredAt")
     @JsonSerialize(using = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
@@ -124,8 +119,7 @@ public class Employee extends Person {
 
     /**
      * Setter for HiredAt.
-     * 
-     * @param hiredAt Value for LocalDateTime
+     * @param hiredAt Value for LocalDateTime.
      */
     @JsonSetter("hiredAt")
     @JsonDeserialize(using = LocalDateTimeHelper.Rfc1123DateTimeDeserializer.class)
@@ -135,8 +129,7 @@ public class Employee extends Person {
 
     /**
      * Getter for JoiningDay.
-     * 
-     * @return Returns the Days
+     * @return Returns the Days.
      */
     @JsonGetter("joiningDay")
     public Days getJoiningDay() {
@@ -145,8 +138,7 @@ public class Employee extends Person {
 
     /**
      * Setter for JoiningDay.
-     * 
-     * @param joiningDay Value for Days
+     * @param joiningDay Value for Days.
      */
     @JsonSetter("joiningDay")
     public void setJoiningDay(Days joiningDay) {
@@ -155,8 +147,7 @@ public class Employee extends Person {
 
     /**
      * Getter for Salary.
-     * 
-     * @return Returns the int
+     * @return Returns the int.
      */
     @JsonGetter("salary")
     public int getSalary() {
@@ -165,8 +156,7 @@ public class Employee extends Person {
 
     /**
      * Setter for Salary.
-     * 
-     * @param salary Value for int
+     * @param salary Value for int.
      */
     @JsonSetter("salary")
     public void setSalary(int salary) {
@@ -175,8 +165,7 @@ public class Employee extends Person {
 
     /**
      * Getter for WorkingDays.
-     * 
-     * @return Returns the List of Days
+     * @return Returns the List of Days.
      */
     @JsonGetter("workingDays")
     public List<Days> getWorkingDays() {
@@ -185,8 +174,7 @@ public class Employee extends Person {
 
     /**
      * Setter for WorkingDays.
-     * 
-     * @param workingDays Value for List of Days
+     * @param workingDays Value for List of Days.
      */
     @JsonSetter("workingDays")
     public void setWorkingDays(List<Days> workingDays) {
@@ -195,8 +183,7 @@ public class Employee extends Person {
 
     /**
      * Getter for Boss.
-     * 
-     * @return Returns the Person
+     * @return Returns the Person.
      */
     @JsonGetter("boss")
     public Person getBoss() {
@@ -205,8 +192,7 @@ public class Employee extends Person {
 
     /**
      * Setter for Boss.
-     * 
-     * @param boss Value for Person
+     * @param boss Value for Person.
      */
     @JsonSetter("boss")
     public void setBoss(Person boss) {
@@ -215,8 +201,7 @@ public class Employee extends Person {
 
     /**
      * Converts this Employee into string format.
-     * 
-     * @return String representation of this class
+     * @return String representation of this class.
      */
     @Override
     public String toString() {
@@ -231,13 +216,13 @@ public class Employee extends Person {
     /**
      * Builds a new {@link Employee.Builder} object. Creates the instance with the state of the
      * current model.
-     * 
-     * @return a new {@link Employee.Builder} object
+     * @return a new {@link Employee.Builder} object.
      */
     public Builder toEmployeeBuilder() {
-        Builder builder = new Builder(getAddress(), getAge(), getBirthday(), getBirthtime(),
-                getName(), getUid(), department, dependents, hiredAt, joiningDay, salary,
-                workingDays, boss).personType(getPersonType());
+        Builder builder =
+                new Builder(getAddress(), getAge(), getBirthday(), getBirthtime(), getName(),
+                        getUid(), department, dependents, hiredAt, joiningDay, salary, workingDays,
+                        boss).personType(getPersonType());
         return builder;
     }
 
@@ -267,7 +252,6 @@ public class Employee extends Person {
 
         /**
          * Initialization constructor.
-         * 
          * @param address String value for address.
          * @param age long value for age.
          * @param birthday LocalDate value for birthday.
@@ -282,10 +266,11 @@ public class Employee extends Person {
          * @param workingDays List of Days value for workingDays.
          * @param boss Person value for boss.
          */
-        public Builder(String address, long age, LocalDate birthday, LocalDateTime birthtime,
-                String name, String uid, String department, List<Person> dependents,
-                LocalDateTime hiredAt, Days joiningDay, int salary, List<Days> workingDays,
-                Person boss) {
+        public Builder(final String address, long age, final LocalDate birthday,
+                final LocalDateTime birthtime, final String name, final String uid,
+                final String department, final List<Person> dependents, final LocalDateTime hiredAt,
+                final Days joiningDay, int salary, final List<Days> workingDays,
+                final Person boss) {
             this.address = address;
             this.age = age;
             this.birthday = birthday;
@@ -303,9 +288,8 @@ public class Employee extends Person {
 
         /**
          * Setter for address.
-         * 
          * @param address String value for address.
-         * @return Builder
+         * @return Builder.
          */
         public Builder address(String address) {
             this.address = address;
@@ -314,9 +298,8 @@ public class Employee extends Person {
 
         /**
          * Setter for age.
-         * 
          * @param age long value for age.
-         * @return Builder
+         * @return Builder.
          */
         public Builder age(long age) {
             this.age = age;
@@ -325,9 +308,8 @@ public class Employee extends Person {
 
         /**
          * Setter for birthday.
-         * 
          * @param birthday LocalDate value for birthday.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthday(LocalDate birthday) {
             this.birthday = birthday;
@@ -336,9 +318,8 @@ public class Employee extends Person {
 
         /**
          * Setter for birthtime.
-         * 
          * @param birthtime LocalDateTime value for birthtime.
-         * @return Builder
+         * @return Builder.
          */
         public Builder birthtime(LocalDateTime birthtime) {
             this.birthtime = birthtime;
@@ -347,9 +328,8 @@ public class Employee extends Person {
 
         /**
          * Setter for name.
-         * 
          * @param name String value for name.
-         * @return Builder
+         * @return Builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -358,9 +338,8 @@ public class Employee extends Person {
 
         /**
          * Setter for uid.
-         * 
          * @param uid String value for uid.
-         * @return Builder
+         * @return Builder.
          */
         public Builder uid(String uid) {
             this.uid = uid;
@@ -369,9 +348,8 @@ public class Employee extends Person {
 
         /**
          * Setter for department.
-         * 
          * @param department String value for department.
-         * @return Builder
+         * @return Builder.
          */
         public Builder department(String department) {
             this.department = department;
@@ -380,9 +358,8 @@ public class Employee extends Person {
 
         /**
          * Setter for dependents.
-         * 
          * @param dependents List of Person value for dependents.
-         * @return Builder
+         * @return Builder.
          */
         public Builder dependents(List<Person> dependents) {
             this.dependents = dependents;
@@ -391,9 +368,8 @@ public class Employee extends Person {
 
         /**
          * Setter for hiredAt.
-         * 
          * @param hiredAt LocalDateTime value for hiredAt.
-         * @return Builder
+         * @return Builder.
          */
         public Builder hiredAt(LocalDateTime hiredAt) {
             this.hiredAt = hiredAt;
@@ -402,9 +378,8 @@ public class Employee extends Person {
 
         /**
          * Setter for joiningDay.
-         * 
          * @param joiningDay Days value for joiningDay.
-         * @return Builder
+         * @return Builder.
          */
         public Builder joiningDay(Days joiningDay) {
             this.joiningDay = joiningDay;
@@ -413,9 +388,8 @@ public class Employee extends Person {
 
         /**
          * Setter for salary.
-         * 
          * @param salary int value for salary.
-         * @return Builder
+         * @return Builder.
          */
         public Builder salary(int salary) {
             this.salary = salary;
@@ -424,9 +398,8 @@ public class Employee extends Person {
 
         /**
          * Setter for workingDays.
-         * 
          * @param workingDays List of Days value for workingDays.
-         * @return Builder
+         * @return Builder.
          */
         public Builder workingDays(List<Days> workingDays) {
             this.workingDays = workingDays;
@@ -435,9 +408,8 @@ public class Employee extends Person {
 
         /**
          * Setter for boss.
-         * 
          * @param boss Person value for boss.
-         * @return Builder
+         * @return Builder.
          */
         public Builder boss(Person boss) {
             this.boss = boss;
@@ -446,9 +418,8 @@ public class Employee extends Person {
 
         /**
          * Setter for personType.
-         * 
          * @param personType String value for personType.
-         * @return Builder
+         * @return Builder.
          */
         public Builder personType(String personType) {
             this.personType = personType;
@@ -457,8 +428,7 @@ public class Employee extends Person {
 
         /**
          * Builds a new {@link Employee} object using the set fields.
-         * 
-         * @return {@link Employee}
+         * @return {@link Employee}.
          */
         public Employee build() {
             return new Employee(address, age, birthday, birthtime, name, uid, department,

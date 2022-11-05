@@ -19,13 +19,12 @@ public class MorningCase {
     @JsonValue
     private Morning morning;
 
-    MorningCase(Morning morning) {
+    MorningCase(final Morning morning) {
         this.morning = morning;
     }
 
-
     @JsonCreator
-    private MorningCase(JsonNode jsonNode) throws IOException {
+    private MorningCase(final JsonNode jsonNode) throws IOException {
         this.morning = CoreHelper.deserialize(jsonNode, Morning.class);
     }
 

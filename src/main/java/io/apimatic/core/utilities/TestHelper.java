@@ -1,4 +1,4 @@
-package io.apimatic.core.testing;
+package io.apimatic.core.utilities;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,40 +22,60 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.apimatic.core.utilities.CoreHelper;
 
 /**
  * Contains utility methods for comparing objects, arrays and files.
- *
  */
-public class TestHelper {
+public final class TestHelper {
+
+    /**
+     * A base value of hexadecimal number.
+     */
+    private static final int BASE_16 = 16;
+
+    /**
+     * To convert the decimal number into hexadecimal.
+     */
+    private static final int TO_EXTRACT_HEXADECIMAL = 0x100;
+
+    /**
+     * A hexadecimal number representation of 16.
+     */
+    private static final int HEXADECIMAL_CONVERTOR = 0xff;
+
+    /**
+     * Buffer size.
+     */
+    private static final int BUFFER_SIZE = 1024;
+
     /**
      * GUID to represent NUll string.
      */
-    public static final String nullString = "b9cb2f80-1b64-43ee-a6da-71f7ef686fa9";
+    public static final String NULL_STRING = "b9cb2f80-1b64-43ee-a6da-71f7ef686fa9";
+
+    private TestHelper() {}
 
     /**
      * Modify a json String according to a given TypeReference, ensuring that inner fields are dealt
      * with properly.
-     *
-     * @param json The json String to modify
-     * @param typeReference The TypeReference to use
-     * @param <T> The extended type
+     * @param json The json String to modify.
+     * @param typeReference The TypeReference to use.
+     * @param <T> The extended type.
      * @throws JsonProcessingException when problems encountered when processing (parsing,
-     *         generating) JSON content
-     * @throws IOException if comparison got failed
-     * @return The modified json String
+     *         generating) JSON content.
+     * @throws IOException if comparison got failed.
+     * @return The modified json String.
      */
-    public static <T extends Object> String prepareForComparison(String json,
-            TypeReference<T> typeReference) throws JsonProcessingException, IOException {
+    public static <T extends Object> String prepareForComparison(
+            String json, TypeReference<T> typeReference)
+            throws JsonProcessingException, IOException {
         return CoreHelper.serialize(CoreHelper.deserialize(json, typeReference));
     }
 
     /**
      * Convert an InputStream to a String (utility function).
-     * 
-     * @param is Input stream to read from
-     * @return All data
+     * @param is Input stream to read from.
+     * @return All data.
      */
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is);
@@ -66,18 +86,18 @@ public class TestHelper {
 
     /**
      * Utility to delegate call to suitable method.
-     * 
-     * @param leftObject Left array as a JSON string
-     * @param rightObject Right array as a JSON string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return True if it is a subset
-     * @throws IOException if deserialization got failed
+     * @param leftObject Left array as a JSON string.
+     * @param rightObject Right array as a JSON string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return True if it is a subset.
+     * @throws IOException if deserialization got failed.
      */
-    public static boolean isProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
-        JsonNode leftNode = CoreHelper.mapper.readTree(leftObject);
+    public static boolean isProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
+        JsonNode leftNode = CoreHelper.getMapper().readTree(leftObject);
         if (leftNode.isObject()) {
             return isJsonObjectProperSubsetOf(leftObject, rightObject, checkValues, allowExtra,
                     isOrdered);
@@ -94,18 +114,17 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left tree is a proper subset of the right tree.
-     * 
-     * @param leftTree Left tree
-     * @param rightTree Right tree
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return <tt>true</tt> if left left tree is a proper subset of right tree
+     * @param leftTree Left tree.
+     * @param rightTree Right tree.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return <tt>true</tt> if left left tree is a proper subset of right tree.
      */
     @SuppressWarnings({"unchecked", "rawtypes", "unused"})
-    private static boolean isProperSubsetOf(Map<String, Object> leftTree,
-            Map<String, Object> rightTree, boolean checkValues, boolean allowExtra,
-            boolean isOrdered) {
+    private static boolean isProperSubsetOf(
+            Map<String, Object> leftTree, Map<String, Object> rightTree, boolean checkValues,
+            boolean allowExtra, boolean isOrdered) {
         for (Iterator<String> iterator = leftTree.keySet().iterator(); iterator.hasNext();) {
             String key = iterator.next();
             Object leftVal = leftTree.get(key);
@@ -165,12 +184,14 @@ public class TestHelper {
                                 return false;
                             }
                             // prepare the list of other instances (other than map)
-                            List<Object> remainingLeftList = (List<Object>) leftList.stream()
-                                    .filter(x -> !leftListOfMap.contains(x))
-                                    .collect(Collectors.toList());
-                            List<Object> remainingRightList = (List<Object>) rightList.stream()
-                                    .filter(x -> !rightListOfMap.contains(x))
-                                    .collect(Collectors.toList());
+                            List<Object> remainingLeftList =
+                                    (List<Object>) leftList.stream()
+                                            .filter(x -> !leftListOfMap.contains(x))
+                                            .collect(Collectors.toList());
+                            List<Object> remainingRightList =
+                                    (List<Object>) rightList.stream()
+                                            .filter(x -> !rightListOfMap.contains(x))
+                                            .collect(Collectors.toList());
 
                             if (!isListProperSubsetOf(remainingLeftList, remainingRightList,
                                     allowExtra, isOrdered)) {
@@ -189,7 +210,7 @@ public class TestHelper {
                                 return false;
                             }
                         }
-                    } else if (!leftVal.equals((rightTree).get(key)) && leftVal != nullString) {
+                    } else if (!leftVal.equals((rightTree).get(key)) && leftVal != NULL_STRING) {
                         return false;
                     }
                 }
@@ -200,35 +221,34 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left JSON object is a proper subset of the right JSON object.
-     * 
-     * @param leftObject Left JSON object as string
-     * @param rightObject Right JSON object as string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra extra value is allowed?
-     * @param isOrdered object value is in order?
-     * @throws IOException Signal that I/O errors occur
-     * @return <tt>true</tt> if left left JSON object is a proper subset of right JSON object
+     * @param leftObject Left JSON object as string.
+     * @param rightObject Right JSON object as string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra extra value is allowed?.
+     * @param isOrdered object value is in order?.
+     * @throws IOException Signal that I/O errors occur.
+     * @return <tt>true</tt> if left left JSON object is a proper subset of right JSON object.
      */
-    public static boolean isJsonObjectProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
+    public static boolean isJsonObjectProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         return isProperSubsetOf(CoreHelper.deserialize(leftObject),
                 CoreHelper.deserialize(rightObject), checkValues, allowExtra, isOrdered);
     }
 
     /**
      * Check if left array of array of objects is a subset of right array of array of objects.
-     * 
-     * @param leftObject Left array as a JSON string
-     * @param rightObject Right array as a JSON string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return True if it is a subset
-     * @throws IOException if deserialization got failed
+     * @param leftObject Left array as a JSON string.
+     * @param rightObject Right array as a JSON string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return True if it is a subset.
+     * @throws IOException if deserialization got failed.
      */
-    public static boolean isArrayOfArrayOfJsonObjectsProperSubsetOf(String leftObject,
-            String rightObject, boolean checkValues, boolean allowExtra, boolean isOrdered)
-            throws IOException {
+    public static boolean isArrayOfArrayOfJsonObjectsProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         // Deserialize left and right objects from their respective strings
         LinkedList<LinkedList<LinkedHashMap<String, Object>>> obj =
                 new LinkedList<LinkedList<LinkedHashMap<String, Object>>>();
@@ -245,13 +265,12 @@ public class TestHelper {
 
     /**
      * Check if left array of array of objects is a subset of right array of array of objects.
-     * 
-     * @param left Left array as a JSON string
-     * @param right Right array as a JSON string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return True if it is a subset
+     * @param left Left array as a JSON string.
+     * @param right Right array as a JSON string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return True if it is a subset.
      */
     private static boolean isArrayOfArrayOfJsonObjectsProperSubsetOf(
             List<LinkedList<LinkedHashMap<String, Object>>> left,
@@ -291,17 +310,17 @@ public class TestHelper {
 
     /**
      * Check if left array of objects is a subset of right array.
-     * 
-     * @param leftObject Left array as a JSON string
-     * @param rightObject Right array as a JSON string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return True if it is a subset
-     * @throws IOException if deserialization got failed
+     * @param leftObject Left array as a JSON string.
+     * @param rightObject Right array as a JSON string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return True if it is a subset.
+     * @throws IOException if deserialization got failed.
      */
-    public static boolean isArrayOfJsonObjectsProperSubsetOf(String leftObject, String rightObject,
-            boolean checkValues, boolean allowExtra, boolean isOrdered) throws IOException {
+    public static boolean isArrayOfJsonObjectsProperSubsetOf(
+            String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
+            boolean isOrdered) throws IOException {
         // Deserialize left and right objects from their respective strings
         LinkedList<LinkedHashMap<String, Object>> obj =
                 new LinkedList<LinkedHashMap<String, Object>>();
@@ -351,13 +370,12 @@ public class TestHelper {
 
     /**
      * Check if left array of objects is a subset of right array.
-     * 
-     * @param left Left array as a JSON string
-     * @param right Right array as a JSON string
-     * @param checkValues Check primitive values for equality?
-     * @param allowExtra Are extra elements allowed in right array?
-     * @param isOrdered Should elements in right be compared in order to left?
-     * @return True if it is a subset
+     * @param left Left array as a JSON string.
+     * @param right Right array as a JSON string.
+     * @param checkValues Check primitive values for equality?.
+     * @param allowExtra Are extra elements allowed in right array?.
+     * @param isOrdered Should elements in right be compared in order to left?.
+     * @return True if it is a subset.
      */
     private static boolean isArrayOfJsonObjectsProperSubsetOf(
             List<LinkedHashMap<String, Object>> left, List<LinkedHashMap<String, Object>> right,
@@ -398,15 +416,14 @@ public class TestHelper {
 
     /**
      * Check whether the a list is a subset of another list.
-     * 
-     * @param leftList Expected List
-     * @param rightList List to check
-     * @param allowExtra Are extras allowed in the list to check?
-     * @param isOrdered Should checking be in order?
-     * @return <tt>true</tt> if list is a subset of another list
+     * @param leftList Expected List.
+     * @param rightList List to check.
+     * @param allowExtra Are extras allowed in the list to check?.
+     * @param isOrdered Should checking be in order?.
+     * @return <tt>true</tt> if list is a subset of another list.
      */
-    private static boolean isListProperSubsetOf(List<Object> leftList, List<Object> rightList,
-            boolean allowExtra, boolean isOrdered) {
+    private static boolean isListProperSubsetOf(
+            List<Object> leftList, List<Object> rightList, boolean allowExtra, boolean isOrdered) {
         if (isOrdered && !allowExtra) {
             return rightList.equals(leftList);
         } else if (isOrdered && allowExtra) {
@@ -421,14 +438,13 @@ public class TestHelper {
 
     /**
      * Recursively check whether the left headers map is a proper subset of the right headers map.
-     * 
-     * @param leftTree Left headers map
-     * @param rightTree Right headers map
-     * @param checkValues Check header values for equality?
-     * @return <tt>true</tt> if left headers map is a proper subset of right headers map
+     * @param leftTree Left headers map.
+     * @param rightTree Right headers map.
+     * @param checkValues Check header values for equality?.
+     * @return <tt>true</tt> if left headers map is a proper subset of right headers map.
      */
-    public static boolean areHeadersProperSubsetOf(Map<String, String> leftTree,
-            Map<String, String> rightTree, boolean checkValues) {
+    public static boolean areHeadersProperSubsetOf(
+            Map<String, String> leftTree, Map<String, String> rightTree, boolean checkValues) {
         Map<String, Object> l = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
         Map<String, Object> r = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
         l.putAll(leftTree);
@@ -438,11 +454,10 @@ public class TestHelper {
 
     /**
      * Compare two input streams.
-     *
-     * @param input1 First stream
-     * @param input2 Second stream
-     * @return true True if streams contain the same content
-     * @throws IOException If error reading either stream
+     * @param input1 First stream.
+     * @param input2 Second stream.
+     * @return true True if streams contain the same content.
+     * @throws IOException If error reading either stream.
      */
     private static boolean isSameInputStream(InputStream input1, InputStream input2)
             throws IOException {
@@ -466,12 +481,11 @@ public class TestHelper {
 
     /**
      * Compare the input stream to file byte-by-byte.
-     * 
-     * @param file First input
-     * @param input Second input
-     * @return true True if stream contains the same content as the file
-     * @throws IOException If error reading either stream
-     * @throws FileNotFoundException If file could not be opened
+     * @param file First input.
+     * @param input Second input.
+     * @return true True if stream contains the same content as the file.
+     * @throws IOException If error reading either stream.
+     * @throws FileNotFoundException If file could not be opened.
      */
     public static boolean isSameAsFile(String file, InputStream input)
             throws FileNotFoundException, IOException {
@@ -481,10 +495,9 @@ public class TestHelper {
     /**
      * Downloads a given url and return a path to its local version. Files are cached. Second call
      * for the same URL will return cached version. Files are deleted when VM exits.
-     * 
-     * @param urlString URL to download
-     * @throws IOException Signals that I/O error occur
-     * @return Absolute path to the local downloaded version of file
+     * @param urlString URL to download.
+     * @throws IOException Signals that I/O error occur.
+     * @return Absolute path to the local downloaded version of file.
      */
     public static File getFile(String urlString) throws IOException {
         String filename = "sdk_tests" + toSha1(urlString) + ".tmp";
@@ -499,7 +512,7 @@ public class TestHelper {
             InputStream in = connection.getInputStream();
             f.createNewFile();
             FileOutputStream out = new FileOutputStream(f);
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
             int len;
             while ((len = in.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
@@ -515,9 +528,8 @@ public class TestHelper {
 
     /**
      * Get SHA1 hash of a string.
-     * 
-     * @param convertme The string to convert
-     * @return SHA1 hash
+     * @param convertme The string to convert.
+     * @return SHA1 hash.
      */
     private static String toSha1(String convertme) {
         byte[] data = convertme.getBytes();
@@ -532,14 +544,15 @@ public class TestHelper {
 
     /**
      * Convert byte array to the hexadecimal representation in string.
-     * 
-     * @param b Byte array
-     * @return Hex representation in string
+     * @param b Byte array.
+     * @return Hex representation in string.
      */
     private static String byteArrayToHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
-            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+            result +=
+                    Integer.toString((b[i] & HEXADECIMAL_CONVERTOR) + TO_EXTRACT_HEXADECIMAL,
+                            BASE_16).substring(1);
         }
         return result;
     }
@@ -547,10 +560,9 @@ public class TestHelper {
     /**
      * Checks actual list against expected list to have same order and count and all corresponding
      * values must be equal.
-     * 
-     * @param actual List of BigDecimal
-     * @param expected List of BigDecimal
-     * @return true if both lists are exactly same
+     * @param actual List of BigDecimal.
+     * @param expected List of BigDecimal.
+     * @return true if both lists are exactly same.
      */
     public static boolean equalsBigDecimalList(List<BigDecimal> actual, List<BigDecimal> expected) {
         if (actual.size() != expected.size()) {
@@ -566,15 +578,14 @@ public class TestHelper {
     }
 
     /**
-     * Checks actual list against expected list, without considering order of elements and actual
+     * Checks actual list against expected list, without considering order of elements and actual.
      * list must have all the expected elements.
-     * 
-     * @param actual List of BigDecimal
-     * @param expected List of BigDecimal
-     * @return true if actual list is a super set of expected list
+     * @param actual List of BigDecimal.
+     * @param expected List of BigDecimal.
+     * @return true if actual list is a super set of expected list.
      */
-    public static boolean containsBigDecimalList(List<BigDecimal> actual,
-            List<BigDecimal> expected) {
+    public static boolean containsBigDecimalList(
+            List<BigDecimal> actual, List<BigDecimal> expected) {
         for (BigDecimal expectedValue : expected) {
             boolean found = false;
             for (BigDecimal actualValue : actual) {

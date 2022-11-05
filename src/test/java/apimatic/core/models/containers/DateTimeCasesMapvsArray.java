@@ -37,7 +37,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param dateTime List of LocalDateTime value for dateTime.
      * @return The DateTimeCase object.
      */
@@ -47,7 +46,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Any-of type initialization method.
-     * 
      * @param dateTime2 Map of String, value for dateTime2.
      * @return The DateTime2Case object.
      */
@@ -57,7 +55,6 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * Method to match from the provided any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      * @param cases The any-of type cases callback.
      * @return The any-of matched case.
@@ -66,12 +63,21 @@ public abstract class DateTimeCasesMapvsArray {
 
     /**
      * This is interface for any-of cases.
-     * 
      * @param <R> The type to return after applying callback.
      */
     public interface Cases<R> {
+        /**
+         * Case for the list of local date time.
+         * @param dateTime The list of {@link LocalDateTime}.
+         * @return R.
+         */
         R dateTime(List<LocalDateTime> dateTime);
 
+        /**
+         * Case for the map of local date time.
+         * @param dateTime2 The map of {@link LocalDateTime}.
+         * @return R.
+         */
         R dateTime2(Map<String, LocalDateTime> dateTime2);
     }
 
@@ -86,7 +92,7 @@ public abstract class DateTimeCasesMapvsArray {
         @FormSerialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
         private List<LocalDateTime> dateTime;
 
-        DateTimeCase(List<LocalDateTime> dateTime) {
+        DateTimeCase(final List<LocalDateTime> dateTime) {
             this.dateTime = dateTime;
         }
 
@@ -96,10 +102,11 @@ public abstract class DateTimeCasesMapvsArray {
         }
 
         @JsonCreator
-        private DateTimeCase(JsonNode jsonNode) throws IOException {
-            this.dateTime = CoreHelper.deserialize(jsonNode,
-                    new TypeReference<List<LocalDateTime>>() {}, LocalDateTime.class,
-                    new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
+        private DateTimeCase(final JsonNode jsonNode) throws IOException {
+            this.dateTime =
+                    CoreHelper.deserialize(jsonNode, new TypeReference<List<LocalDateTime>>() {},
+                            LocalDateTime.class,
+                            new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
         }
 
         @Override
@@ -112,8 +119,9 @@ public abstract class DateTimeCasesMapvsArray {
          */
         private static class DateTimeCaseSerializer extends JsonSerializer<DateTimeCase> {
             @Override
-            public void serialize(DateTimeCase dateTimeCase, JsonGenerator jgen,
-                    SerializerProvider provider) throws IOException {
+            public void serialize(
+                    DateTimeCase dateTimeCase, JsonGenerator jgen, SerializerProvider provider)
+                    throws IOException {
                 jgen.writeObject(LocalDateTimeHelper.toRfc1123DateTime(dateTimeCase.dateTime));
             }
         }
@@ -130,7 +138,7 @@ public abstract class DateTimeCasesMapvsArray {
         @FormSerialize(contentUsing = LocalDateTimeHelper.Rfc1123DateTimeSerializer.class)
         private Map<String, LocalDateTime> dateTime2;
 
-        DateTime2Case(Map<String, LocalDateTime> dateTime2) {
+        DateTime2Case(final Map<String, LocalDateTime> dateTime2) {
             this.dateTime2 = dateTime2;
         }
 
@@ -140,10 +148,11 @@ public abstract class DateTimeCasesMapvsArray {
         }
 
         @JsonCreator
-        private DateTime2Case(JsonNode jsonNode) throws IOException {
-            this.dateTime2 = CoreHelper.deserialize(jsonNode,
-                    new TypeReference<Map<String, LocalDateTime>>() {}, LocalDateTime.class,
-                    new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
+        private DateTime2Case(final JsonNode jsonNode) throws IOException {
+            this.dateTime2 =
+                    CoreHelper.deserialize(jsonNode,
+                            new TypeReference<Map<String, LocalDateTime>>() {}, LocalDateTime.class,
+                            new LocalDateTimeHelper.Rfc1123DateTimeDeserializer());
         }
 
         @Override
@@ -156,8 +165,9 @@ public abstract class DateTimeCasesMapvsArray {
          */
         private static class DateTime2CaseSerializer extends JsonSerializer<DateTime2Case> {
             @Override
-            public void serialize(DateTime2Case dateTime2Case, JsonGenerator jgen,
-                    SerializerProvider provider) throws IOException {
+            public void serialize(
+                    DateTime2Case dateTime2Case, JsonGenerator jgen, SerializerProvider provider)
+                    throws IOException {
                 jgen.writeObject(LocalDateTimeHelper.toRfc1123DateTime(dateTime2Case.dateTime2));
             }
         }
