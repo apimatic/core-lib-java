@@ -42,16 +42,21 @@ jobs:
         uses: devops-infra/action-commit-push@master
         with:
            github_token: "${{ secrets.GITHUB_TOKEN }}"
-           add_timestamp: true
            commit_message: "ci(release-version): update pom.xml [ci skip]"
            force: false
-           target_branch: ${{ github.ref }}
-      - name: Push the version change
+           target_branch: project-version-update
+      - name: Push the version changes
         if: steps.release.outputs.exit_code == 0
-        uses: ad-m/github-push-action@master
+        uses: CasperWA/push-protected@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+           token: ${{ secrets.TOKEN_GITHUB }}
+           branch: main
+      - name: Delete the intermediate branch
+        if: steps.release.outputs.exit_code == 0
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{github.token}}
+          branches: project-version-update
       - name: Create tag
         if: steps.release.outputs.exit_code == 0
         id: tag_version
