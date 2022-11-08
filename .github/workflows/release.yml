@@ -45,11 +45,11 @@ jobs:
            commit_message: "ci(release-version): update pom.xml [ci skip]"
            force: false
            target_branch: project-version-update
-      - name: Push the version changes
+      - name: Push the version change
         if: steps.release.outputs.exit_code == 0
         uses: CasperWA/push-protected@v2
         with:
-           token: ${{ secrets.TOKEN_GITHUB }}
+           token: ${{ secrets.PAT }}
            branch: main
       - name: Delete the intermediate branch
         if: steps.release.outputs.exit_code == 0
