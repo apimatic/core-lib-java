@@ -3,6 +3,8 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
@@ -202,13 +204,28 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         Response response = httpContext.getResponse();
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
-
-        if (localErrorCases != null && localErrorCases.containsKey(errorCode)) {
-            localErrorCases.get(errorCode).throwException(httpContext);
+        String defaultErrorCode = "";
+        Matcher match = Pattern.compile("^[(4|5)[0-9]]{3}").matcher(errorCode);
+        if (match.find()) {
+            defaultErrorCode = errorCode.charAt(0) + "XX";
         }
 
-        if (globalErrorCases != null && globalErrorCases.containsKey(errorCode)) {
-            globalErrorCases.get(errorCode).throwException(httpContext);
+        if (localErrorCases != null) {
+            if (localErrorCases.containsKey(errorCode)) {
+                localErrorCases.get(errorCode).throwException(httpContext);
+            }
+            if (localErrorCases.containsKey(defaultErrorCode)) {
+                localErrorCases.get(defaultErrorCode).throwException(httpContext);
+            }
+        }
+
+        if (globalErrorCases != null) {
+            if (globalErrorCases.containsKey(errorCode)) {
+                globalErrorCases.get(errorCode).throwException(httpContext);
+            }
+            if (globalErrorCases.containsKey(defaultErrorCode)) {
+                globalErrorCases.get(defaultErrorCode).throwException(httpContext);
+            }
         }
 
         if ((statusCode < MIN_SUCCESS_CODE) || (statusCode > MAX_SUCCESS_CODE)) {
