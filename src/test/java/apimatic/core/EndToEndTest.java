@@ -116,16 +116,16 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testLocalErrorTemplateBody() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallLocalErrorTemplate(response, BAD_REQUEST).execute();
+            getApiCallLocalErrorTemplate(responseString, BAD_REQUEST).execute();
         });
-        String expected =
-                "Failed to make the request, 400 UNAUTHORIZED - This request could not be authorized.";
+        String expected = "Failed to make the request, 400 UNAUTHORIZED - "
+                + "This request could not be authorized.";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
@@ -138,16 +138,16 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplateBody() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(GlobalTestException.class, () -> {
-            getApiCallGlobalErrorTemplate(response, BAD_REQUEST).execute();
+            getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
         });
-        String expected =
-                "Failed to make the request, 400 UNAUTHORIZED - This request could not be authorized.";
+        String expected = "Failed to make the request, 400 UNAUTHORIZED - "
+                + "This request could not be authorized.";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
@@ -159,12 +159,12 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplateMissingBody() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\"\r\n" + "    }\r\n" + "  ]\r\n" + "}\r\n"
                 + "\r\n";
         Exception exception = assertThrows(GlobalTestException.class, () -> {
-            getApiCallGlobalErrorTemplate(response, BAD_REQUEST).execute();
+            getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
         });
         String expected = "Failed to make the request, 400 UNAUTHORIZED - ";
         String actual = exception.getMessage();
@@ -178,13 +178,13 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplateMissingStatusCode() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplate(response, TOO_MANY_REQUEST).execute();
+            getApiCallGlobalErrorTemplate(responseString, TOO_MANY_REQUEST).execute();
         });
         String expected =
                 "Failed to make the request, UNAUTHORIZED - This request could not be authorized.";
@@ -199,16 +199,16 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplateHeaders() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(response, UNAUTHORIZED).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, UNAUTHORIZED).execute();
         });
-        String expected =
-                "Failed to make the request, application/json UNAUTHORIZED - This request could not be authorized.";
+        String expected = "Failed to make the request, application/json UNAUTHORIZED - "
+                + "This request could not be authorized.";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
@@ -220,20 +220,20 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplateHeadersMissing() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(response, METHOD_NOT_ALLOWED).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, METHOD_NOT_ALLOWED).execute();
         });
-        String expected =
-                "Failed to make the request,  UNAUTHORIZED - This request could not be authorized.";
+        String expected = "Failed to make the request,  UNAUTHORIZED - "
+                + "This request could not be authorized.";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
-    
+
     /**
      * Test the Global Error template missing headers.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -241,20 +241,20 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplate4XX() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(response, 415).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, 415).execute();
         });
-        String expected =
-                "Failed to make the request, UNAUTHORIZED - This request could not be authorized.";
+        String expected = "Failed to make the request, UNAUTHORIZED - "
+                + "This request could not be authorized.";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
-    
+
     /**
      * Test the Global Error template missing headers.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -262,16 +262,15 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Test
     public void testGlobalErrorTemplate5XX() throws IOException, CoreApiException {
-        String response = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
                 + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
                 + "      \"code\": \"UNAUTHORIZED\",\r\n"
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(response, 500).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, 500).execute();
         });
-        String expected =
-                "Failed to make the request, http status code: 500";
+        String expected = "Failed to make the request, http status code: 500";
         String actual = exception.getMessage();
         assertEquals(actual, expected);
     }
@@ -311,9 +310,12 @@ public class EndToEndTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .localErrorCase("400", ErrorCase.createErrorTemplate(
-                                "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                                (reason, context) -> new CoreApiException(reason, context)))
+                        .localErrorCase("400",
+                                ErrorCase.createErrorTemplate(
+                                        "Failed to make the request, {$statusCode} "
+                                                + "{$response.body#/errors/0/code} - "
+                                                + "{$response.body#/errors/0/detail}",
+                                        (reason, context) -> new CoreApiException(reason, context)))
                         .nullify404(false).globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
@@ -401,31 +403,39 @@ public class EndToEndTest extends MockCoreConfig {
     private Map<String, ErrorCase<CoreApiException>> getGlobalErrorCases() {
         Map<String, ErrorCase<CoreApiException>> globalErrorCase = new HashMap<>();
         globalErrorCase.put("400", ErrorCase.createErrorTemplate(
-                "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - "
+                        + "{$response.body#/errors/0/detail}",
                 (reason, context) -> new GlobalTestException(reason, context)));
 
         globalErrorCase.put("404", ErrorCase.create("Not found",
                 (reason, context) -> new CoreApiException(reason, context)));
 
         globalErrorCase.put("401", ErrorCase.createErrorTemplate(
-                "Failed to make the request, {$response.header.content-type} {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                "Failed to make the request, {$response.header.content-type} "
+                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
                 (reason, context) -> new CoreApiException(reason, context)));
 
         globalErrorCase.put("405", ErrorCase.createErrorTemplate(
-                "Failed to make the request, {$response.header.accept} {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                (reason, context) -> new CoreApiException(reason, context)));
-        
-        globalErrorCase.put("500", ErrorCase.createErrorTemplate(
-                "Failed to make the request, http status code: {$statusCode}",
-                (reason, context) -> new CoreApiException(reason, context)));
-        
-        globalErrorCase.put("4XX", ErrorCase.createErrorTemplate(
-                "Failed to make the request, {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                "Failed to make the request, {$response.header.accept} "
+                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
                 (reason, context) -> new CoreApiException(reason, context)));
 
-        globalErrorCase.put(ErrorCase.DEFAULT, ErrorCase.create(
-                "Failed to make the request, {$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                (reason, context) -> new CoreApiException(reason, context)));
+        globalErrorCase.put("500",
+                ErrorCase.createErrorTemplate(
+                        "Failed to make the request, http status code: {$statusCode}",
+                        (reason, context) -> new CoreApiException(reason, context)));
+
+        globalErrorCase.put("4XX",
+                ErrorCase.createErrorTemplate(
+                        "Failed to make the request, {$response.body#/errors/0/code} -"
+                                + " {$response.body#/errors/0/detail}",
+                        (reason, context) -> new CoreApiException(reason, context)));
+
+        globalErrorCase.put(ErrorCase.DEFAULT,
+                ErrorCase.create(
+                        "Failed to make the request, {$response.body#/errors/0/code} - "
+                                + "{$response.body#/errors/0/detail}",
+                        (reason, context) -> new CoreApiException(reason, context)));
 
         return globalErrorCase;
 

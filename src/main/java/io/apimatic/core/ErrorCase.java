@@ -35,7 +35,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
     /**
      * Error message a template or not.
      */
-    private static boolean isErrorTemplate;
+    private boolean isErrorTemplate;
 
     /**
      * An instance of {@link ExceptionCreator}.
@@ -47,9 +47,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * @param reason the exception reason.
      * @param exceptionCreator the exceptionCreator.
      */
-    private ErrorCase(final String reason, final ExceptionCreator<ExceptionType> exceptionCreator) {
+    private ErrorCase(final String reason, final ExceptionCreator<ExceptionType> exceptionCreator, boolean isErrorTemplate) {
         this.reason = reason;
         this.exceptionCreator = exceptionCreator;
+        this.isErrorTemplate = isErrorTemplate;
     }
 
     /**
@@ -73,7 +74,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      */
     public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
-        ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator);
+        ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator, false);
         return errorCase;
     }
 
@@ -88,8 +89,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      */
     public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> createErrorTemplate(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
-        isErrorTemplate = true;
-        return new ErrorCase<ExceptionType>(reason, exceptionCreator);
+        return new ErrorCase<ExceptionType>(reason, exceptionCreator, true);
     }
 
 
@@ -108,13 +108,13 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * @return A updated string
      */
     private String replacePlaceHolder(Response response, String format) {
-        format = replaceStatusCodePlaceHolder(format, response.getStatusCode()); // improve the method name
-        format = replaceHeadersPlaceHolder(format, response.getHeaders());
-        format = replaceBodyPlaceHolder(format, response.getBody());
+        format = replaceStatusCodeFromTemplate(format, response.getStatusCode()); 
+        format = replaceHeadersFromTemplate(format, response.getHeaders());
+        format = replaceBodyFromTemplate(format, response.getBody());
         return format;
     }
 
-    private String replaceHeadersPlaceHolder(String format, HttpHeaders headers) {
+    private String replaceHeadersFromTemplate(String format, HttpHeaders headers) {
         StringBuilder formatter = new StringBuilder(format);
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
         while (matcher.find()) {
@@ -133,7 +133,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         return formatter.toString();
     }
 
-    private String replaceBodyPlaceHolder(String format, String responseBody) {
+    private String replaceBodyFromTemplate(String format, String responseBody) {
         InputStream inputStream = new ByteArrayInputStream(responseBody.getBytes());
         Reader reader = new InputStreamReader(inputStream);
         StringBuilder formatter = new StringBuilder(format);
@@ -164,7 +164,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         return formatter.toString();
     }
 
-    private static String replaceStatusCodePlaceHolder(String format, int statusCode) {
+    private static String replaceStatusCodeFromTemplate(String format, int statusCode) {
         StringBuilder formatter = new StringBuilder(format);
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
         while (matcher.find()) {
