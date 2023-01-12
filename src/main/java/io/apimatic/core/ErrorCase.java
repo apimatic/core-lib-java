@@ -74,7 +74,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      *        thrown exception.
      * @return {@link ErrorCase}.
      */
-    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
+    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> setReason(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         ErrorCase<ExceptionType> errorCase =
                 new ErrorCase<ExceptionType>(reason, exceptionCreator, false);
@@ -90,7 +90,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      *        thrown exception.
      * @return {@link ErrorCase}.
      */
-    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> createErrorTemplate(
+    public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> setTemplate(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
         return new ErrorCase<ExceptionType>(reason, exceptionCreator, true);
     }
