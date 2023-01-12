@@ -44,6 +44,8 @@ public class EndToEndTest extends MockCoreConfig {
     private static final int TOO_MANY_REQUEST = 429;
     private static final int UNAUTHORIZED = 401;
     private static final int METHOD_NOT_ALLOWED = 405;
+    private static final int UNSUPPORTED_MEDIA = 415;
+    private static final int INTERNAL_SERVER_ERROR = 500;
 
     /**
      * Initializes mocks annotated with Mock.
@@ -247,7 +249,7 @@ public class EndToEndTest extends MockCoreConfig {
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(responseString, 415).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, UNSUPPORTED_MEDIA).execute();
         });
         String expected = "Failed to make the request, UNAUTHORIZED - "
                 + "This request could not be authorized.";
@@ -268,7 +270,8 @@ public class EndToEndTest extends MockCoreConfig {
                 + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
                 + "  ]\r\n" + "}\r\n" + "\r\n";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplateWithHeaders(responseString, 500).execute();
+            getApiCallGlobalErrorTemplateWithHeaders(responseString, INTERNAL_SERVER_ERROR)
+                    .execute();
         });
         String expected = "Failed to make the request, http status code: 500";
         String actual = exception.getMessage();

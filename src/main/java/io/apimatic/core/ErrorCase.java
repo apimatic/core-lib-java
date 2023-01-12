@@ -46,8 +46,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * A private constructor.
      * @param reason the exception reason.
      * @param exceptionCreator the exceptionCreator.
+     * @param isErrorTemplate error case for error template.
      */
-    private ErrorCase(final String reason, final ExceptionCreator<ExceptionType> exceptionCreator, boolean isErrorTemplate) {
+    private ErrorCase(final String reason, final ExceptionCreator<ExceptionType> exceptionCreator,
+            boolean isErrorTemplate) {
         this.reason = reason;
         this.exceptionCreator = exceptionCreator;
         this.isErrorTemplate = isErrorTemplate;
@@ -74,7 +76,8 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      */
     public static <ExceptionType extends CoreApiException> ErrorCase<ExceptionType> create(
             String reason, ExceptionCreator<ExceptionType> exceptionCreator) {
-        ErrorCase<ExceptionType> errorCase = new ErrorCase<ExceptionType>(reason, exceptionCreator, false);
+        ErrorCase<ExceptionType> errorCase =
+                new ErrorCase<ExceptionType>(reason, exceptionCreator, false);
         return errorCase;
     }
 
@@ -105,10 +108,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * Replace the placeholder of error template.
      * @param response A request response from server side.
      * @param format A error template.
-     * @return A updated string
+     * @return A updated string.
      */
     private String replacePlaceHolder(Response response, String format) {
-        format = replaceStatusCodeFromTemplate(format, response.getStatusCode()); 
+        format = replaceStatusCodeFromTemplate(format, response.getStatusCode());
         format = replaceHeadersFromTemplate(format, response.getHeaders());
         format = replaceBodyFromTemplate(format, response.getBody());
         return format;
@@ -138,9 +141,9 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         Reader reader = new InputStreamReader(inputStream);
         StringBuilder formatter = new StringBuilder(format);
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
-        JsonReader JsonReader = Json.createReader(reader);
-        JsonStructure jsonStructure = JsonReader.read();
-        JsonReader.close();
+        JsonReader jsonReader = Json.createReader(reader);
+        JsonStructure jsonStructure = jsonReader.read();
+        jsonReader.close();
         while (matcher.find()) {
             String key = matcher.group(1);
             String pointerKey = key;
@@ -153,7 +156,8 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                     try {
                         formatter.replace(index, index + formatKey.length(),
                                 "" + (jsonPointer.containsValue(jsonStructure)
-                                        ? jsonPointer.getValue(jsonStructure).toString().replaceAll("^\"|\"$", "")
+                                        ? jsonPointer.getValue(jsonStructure).toString()
+                                                .replaceAll("^\"|\"$", "")
                                         : ""));
                     } catch (JsonException ex) {
                         formatter.replace(index, index + formatKey.length(), "");
