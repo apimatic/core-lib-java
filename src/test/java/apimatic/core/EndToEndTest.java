@@ -46,6 +46,7 @@ public class EndToEndTest extends MockCoreConfig {
     private static final int METHOD_NOT_ALLOWED = 405;
     private static final int UNSUPPORTED_MEDIA = 415;
     private static final int INTERNAL_SERVER_ERROR = 500;
+    private static final int GONE_CLIENT = 410;
 
     /**
      * Initializes mocks annotated with Mock.
@@ -212,7 +213,7 @@ public class EndToEndTest extends MockCoreConfig {
         String actual = exception.getMessage().trim();
         assertEquals(actual, expected);
     }
-    
+
     /**
      * Test the Global Error template.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -228,7 +229,7 @@ public class EndToEndTest extends MockCoreConfig {
         String actual = exception.getMessage().trim();
         assertEquals(actual, expected);
     }
-    
+
     /**
      * Test the Global Error template.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -238,13 +239,13 @@ public class EndToEndTest extends MockCoreConfig {
     public void testGlobalErrorTemplateExistScalarBody() throws IOException, CoreApiException {
         String responseString = "\"true\"";
         Exception exception = assertThrows(CoreApiException.class, () -> {
-            getApiCallGlobalErrorTemplate(responseString, 410).execute();
+            getApiCallGlobalErrorTemplate(responseString, GONE_CLIENT).execute();
         });
         String expected = "Failed to make the request, true";
         String actual = exception.getMessage().trim();
         assertEquals(actual, expected);
     }
-    
+
     /**
      * Test the Global Error template missing status code.
      * @throws IOException Signals that an I/O exception of some sort has occurred.

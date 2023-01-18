@@ -127,7 +127,8 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         JsonStructure jsonStructure = null;
         try {
             jsonStructure = jsonReader.read();
-        }catch (Exception e) {
+        } catch (Exception e) {
+            // No need to do anything here
         }
         jsonReader.close();
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
