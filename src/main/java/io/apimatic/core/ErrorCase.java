@@ -2,11 +2,6 @@ package io.apimatic.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.json.Json;
@@ -101,12 +96,6 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         return new ErrorCase<ExceptionType>(reason, exceptionCreator, true);
     }
 
-    /**
-     * Replace the placeholder of error template.
-     * @param response A request response from server side.
-     * @param format A error template.
-     * @return A updated string.
-     */
     private void replacePlaceHolder(Response response) {
         replaceStatusCodeFromTemplate(response.getStatusCode());
         replaceHeadersFromTemplate(response.getHeaders());
@@ -153,7 +142,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                         String toReplaceString = responseBody;
                         if (jsonPointer.containsValue(jsonStructure)) {
                             toReplaceString = jsonPointer.getValue(jsonStructure).toString();
-                        } 
+                        }
                         formatter.replace(index, index + formatKey.length(), toReplaceString);
                     } catch (JsonException ex) {
                         formatter.replace(index, index + formatKey.length(), "");

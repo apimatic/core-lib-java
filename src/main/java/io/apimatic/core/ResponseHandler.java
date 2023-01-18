@@ -204,15 +204,15 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         String errorCode = String.valueOf(statusCode);
 
 
-        ThrowConfiguredException(localErrorCases, errorCode, httpContext);
-        ThrowConfiguredException(globalErrorCases, errorCode, httpContext);
+        throwConfiguredException(localErrorCases, errorCode, httpContext);
+        throwConfiguredException(globalErrorCases, errorCode, httpContext);
 
         if ((statusCode < MIN_SUCCESS_CODE) || (statusCode > MAX_SUCCESS_CODE)) {
             globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
         }
     }
 
-    private void ThrowConfiguredException(Map<String, ErrorCase<ExceptionType>> errorCases,
+    private void throwConfiguredException(Map<String, ErrorCase<ExceptionType>> errorCases,
             String errorCode, Context httpContext) throws ExceptionType {
         String defaultErrorCode = "";
         Matcher match = Pattern.compile("^[(4|5)[0-9]]{3}").matcher(errorCode);
@@ -310,8 +310,9 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param <IntermediateResponseType> the intermediate type of api response.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <IntermediateResponseType> Builder<ResponseType, ExceptionType> apiResponseDeserializer(
-                Deserializer<IntermediateResponseType> intermediateDeserializer) {
+        public <IntermediateResponseType> Builder<ResponseType, ExceptionType> 
+                apiResponseDeserializer(
+                        Deserializer<IntermediateResponseType> intermediateDeserializer) {
             this.intermediateDeserializer = intermediateDeserializer;
             return this;
         }
