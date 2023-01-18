@@ -189,18 +189,62 @@ public class EndToEndTest extends MockCoreConfig {
         Exception exception = assertThrows(GlobalTestException.class, () -> {
             getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
         });
-        String expected = "Failed to make the request, 400 UNAUTHORIZED - {\r\n"
-                + "  errors: [\r\n"
-                + "    {\r\n"
-                + "      category: AUTHENTICATION_ERROR,\r\n"
-                + "      code: UNAUTHORIZED\r\n"
-                + "    }\r\n"
-                + "  ]\r\n"
-                + "}";
+        String expected = "Failed to make the request, 400 UNAUTHORIZED -";
         String actual = exception.getMessage().trim();
         assertEquals(actual, expected);
     }
 
+    /**
+     * Test the Global Error template.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws CoreApiException Exception in api call execution.
+     */
+    @Test
+    public void testGlobalErrorTemplateUnknownPropertyBody() throws IOException, CoreApiException {
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+                + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
+                + "      \"code\": \"UNAUTHORIZED\"\r\n" + "    }\r\n" + "  ]\r\n" + "}\r\n"
+                + "\r\n";
+        Exception exception = assertThrows(GlobalTestException.class, () -> {
+            getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
+        });
+        String expected = "Failed to make the request, 400 UNAUTHORIZED -";
+        String actual = exception.getMessage().trim();
+        assertEquals(actual, expected);
+    }
+    
+    /**
+     * Test the Global Error template.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws CoreApiException Exception in api call execution.
+     */
+    @Test
+    public void testGlobalErrorTemplateScalarBody() throws IOException, CoreApiException {
+        String responseString = "\"true\"";
+        Exception exception = assertThrows(GlobalTestException.class, () -> {
+            getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
+        });
+        String expected = "Failed to make the request, 400  -";
+        String actual = exception.getMessage().trim();
+        assertEquals(actual, expected);
+    }
+    
+    /**
+     * Test the Global Error template.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws CoreApiException Exception in api call execution.
+     */
+    @Test
+    public void testGlobalErrorTemplateExistScalarBody() throws IOException, CoreApiException {
+        String responseString = "\"true\"";
+        Exception exception = assertThrows(CoreApiException.class, () -> {
+            getApiCallGlobalErrorTemplate(responseString, 410).execute();
+        });
+        String expected = "Failed to make the request, true";
+        String actual = exception.getMessage().trim();
+        assertEquals(actual, expected);
+    }
+    
     /**
      * Test the Global Error template missing status code.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
@@ -444,6 +488,10 @@ public class EndToEndTest extends MockCoreConfig {
         globalErrorCase.put("401",
                 ErrorCase.setTemplate("Failed to make the request, {$response.header.content-type} "
                         + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                        (reason, context) -> new CoreApiException(reason, context)));
+
+        globalErrorCase.put("410",
+                ErrorCase.setTemplate("Failed to make the request, {$response.body}",
                         (reason, context) -> new CoreApiException(reason, context)));
 
         globalErrorCase.put("405",

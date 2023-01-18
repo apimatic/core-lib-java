@@ -1,7 +1,6 @@
 package io.apimatic.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.json.Json;
@@ -123,34 +122,56 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
     }
 
     private void replaceBodyFromTemplate(String responseBody) {
-        InputStream inputStream = new ByteArrayInputStream(responseBody.getBytes());
         StringBuilder formatter = new StringBuilder(reason);
-        JsonReader jsonReader = Json.createReader(inputStream);
-        JsonStructure jsonStructure = jsonReader.read();
+        JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
+        JsonStructure jsonStructure = null;
+        try {
+            jsonStructure = jsonReader.read();
+        }catch (Exception e) {
+        }
         jsonReader.close();
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
             String key = matcher.group(1);
             String pointerKey = key;
-            if (pointerKey.startsWith("$response.body#")) {
-                pointerKey = pointerKey.replace("$response.body#", "");
-                JsonPointer jsonPointer = Json.createPointer(pointerKey);
-                String formatKey = String.format("{%s}", key);
-                int index = formatter.indexOf(formatKey);
-                if (index != -1) {
-                    try {
-                        String toReplaceString = responseBody;
-                        if (jsonPointer.containsValue(jsonStructure)) {
-                            toReplaceString = jsonPointer.getValue(jsonStructure).toString();
-                        }
-                        formatter.replace(index, index + formatKey.length(), toReplaceString);
-                    } catch (JsonException ex) {
-                        formatter.replace(index, index + formatKey.length(), "");
-                    }
+            replaceBodyString(responseBody, formatter, jsonStructure, key, pointerKey);
+        }
+        reason = formatter.toString().replaceAll("\"", "");
+    }
+
+    private void replaceBodyString(String responseBody, StringBuilder formatter,
+            JsonStructure jsonStructure, String key, String pointerKey) {
+        if (pointerKey.startsWith("$response.body")) {
+            String formatKey = String.format("{%s}", key);
+            int index = formatter.indexOf(formatKey);
+            String toReplaceString = "";
+            toReplaceString = extractReplacementString(responseBody, jsonStructure, pointerKey,
+                    toReplaceString);
+            if (index != -1) {
+                try {
+
+                    formatter.replace(index, index + formatKey.length(), toReplaceString);
+                } catch (JsonException ex) {
+                    formatter.replace(index, index + formatKey.length(), "");
                 }
             }
         }
-        reason = formatter.toString().replaceAll("\"", "");
+    }
+
+    private String extractReplacementString(String responseBody, JsonStructure jsonStructure,
+            String pointerKey, String toReplaceString) {
+        if (pointerKey.contains("#")) {
+            pointerKey = pointerKey.replace("$response.body#", "");
+            JsonPointer jsonPointer = Json.createPointer(pointerKey);
+            if (jsonStructure != null && jsonPointer.containsValue(jsonStructure)) {
+                toReplaceString = jsonPointer.getValue(jsonStructure).toString();
+            }
+        } else {
+            if (responseBody != null && !responseBody.isEmpty()) {
+                toReplaceString = responseBody;
+            }
+        }
+        return toReplaceString;
     }
 
     private void replaceStatusCodeFromTemplate(int statusCode) {
