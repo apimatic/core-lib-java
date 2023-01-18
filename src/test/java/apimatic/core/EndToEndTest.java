@@ -132,6 +132,27 @@ public class EndToEndTest extends MockCoreConfig {
         assertEquals(actual, expected);
     }
 
+    /**
+     * Test the local error template.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws CoreApiException Exception in api call execution.
+     */
+    @Test
+    public void testLocalErrorTemplateNonScalerBody() throws IOException, CoreApiException {
+        String responseString = "{\r\n" + "  \"errors\": [\r\n" + "    {\r\n"
+                + "      \"category\": \"AUTHENTICATION_ERROR\",\r\n"
+                + "      \"code\": {\"type\" : \"status\"},\r\n"
+                + "      \"detail\": \"This request could not be authorized.\"\r\n" + "    }\r\n"
+                + "  ]\r\n" + "}\r\n" + "\r\n";
+        Exception exception = assertThrows(CoreApiException.class, () -> {
+            getApiCallLocalErrorTemplate(responseString, BAD_REQUEST).execute();
+        });
+        String expected = "Failed to make the request, 400 {type:status}"
+                + " - This request could not be authorized.";
+        String actual = exception.getMessage();
+        assertEquals(actual, expected);
+    }
+
 
     /**
      * Test the Global Error template.
@@ -168,8 +189,15 @@ public class EndToEndTest extends MockCoreConfig {
         Exception exception = assertThrows(GlobalTestException.class, () -> {
             getApiCallGlobalErrorTemplate(responseString, BAD_REQUEST).execute();
         });
-        String expected = "Failed to make the request, 400 UNAUTHORIZED - ";
-        String actual = exception.getMessage();
+        String expected = "Failed to make the request, 400 UNAUTHORIZED - {\r\n"
+                + "  errors: [\r\n"
+                + "    {\r\n"
+                + "      category: AUTHENTICATION_ERROR,\r\n"
+                + "      code: UNAUTHORIZED\r\n"
+                + "    }\r\n"
+                + "  ]\r\n"
+                + "}";
+        String actual = exception.getMessage().trim();
         assertEquals(actual, expected);
     }
 
@@ -413,19 +441,18 @@ public class EndToEndTest extends MockCoreConfig {
         globalErrorCase.put("404", ErrorCase.setReason("Not found",
                 (reason, context) -> new CoreApiException(reason, context)));
 
-        globalErrorCase.put("401", ErrorCase.setTemplate(
-                "Failed to make the request, {$response.header.content-type} "
+        globalErrorCase.put("401",
+                ErrorCase.setTemplate("Failed to make the request, {$response.header.content-type} "
                         + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                (reason, context) -> new CoreApiException(reason, context)));
+                        (reason, context) -> new CoreApiException(reason, context)));
 
-        globalErrorCase.put("405", ErrorCase.setTemplate(
-                "Failed to make the request, {$response.header.accept} "
+        globalErrorCase.put("405",
+                ErrorCase.setTemplate("Failed to make the request, {$response.header.accept} "
                         + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                (reason, context) -> new CoreApiException(reason, context)));
+                        (reason, context) -> new CoreApiException(reason, context)));
 
         globalErrorCase.put("500",
-                ErrorCase.setTemplate(
-                        "Failed to make the request, http status code: {$statusCode}",
+                ErrorCase.setTemplate("Failed to make the request, http status code: {$statusCode}",
                         (reason, context) -> new CoreApiException(reason, context)));
 
         globalErrorCase.put("4XX",

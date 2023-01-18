@@ -107,13 +107,12 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @throws ExceptionType Represents error response from the server.
      */
     @SuppressWarnings("unchecked")
-    public ResponseType handle(
-            Request httpRequest, Response httpResponse, GlobalConfiguration globalConfiguration,
+    public ResponseType handle(Request httpRequest, Response httpResponse,
+            GlobalConfiguration globalConfiguration,
             CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
-        Context httpContext =
-                globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest,
-                        httpResponse);
+        Context httpContext = globalConfiguration.getCompatibilityFactory()
+                .createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
         if (globalConfiguration.getHttpCallback() != null) {
             globalConfiguration.getHttpCallback().onAfterResponse(httpContext);
@@ -167,9 +166,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private <T> ResponseType createResponseClassType(
-            Response httpResponse, GlobalConfiguration coreConfig, boolean hasBinaryResponse)
-            throws IOException {
+    private <T> ResponseType createResponseClassType(Response httpResponse,
+            GlobalConfiguration coreConfig, boolean hasBinaryResponse) throws IOException {
         CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
         switch (responseClassType) {
             case API_RESPONSE:
@@ -189,8 +187,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseType createDynamicResponse(
-            Response httpResponse, CompatibilityFactory compatibilityFactory) {
+    private ResponseType createDynamicResponse(Response httpResponse,
+            CompatibilityFactory compatibilityFactory) {
         return (ResponseType) compatibilityFactory.createDynamicResponse(httpResponse);
     }
 
@@ -204,32 +202,30 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         Response response = httpContext.getResponse();
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
+
+
+        ThrowConfiguredException(localErrorCases, errorCode, httpContext);
+        ThrowConfiguredException(globalErrorCases, errorCode, httpContext);
+
+        if ((statusCode < MIN_SUCCESS_CODE) || (statusCode > MAX_SUCCESS_CODE)) {
+            globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
+        }
+    }
+
+    private void ThrowConfiguredException(Map<String, ErrorCase<ExceptionType>> errorCases,
+            String errorCode, Context httpContext) throws ExceptionType {
         String defaultErrorCode = "";
         Matcher match = Pattern.compile("^[(4|5)[0-9]]{3}").matcher(errorCode);
         if (match.find()) {
             defaultErrorCode = errorCode.charAt(0) + "XX";
         }
-
-        if (localErrorCases != null) {
-            if (localErrorCases.containsKey(errorCode)) {
-                localErrorCases.get(errorCode).throwException(httpContext);
+        if (errorCases != null) {
+            if (errorCases.containsKey(errorCode)) {
+                errorCases.get(errorCode).throwException(httpContext);
             }
-            if (localErrorCases.containsKey(defaultErrorCode)) {
-                localErrorCases.get(defaultErrorCode).throwException(httpContext);
+            if (errorCases.containsKey(defaultErrorCode)) {
+                errorCases.get(defaultErrorCode).throwException(httpContext);
             }
-        }
-
-        if (globalErrorCases != null) {
-            if (globalErrorCases.containsKey(errorCode)) {
-                globalErrorCases.get(errorCode).throwException(httpContext);
-            }
-            if (globalErrorCases.containsKey(defaultErrorCode)) {
-                globalErrorCases.get(defaultErrorCode).throwException(httpContext);
-            }
-        }
-
-        if ((statusCode < MIN_SUCCESS_CODE) || (statusCode > MAX_SUCCESS_CODE)) {
-            globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
         }
     }
 
@@ -275,8 +271,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param errorCase to generate the SDK Exception.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> localErrorCase(
-                String statusCode, ErrorCase<ExceptionType> errorCase) {
+        public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
+                ErrorCase<ExceptionType> errorCase) {
             if (this.localErrorCases == null) {
                 this.localErrorCases = new HashMap<String, ErrorCase<ExceptionType>>();
             }
@@ -314,9 +310,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param <IntermediateResponseType> the intermediate type of api response.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <IntermediateResponseType> Builder<ResponseType, ExceptionType>
-                apiResponseDeserializer(
-                        Deserializer<IntermediateResponseType> intermediateDeserializer) {
+        public <IntermediateResponseType> Builder<ResponseType, ExceptionType> apiResponseDeserializer(
+                Deserializer<IntermediateResponseType> intermediateDeserializer) {
             this.intermediateDeserializer = intermediateDeserializer;
             return this;
         }

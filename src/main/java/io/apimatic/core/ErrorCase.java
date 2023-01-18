@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.json.Json;
@@ -62,7 +65,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * @throws ExceptionType Represents error response from the server.
      */
     public void throwException(Context httpContext) throws ExceptionType {
-        throw exceptionCreator.apply(getReason(httpContext), httpContext);
+        if (isErrorTemplate) {
+            replacePlaceHolder(httpContext.getResponse());
+        }
+        throw exceptionCreator.apply(reason, httpContext);
     }
 
     /**
@@ -95,31 +101,21 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         return new ErrorCase<ExceptionType>(reason, exceptionCreator, true);
     }
 
-
-    private String getReason(Context context) {
-        if (!isErrorTemplate) {
-            return reason;
-        }
-        reason = replacePlaceHolder(context.getResponse(), reason);
-        return reason;
-    }
-
     /**
      * Replace the placeholder of error template.
      * @param response A request response from server side.
      * @param format A error template.
      * @return A updated string.
      */
-    private String replacePlaceHolder(Response response, String format) {
-        format = replaceStatusCodeFromTemplate(format, response.getStatusCode());
-        format = replaceHeadersFromTemplate(format, response.getHeaders());
-        format = replaceBodyFromTemplate(format, response.getBody());
-        return format;
+    private void replacePlaceHolder(Response response) {
+        replaceStatusCodeFromTemplate(response.getStatusCode());
+        replaceHeadersFromTemplate(response.getHeaders());
+        replaceBodyFromTemplate(response.getBody());
     }
 
-    private String replaceHeadersFromTemplate(String format, HttpHeaders headers) {
-        StringBuilder formatter = new StringBuilder(format);
-        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
+    private void replaceHeadersFromTemplate(HttpHeaders headers) {
+        StringBuilder formatter = new StringBuilder(reason);
+        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
             String key = matcher.group(1);
             String pointerKey = key;
@@ -127,23 +123,23 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                 pointerKey = pointerKey.replace("$response.header.", "");
                 String formatKey = String.format("{%s}", key);
                 int index = formatter.indexOf(formatKey);
+                pointerKey = pointerKey.toLowerCase();
                 if (index != -1) {
                     formatter.replace(index, index + formatKey.length(),
                             "" + (headers.has(pointerKey) ? headers.value(pointerKey) : ""));
                 }
             }
         }
-        return formatter.toString();
+        reason = formatter.toString();
     }
 
-    private String replaceBodyFromTemplate(String format, String responseBody) {
+    private void replaceBodyFromTemplate(String responseBody) {
         InputStream inputStream = new ByteArrayInputStream(responseBody.getBytes());
-        Reader reader = new InputStreamReader(inputStream);
-        StringBuilder formatter = new StringBuilder(format);
-        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
-        JsonReader jsonReader = Json.createReader(reader);
+        StringBuilder formatter = new StringBuilder(reason);
+        JsonReader jsonReader = Json.createReader(inputStream);
         JsonStructure jsonStructure = jsonReader.read();
         jsonReader.close();
+        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
             String key = matcher.group(1);
             String pointerKey = key;
@@ -154,23 +150,23 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                 int index = formatter.indexOf(formatKey);
                 if (index != -1) {
                     try {
-                        formatter.replace(index, index + formatKey.length(),
-                                "" + (jsonPointer.containsValue(jsonStructure)
-                                        ? jsonPointer.getValue(jsonStructure).toString()
-                                                .replaceAll("^\"|\"$", "")
-                                        : ""));
+                        String toReplaceString = responseBody;
+                        if (jsonPointer.containsValue(jsonStructure)) {
+                            toReplaceString = jsonPointer.getValue(jsonStructure).toString();
+                        } 
+                        formatter.replace(index, index + formatKey.length(), toReplaceString);
                     } catch (JsonException ex) {
                         formatter.replace(index, index + formatKey.length(), "");
                     }
                 }
             }
         }
-        return formatter.toString();
+        reason = formatter.toString().replaceAll("\"", "");
     }
 
-    private static String replaceStatusCodeFromTemplate(String format, int statusCode) {
-        StringBuilder formatter = new StringBuilder(format);
-        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(format);
+    private void replaceStatusCodeFromTemplate(int statusCode) {
+        StringBuilder formatter = new StringBuilder(reason);
+        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
             String key = matcher.group(1);
             if (key.equals("$statusCode")) {
@@ -181,6 +177,6 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                 }
             }
         }
-        return formatter.toString();
+        reason = formatter.toString();
     }
 }
