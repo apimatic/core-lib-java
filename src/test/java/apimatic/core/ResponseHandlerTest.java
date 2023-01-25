@@ -327,7 +327,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>()
                         .localErrorCase("403",
-                                ErrorCase.create("Forbidden",
+                                ErrorCase.setReason("Forbidden",
                                         (reason, context) -> new CoreApiException(reason, context)))
                         .build();
         // stub
@@ -349,7 +349,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>()
                         .localErrorCase("403",
-                                ErrorCase.create("Forbidden",
+                                ErrorCase.setReason("Forbidden",
                                         (reason, context) -> new CoreApiException(reason, context)))
                         .globalErrorCase(getGlobalErrorCases()).build();
 
@@ -373,7 +373,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>()
                         .localErrorCase("403",
-                                ErrorCase.create("Forbidden",
+                                ErrorCase.setReason("Forbidden",
                                         (reason, context) -> new CoreApiException(reason, context)))
                         .globalErrorCase(getGlobalErrorCases()).build();
 
@@ -441,13 +441,13 @@ public class ResponseHandlerTest extends MockCoreConfig {
     private Map<String, ErrorCase<CoreApiException>> getGlobalErrorCases() {
 
         Map<String, ErrorCase<CoreApiException>> globalErrorCase = new HashMap<>();
-        globalErrorCase.put("400", ErrorCase.create("Bad Request",
+        globalErrorCase.put("400", ErrorCase.setReason("Bad Request",
                 (reason, context) -> new GlobalTestException(reason, context)));
 
-        globalErrorCase.put("404", ErrorCase.create("Not found",
+        globalErrorCase.put("404", ErrorCase.setReason("Not found",
                 (reason, context) -> new CoreApiException(reason, context)));
 
-        globalErrorCase.put(ErrorCase.DEFAULT, ErrorCase.create("Invalid response.",
+        globalErrorCase.put(ErrorCase.DEFAULT, ErrorCase.setReason("Invalid response.",
                 (reason, context) -> new CoreApiException(reason, context)));
 
         return globalErrorCase;

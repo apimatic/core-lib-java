@@ -3,6 +3,8 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
@@ -105,13 +107,12 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @throws ExceptionType Represents error response from the server.
      */
     @SuppressWarnings("unchecked")
-    public ResponseType handle(
-            Request httpRequest, Response httpResponse, GlobalConfiguration globalConfiguration,
+    public ResponseType handle(Request httpRequest, Response httpResponse,
+            GlobalConfiguration globalConfiguration,
             CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
 
-        Context httpContext =
-                globalConfiguration.getCompatibilityFactory().createHttpContext(httpRequest,
-                        httpResponse);
+        Context httpContext = globalConfiguration.getCompatibilityFactory()
+                .createHttpContext(httpRequest, httpResponse);
         // invoke the callback after response if its not null
         if (globalConfiguration.getHttpCallback() != null) {
             globalConfiguration.getHttpCallback().onAfterResponse(httpContext);
@@ -165,9 +166,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private <T> ResponseType createResponseClassType(
-            Response httpResponse, GlobalConfiguration coreConfig, boolean hasBinaryResponse)
-            throws IOException {
+    private <T> ResponseType createResponseClassType(Response httpResponse,
+            GlobalConfiguration coreConfig, boolean hasBinaryResponse) throws IOException {
         CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
         switch (responseClassType) {
             case API_RESPONSE:
@@ -187,8 +187,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseType createDynamicResponse(
-            Response httpResponse, CompatibilityFactory compatibilityFactory) {
+    private ResponseType createDynamicResponse(Response httpResponse,
+            CompatibilityFactory compatibilityFactory) {
         return (ResponseType) compatibilityFactory.createDynamicResponse(httpResponse);
     }
 
@@ -203,16 +203,29 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
 
-        if (localErrorCases != null && localErrorCases.containsKey(errorCode)) {
-            localErrorCases.get(errorCode).throwException(httpContext);
-        }
 
-        if (globalErrorCases != null && globalErrorCases.containsKey(errorCode)) {
-            globalErrorCases.get(errorCode).throwException(httpContext);
-        }
+        throwConfiguredException(localErrorCases, errorCode, httpContext);
+        throwConfiguredException(globalErrorCases, errorCode, httpContext);
 
         if ((statusCode < MIN_SUCCESS_CODE) || (statusCode > MAX_SUCCESS_CODE)) {
             globalErrorCases.get(ErrorCase.DEFAULT).throwException(httpContext);
+        }
+    }
+
+    private void throwConfiguredException(Map<String, ErrorCase<ExceptionType>> errorCases,
+            String errorCode, Context httpContext) throws ExceptionType {
+        String defaultErrorCode = "";
+        Matcher match = Pattern.compile("^[(4|5)[0-9]]{3}").matcher(errorCode);
+        if (match.find()) {
+            defaultErrorCode = errorCode.charAt(0) + "XX";
+        }
+        if (errorCases != null) {
+            if (errorCases.containsKey(errorCode)) {
+                errorCases.get(errorCode).throwException(httpContext);
+            }
+            if (errorCases.containsKey(defaultErrorCode)) {
+                errorCases.get(defaultErrorCode).throwException(httpContext);
+            }
         }
     }
 
@@ -258,8 +271,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param errorCase to generate the SDK Exception.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> localErrorCase(
-                String statusCode, ErrorCase<ExceptionType> errorCase) {
+        public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
+                ErrorCase<ExceptionType> errorCase) {
             if (this.localErrorCases == null) {
                 this.localErrorCases = new HashMap<String, ErrorCase<ExceptionType>>();
             }
