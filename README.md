@@ -2,7 +2,6 @@
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
 [![Lint Code][lint-badge]][lint-url]
-[![Maintainability][maintainability-url]][code-climate-url]
 [![Test Coverage][test-coverage-url]][code-climate-url]
 [![Licence][license-badge]][license-url]
 
