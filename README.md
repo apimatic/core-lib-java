@@ -2,7 +2,6 @@
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
 [![Lint Code][lint-badge]][lint-url]
-[![Maintainability][maintainability-url]][code-climate-url]
 [![Test Coverage][test-coverage-url]][code-climate-url]
 [![Licence][license-badge]][license-url]
 
@@ -57,7 +56,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 * [Core-interfaces-java](https://github.com/apimatic/core-interfaces-java)
 * [OkHttpClient](https://github.com/apimatic/okhttp-client-lib)
 
-[license-badge]: https://img.shields.io/badge/licence-APIMATIC-blue
+[license-badge]: https://img.shields.io/badge/licence-MIT-blue
 [license-url]: LICENSE
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
 [maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.2.0
