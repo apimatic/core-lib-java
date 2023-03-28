@@ -227,7 +227,7 @@ public final class TestHelper {
      * @param allowExtra extra value is allowed?.
      * @param isOrdered object value is in order?.
      * @throws IOException Signal that I/O errors occur.
-     * @return <tt>true</tt> if left left JSON object is a proper subset of right JSON object.
+     * @return true if left left JSON object is a proper subset of right JSON object.
      */
     public static boolean isJsonObjectProperSubsetOf(
             String leftObject, String rightObject, boolean checkValues, boolean allowExtra,
@@ -441,7 +441,7 @@ public final class TestHelper {
      * @param leftTree Left headers map.
      * @param rightTree Right headers map.
      * @param checkValues Check header values for equality?.
-     * @return <tt>true</tt> if left headers map is a proper subset of right headers map.
+     * @return true if left headers map is a proper subset of right headers map.
      */
     public static boolean areHeadersProperSubsetOf(
             Map<String, String> leftTree, Map<String, String> rightTree, boolean checkValues) {
