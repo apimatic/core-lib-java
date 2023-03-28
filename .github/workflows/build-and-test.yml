@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    
+
 jobs:
   build-and-test:
     name: Test using Java ${{ matrix.java }}
