@@ -42,7 +42,7 @@ jobs:
         uses: devops-infra/action-commit-push@master
         with:
            github_token: "${{ secrets.GITHUB_TOKEN }}"
-           commit_message: "ci(release-version): update pom.xml [ci skip]"
+           commit_message: "ci(release-version) update pom.xml [ci skip]"
            force: false
            target_branch: project-version-update
       - name: Push the version change
