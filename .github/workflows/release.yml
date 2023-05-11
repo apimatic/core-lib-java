@@ -53,10 +53,9 @@ jobs:
            branch: main
       - name: Delete the intermediate branch
         if: steps.release.outputs.exit_code == 0
-        uses: dawidd6/action-delete-branch@v3
-        with:
-          github_token: ${{github.token}}
-          branches: project-version-update
+        run: |
+           git branch -D project-version-update &>/dev/null || true
+           git push origin :project-version-update &>/dev/null || true
       - name: Create tag
         if: steps.release.outputs.exit_code == 0
         id: tag_version
