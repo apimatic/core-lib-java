@@ -13,7 +13,7 @@ import io.apimatic.core.utilities.CoreHelper;
  * This is a implementation class for OrbitCase.
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-@TypeCombinatorCase
+@TypeCombinatorCase(type = "Orbit")
 public class OrbitCase {
 
     @JsonValue

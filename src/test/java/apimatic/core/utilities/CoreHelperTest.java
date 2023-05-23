@@ -41,6 +41,8 @@ import apimatic.core.models.OrbitCase;
 import apimatic.core.models.Person;
 import apimatic.core.models.containers.SendParamsFormDateTime;
 import apimatic.core.models.containers.SendScalarParamBody;
+import io.apimatic.core.types.AnyOfValidationException;
+import io.apimatic.core.types.OneOfValidationException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.CoreJsonObject;
 import io.apimatic.core.utilities.CoreJsonValue;
@@ -968,20 +970,6 @@ public class CoreHelperTest {
     }
 
     @Test
-    public void testDeserializeOneOf() throws IOException {
-        String json =
-                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
-                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(json);
-
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        true);
-        assertNotNull(result);
-    }
-
-    @Test
     public void testDeserializeOneOfNull() throws IOException {
         JsonNode jsonNode = null;
         Object result =
@@ -990,9 +978,23 @@ public class CoreHelperTest {
         assertNull(result);
     }
 
+    @Test
+    public void testDeserializeOneOfA() throws IOException {
+        String json =
+                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
+                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(json);
+
+        Object result =
+                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
+                        true);
+        assertEquals("{key1=Atom [numberOfElectrons=2, numberOfProtons=2], "
+        		+ "key2=Atom [numberOfElectrons=2, numberOfProtons=2]}", result.toString());
+    }
 
     @Test
-    public void testDeserializeOneOf1() throws IOException {
+    public void testDeserializeOneOfB() throws IOException {
         String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
@@ -1000,31 +1002,39 @@ public class CoreHelperTest {
         Object result =
                 CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
                         true);
-        assertNotNull(result);
+        assertEquals("Orbit [numberOfElectrons=2]", result.toString());
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOf2() throws IOException {
+    @Test(expected = OneOfValidationException.class)
+    public void testDeserializeOneOfFailA() throws IOException {
         String json = "{\"RandomKey\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        try {
+        	CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        } catch (Exception e) {
+        	assertEquals("We could not match any acceptable type from "
+        			+ "Map<String, Atom>, Orbit on: {\"RandomKey\":2}", e.getMessage());
+			throw e;
+		}
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOf3() throws IOException {
-        String json =
-                "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
+    @Test(expected = OneOfValidationException.class)
+    public void testDeserializeOneOfFailB() throws IOException {
+        String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        try {
+        	CoreHelper.deserialize(jsonNode, Arrays.asList(OrbitCase.class, OrbitCase.class), true);
+        } catch (Exception e) {
+        	assertEquals("There are more than one matching types i.e. Orbit and "
+        			+ "Orbit on: {\"NumberOfElectrons\":2}", e.getMessage());
+			throw e;
+		}
     }
 
-
     @Test
-    public void testDeserializeAnyOf() throws IOException {
+    public void testDeserializeAnyOfA() throws IOException {
         String json =
                 "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
                         + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
@@ -1034,11 +1044,12 @@ public class CoreHelperTest {
         Object result =
                 CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
                         false);
-        assertNotNull(result);
+        assertEquals("{key1=Atom [numberOfElectrons=2, numberOfProtons=2], "
+        		+ "key2=Atom [numberOfElectrons=2, numberOfProtons=2]}", result.toString());
     }
 
     @Test
-    public void testDeserializeOneOfAnyOf1() throws IOException {
+    public void testDeserializeAnyOfB() throws IOException {
         String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
@@ -1046,28 +1057,38 @@ public class CoreHelperTest {
         Object result =
                 CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
                         false);
-        assertNotNull(result);
+        assertEquals("Orbit [numberOfElectrons=2]", result.toString());
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOfAnyOf2() throws IOException {
+    @Test(expected = AnyOfValidationException.class)
+    public void testDeserializeAnyOfFailA() throws IOException {
         String json = "{\"RandomKey\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        try {
+        	CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        } catch (Exception e) {
+        	assertEquals("We could not match any acceptable type from "
+        			+ "Map<String, Atom>, Orbit on: {\"RandomKey\":2}", e.getMessage());
+			throw e;
+		}
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeAnyOf3() throws IOException {
+    @Test(expected = AnyOfValidationException.class)
+    public void testDeserializeAnyOfFailB() throws IOException {
         String json =
                 "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        try {
+        	CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        } catch (Exception e) {
+        	assertEquals("We could not match any acceptable type "
+        			+ "from Map<String, Atom>, Orbit on: [{\"NumberOfElectrons\":2},"
+        			+ "{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}]", e.getMessage());
+			throw e;
+		}
     }
-
 
     @Test
     public void testTypeCombinatorSerializationString() throws JsonProcessingException {
