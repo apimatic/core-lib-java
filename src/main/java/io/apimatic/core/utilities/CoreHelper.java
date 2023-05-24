@@ -180,7 +180,7 @@ public class CoreHelper {
 
     /**
      * Strict Deserialization of Json data.
-     * 
+     *
      * @return {@link ObjectMapper}.
      */
     public static ObjectMapper getStrictMapper() {
