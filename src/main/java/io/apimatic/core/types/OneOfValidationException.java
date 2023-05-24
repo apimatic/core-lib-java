@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class OneOfValidationException extends IOException {
 
-	/**
-	 * UID for serialization.
-	 */
-	private static final long serialVersionUID = 6424174253911720228L;
+    /**
+     * UID for serialization.
+     */
+    private static final long serialVersionUID = 6424174253911720228L;
 
     /**
      * Initialization constructor.
@@ -20,16 +20,18 @@ public class OneOfValidationException extends IOException {
      * @param type2 The second type that also got mapped on jsonNode
      * @param json Value that was mapped by the above two types
      */
-    public OneOfValidationException(String type1, String type2, JsonNode json) {
-        super("There are more than one matching types i.e. " + type1 + " and " + type2 + " on: " + json );
+    public OneOfValidationException(final String type1, final String type2, final JsonNode json) {
+        super("There are more than one matching types i.e. "
+                + type1 + " and " + type2 + " on: " + json);
     }
 
-	/**
+    /**
      * Initialization constructor.
-	 * @param types List on unMapped types
-	 * @param json Value that was not mapped by the above types
-	 */
-	public OneOfValidationException(List<String> types, JsonNode json) {
-        super("We could not match any acceptable type from " + String.join(", ", types) + " on: " + json );
+     * @param types List on unMapped types
+     * @param json Value that was not mapped by the above types
+     */
+    public OneOfValidationException(final List<String> types, final JsonNode json) {
+        super("We could not match any acceptable type from "
+                + String.join(", ", types) + " on: " + json);
     }
 }

@@ -9,17 +9,18 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class AnyOfValidationException extends IOException {
 
-	/**
-	 * UID for serialization.
-	 */
-	private static final long serialVersionUID = 1214174253911720228L;
+    /**
+     * UID for serialization.
+     */
+    private static final long serialVersionUID = 1214174253911720228L;
 
-	/**
+    /**
      * Initialization constructor.
-	 * @param types List on unMapped types
-	 * @param json Value that was not mapped by the above types
-	 */
-	public AnyOfValidationException(List<String> types, JsonNode json) {
-        super("We could not match any acceptable type from " + String.join(", ", types) + " on: " + json );
+     * @param types List on unMapped types
+     * @param json Value that was not mapped by the above types
+     */
+    public AnyOfValidationException(final List<String> types, final JsonNode json) {
+        super("We could not match any acceptable type from "
+                + String.join(", ", types) + " on: " + json);
     }
 }

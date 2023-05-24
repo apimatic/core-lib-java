@@ -14,7 +14,11 @@ public interface TypeCombinator {
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface TypeCombinatorCase {
-    	public String type() default "";
+        /**
+         * Java type of the object wrapped in the annotated TypeCombinator container.
+         * @return String encoded java type of the wrapped object
+         */
+        String type() default "";
     }
 
     @Retention(RetentionPolicy.RUNTIME)
