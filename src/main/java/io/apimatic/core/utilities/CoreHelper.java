@@ -116,7 +116,7 @@ public class CoreHelper {
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
-     * 
+     *
      * @param serializerAnnotation The Annotation containing information about the
      *                             custom serializer of a collection.
      * @return The JsonSerializer instance of the required type.
@@ -141,7 +141,7 @@ public class CoreHelper {
 
     /**
      * Get a JsonSerializer instance from the provided annotation.
-     * 
+     *
      * @param serializerAnnotation The Annotation containing information about the
      *                             serializer.
      * @return The JsonSerializer instance of the required type.
@@ -156,7 +156,7 @@ public class CoreHelper {
 
     /**
      * Get a JsonSerializer instance for a collection from the provided annotation.
-     * 
+     *
      * @param serializerAnnotation The Annotation containing information about the
      *                             serializer of a collection.
      * @return The JsonSerializer instance of the required type.
@@ -171,7 +171,7 @@ public class CoreHelper {
 
     /**
      * Deserialization of Json data.
-     * 
+     *
      * @return {@link ObjectMapper}.
      */
     public static ObjectMapper getMapper() {
@@ -189,7 +189,7 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given object.
-     * 
+     *
      * @param obj The object to serialize into Json.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has
@@ -205,7 +205,7 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given object using a specified JsonSerializer.
-     * 
+     *
      * @param obj        The object to serialize into Json.
      * @param serializer The instance of JsonSerializer to use.
      * @return The serialized Json string representation of the given object.
@@ -239,7 +239,7 @@ public class CoreHelper {
 
     /**
      * Xml Serialization of a given object list.
-     * 
+     *
      * @param <T>      Type of object to be serialized.
      * @param objArray Object Array to be serialized.
      * @param rootName Root name for the xml.
@@ -273,7 +273,7 @@ public class CoreHelper {
 
     /**
      * Xml Serialization of a given object.
-     * 
+     *
      * @param <T>      Type of object to be serialized.
      * @param obj      Object to be serialized.
      * @param rootName Root name for the xml.
@@ -298,7 +298,7 @@ public class CoreHelper {
 
     /**
      * Json Serialization of a given container object based on annotation.
-     * 
+     *
      * @param obj The object to serialize into Json.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has
@@ -322,7 +322,7 @@ public class CoreHelper {
     /**
      * Json deserialization of the given Json string using a specified
      * JsonDerializer.
-     * 
+     *
      * @param jsonNode      The JsonNode to deserialize.
      * @param typeReference TypeReference of T1.
      * @param <T1>          The type of the object to deserialize into.
@@ -345,7 +345,7 @@ public class CoreHelper {
     /**
      * Json deserialization of the given Json string using a specified
      * JsonDerializer.
-     * 
+     *
      * @param json          The Json string to deserialize.
      * @param typeReference TypeReference of T1.
      * @param <T1>          The type of the object to deserialize into.
@@ -374,7 +374,7 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
+     *
      * @param <T>   The type of the object to deserialize into.
      * @param json  The Json string to deserialize.
      * @param clazz The type of the object to deserialize into.
@@ -393,7 +393,7 @@ public class CoreHelper {
      * Strict JSON deserialization of the given JSON string with
      * FAIL_ON_UNKNOWN_PROPERTIES flag as true, used particularly for type
      * combinators.
-     * 
+     *
      * @param <T>     The type of the object to deserialize into
      * @param json    The JsonNode to deserialize
      * @param classes The list of types of the object to deserialize into
@@ -446,7 +446,7 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
+     *
      * @param json The Json string to deserialize.
      * @return The deserialized Json as a Map.
      * @throws IOException Signals if any I/O exception occurred.
@@ -456,14 +456,14 @@ public class CoreHelper {
             return null;
         }
 
-        TypeReference<LinkedHashMap<String, Object>> typeRef = new TypeReference<LinkedHashMap<String, Object>>() {
-        };
+        TypeReference<LinkedHashMap<String, Object>> typeRef =
+                new TypeReference<LinkedHashMap<String, Object>>() {};
         return deserialize(json, typeRef);
     }
 
     /**
      * JSON Deserialization of the given json string.
-     * 
+     *
      * @param json          The json string to deserialize.
      * @param typeReference TypeReference of T.
      * @param <T>           The type of the object to deserialize into.
@@ -482,7 +482,7 @@ public class CoreHelper {
     /**
      * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES
      * flag as true.
-     * 
+     *
      * @param jsonNode      The Json Node to deserialize.
      * @param typeReference TypeReference of T.
      * @param <T>           The type of the object to deserialize into.
@@ -501,7 +501,7 @@ public class CoreHelper {
     /**
      * JSON deserialization of the given JsonNode with FAIL_ON_UNKNOWN_PROPERTIES
      * flag as true.
-     * 
+     *
      * @param <T>      The type of the object to deserialize into.
      * @param jsonNode The Json Node to deserialize.
      * @param clazz    The type of the object to deserialize into.
@@ -518,7 +518,7 @@ public class CoreHelper {
 
     /**
      * XML Deserialization of the given xml string.
-     * 
+     *
      * @param <T> The class of the object to deserialize into.
      * @param xml The xml string to deserialize.
      * @param cls The class of the object to deserialize into.
@@ -540,7 +540,7 @@ public class CoreHelper {
 
     /**
      * XML Deserialization of the given xml string.
-     * 
+     *
      * @param <T> The class of the object to deserialize into.
      * @param xml The xml string to deserialize.
      * @param cls The class of the object to deserialize into.
@@ -564,7 +564,7 @@ public class CoreHelper {
 
     /**
      * XML Deserialization of the given xml string for simple types.
-     * 
+     *
      * @param <T> The class of the object to deserialize into.
      * @param xml The xml string to deserialize.
      * @param cls The class of the object to deserialize into.
@@ -594,7 +594,7 @@ public class CoreHelper {
     /**
      * JSON Deserialization from custom deserializer based on given discriminator
      * and registry.
-     * 
+     *
      * @param jp                        Parsed used for reading JSON content.
      * @param ctxt                      Context that can be used to access
      *                                  information about this deserialization
@@ -630,7 +630,7 @@ public class CoreHelper {
 
     /**
      * Json deserialization of the given Json string.
-     * 
+     *
      * @param json The Json string to deserialize.
      * @return The deserialized Json as an Object.
      */
@@ -650,7 +650,7 @@ public class CoreHelper {
 
     /**
      * JSON Deserialization of the given json string.
-     * 
+     *
      * @param <T>        The type of the object to deserialize into.
      * @param json       The Json string to deserialize.
      * @param classArray The class of the array of objects to deserialize into.
@@ -668,7 +668,7 @@ public class CoreHelper {
 
     /**
      * Replaces template parameters in the given URL.
-     * 
+     *
      * @param queryBuilder The query string builder to replace the template
      *                     parameters.
      * @param parameters   The parameters to replace in the URL.
@@ -713,7 +713,7 @@ public class CoreHelper {
 
     /**
      * Appends the given set of parameters to the given query string.
-     * 
+     *
      * @param queryBuilder             The query URL string to append the
      *                                 parameters.
      * @param parameters               The parameters to append.
@@ -739,7 +739,7 @@ public class CoreHelper {
 
     /**
      * Validates if the string is null, empty or whitespace.
-     * 
+     *
      * @param s The string to validate.
      * @return The result of validation.
      */
@@ -763,7 +763,7 @@ public class CoreHelper {
 
     /**
      * Replaces all occurrences of the given string in the string builder.
-     * 
+     *
      * @param stringBuilder The string builder to update with replaced strings.
      * @param toReplace     The string to replace in the string builder.
      * @param replaceWith   The string to replace with.
@@ -781,7 +781,7 @@ public class CoreHelper {
 
     /**
      * Updates the user agent header value.
-     * 
+     *
      * @param apiUserAgent    the String value of apiUserAgent.
      * @param userAgentConfig the Map of user agent config.
      * @return {@link String}.
@@ -806,7 +806,7 @@ public class CoreHelper {
 
     /**
      * Removes null values from the given map.
-     * 
+     *
      * @param map Map of values.
      */
     public static void removeNullValues(Map<String, ?> map) {
@@ -819,7 +819,7 @@ public class CoreHelper {
 
     /**
      * Validates and processes the given URL.
-     * 
+     *
      * @param url The given URL to process.
      * @return Pre-process URL as string.
      */
@@ -844,7 +844,7 @@ public class CoreHelper {
 
     /**
      * Prepares Array style form fields from a given array of values.
-     * 
+     *
      * @param value                    Value for the form fields.
      * @param arraySerializationFormat serialization format.
      * @return Dictionary of form fields created from array elements.
@@ -861,7 +861,7 @@ public class CoreHelper {
     /**
      * JSON Deserialization of the given json string with FAIL_ON_UNKNOWN_PROPERTIES
      * flag as true.
-     * 
+     *
      * @param <T>        The type of the object to deserialize into.
      * @param json       The Json string to deserialize.
      * @param classArray The class of the array of objects to deserialize into.
@@ -879,7 +879,7 @@ public class CoreHelper {
 
     /**
      * Deduces the type based on given discriminator and registry.
-     * 
+     *
      * @param jsonNode      The json to check against.
      * @param discriminator The model's discriminator.
      * @param registry      The Map containing all discriminators as keys and
@@ -918,7 +918,7 @@ public class CoreHelper {
 
     /**
      * Deduces the type from immediate child if exists based on given discriminator.
-     * 
+     *
      * @param jsonNode      The json to check against.
      * @param discriminator The model's discriminator.
      * @return The type to deserialize into.
@@ -945,7 +945,7 @@ public class CoreHelper {
 
     /**
      * Encodes a given object to URL encoded string.
-     * 
+     *
      * @param name                     Name of the object.
      * @param obj                      Raw object sent from caller.
      * @param objBuilder               String of elements.
@@ -1007,7 +1007,7 @@ public class CoreHelper {
 
     /**
      * Flattening a collection of objects into a string.
-     * 
+     *
      * @param elemName  The element name of collection.
      * @param array     Array of elements to flatten.
      * @param encode    Need to encode?.
@@ -1045,7 +1045,7 @@ public class CoreHelper {
 
     /**
      * Tries URL encode using UTF-8.
-     * 
+     *
      * @param value                 The value to URL encode.
      * @param spaceAsPercentEncoded The flag get space character as percent encoded.
      * @return Encoded url.
@@ -1064,7 +1064,7 @@ public class CoreHelper {
 
     /**
      * Responsible to encode into base64 the username and password
-     * 
+     *
      * @param basicAuthUserName The auth username
      * @param basicAuthPassword The auth password
      * @return The base64 encoded String
@@ -1119,7 +1119,7 @@ public class CoreHelper {
 
     /**
      * Converts a given object to a form encoded map.
-     * 
+     *
      * @param objName                  Name of the object.
      * @param obj                      The object to convert into a map.
      * @param objectList               The object list to populate.
@@ -1275,7 +1275,7 @@ public class CoreHelper {
 
     /**
      * Processes the value and load into objectList against key.
-     * 
+     *
      * @param key                      The key to used for creation of key value
      *                                 pair.
      * @param value                    The value to process against the given key.
@@ -1306,7 +1306,7 @@ public class CoreHelper {
 
     /**
      * While processing objects to map, loads value after serializing.
-     * 
+     *
      * @param key                      The key to used for creation of key value
      *                                 pair.
      * @param value                    The value to process against the given key.
@@ -1336,7 +1336,7 @@ public class CoreHelper {
     /**
      * While processing objects to map, decides whether to perform recursion or load
      * value.
-     * 
+     *
      * @param key                      The key for creating key value pair.
      * @param value                    The value to process against the given key.
      * @param objectList               The object list to process with key value
@@ -1372,7 +1372,7 @@ public class CoreHelper {
 
     /**
      * While processing objects to map, loads value after serializing.
-     * 
+     *
      * @param key                      The key to used for creation of key value
      *                                 pair.
      * @param value                    The value to process against the given key.
@@ -1404,7 +1404,7 @@ public class CoreHelper {
 
     /**
      * Check if the given object can be wrapped directly.
-     * 
+     *
      * @param object The given object.
      * @return true if the class is an autoboxed class e.g., Integer.
      */
@@ -1418,7 +1418,7 @@ public class CoreHelper {
 
     /**
      * Json Serialization of an ENUM defined under oneOf/anyOf container.
-     * 
+     *
      * @param value The object to serialize into Json String.
      * @return The serialized Json String representation of the given object.
      * @throws JsonProcessingException Signals that a Json Processing Exception has

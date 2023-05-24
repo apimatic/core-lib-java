@@ -78,12 +78,14 @@ public class CoreHelperTest {
     private static final String INVALID_XML = "\r\n"
             + "  item number=\"3\" string=\"XMLRootName\"\r\n" + "    number>6</number>\r\n"
             + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
-    private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n"
+    private static final String XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n"
             + "<arrayOfModels number=\"3\" string=\"XMLRootName\">\r\n"
             + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n"
             + "</arrayOfModels>\r\n" + "";
 
-    private static final String JSON_OBJECT = "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson."
+    private static final String JSON_OBJECT =
+            "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson."
             + "schema.json&operations[$schema]=https%3A%2F%2Fjson-schema"
             + ".org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations"
             + "[type]=object&operations[properties][firstName][type]=string&operations"
@@ -92,7 +94,8 @@ public class CoreHelperTest {
             + "[lastName][description]=The+person%27s+last+name.&operations"
             + "[properties][age][type]=integer&operations[properties][age][description]"
             + "=Age+in+years&operations[properties][age][minimum]=0";
-    private static final String JSON_VALUE = "https://localhost:3000/query?operations=test-JsonValue";
+    private static final String JSON_VALUE =
+            "https://localhost:3000/query?operations=test-JsonValue";
 
     @Test
     public void testSerializeNullObject() throws JsonProcessingException {
@@ -1044,7 +1047,8 @@ public class CoreHelperTest {
 
     @Test(expected = AnyOfValidationException.class)
     public void testDeserializeAnyOfFailB() throws IOException {
-        String json = "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
+        String json =
+                "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
         try {
