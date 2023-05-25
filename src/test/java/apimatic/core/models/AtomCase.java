@@ -15,7 +15,7 @@ import io.apimatic.core.utilities.CoreHelper;
  * This is a implementation class for AtomCase.
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-@TypeCombinatorCase
+@TypeCombinatorCase(type = "Map<String, Atom>")
 public class AtomCase {
 
     @JsonValue

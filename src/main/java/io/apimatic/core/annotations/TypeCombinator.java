@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import com.fasterxml.jackson.databind.JsonSerializer;
 
 /**
@@ -13,6 +14,11 @@ public interface TypeCombinator {
     @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface TypeCombinatorCase {
+        /**
+         * Java type of the object wrapped in the annotated TypeCombinator container.
+         * @return String encoded java type of the wrapped object
+         */
+        String type() default "";
     }
 
     @Retention(RetentionPolicy.RUNTIME)

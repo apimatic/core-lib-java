@@ -41,6 +41,8 @@ import apimatic.core.models.OrbitCase;
 import apimatic.core.models.Person;
 import apimatic.core.models.containers.SendParamsFormDateTime;
 import apimatic.core.models.containers.SendScalarParamBody;
+import io.apimatic.core.types.AnyOfValidationException;
+import io.apimatic.core.types.OneOfValidationException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.CoreJsonObject;
 import io.apimatic.core.utilities.CoreJsonValue;
@@ -70,29 +72,28 @@ public class CoreHelperTest {
     private static final long UNIQUE_UUID_NUMBER2 = 87866L;
     private static final long UNIQUE_UUID_NUMBER1 = 876547L;
     private static final List<Integer> LIST_OF_INTEGERS = Arrays.asList(1, 2, 3, 4, 5);
-    private static final String XML_ARRAY =
-            "<arrayOfModels>\r\n" + "  <item number=\"3\" string=\"XMLRootName\">\r\n"
-                    + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n" + "</item>\r\n"
-                    + "</arrayOfModels>";
-    private static final String INVALID_XML =
-            "\r\n" + "  item number=\"3\" string=\"XMLRootName\"\r\n" + "    number>6</number>\r\n"
-                    + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
+    private static final String XML_ARRAY = "<arrayOfModels>\r\n"
+            + "  <item number=\"3\" string=\"XMLRootName\">\r\n" + "    <number>6</number>\r\n"
+            + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
+    private static final String INVALID_XML = "\r\n"
+            + "  item number=\"3\" string=\"XMLRootName\"\r\n" + "    number>6</number>\r\n"
+            + "    <string>Data</string>\r\n" + "</item>\r\n" + "</arrayOfModels>";
     private static final String XML =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n"
-                    + "<arrayOfModels number=\"3\" string=\"XMLRootName\">\r\n"
-                    + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n"
-                    + "</arrayOfModels>\r\n" + "";
+            + "<arrayOfModels number=\"3\" string=\"XMLRootName\">\r\n"
+            + "    <number>6</number>\r\n" + "    <string>Data</string>\r\n"
+            + "</arrayOfModels>\r\n" + "";
 
     private static final String JSON_OBJECT =
             "https://localhost:3000/query?operations[$id]=https%3A%2F%2Fexample.com%2Fperson."
-                    + "schema.json&operations[$schema]=https%3A%2F%2Fjson-schema"
-                    + ".org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations"
-                    + "[type]=object&operations[properties][firstName][type]=string&operations"
-                    + "[properties][firstName][description]=The+person%27s+first+name.&"
-                    + "operations[properties][lastName][type]=string&operations[properties]"
-                    + "[lastName][description]=The+person%27s+last+name.&operations"
-                    + "[properties][age][type]=integer&operations[properties][age][description]"
-                    + "=Age+in+years&operations[properties][age][minimum]=0";
+            + "schema.json&operations[$schema]=https%3A%2F%2Fjson-schema"
+            + ".org%2Fdraft%2F2020-12%2Fschema&operations[title]=Person&operations"
+            + "[type]=object&operations[properties][firstName][type]=string&operations"
+            + "[properties][firstName][description]=The+person%27s+first+name.&"
+            + "operations[properties][lastName][type]=string&operations[properties]"
+            + "[lastName][description]=The+person%27s+last+name.&operations"
+            + "[properties][age][type]=integer&operations[properties][age][description]"
+            + "=Age+in+years&operations[properties][age][minimum]=0";
     private static final String JSON_VALUE =
             "https://localhost:3000/query?operations=test-JsonValue";
 
@@ -101,7 +102,6 @@ public class CoreHelperTest {
         Object obj = null;
         assertNull(CoreHelper.serialize(obj));
     }
-
 
     @Test
     public void testIsWhiteSpace() {
@@ -132,7 +132,6 @@ public class CoreHelperTest {
         String username = "username";
         String password = "password";
 
-
         String expectedEncodedString = "Basic dXNlcm5hbWU6cGFzc3dvcmQ=";
         String actualEncodedString = CoreHelper.getBase64EncodedCredentials(username, password);
         assertEquals(actualEncodedString, expectedEncodedString);
@@ -160,7 +159,6 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
-
     @Test
     public void testUrlEncodingPercentage() {
         String urlString = "https://localhost:8080/query=0";
@@ -179,7 +177,6 @@ public class CoreHelperTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(server);
         stringBuilder.append(path);
-
 
         String expected = "https://localhost:3000/query/basic/body";
         String actual = CoreHelper.cleanUrl(stringBuilder);
@@ -223,9 +220,8 @@ public class CoreHelperTest {
     public void testUpdateUserAgent() {
         String userAgent = "Java|31.8.0|{engine}|{engine-version}|{os-info}";
 
-        String expected =
-                "Java|31.8.0|JRE|" + System.getProperty("java.runtime.version") + "|"
-                        + System.getProperty("os.name") + "-" + System.getProperty("os.version");
+        String expected = "Java|31.8.0|JRE|" + System.getProperty("java.runtime.version") + "|"
+                + System.getProperty("os.name") + "-" + System.getProperty("os.version");
 
         String actual = CoreHelper.updateUserAgent(userAgent, null);
 
@@ -238,16 +234,14 @@ public class CoreHelperTest {
         Map<String, String> userAgentConfig = new HashMap<>();
         userAgentConfig.put("{square-version}", "17.2.6");
 
-        String expected =
-                "Java|31.8.0|JRE|" + System.getProperty("java.runtime.version") + "|"
-                        + System.getProperty("os.name") + "-" + System.getProperty("os.version")
-                        + "|17.2.6";
+        String expected = "Java|31.8.0|JRE|" + System.getProperty("java.runtime.version") + "|"
+                + System.getProperty("os.name") + "-" + System.getProperty("os.version")
+                + "|17.2.6";
 
         String actual = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
 
         assertEquals(actual, expected);
     }
-
 
     @Test
     public void testAppendTemplateParameters() {
@@ -283,7 +277,6 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
-
     @Test
     public void testAppendTemplateParameters2() {
         String baseUri = "https://localhost:3000";
@@ -318,7 +311,6 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void testAppendTemplateParameters4() {
         String templateStringValue = "strings";
@@ -330,7 +322,6 @@ public class CoreHelperTest {
                 new SimpleEntry<Object, Boolean>(templateStringValue, shouldEncode));
         CoreHelper.appendUrlWithTemplateParameters(queryBuilder, templateParameters);
     }
-
 
     @Test
     public void testAppendTemplateParametersShouldNotEncode() {
@@ -349,7 +340,6 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
-
     @Test
     public void testAppendTemplateParameters5() {
         String baseUri = "https://localhost:3000";
@@ -363,11 +353,10 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
-
     @Test
     public void testptionalNullable() throws IOException {
-        ChildClass child =
-                CoreHelper.deserialize(
+        ChildClass child = CoreHelper
+                .deserialize(
                         "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":"
                                 + "\"not nullable and required\",\"class\":23,\""
                                 + "Parent_Optional_Nullable_With_Default_Value\":"
@@ -379,14 +368,13 @@ public class CoreHelperTest {
                                 + "nullable and required\",\"Child_Class_Array\":null}",
                         ChildClass.class);
 
-        String expected =
-                "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":"
-                        + "\"not nullable and required\",\"Parent_Optional_Nullable_With_"
-                        + "Default_Value\":\"Has default value\",\"Parent_Required_Nullable"
-                        + "\":null,\"Parent_Required\":\"not nullable and required\","
-                        + "\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":"
-                        + "\"With default value\",\"Required_Nullable\":null,\"Required\":"
-                        + "\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
+        String expected = "{\"Grand_Parent_Required_Nullable\":null,\"Grand_Parent_Required\":"
+                + "\"not nullable and required\",\"Parent_Optional_Nullable_With_"
+                + "Default_Value\":\"Has default value\",\"Parent_Required_Nullable"
+                + "\":null,\"Parent_Required\":\"not nullable and required\","
+                + "\"Optional_Nullable\":null,\"Optional_Nullable_With_Default_Value\":"
+                + "\"With default value\",\"Required_Nullable\":null,\"Required\":"
+                + "\"not nullable and required\",\"Child_Class_Array\":null,\"class\":23}";
 
         String actual = CoreHelper.serialize(child);
         assertEquals(actual, expected);
@@ -617,8 +605,6 @@ public class CoreHelperTest {
         assertTrue(actual.contains(","));
     }
 
-
-
     @Test(expected = IllegalArgumentException.class)
     public void testAppendQueryParameters4() {
         String queryValue = "x+y";
@@ -630,7 +616,6 @@ public class CoreHelperTest {
                 ArraySerializationFormat.INDEXED);
     }
 
-
     @Test
     public void testPrepareFormFields() {
         String body = "test for prepare form fields";
@@ -639,8 +624,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body", body));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
 
@@ -652,11 +637,10 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body", body.toString()));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
-
 
     @Test
     public void testPrepareFormFieldsModel() {
@@ -667,11 +651,10 @@ public class CoreHelperTest {
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[name]", "ali"));
         expected.add(new SimpleEntry<String, Object>("body[field]", "QA"));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
-
 
     @Test
     public void testPrepareFormFieldsIndexedSerialization() {
@@ -683,8 +666,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[0]", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
 
@@ -696,8 +679,8 @@ public class CoreHelperTest {
         formParameters.put("body", body);
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
 
@@ -710,8 +693,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.PLAIN);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.PLAIN);
         assertEquals(actual, expected);
     }
 
@@ -724,8 +707,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[]", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.UNINDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.UNINDEXED);
         assertEquals(actual, expected);
     }
 
@@ -739,8 +722,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[0]", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.CSV);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.CSV);
         assertEquals(actual, expected);
     }
 
@@ -753,8 +736,8 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[0]", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.PSV);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.PSV);
         assertEquals(actual, expected);
     }
 
@@ -767,19 +750,18 @@ public class CoreHelperTest {
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[0]", bodyText));
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.TSV);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.TSV);
         assertEquals(actual, expected);
     }
-
 
     @Test
     public void testPrepareFormFields1() {
         Map<String, Object> formParameters = null;
 
         List<SimpleEntry<String, Object>> expected = new ArrayList<SimpleEntry<String, Object>>();
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
 
@@ -802,9 +784,8 @@ public class CoreHelperTest {
 
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
-        LocalDateTime localDateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1, MONTH1, DAY1,
-                        HOUR1, MINUTES, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime localDateTime = TestDateTimeHelper.getLocalDateTimeFromGMT(
+                ZonedDateTime.of(YEAR1, MONTH1, DAY1, HOUR1, MINUTES, 0, 0, ZoneId.of("GMT")));
         JsonSerializer<?> serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         String expected = "868756200";
         String actual = CoreHelper.serialize(localDateTime, serializer);
@@ -847,8 +828,8 @@ public class CoreHelperTest {
 
     @Test
     public void testUnixTimeStampSerializerNull() throws JsonProcessingException {
-        LocalDateTime localDateTime =
-                LocalDateTime.of(YEAR1, MONTH1, DAY1, XML_NO_OF_ELEMENT, MINUTES);
+        LocalDateTime localDateTime = LocalDateTime.of(YEAR1, MONTH1, DAY1, XML_NO_OF_ELEMENT,
+                MINUTES);
         JsonSerializer<?> serializer = null;
         String actual = CoreHelper.serialize(localDateTime, serializer);
 
@@ -860,10 +841,9 @@ public class CoreHelperTest {
         List<LocalDate> expectedDates = new ArrayList<>();
         expectedDates.add(LocalDate.of(YEAR2, MONTH2, DAY1));
         expectedDates.add(LocalDate.of(YEAR2, MONTH2, DAY1));
-        List<LocalDate> actualDates =
-                CoreHelper.deserialize("[\"1994-02-13\",\"1994-02-13\"]",
-                        new TypeReference<List<LocalDate>>() {}, LocalDate.class,
-                        new DateHelper.SimpleDateDeserializer());
+        List<LocalDate> actualDates = CoreHelper.deserialize("[\"1994-02-13\",\"1994-02-13\"]",
+                new TypeReference<List<LocalDate>>() {
+                }, LocalDate.class, new DateHelper.SimpleDateDeserializer());
         assertEquals(actualDates, expectedDates);
     }
 
@@ -884,9 +864,9 @@ public class CoreHelperTest {
     @Test
     public void testSimpleDateDeserializerNull() throws IOException {
         String json = null;
-        List<LocalDate> actualDates =
-                CoreHelper.deserialize(json, new TypeReference<List<LocalDate>>() {},
-                        LocalDate.class, new DateHelper.SimpleDateDeserializer());
+        List<LocalDate> actualDates = CoreHelper.deserialize(json,
+                new TypeReference<List<LocalDate>>() {
+                }, LocalDate.class, new DateHelper.SimpleDateDeserializer());
         assertNull(actualDates);
     }
 
@@ -894,8 +874,8 @@ public class CoreHelperTest {
     public void testDeserializerWithClass() throws IOException {
         DeleteBody expected = new DeleteBody.Builder("ali", "QA").build();
 
-        DeleteBody actual =
-                CoreHelper.deserialize("{\"name\": \"ali\", \"field\": \"QA\"}", DeleteBody.class);
+        DeleteBody actual = CoreHelper.deserialize("{\"name\": \"ali\", \"field\": \"QA\"}",
+                DeleteBody.class);
         assertEquals(actual.getName(), expected.getName());
         assertEquals(actual.getField(), expected.getField());
     }
@@ -906,8 +886,6 @@ public class CoreHelperTest {
         DeleteBody actual = CoreHelper.deserialize(json, DeleteBody.class);
         assertNull(actual);
     }
-
-
 
     @Test
     public void testDeserializeAsObject() {
@@ -949,14 +927,16 @@ public class CoreHelperTest {
         LinkedHashMap<String, String> expected = new LinkedHashMap<>();
         expected.put("name", "ali");
         expected.put("field", "QA");
-        Object actual = CoreHelper.deserialize(json, new TypeReference<Object>() {});
+        Object actual = CoreHelper.deserialize(json, new TypeReference<Object>() {
+        });
         assertEquals(actual, expected);
     }
 
     @Test
     public void testDeserialize2() throws IOException {
         String json = null;
-        Object actual = CoreHelper.deserialize(json, new TypeReference<Object>() {});
+        Object actual = CoreHelper.deserialize(json, new TypeReference<Object>() {
+        });
         assertNull(actual);
     }
 
@@ -968,106 +948,118 @@ public class CoreHelperTest {
     }
 
     @Test
-    public void testDeserializeOneOf() throws IOException {
-        String json =
-                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
-                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(json);
-
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        true);
-        assertNotNull(result);
-    }
-
-    @Test
     public void testDeserializeOneOfNull() throws IOException {
         JsonNode jsonNode = null;
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        true);
+        Object result = CoreHelper.deserialize(jsonNode,
+                Arrays.asList(AtomCase.class, OrbitCase.class), true);
         assertNull(result);
     }
 
+    @Test
+    public void testDeserializeOneOfA() throws IOException {
+        String json = "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
+                + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(json);
+
+        Object result = CoreHelper.deserialize(jsonNode,
+                Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        assertEquals("{key1=Atom [numberOfElectrons=2, numberOfProtons=2], "
+                + "key2=Atom [numberOfElectrons=2, numberOfProtons=2]}", result.toString());
+    }
 
     @Test
-    public void testDeserializeOneOf1() throws IOException {
+    public void testDeserializeOneOfB() throws IOException {
         String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
 
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        true);
-        assertNotNull(result);
+        Object result = CoreHelper.deserialize(jsonNode,
+                Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        assertEquals("Orbit [numberOfElectrons=2]", result.toString());
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOf2() throws IOException {
+    @Test(expected = OneOfValidationException.class)
+    public void testDeserializeOneOfFailA() throws IOException {
         String json = "{\"RandomKey\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        try {
+            CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
+        } catch (Exception e) {
+            assertEquals("We could not match any acceptable type from "
+                    + "Map<String, Atom>, Orbit on: {\"RandomKey\":2}", e.getMessage());
+            throw e;
+        }
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOf3() throws IOException {
-        String json =
-                "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
+    @Test(expected = OneOfValidationException.class)
+    public void testDeserializeOneOfFailB() throws IOException {
+        String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), true);
-    }
-
-
-    @Test
-    public void testDeserializeAnyOf() throws IOException {
-        String json =
-                "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
-                        + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(json);
-
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        false);
-        assertNotNull(result);
+        try {
+            CoreHelper.deserialize(jsonNode, Arrays.asList(OrbitCase.class, OrbitCase.class), true);
+        } catch (Exception e) {
+            assertEquals("There are more than one matching types i.e. Orbit and "
+                    + "Orbit on: {\"NumberOfElectrons\":2}", e.getMessage());
+            throw e;
+        }
     }
 
     @Test
-    public void testDeserializeOneOfAnyOf1() throws IOException {
+    public void testDeserializeAnyOfA() throws IOException {
+        String json = "{\"key1\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2},"
+                + "\"key2\":{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(json);
+
+        Object result = CoreHelper.deserialize(jsonNode,
+                Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        assertEquals("{key1=Atom [numberOfElectrons=2, numberOfProtons=2], "
+                + "key2=Atom [numberOfElectrons=2, numberOfProtons=2]}", result.toString());
+    }
+
+    @Test
+    public void testDeserializeAnyOfB() throws IOException {
         String json = "{\"NumberOfElectrons\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
 
-        Object result =
-                CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class),
-                        false);
-        assertNotNull(result);
+        Object result = CoreHelper.deserialize(jsonNode,
+                Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        assertEquals("Orbit [numberOfElectrons=2]", result.toString());
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeOneOfAnyOf2() throws IOException {
+    @Test(expected = AnyOfValidationException.class)
+    public void testDeserializeAnyOfFailA() throws IOException {
         String json = "{\"RandomKey\":2}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        try {
+            CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        } catch (Exception e) {
+            assertEquals("We could not match any acceptable type from "
+                    + "Map<String, Atom>, Orbit on: {\"RandomKey\":2}", e.getMessage());
+            throw e;
+        }
     }
 
-    @Test(expected = IOException.class)
-    public void testDeserializeAnyOf3() throws IOException {
+    @Test(expected = AnyOfValidationException.class)
+    public void testDeserializeAnyOfFailB() throws IOException {
         String json =
                 "[{\"NumberOfElectrons\":2},{\"NumberOfElectrons\":2, \"NumberOfProtons\":2}]";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
-
-        CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        try {
+            CoreHelper.deserialize(jsonNode, Arrays.asList(AtomCase.class, OrbitCase.class), false);
+        } catch (Exception e) {
+            assertEquals("We could not match any acceptable type "
+                    + "from Map<String, Atom>, Orbit on: [{\"NumberOfElectrons\":2},"
+                    + "{\"NumberOfElectrons\":2,\"NumberOfProtons\":2}]", e.getMessage());
+            throw e;
+        }
     }
-
 
     @Test
     public void testTypeCombinatorSerializationString() throws JsonProcessingException {
@@ -1092,15 +1084,15 @@ public class CoreHelperTest {
         Map<String, Object> mapOfTypes = new HashMap<>();
         mapOfTypes.put("key1", body);
 
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(mapOfTypes, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(mapOfTypes,
+                ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
 
     @Test
     public void testTypeCombinatorSerializationInteger() throws JsonProcessingException {
-        SendScalarParamBody body =
-                SendScalarParamBody.fromPrecision(Arrays.asList(PRECISION_NUMBER));
+        SendScalarParamBody body = SendScalarParamBody
+                .fromPrecision(Arrays.asList(PRECISION_NUMBER));
         String expected = "[1.2]";
         String actual = CoreHelper.serializeTypeCombinator(body);
         assertEquals(actual, expected);
@@ -1112,7 +1104,8 @@ public class CoreHelperTest {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(json);
 
-        Object result = CoreHelper.deserialize(jsonNode, new TypeReference<Object>() {});
+        Object result = CoreHelper.deserialize(jsonNode, new TypeReference<Object>() {
+        });
         assertNotNull(result);
     }
 
@@ -1120,7 +1113,8 @@ public class CoreHelperTest {
     public void testDeserializeTypeReferenceJsonNode1() throws IOException {
         JsonNode jsonNode = null;
 
-        Object result = CoreHelper.deserialize(jsonNode, new TypeReference<Object>() {});
+        Object result = CoreHelper.deserialize(jsonNode, new TypeReference<Object>() {
+        });
         assertNull(result);
     }
 
@@ -1131,10 +1125,9 @@ public class CoreHelperTest {
         DeserializationContext context = mapper.getDeserializationContext();
         JsonParser jsonParser = mapper.createParser("{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}");
 
-        Object actual =
-                CoreHelper.deserialize(jsonParser, context, discriminator,
-                        Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)),
-                        Arrays.asList(CarCase.class, AtomCase.class), true);
+        Object actual = CoreHelper.deserialize(jsonParser, context, discriminator,
+                Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)),
+                Arrays.asList(CarCase.class, AtomCase.class), true);
 
         assertNotNull(actual);
     }
@@ -1150,7 +1143,6 @@ public class CoreHelperTest {
                 Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)),
                 Arrays.asList(), true);
     }
-
 
     @Test
     public void testDeserializeThroughParser2() throws IOException {
@@ -1169,8 +1161,8 @@ public class CoreHelperTest {
         String discriminator = "";
         ObjectMapper mapper = new ObjectMapper();
         DeserializationContext context = mapper.getDeserializationContext();
-        JsonParser jsonParser =
-                mapper.createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
+        JsonParser jsonParser = mapper
+                .createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
 
         CoreHelper.deserialize(jsonParser, context, discriminator,
                 Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)),
@@ -1182,8 +1174,8 @@ public class CoreHelperTest {
         String discriminator = "";
         ObjectMapper mapper = new ObjectMapper();
         DeserializationContext context = mapper.getDeserializationContext();
-        JsonParser jsonParser =
-                mapper.createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
+        JsonParser jsonParser = mapper
+                .createParser("[{\"NumberOfTyres\":\"4\",\"HaveTrunk\":true}]");
 
         CoreHelper.deserialize(jsonParser, context, discriminator,
                 Arrays.asList(Collections.singletonMap("Morning", MorningCase.class)), null, true);
@@ -1198,36 +1190,34 @@ public class CoreHelperTest {
 
     @Test
     public void testPrepareFormFieldOneOfAnyOf() throws IOException {
-        NonScalarModel formNonScalarModel =
-                CoreHelper.deserialize(
-                        "{\"outerMap" + "\":{\"key1\":{\"startsAt\":\"15:00\",\"endsAt\":"
-                                + "\"21:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"}"
-                                + ",\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\","
-                                + "\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}}",
-                        NonScalarModel.class);
+        NonScalarModel formNonScalarModel = CoreHelper.deserialize(
+                "{\"outerMap" + "\":{\"key1\":{\"startsAt\":\"15:00\",\"endsAt\":"
+                        + "\"21:00\",\"offerLunch\":true,\"sessionType\":\"Noon\"}"
+                        + ",\"key2\":{\"startsAt\":\"6:00\",\"endsAt\":\"11:00\","
+                        + "\"offerTeaBreak\":true,\"sessionType\":\"Morning\"}}}",
+                NonScalarModel.class);
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("Key1", formNonScalarModel);
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
 
     @Test
     public void testPrepareFormFieldOneOfAnyOfDateTime() throws IOException {
-        DateTimeCases formDateTimeCases =
-                CoreHelper.deserialize(
+        DateTimeCases formDateTimeCases = CoreHelper
+                .deserialize(
                         "{\"mapvsArray\":{\"key1\":" + "\"Sun, 06 Nov 1994 08:49:37 GMT\","
                                 + "\"key2\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}}",
                         DateTimeCases.class);
 
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("DateTime", formDateTimeCases);
-        List<SimpleEntry<String, Object>> actual =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
+        List<SimpleEntry<String, Object>> actual = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.INDEXED);
         assertNotNull(actual);
     }
-
 
     @Test
     public void testDeserializeArrayJsonNode() throws IOException {
@@ -1238,7 +1228,6 @@ public class CoreHelperTest {
         List<Double> actualArray = CoreHelper.deserializeArray(jsonNode, Double[].class);
         assertEquals(actualArray, expectedArray);
     }
-
 
     @Test
     public void testDeserializeArrayJsonNode1() throws IOException {
@@ -1275,8 +1264,8 @@ public class CoreHelperTest {
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("date", formDateTime);
 
-        List<SimpleEntry<String, Object>> formFields =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.PLAIN);
+        List<SimpleEntry<String, Object>> formFields = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.PLAIN);
         assertNotNull(formFields);
     }
 
@@ -1292,44 +1281,40 @@ public class CoreHelperTest {
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("date", formDateTime);
 
-        List<SimpleEntry<String, Object>> formFields =
-                CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.PLAIN);
+        List<SimpleEntry<String, Object>> formFields = CoreHelper.prepareFormFields(formParameters,
+                ArraySerializationFormat.PLAIN);
         assertNotNull(formFields);
     }
 
     @Test
     public void testSerializeXMLArray() throws IOException {
         String expected = XML_ARRAY.replace("\r\n", "");
-        AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
-                        XML_NO_OF_ELEMENT).build();
+        AttributesAndElements elements = new AttributesAndElements.Builder("XMLRootName",
+                XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> attributesAndElements = new ArrayList<>();
         attributesAndElements.add(elements);
-        String actual =
-                CoreHelper.serializeXmlArray(
-                        attributesAndElements
-                                .toArray(new AttributesAndElements[attributesAndElements.size()]),
-                        "arrayOfModels", "item", AttributesAndElements.class);
+        String actual = CoreHelper.serializeXmlArray(
+                attributesAndElements
+                        .toArray(new AttributesAndElements[attributesAndElements.size()]),
+                "arrayOfModels", "item", AttributesAndElements.class);
         assertEquals(actual.replace("\n", ""), expected);
     }
 
     @Test
     public void testSerializeXML() throws IOException {
         String expected = XML.replace("\r\n", "");
-        AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
-                        XML_NO_OF_ELEMENT).build();
+        AttributesAndElements elements = new AttributesAndElements.Builder("XMLRootName",
+                XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
 
-        String actual =
-                CoreHelper.serializeXml(elements, "arrayOfModels", AttributesAndElements.class);
+        String actual = CoreHelper.serializeXml(elements, "arrayOfModels",
+                AttributesAndElements.class);
         assertEquals(actual.replace("\n", ""), expected);
     }
 
     @Test
     public void testDeserializeXML() throws IOException {
-        AttributesAndElements expected =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
-                        XML_NO_OF_ELEMENT).build();
+        AttributesAndElements expected = new AttributesAndElements.Builder("XMLRootName",
+                XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
 
         AttributesAndElements actual = CoreHelper.deserializeXml(XML, AttributesAndElements.class);
         assertEquals(actual.getNumberAttr(), expected.getNumberAttr());
@@ -1340,14 +1325,13 @@ public class CoreHelperTest {
 
     @Test
     public void testDeserializeXMLArray() throws IOException {
-        AttributesAndElements elements =
-                new AttributesAndElements.Builder("XMLRootName", XML_NO_OF_ATTRIBUTE, "Data",
-                        XML_NO_OF_ELEMENT).build();
+        AttributesAndElements elements = new AttributesAndElements.Builder("XMLRootName",
+                XML_NO_OF_ATTRIBUTE, "Data", XML_NO_OF_ELEMENT).build();
         List<AttributesAndElements> expected = new ArrayList<>();
         expected.add(elements);
 
-        List<AttributesAndElements> actual =
-                CoreHelper.deserializeXmlArray(XML_ARRAY, AttributesAndElements[].class);
+        List<AttributesAndElements> actual = CoreHelper.deserializeXmlArray(XML_ARRAY,
+                AttributesAndElements[].class);
         assertEquals(actual.get(0).getNumberAttr(), expected.get(0).getNumberAttr());
     }
 
@@ -1370,16 +1354,15 @@ public class CoreHelperTest {
 
     @Test
     public void testJSonObjectDeserialization() throws IOException {
-        CoreJsonObject body =
-                CoreJsonObject.fromJsonString(
-                        "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":"
-                                + "\"https://json-schema.org/draft/2020-12/schema\",\"title\":"
-                                + "\"Person\",\"type\":\"object\",\"properties\":"
-                                + "{\"firstName\":{\"type\":\"string\",\"description\":"
-                                + "\"The person's first name.\"},\"lastName\":"
-                                + "{\"type\":\"string\",\"description\":\"The person's last n"
-                                + "ame.\",\"test\":null},\"age\":{\"type\":\"integer\","
-                                + "\"description\":\"Age in years\",\"minimum\":0}}}");
+        CoreJsonObject body = CoreJsonObject
+                .fromJsonString("{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":"
+                        + "\"https://json-schema.org/draft/2020-12/schema\",\"title\":"
+                        + "\"Person\",\"type\":\"object\",\"properties\":"
+                        + "{\"firstName\":{\"type\":\"string\",\"description\":"
+                        + "\"The person's first name.\"},\"lastName\":"
+                        + "{\"type\":\"string\",\"description\":\"The person's last n"
+                        + "ame.\",\"test\":null},\"age\":{\"type\":\"integer\","
+                        + "\"description\":\"Age in years\",\"minimum\":0}}}");
         String baseUri = "https://localhost:3000";
         StringBuilder queryBuilder = new StringBuilder(baseUri + "/query");
 
@@ -1410,52 +1393,51 @@ public class CoreHelperTest {
     }
 
     private Map<String, ComplexType> getComplexType() throws IOException {
-        Map<String, ComplexType> complexType =
-                CoreHelper.deserialize(
-                        "{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":"
-                                + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType"
-                                + "\":{\"stringType\":\"MyString1\",\"booleanTyp"
-                                + "e\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\""
-                                + ",\"dateType\":\"1994-02-13\",\"uuidType\":"
-                                + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\","
-                                + "\"longType\":500000000,\"precisionType\":5.43,"
-                                + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000},"
-                                + "\"stringListType\":[\"Item1\",\"Item2\"]},"
-                                + "\"innerComplexListType\":[{\"stringTyp"
-                                + "e\":\"MyString1\",\"booleanType\":true,\"dateTimeType\":"
-                                + "\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\","
-                                + "\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd"
-                                + "8b\",\"longType\":500000000,\"precisionType\":5.43,"
-                                + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
-                                + ",\"stringListType\":[\"Item1\",\"Item2\"]},{\"string"
-                                + "Type\":\"MyString2\",\"booleanType\":false,"
-                                + "\"dateTimeType\":\"1994-11-07T08:49:37Z\",\"dateType\":"
-                                + "\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c"
-                                + "89a6\",\"longType\":1000000000,\"precisionType\":5.43,"
-                                + "\"objectType\":{\"bool1\":true,\"bool2\":false},"
-                                + "\"stringListType\":[\"Item1\",\"Item2\"]}]}, \"key2\": {"
-                                + "\"numberListType\":[555,666,777],\"numberMapType\":"
-                                + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType\":"
-                                + "{\"stringType\":\"MyString1\",\"booleanType\":true,"
-                                + "\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":"
-                                + "\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-"
-                                + "a7d844debd8b\",\"longType\":500000000,\"precisionType\":"
-                                + "5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
-                                + ",\"stringListType\":[\"Item1\",\"Item2\"]},"
-                                + "\"innerComplexListType\":[{\"stringType\":\"MyString1\","
-                                + "\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08"
-                                + ":49:37Z\",\"dateType\":\"1994-02-13\",\"uuidType\":"
-                                + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longTy"
-                                + "pe\":500000000,\"precisionType\":5.43,\"objectType\""
-                                + ":{\"long2\":1000000000,\"long1\":500000000},\"stringListType\""
-                                + ":[\"Item1\",\"Item2\"]},{\"stringType\":\"MySt"
-                                + "ring2\",\"booleanType\":false,\"dateTimeType\":"
-                                + "\"1994-11-07T08:49:37Z\",\"dateType\":\"1994-02-12\","
-                                + "\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c89a6\",\"long"
-                                + "Type\":1000000000,\"precisionType\":5.43,\"objectType\":"
-                                + "{\"bool1\":true,\"bool2\":false},\"stringListType\":[\"Item1\","
-                                + "\"Item2\"]}]}}",
-                        new TypeReference<Map<String, ComplexType>>() {});
+        Map<String, ComplexType> complexType = CoreHelper
+                .deserialize("{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":"
+                        + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType"
+                        + "\":{\"stringType\":\"MyString1\",\"booleanTyp"
+                        + "e\":true,\"dateTimeType\":\"1994-11-06T08:49:37Z\""
+                        + ",\"dateType\":\"1994-02-13\",\"uuidType\":"
+                        + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\","
+                        + "\"longType\":500000000,\"precisionType\":5.43,"
+                        + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000},"
+                        + "\"stringListType\":[\"Item1\",\"Item2\"]},"
+                        + "\"innerComplexListType\":[{\"stringTyp"
+                        + "e\":\"MyString1\",\"booleanType\":true,\"dateTimeType\":"
+                        + "\"1994-11-06T08:49:37Z\",\"dateType\":\"1994-02-13\","
+                        + "\"uuidType\":\"a5e48529-745b-4dfb-aac0-a7d844debd"
+                        + "8b\",\"longType\":500000000,\"precisionType\":5.43,"
+                        + "\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
+                        + ",\"stringListType\":[\"Item1\",\"Item2\"]},{\"string"
+                        + "Type\":\"MyString2\",\"booleanType\":false,"
+                        + "\"dateTimeType\":\"1994-11-07T08:49:37Z\",\"dateType\":"
+                        + "\"1994-02-12\",\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c"
+                        + "89a6\",\"longType\":1000000000,\"precisionType\":5.43,"
+                        + "\"objectType\":{\"bool1\":true,\"bool2\":false},"
+                        + "\"stringListType\":[\"Item1\",\"Item2\"]}]}, \"key2\": {"
+                        + "\"numberListType\":[555,666,777],\"numberMapType\":"
+                        + "{\"num1\":1,\"num3\":2,\"num2\":3},\"innerComplexType\":"
+                        + "{\"stringType\":\"MyString1\",\"booleanType\":true,"
+                        + "\"dateTimeType\":\"1994-11-06T08:49:37Z\",\"dateType\":"
+                        + "\"1994-02-13\",\"uuidType\":\"a5e48529-745b-4dfb-aac0-"
+                        + "a7d844debd8b\",\"longType\":500000000,\"precisionType\":"
+                        + "5.43,\"objectType\":{\"long2\":1000000000,\"long1\":500000000}"
+                        + ",\"stringListType\":[\"Item1\",\"Item2\"]},"
+                        + "\"innerComplexListType\":[{\"stringType\":\"MyString1\","
+                        + "\"booleanType\":true,\"dateTimeType\":\"1994-11-06T08"
+                        + ":49:37Z\",\"dateType\":\"1994-02-13\",\"uuidType\":"
+                        + "\"a5e48529-745b-4dfb-aac0-a7d844debd8b\",\"longTy"
+                        + "pe\":500000000,\"precisionType\":5.43,\"objectType\""
+                        + ":{\"long2\":1000000000,\"long1\":500000000},\"stringListType\""
+                        + ":[\"Item1\",\"Item2\"]},{\"stringType\":\"MySt"
+                        + "ring2\",\"booleanType\":false,\"dateTimeType\":"
+                        + "\"1994-11-07T08:49:37Z\",\"dateType\":\"1994-02-12\","
+                        + "\"uuidType\":\"b46ba2d3-b4ac-4b40-ae62-6326e88c89a6\",\"long"
+                        + "Type\":1000000000,\"precisionType\":5.43,\"objectType\":"
+                        + "{\"bool1\":true,\"bool2\":false},\"stringListType\":[\"Item1\","
+                        + "\"Item2\"]}]}}", new TypeReference<Map<String, ComplexType>>() {
+                        });
         return complexType;
     }
 }
