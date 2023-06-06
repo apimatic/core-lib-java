@@ -283,7 +283,7 @@ public class OptionalNullableTest {
         assertTrue(object1.equals("some string"));
         assertTrue(object4.equals(NUMBER_124));
         assertTrue(object5.equals(null));
-        
+
         assertFalse(object1.equals(object3));
         assertFalse(object1.equals(object4));
         assertFalse(object4.equals(NUMBER_125));
