@@ -96,11 +96,18 @@ public class OptionalNullableTest {
      * An instance of {@link LocalDateTime}.
      */
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2021, 1, 20, 12, 12, 41);
-
     /**
      * An instance of {@link LocalDate}.
      */
     private static final LocalDate LOCAL_DATE = LocalDate.of(2020, 1, 8);
+    /**
+     * An instance of a number.
+     */
+    private static final int NUMBER_124 = 124;
+    /**
+     * An instance of a number.
+     */
+    private static final int NUMBER_125 = 125;
 
     @Test
     public void testSimpleDate() throws IOException {
@@ -268,29 +275,26 @@ public class OptionalNullableTest {
         OptionalNullable<String> object1 = OptionalNullable.of("some string");
         OptionalNullable<String> object2 = OptionalNullable.of("some string");
         OptionalNullable<String> object3 = OptionalNullable.of("some other string");
-        int number = 124;
-        OptionalNullable<Integer> object4 = OptionalNullable.of(number);
+        OptionalNullable<Integer> object4 = OptionalNullable.of(NUMBER_124);
 
         assertTrue(object1.equals(object1));
         assertTrue(object1.equals(object2));
         assertTrue(object1.equals("some string"));
-        assertTrue(object4.equals(number));
+        assertTrue(object4.equals(NUMBER_124));
 
         assertFalse(object1.equals(object3));
         assertFalse(object1.equals(object4));
-        int numberWrong = 125;
-        assertFalse(object4.equals(numberWrong));
+        assertFalse(object4.equals(NUMBER_125));
     }
 
     @Test
     public void testHashCode() throws IOException {
         OptionalNullable<String> object1 = OptionalNullable.of("some string");
         OptionalNullable<String> object2 = OptionalNullable.of("some string");
-        int number = 124;
-        OptionalNullable<Integer> object3 = OptionalNullable.of(number);
+        OptionalNullable<Integer> object3 = OptionalNullable.of(NUMBER_124);
 
         assertEquals(object1.hashCode(), object2.hashCode());
         assertEquals(object1.hashCode(), Objects.hash("some string"));
-        assertEquals(object3.hashCode(), Objects.hash(number));
+        assertEquals(object3.hashCode(), Objects.hash(NUMBER_124));
     }
 }
