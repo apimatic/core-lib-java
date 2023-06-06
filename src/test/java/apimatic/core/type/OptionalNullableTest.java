@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.junit.Test;
 import apimatic.core.models.Rfc1123Date;
 import apimatic.core.models.Rfc1123DateArray;
@@ -266,15 +268,29 @@ public class OptionalNullableTest {
         OptionalNullable<String> object1 = OptionalNullable.of("some string");
         OptionalNullable<String> object2 = OptionalNullable.of("some string");
         OptionalNullable<String> object3 = OptionalNullable.of("some other string");
-        OptionalNullable<Integer> object4 = OptionalNullable.of(124);
+        int number = 124;
+        OptionalNullable<Integer> object4 = OptionalNullable.of(number);
 
         assertTrue(object1.equals(object1));
         assertTrue(object1.equals(object2));
         assertTrue(object1.equals("some string"));
-        assertTrue(object4.equals(124));
+        assertTrue(object4.equals(number));
 
         assertFalse(object1.equals(object3));
         assertFalse(object1.equals(object4));
-        assertFalse(object4.equals(125));
+        int numberWrong = 125;
+        assertFalse(object4.equals(numberWrong));
+    }
+
+    @Test
+    public void testHashCode() throws IOException {
+        OptionalNullable<String> object1 = OptionalNullable.of("some string");
+        OptionalNullable<String> object2 = OptionalNullable.of("some string");
+        int number = 124;
+        OptionalNullable<Integer> object3 = OptionalNullable.of(number);
+
+        assertEquals(object1.hashCode(), object2.hashCode());
+        assertEquals(object1.hashCode(), Objects.hash("some string"));
+        assertEquals(object3.hashCode(), Objects.hash(number));
     }
 }

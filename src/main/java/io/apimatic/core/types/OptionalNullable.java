@@ -59,14 +59,19 @@ public final class OptionalNullable<T> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
         if (obj instanceof OptionalNullable<?>) {
-            return Objects.equals(((OptionalNullable<?>) obj).value, this.value);
+            return Objects.equals(((OptionalNullable<?>) obj).value, value);
         }
-        return Objects.equals(obj, this.value);
+        return Objects.equals(obj, value);
     }
 
     /**
