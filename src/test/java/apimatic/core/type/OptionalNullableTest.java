@@ -1,6 +1,9 @@
 package apimatic.core.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.junit.Test;
 import apimatic.core.models.Rfc1123Date;
 import apimatic.core.models.Rfc1123DateArray;
@@ -21,11 +26,11 @@ import apimatic.core.models.SimpleDateMap;
 import apimatic.core.models.UnixDate;
 import apimatic.core.models.UnixDateArray;
 import apimatic.core.models.UnixDateMap;
+import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class OptionalNullableTest {
-
 
     /**
      * Simple date string.
@@ -91,11 +96,18 @@ public class OptionalNullableTest {
      * An instance of {@link LocalDateTime}.
      */
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2021, 1, 20, 12, 12, 41);
-
     /**
      * An instance of {@link LocalDate}.
      */
     private static final LocalDate LOCAL_DATE = LocalDate.of(2020, 1, 8);
+    /**
+     * An instance of a number.
+     */
+    private static final int NUMBER_124 = 124;
+    /**
+     * An instance of a number.
+     */
+    private static final int NUMBER_125 = 125;
 
     @Test
     public void testSimpleDate() throws IOException {
@@ -256,5 +268,36 @@ public class OptionalNullableTest {
 
         String actual = rfc8601DateMap.toString();
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testEquals() throws IOException {
+        OptionalNullable<String> object1 = OptionalNullable.of("some string");
+        OptionalNullable<String> object2 = OptionalNullable.of("some string");
+        OptionalNullable<String> object3 = OptionalNullable.of("some other string");
+        OptionalNullable<Integer> object4 = OptionalNullable.of(NUMBER_124);
+        OptionalNullable<Integer> object5 = OptionalNullable.of(null);
+
+        assertTrue(object1.equals(object1));
+        assertTrue(object1.equals(object2));
+        assertTrue(object1.equals("some string"));
+        assertTrue(object4.equals(NUMBER_124));
+        assertTrue(object5.equals(null));
+
+        assertFalse(object1.equals(object3));
+        assertFalse(object1.equals(object4));
+        assertFalse(object4.equals(NUMBER_125));
+        assertFalse(object1.equals(null));
+    }
+
+    @Test
+    public void testHashCode() throws IOException {
+        OptionalNullable<String> object1 = OptionalNullable.of("some string");
+        OptionalNullable<String> object2 = OptionalNullable.of("some string");
+        OptionalNullable<Integer> object3 = OptionalNullable.of(NUMBER_124);
+
+        assertEquals(object1.hashCode(), object2.hashCode());
+        assertEquals(object1.hashCode(), Objects.hash("some string"));
+        assertEquals(object3.hashCode(), Objects.hash(NUMBER_124));
     }
 }

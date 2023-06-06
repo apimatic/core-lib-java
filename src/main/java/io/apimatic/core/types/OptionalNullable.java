@@ -5,9 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 /**
@@ -53,6 +56,24 @@ public final class OptionalNullable<T> {
      */
     public static <T> T getFrom(OptionalNullable<T> optionalNullable) {
         return (optionalNullable == null) ? null : optionalNullable.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj instanceof OptionalNullable<?>) {
+            return Objects.equals(((OptionalNullable<?>) obj).value, value);
+        }
+
+        return Objects.equals(obj, value);
     }
 
     /**
