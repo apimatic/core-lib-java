@@ -1,6 +1,9 @@
 package apimatic.core.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,11 +24,11 @@ import apimatic.core.models.SimpleDateMap;
 import apimatic.core.models.UnixDate;
 import apimatic.core.models.UnixDateArray;
 import apimatic.core.models.UnixDateMap;
+import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class OptionalNullableTest {
-
 
     /**
      * Simple date string.
@@ -256,5 +259,22 @@ public class OptionalNullableTest {
 
         String actual = rfc8601DateMap.toString();
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testEquals() throws IOException {
+        OptionalNullable<String> object1 = OptionalNullable.of("some string");
+        OptionalNullable<String> object2 = OptionalNullable.of("some string");
+        OptionalNullable<String> object3 = OptionalNullable.of("some other string");
+        OptionalNullable<Integer> object4 = OptionalNullable.of(124);
+
+        assertTrue(object1.equals(object1));
+        assertTrue(object1.equals(object2));
+        assertTrue(object1.equals("some string"));
+        assertTrue(object4.equals(124));
+
+        assertFalse(object1.equals(object3));
+        assertFalse(object1.equals(object4));
+        assertFalse(object4.equals(125));
     }
 }
