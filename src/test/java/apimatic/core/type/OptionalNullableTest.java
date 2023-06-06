@@ -276,15 +276,18 @@ public class OptionalNullableTest {
         OptionalNullable<String> object2 = OptionalNullable.of("some string");
         OptionalNullable<String> object3 = OptionalNullable.of("some other string");
         OptionalNullable<Integer> object4 = OptionalNullable.of(NUMBER_124);
+        OptionalNullable<Integer> object5 = OptionalNullable.of(null);
 
         assertTrue(object1.equals(object1));
         assertTrue(object1.equals(object2));
         assertTrue(object1.equals("some string"));
         assertTrue(object4.equals(NUMBER_124));
-
+        assertTrue(object5.equals(null));
+        
         assertFalse(object1.equals(object3));
         assertFalse(object1.equals(object4));
         assertFalse(object4.equals(NUMBER_125));
+        assertFalse(object1.equals(null));
     }
 
     @Test

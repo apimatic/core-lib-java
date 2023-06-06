@@ -68,9 +68,11 @@ public final class OptionalNullable<T> {
         if (obj == this) {
             return true;
         }
+
         if (obj instanceof OptionalNullable<?>) {
             return Objects.equals(((OptionalNullable<?>) obj).value, value);
         }
+
         return Objects.equals(obj, value);
     }
 
