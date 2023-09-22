@@ -1,13 +1,12 @@
 name: Release To Maven Central
-run-name: Release ${{ github.event.inputs.Version }}
+run-name: Publishing Package Version ${{ github.event.inputs.Version }}
 # Run workflow on commits to the `main` branch
 on:
    workflow_dispatch:
     inputs:
       Version:
-        description: "Version to be released in format: x.y.z, where x => major version, y => minor version and z => patch version"
+        description: "This input field requires version in format: x.y.z, where x => major version, y => minor version and z => patch version"
         required: true
-        default: "0.1.0"
 
 jobs:
   publish:
@@ -66,5 +65,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with: 
           tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Version ${{ github.event.inputs.Version }}
+          name: Release Version ${{ github.event.inputs.Version }}
           body: ${{ steps.tag_version.outputs.changelog }}
