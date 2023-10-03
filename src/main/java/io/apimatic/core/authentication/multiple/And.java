@@ -4,13 +4,22 @@ import java.util.List;
 
 import io.apimatic.coreinterfaces.authentication.Authentication;
 
+/**
+ * Holds the AND group authentication.
+ */
 public class And extends AuthGroup {
 
+    /**
+     * @param authParticipants List of authentication participants.
+     */
 	public And(List<Authentication> authParticipants) {
 		super(authParticipants);
 		setValidity(true);
 	}
 
+    /**
+     * Validates the OR group authentication.
+     */
 	public void validate() {
 		List<Authentication> authParticipants = getAuthParticipants();
 
@@ -28,7 +37,10 @@ public class And extends AuthGroup {
 		}
 	}
 
-	@Override
+    /**
+     * Getter for the error message.
+     * @return String the consolidated error messages in this authentication group.
+     */
 	public String getErrorMessage() {
 		List<String> errorMessages = getErrorMessages();
 		if (errorMessages.size() == 1) {

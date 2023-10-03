@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 
+/**
+ * Handles and validates the Authentication parameters.
+ */
 public abstract class AuthCredential extends Authentication {
 
     /**
@@ -18,19 +21,18 @@ public abstract class AuthCredential extends Authentication {
         this.authParams = authParams;
     }
 
-
     /**
      * Getter for the map of authentication parameters.
+     * @return Map&lt;String, String&gt; The map of authentication parameters.
      */
     public Map<String, String> getAuthParams() {
         return authParams;
     }
 
     /**
-     * Validate the credentials for authentication.
+     * Validates the credentials for authentication.
      */
     public void validate() {
-        
         // Check for null keys or values
         boolean hasNullKeyOrValue = authParams.entrySet().stream()
                 .anyMatch(entry -> entry.getKey() == null || entry.getValue() == null);

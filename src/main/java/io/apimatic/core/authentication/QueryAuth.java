@@ -19,8 +19,8 @@ public class QueryAuth extends AuthCredential {
 
     /**
      * Apply the Query authentication.
-     * 
-     * @param httpRequest A httpRequest
+     * @param httpRequest The HTTP request on which the auth is to be applied.
+     * @return {@link Request} The HTTP request after applying auth.
      */
     public Request apply(Request httpRequest) {
         getAuthParams().forEach((key, value) -> {

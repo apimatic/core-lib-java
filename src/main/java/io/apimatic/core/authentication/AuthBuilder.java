@@ -10,14 +10,34 @@ import io.apimatic.core.authentication.multiple.Or;
 import io.apimatic.core.authentication.multiple.Single;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 
+/**
+ * A builder for authentication.
+ */
 public class AuthBuilder {
 
+	/**
+     * Constant for AND group identifier.
+     */
     private static final String AND = "AND";
+    
+    /**
+     * Constant for OR group identifier.
+     */
     private static final String OR = "OR";
 
+    /**
+     * Holds nested combination of authentication.
+     */
     private Map<String, List<AuthBuilder>> authBuilders;
+
+    /**
+     * Holds the authentication keys, must belong to the provided authentication managers.
+     */
     private List<String> authKeys;
 
+    /**
+     * Default constructor.
+     */
     public AuthBuilder() {
         authBuilders = new HashMap<String, List<AuthBuilder>>();
         authBuilders.put(AND, new ArrayList<AuthBuilder>());
@@ -25,11 +45,21 @@ public class AuthBuilder {
         authKeys = new ArrayList<String>();
     }
 
+    /**
+     * Registers the authentication key to the builder.
+     * @param authKey A key pointing to some authentication in the provided auth managers.
+     * @return {@link AuthBuilder} The instance of the current builder.
+     */
     public AuthBuilder add(String authKey) {
         authKeys.add(authKey);
         return this;
     }
 
+    /**
+     * Registers the and group for authentication.
+     * @param action A consumer for the nested builder.
+     * @return {@link AuthBuilder} The instance of the current builder.
+     */
     public AuthBuilder and(Consumer<AuthBuilder> action) {
         AuthBuilder authBuilder = new AuthBuilder();
         action.accept(authBuilder);
@@ -37,6 +67,11 @@ public class AuthBuilder {
         return this;
     }
 
+    /**
+     * Registers the or group for authentication.
+     * @param action A consumer for the nested builder.
+     * @return {@link AuthBuilder} The instance of the current builder.
+     */
     public AuthBuilder or(Consumer<AuthBuilder> action) {
         AuthBuilder authBuilder = new AuthBuilder();
         action.accept(authBuilder);
@@ -44,6 +79,11 @@ public class AuthBuilder {
         return this;
     }
 
+    /**
+     * Builds and validates the authentication using registered authentication keys.
+     * @param authManagers The map of authentication managers.
+     * @return {@link Authentication} The validated instance of authentication.
+     */
     public Authentication build(Map<String, Authentication> authManagers) {
         
     	if(authManagers == null || authManagers.isEmpty()) {
@@ -61,7 +101,6 @@ public class AuthBuilder {
             return mappedAuth;   
         }
 
-
         for (AuthBuilder authBuilder : authBuilders.get(AND)) {
             mappedAuth = new And(authBuilder.buildAuthGroup(authManagers));
         }
@@ -75,6 +114,11 @@ public class AuthBuilder {
         return mappedAuth;
     }
 
+    /**
+     * Builds the nested authentication groups.
+     * @param authManagers The map of authentication managers.
+     * @return List<{@link Authentication}> The converted instance of nested authentications.
+     */
     private List<Authentication> buildAuthGroup(Map<String, Authentication> authManagers) {
         List<Authentication> auths = new ArrayList<Authentication>();
 
