@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import io.apimatic.core.authentication.AuthBuilder;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.core.utilities.CoreHelper;
@@ -68,7 +69,7 @@ public final class HttpRequest {
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
-            final String path, final Method httpMethod, final String authenticationKey,
+            final String path, final Method httpMethod, final Authentication authentication,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
@@ -86,29 +87,14 @@ public final class HttpRequest {
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authenticationKey);
+        applyAuthentication(authentication);
     }
 
-    /**
+	/**
      * @return the {@link Request} instance which is used for making {@link ApiCall}.
      */
     public Request getCoreHttpRequest() {
         return coreHttpRequest;
-    }
-
-    private void applyAuthentication(String authenticationKey) {
-        if (authenticationKey == null) {
-            return;
-        }
-
-        Map<String, Authentication> authentications = coreConfig.getAuthentications();
-        if (authentications != null) {
-            Authentication authManager = authentications.get(authenticationKey);
-            if (authManager != null) {
-                authManager.validate();
-                authManager.apply(coreHttpRequest);
-            }
-        }
     }
 
     private Request buildRequest(
@@ -124,6 +110,16 @@ public final class HttpRequest {
                 queryParams, formFields);
     }
 
+    private void applyAuthentication(Authentication authentication) {
+    	if(authentication != null) {
+        	if (!authentication.isValid()) {
+        		throw new IllegalStateException(authentication.getErrorMessage());
+        	}
+        	
+            authentication.apply(coreHttpRequest); 
+        }
+	}
+    
     /**
      * @param formParams
      * @param optionalFormParamaters
@@ -242,6 +238,11 @@ public final class HttpRequest {
          * A authentication key string.
          */
         private String authenticationKey;
+        
+        /**
+         * An auth builder for the request.
+         */
+        private AuthBuilder authBuilder = new AuthBuilder();
 
         /**
          * A map of query parameters.
@@ -325,12 +326,23 @@ public final class HttpRequest {
         }
 
         /**
-         * Setter for requiresAuth.
+         * Setter for authentication key.
          * @param authenticationKey string value for authenticationKey.
          * @return Builder.
          */
         public Builder authenticationKey(String authenticationKey) {
-            this.authenticationKey = authenticationKey;
+            authBuilder = authBuilder.add(authenticationKey);
+//            this.authenticationKey = authenticationKey;
+            return this;
+        }
+        
+        /**
+         * Setter for Authentication Builder, used for authenticating the request.
+         * @param authBuilder the builder for authentication.
+         * @return Builder.
+         */
+        public Builder withAuth(Consumer<AuthBuilder> action) {
+            action.accept(authBuilder);
             return this;
         }
 
@@ -472,8 +484,9 @@ public final class HttpRequest {
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
+            Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
-                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
+                    new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
                             body, bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();

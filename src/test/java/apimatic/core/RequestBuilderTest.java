@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
@@ -17,14 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.mockito.stubbing.Answer;
+
 import apimatic.core.mocks.MockCoreConfig;
 import apimatic.core.models.Employee;
 import io.apimatic.core.ApiCall;
@@ -84,7 +86,7 @@ public class RequestBuilderTest extends MockCoreConfig {
      * Mock of {@link HeaderAuth}.
      */
     @Mock
-    private HeaderAuth authentication;
+    private Authentication authentication;
 
     /**
      * Mock of {@link Callback}.
@@ -758,6 +760,67 @@ public class RequestBuilderTest extends MockCoreConfig {
         // verify
         assertNull(coreHttpRequest.getQueryParameters().get("token"));
         assertNull(coreHttpRequest.getQueryParameters().get("api-key"));
+    }
+    
+    @SuppressWarnings("serial")
+	@Test
+    public void testMultipleAuthRequest() throws IOException {
+		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
+			{
+				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth", new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
+			}
+		};
+		
+		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> queryParams = new HashMap<String, String>();
+		
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                // Retrieve the arguments passed to the method
+                Object[] args = invocation.getArguments();
+                String headerKey = (String) args[0];
+                String headerValue = (String) args[1];
+                headers.put(headerKey, headerValue);
+                return null; // Return null for void method
+            }
+        }).when(getHttpHeaders()).add(anyString(), anyString());
+        
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                // Retrieve the arguments passed to the method
+                Object[] args = invocation.getArguments();
+                String queryKey = (String) args[0];
+                String headerValue = (String) args[1];
+                queryParams.put(queryKey, headerValue);
+                return null; // Return null for void method
+            }
+        }).when(getCoreHttpRequest()).addQueryParameter(anyString(), anyString());
+        
+		when(getMockGlobalConfig().getAuthentications()).thenReturn(authManagers);
+		when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
+		
+		new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
+                        .formParam(param -> param.key("key").value("string"))
+                        .withAuth(auth -> auth
+                        		.and(andAuth -> andAuth
+                        				.add("basic-auth")
+                        				.and(andAuth1 -> andAuth1.add("query-auth").add("header-auth"))
+                        				.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth"))))
+                        .httpMethod(Method.GET)
+                        .build(getMockGlobalConfig());
+        
+        assertEquals("ABCDEF", headers.get("x-api-key-header"));
+        assertEquals("123456", headers.get("x-custom-header"));
+        assertEquals("password", headers.get("username"));
+        
+        assertEquals("A1B2C3", queryParams.get("x-api-key-query"));
+        assertEquals("QWERTY", queryParams.get("x-custom-query"));
     }
 
     private void prepareCoreConfigStub() {
