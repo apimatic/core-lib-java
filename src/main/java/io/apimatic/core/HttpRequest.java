@@ -233,11 +233,6 @@ public final class HttpRequest {
          * A HttpMethod.
          */
         private Method httpMethod;
-
-        /**
-         * A authentication key string.
-         */
-        private String authenticationKey;
         
         /**
          * An auth builder for the request.
@@ -332,7 +327,6 @@ public final class HttpRequest {
          */
         public Builder authenticationKey(String authenticationKey) {
             authBuilder = authBuilder.add(authenticationKey);
-//            this.authenticationKey = authenticationKey;
             return this;
         }
         
