@@ -1,11 +1,10 @@
 package io.apimatic.core.authentication;
 
 import java.util.Map;
-import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
- * HeaderAuth is an implementation of {@link Authentication} that supports HTTP authentication
+ * HeaderAuth is an implementation of Authentication that supports HTTP authentication
  * through HTTP Headers.
  */
 public class HeaderAuth extends AuthCredential {
@@ -26,6 +25,7 @@ public class HeaderAuth extends AuthCredential {
         getAuthParams().forEach((key, value) -> {
             httpRequest.getHeaders().add(key, value);
         });
+
         return httpRequest;
     }
 }

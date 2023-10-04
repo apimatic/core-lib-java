@@ -12,41 +12,42 @@ public class And extends AuthGroup {
     /**
      * @param authParticipants List of authentication participants.
      */
-	public And(List<Authentication> authParticipants) {
-		super(authParticipants);
-		setValidity(true);
-	}
+    public And(List<Authentication> authParticipants) {
+        super(authParticipants);
+    }
 
     /**
      * Validates the OR group authentication.
+     * @return true if the auth group are valid, false otherwise.
      */
-	public void validate() {
-		List<Authentication> authParticipants = getAuthParticipants();
+    public boolean validate() {
+        List<Authentication> authParticipants = getAuthParticipants();
 
-		if (authParticipants == null || authParticipants.isEmpty()) {
-			setValidity(false);
-			return;
-		}
+        if (authParticipants == null || authParticipants.isEmpty()) {
+            return false;
+        }
 
-		for (Authentication authParticipant : authParticipants) {
-			authParticipant.validate();
-			if (!authParticipant.isValid()) {
-				getErrorMessages().add(authParticipant.getErrorMessage());
-				setValidity(false);
-			}
-		}
+        boolean isValid = true;
+        for (Authentication authParticipant : authParticipants) {
+            if (!authParticipant.validate()) {
+                getErrorMessages().add(authParticipant.getErrorMessage());
+                isValid = false;
+            }
+        }
+
+        return isValid;
 	}
 
     /**
      * Getter for the error message.
      * @return String the consolidated error messages in this authentication group.
      */
-	public String getErrorMessage() {
-		List<String> errorMessages = getErrorMessages();
-		if (errorMessages.size() == 1) {
-			return errorMessages.get(0);
-		}
+    public String getErrorMessage() {
+        List<String> errorMessages = getErrorMessages();
+        if (errorMessages.size() == 1) {
+            return errorMessages.get(0);
+        }
 
-		return "[" + String.join(" and ", getErrorMessages()) + "]";
-	}
+        return "[" + String.join(" and ", getErrorMessages()) + "]";
+    }
 }

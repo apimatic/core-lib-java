@@ -8,36 +8,34 @@ import io.apimatic.coreinterfaces.http.request.Request;
  */
 public class Single extends Authentication {
 
-	/**
+    /**
      * The provided authentication scheme to be validated and applied.
      */
-	private Authentication authentication;
+    private Authentication authentication;
 
-	public Single(Authentication authentication) {
-		this.authentication = authentication;
-	}
+    public Single(final Authentication authentication) {
+        this.authentication = authentication;
+    }
 
     /**
      * Applies the authentication on the httpRequest.
      * @param httpRequest the request on which authentication is being applied.
      * @return {@link Request} The authenticated request.
      */
-	public Request apply(Request httpRequest) {
-		if (!isValid()) {
-			return httpRequest;
-		}
-
-		return authentication.apply(httpRequest);
-	}
+    public Request apply(Request httpRequest) {
+        return authentication.apply(httpRequest);
+    }
 
     /**
      * Validates the single/leaf authentication.
+     * @return true if the auth is valid, false otherwise.
      */
-	public void validate() {
-		authentication.validate();
-		setValidity(authentication.isValid());
-		if (!isValid()) {
-			setErrorMessage(authentication.getErrorMessage());
-		}
-	}
+    public boolean validate() {
+        boolean isValid = authentication.validate();
+        if (!isValid) {
+            setErrorMessage(authentication.getErrorMessage());
+        }
+
+        return isValid;
+    }
 }

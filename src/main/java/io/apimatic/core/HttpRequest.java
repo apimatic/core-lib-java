@@ -56,7 +56,7 @@ public final class HttpRequest {
      * @param server
      * @param path
      * @param httpMethod
-     * @param authenticationKey
+     * @param authentication
      * @param queryParams
      * @param templateParams
      * @param headerParams
@@ -90,7 +90,7 @@ public final class HttpRequest {
         applyAuthentication(authentication);
     }
 
-	/**
+    /**
      * @return the {@link Request} instance which is used for making {@link ApiCall}.
      */
     public Request getCoreHttpRequest() {
@@ -111,15 +111,15 @@ public final class HttpRequest {
     }
 
     private void applyAuthentication(Authentication authentication) {
-    	if(authentication != null) {
-        	if (!authentication.isValid()) {
-        		throw new IllegalStateException(authentication.getErrorMessage());
+    	if (authentication != null) {
+        	if (!authentication.validate()) {
+        		throw new IllegalArgumentException(authentication.getErrorMessage());
         	}
-        	
-            authentication.apply(coreHttpRequest); 
+
+            authentication.apply(coreHttpRequest);
         }
 	}
-    
+
     /**
      * @param formParams
      * @param optionalFormParamaters
@@ -233,7 +233,7 @@ public final class HttpRequest {
          * A HttpMethod.
          */
         private Method httpMethod;
-        
+
         /**
          * An auth builder for the request.
          */
@@ -329,14 +329,14 @@ public final class HttpRequest {
             authBuilder = authBuilder.add(authenticationKey);
             return this;
         }
-        
+
         /**
          * Setter for Authentication Builder, used for authenticating the request.
-         * @param authBuilder the builder for authentication.
+         * @param consumer the builder consumer for authentication.
          * @return Builder.
          */
-        public Builder withAuth(Consumer<AuthBuilder> action) {
-            action.accept(authBuilder);
+        public Builder withAuth(Consumer<AuthBuilder> consumer) {
+        	consumer.accept(authBuilder);
             return this;
         }
 

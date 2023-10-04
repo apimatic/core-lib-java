@@ -15,11 +15,11 @@ import io.apimatic.coreinterfaces.authentication.Authentication;
  */
 public class AuthBuilder {
 
-	/**
+    /**
      * Constant for AND group identifier.
      */
     private static final String AND = "AND";
-    
+
     /**
      * Constant for OR group identifier.
      */
@@ -85,19 +85,19 @@ public class AuthBuilder {
      * @return {@link Authentication} The validated instance of authentication.
      */
     public Authentication build(Map<String, Authentication> authManagers) {
-        
-    	if(authManagers == null || authManagers.isEmpty()) {
+    	if (authManagers == null || authManagers.isEmpty()) {
     		return null;
     	}
-    	
-        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() && authKeys.isEmpty()) {
+
+        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() &&
+                authKeys.isEmpty()) {
             return null;
         }
-        
+
         Authentication mappedAuth = null;
-        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() && !authKeys.isEmpty()) {
+        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() &&
+                !authKeys.isEmpty()) {
             mappedAuth = new Single(authManagers.get(authKeys.get(0)));
-            mappedAuth.validate();
             return mappedAuth;   
         }
 
@@ -109,8 +109,6 @@ public class AuthBuilder {
             mappedAuth = new Or(authBuilder.buildAuthGroup(authManagers));
         }
 
-        mappedAuth.validate();
-        
         return mappedAuth;
     }
 

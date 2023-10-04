@@ -4,7 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.anyMap;
+import static org.mockito.Mockito.anyList;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -657,7 +662,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                 CoreHelper.getBase64EncodedCredentials("username", "password"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testHeaderAuthenticationWithNull() throws IOException {
         when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
         when(authentications.get("global"))
@@ -670,7 +675,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testHeaderAuthenticationWithValueNull() throws IOException {
         when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
         when(authentications.get("global"))
@@ -704,7 +709,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertEquals(coreHttpRequest.getQueryParameters().get("api-key"), "apikey");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testQueryAuthenticationWithNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put(null, null);
@@ -717,7 +722,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testQueryAuthenticationWithKeyNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put(null, "api-token");
@@ -730,7 +735,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testQueryAuthenticationWithValueNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put("token", null);
@@ -761,20 +766,25 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertNull(coreHttpRequest.getQueryParameters().get("token"));
         assertNull(coreHttpRequest.getQueryParameters().get("api-key"));
     }
-    
+
     @SuppressWarnings("serial")
 	@Test
     public void testMultipleAuthRequest() throws IOException {
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
 			}
 		};
-		
+
 		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, String> queryParams = new HashMap<String, String>();
 		
@@ -801,17 +811,21 @@ public class RequestBuilderTest extends MockCoreConfig {
                 return null; // Return null for void method
             }
         }).when(getCoreHttpRequest()).addQueryParameter(anyString(), anyString());
-        
+
 		when(getMockGlobalConfig().getAuthentications()).thenReturn(authManagers);
 		when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
-		
+
 		new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
                         .withAuth(auth -> auth
                         		.and(andAuth -> andAuth
                         				.add("basic-auth")
-                        				.and(andAuth1 -> andAuth1.add("query-auth").add("header-auth"))
-                        				.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth"))))
+                        				.and(andAuth1 -> andAuth1
+                        						.add("query-auth")
+                        						.add("header-auth"))
+                        				.or(orAuth -> orAuth
+                        						.add("custom-header-auth")
+                        						.add("custom-query-auth"))))
                         .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
         

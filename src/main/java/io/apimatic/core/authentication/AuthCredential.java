@@ -31,19 +31,19 @@ public abstract class AuthCredential extends Authentication {
 
     /**
      * Validates the credentials for authentication.
+     * @return true if the auth credentials are valid, false otherwise.
      */
-    public void validate() {
+    public boolean validate() {
         // Check for null keys or values
         boolean hasNullKeyOrValue = authParams.entrySet().stream()
                 .anyMatch(entry -> entry.getKey() == null || entry.getValue() == null);
-        
+
         if (hasNullKeyOrValue) {
-            setValidity(false);
             setErrorMessage("[Auth key and value cannot be null]");
-            return;
+            return false;
         }
 
-        setValidity(true);
+        return true;
     }
 
 }

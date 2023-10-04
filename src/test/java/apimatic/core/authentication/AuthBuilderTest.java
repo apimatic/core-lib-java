@@ -37,7 +37,8 @@ public class AuthBuilderTest {
 	public void testValidSingleHeaderAuth() {
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
 			}
 		};
 
@@ -45,9 +46,9 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 	}
-	
+
 	@Test
 	public void testValidSingleQueryAuth() {
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
@@ -60,7 +61,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 	}
 
 	@Test
@@ -75,7 +76,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
@@ -88,7 +89,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
@@ -101,7 +102,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 	}
 
@@ -116,7 +117,7 @@ public class AuthBuilderTest {
 		Authentication auth = new AuthBuilder().add("basic-auth").build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
@@ -129,7 +130,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
@@ -142,7 +143,7 @@ public class AuthBuilderTest {
 		auth.validate();
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 	}
 
@@ -150,16 +151,19 @@ public class AuthBuilderTest {
 	public void testValidAndAuth() {
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key", "A1B2C3")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key", "A1B2C3")));
 			}
 		};
 
-		Authentication auth = new AuthBuilder().and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
+		Authentication auth = new AuthBuilder()
+				.and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 	}
 
 	@Test
@@ -171,11 +175,12 @@ public class AuthBuilderTest {
 			}
 		};
 
-		Authentication auth = new AuthBuilder().and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
+		Authentication auth = new AuthBuilder()
+				.and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
@@ -185,11 +190,14 @@ public class AuthBuilderTest {
 			}
 		};
 
-		auth = new AuthBuilder().and(andAuth -> andAuth.add("basic-auth").add("query-auth")).build(authManagers);
+		auth = new AuthBuilder()
+				.and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
+				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
-		assertEquals("[[Auth key and value cannot be null] and [Auth key and value cannot be null]]",
+		assertFalse(auth.validate());
+		assertEquals("[[Auth key and value cannot be null] "
+				+ "and [Auth key and value cannot be null]]",
 				auth.getErrorMessage());
 	}
 
@@ -197,16 +205,19 @@ public class AuthBuilderTest {
 	public void testValidOrAuth() {
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key", "A1B2C3")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key", "A1B2C3")));
 			}
 		};
 
-		Authentication auth = new AuthBuilder().or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
+		Authentication auth = new AuthBuilder()
+				.or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 
 		authManagers = new HashMap<String, Authentication>() {
 			{
@@ -215,10 +226,12 @@ public class AuthBuilderTest {
 			}
 		};
 
-		auth = new AuthBuilder().or(orAuth -> orAuth.add("basic-auth").add("query-auth")).build(authManagers);
+		auth = new AuthBuilder()
+				.or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
+				.build(authManagers);
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 	}
 
 	@Test
@@ -231,12 +244,14 @@ public class AuthBuilderTest {
 			}
 		};
 
-		Authentication auth = new AuthBuilder().or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
+		Authentication auth = new AuthBuilder()
+				.or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
-		assertEquals("[[Auth key and value cannot be null] or [Auth key and value cannot be null]]",
+		assertFalse(auth.validate());
+		assertEquals("[[Auth key and value cannot be null]"
+				+ " or [Auth key and value cannot be null]]",
 				auth.getErrorMessage());
 	}
 
@@ -245,39 +260,53 @@ public class AuthBuilderTest {
 
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
 			}
 		};
 
 		Authentication auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 
 		authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap(null, null)));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
 			}
 		};
 
 		auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertTrue(auth.isValid());
+		assertTrue(auth.validate());
 	}
 
 	@Test
@@ -285,84 +314,116 @@ public class AuthBuilderTest {
 
 		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
 			}
 		};
 
 		Authentication auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("query-auth", new QueryAuth(Collections.singletonMap(null, null)));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap(null, null)));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
 			}
 		};
 
 		auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
-		assertEquals("[[Auth key and value cannot be null] and [Auth key and value cannot be null]]",
+		assertFalse(auth.validate());
+		assertEquals("[[Auth key and value cannot be null]"
+				+ " and [Auth key and value cannot be null]]",
 				auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth", new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth", new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap(null, null)));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap("username", "password")));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
 			}
 		};
 
 		auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
-		assertEquals("[[Auth key and value cannot be null] or [Auth key and value cannot be null]]",
+		assertFalse(auth.validate());
+		assertEquals("[[Auth key and value cannot be null]"
+				+ " or [Auth key and value cannot be null]]",
 				auth.getErrorMessage());
 
 		authManagers = new HashMap<String, Authentication>() {
 			{
-				put("basic-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("query-auth", new QueryAuth(Collections.singletonMap(null, null)));
-				put("header-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("custom-header-auth", new HeaderAuth(Collections.singletonMap(null, null)));
-				put("custom-query-auth", new QueryAuth(Collections.singletonMap(null, null)));
+				put("basic-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
+				put("header-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("custom-header-auth",
+						new HeaderAuth(Collections.singletonMap(null, null)));
+				put("custom-query-auth",
+						new QueryAuth(Collections.singletonMap(null, null)));
 			}
 		};
 
 		auth = new AuthBuilder()
-				.and(andAuth -> andAuth.add("basic-auth").and(orAuth -> orAuth.add("query-auth").add("header-auth"))
+				.and(andAuth -> andAuth
+						.add("basic-auth")
+						.and(orAuth -> orAuth.add("query-auth").add("header-auth"))
 						.or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
 				.build(authManagers);
 
 		assertNotNull(auth);
-		assertFalse(auth.isValid());
+		assertFalse(auth.validate());
 		assertEquals(
 				"[[Auth key and value cannot be null] and "
-						+ "[[Auth key and value cannot be null] and [Auth key and value cannot be null]] and "
-						+ "[[Auth key and value cannot be null] or [Auth key and value cannot be null]]]",
+						+ "[[Auth key and value cannot be null] "
+						+ "and [Auth key and value cannot be null]] and "
+						+ "[[Auth key and value cannot be null] or "
+						+ "[Auth key and value cannot be null]]]",
 				auth.getErrorMessage());
 	}
 

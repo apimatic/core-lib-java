@@ -19,17 +19,18 @@ public abstract class AuthGroup extends Authentication {
     /**
      * Holds the list of error messages for this group.
      */
-	private List<String> errorMessages;
+    private List<String> errorMessages;
 
     /**
      * @param authParticipants List of authentication participants.
      */
-	public AuthGroup(List<Authentication> authParticipants) {
-		if (authParticipants == null)
-			throw new IllegalArgumentException("Auth Participants can not be null.");
+    public AuthGroup(List<Authentication> authParticipants) {
+        if (authParticipants == null) {
+            throw new IllegalArgumentException("Auth Participants can not be null.");
+        }
 
-		this.authParticipants = authParticipants;
-		errorMessages = new ArrayList<>();
+        this.authParticipants = authParticipants;
+        errorMessages = new ArrayList<>();
 	}
 
     /**
@@ -37,32 +38,27 @@ public abstract class AuthGroup extends Authentication {
      * @param httpRequest the request on which authentication is being applied.
      * @return {@link Request} The authenticated request.
      */
-	public Request apply(Request httpRequest) {
-		if (!isValid()) {
-			return httpRequest;
-		}
+    public Request apply(Request httpRequest) {
+        for (Authentication participant : authParticipants) {
+            httpRequest = participant.apply(httpRequest);
+        }
 
-		for (Authentication participant : authParticipants) {
-			httpRequest = participant.apply(httpRequest);
-		}
-
-		return httpRequest;
-	}
+        return httpRequest;
+    }
 
     /**
-	 * Getter for the list of error message in this authentication group.
-	 * @return List&lt;String&gt; The list of error messages.
-	 */
-	protected List<String> getErrorMessages() {
-		return errorMessages;
-	}
+     * Getter for the list of error message in this authentication group.
+     * @return List&lt;String&gt; The list of error messages.
+     */
+    protected List<String> getErrorMessages() {
+        return errorMessages;
+    }
 
-	/**
-	 * Getter for the list of participants in this authentication group.
-	 * @return List<{@link Authentication}> The list of error messages.
-	 */
-	protected List<Authentication> getAuthParticipants() {
-		return authParticipants;
-	}
-
+    /**
+     * Getter for the list of participants in this authentication group.
+     * @return List<{@link Authentication}> The list of error messages.
+     */
+    protected List<Authentication> getAuthParticipants() {
+        return authParticipants;
+    }
 }
