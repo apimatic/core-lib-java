@@ -768,26 +768,26 @@ public class RequestBuilderTest extends MockCoreConfig {
     }
 
     @SuppressWarnings("serial")
-	@Test
+    @Test
     public void testMultipleAuthRequest() throws IOException {
-		Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
-			{
-				put("basic-auth",
-						new HeaderAuth(Collections.singletonMap("username", "password")));
-				put("query-auth",
-						new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
-				put("header-auth",
-						new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
-				put("custom-header-auth",
-						new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
-				put("custom-query-auth",
-						new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
-			}
-		};
+        Map<String, Authentication> authManagers = new HashMap<String, Authentication>() {
+            {
+                put("basic-auth",
+                        new HeaderAuth(Collections.singletonMap("username", "password")));
+                put("query-auth",
+                        new QueryAuth(Collections.singletonMap("x-api-key-query", "A1B2C3")));
+                put("header-auth",
+                        new HeaderAuth(Collections.singletonMap("x-api-key-header", "ABCDEF")));
+                put("custom-header-auth",
+                        new HeaderAuth(Collections.singletonMap("x-custom-header", "123456")));
+                put("custom-query-auth",
+                        new QueryAuth(Collections.singletonMap("x-custom-query", "QWERTY")));
+            }
+        };
 
-		Map<String, String> headers = new HashMap<String, String>();
-		Map<String, String> queryParams = new HashMap<String, String>();
-		
+        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> queryParams = new HashMap<String, String>();
+        
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -812,20 +812,20 @@ public class RequestBuilderTest extends MockCoreConfig {
             }
         }).when(getCoreHttpRequest()).addQueryParameter(anyString(), anyString());
 
-		when(getMockGlobalConfig().getAuthentications()).thenReturn(authManagers);
-		when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
+        when(getMockGlobalConfig().getAuthentications()).thenReturn(authManagers);
+        when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
 
-		new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
+        new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
                         .withAuth(auth -> auth
-                        		.and(andAuth -> andAuth
-                        				.add("basic-auth")
-                        				.and(andAuth1 -> andAuth1
-                        						.add("query-auth")
-                        						.add("header-auth"))
-                        				.or(orAuth -> orAuth
-                        						.add("custom-header-auth")
-                        						.add("custom-query-auth"))))
+                                .and(andAuth -> andAuth
+                                        .add("basic-auth")
+                                        .and(andAuth1 -> andAuth1
+                                                .add("query-auth")
+                                                .add("header-auth"))
+                                        .or(orAuth -> orAuth
+                                                .add("custom-header-auth")
+                                                .add("custom-query-auth"))))
                         .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
         

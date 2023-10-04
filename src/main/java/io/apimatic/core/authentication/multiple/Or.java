@@ -12,7 +12,7 @@ public class Or extends AuthGroup {
     /**
      * @param authParticipants List of authentication participants.
      */
-    public Or(List<Authentication> authParticipants) {
+    public Or(final List<Authentication> authParticipants) {
         super(authParticipants);
     }
 

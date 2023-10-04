@@ -12,7 +12,7 @@ public class And extends AuthGroup {
     /**
      * @param authParticipants List of authentication participants.
      */
-    public And(List<Authentication> authParticipants) {
+    public And(final List<Authentication> authParticipants) {
         super(authParticipants);
     }
 
@@ -36,7 +36,7 @@ public class And extends AuthGroup {
         }
 
         return isValid;
-	}
+    }
 
     /**
      * Getter for the error message.

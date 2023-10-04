@@ -13,6 +13,9 @@ public class Single extends Authentication {
      */
     private Authentication authentication;
 
+    /**
+     * @param authentication The authentication instance.
+     */
     public Single(final Authentication authentication) {
         this.authentication = authentication;
     }

@@ -111,7 +111,7 @@ public final class HttpRequest {
     }
 
     private void applyAuthentication(Authentication authentication) {
-    	if (authentication != null) {
+        if (authentication != null) {
         	if (!authentication.validate()) {
         		throw new IllegalArgumentException(authentication.getErrorMessage());
         	}

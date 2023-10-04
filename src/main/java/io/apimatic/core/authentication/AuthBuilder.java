@@ -85,20 +85,20 @@ public class AuthBuilder {
      * @return {@link Authentication} The validated instance of authentication.
      */
     public Authentication build(Map<String, Authentication> authManagers) {
-    	if (authManagers == null || authManagers.isEmpty()) {
+        if (authManagers == null || authManagers.isEmpty()) {
     		return null;
     	}
 
-        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() &&
-                authKeys.isEmpty()) {
+        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty()
+        		&& authKeys.isEmpty()) {
             return null;
         }
 
         Authentication mappedAuth = null;
-        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty() &&
-                !authKeys.isEmpty()) {
+        if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty()
+        		&& !authKeys.isEmpty()) {
             mappedAuth = new Single(authManagers.get(authKeys.get(0)));
-            return mappedAuth;   
+            return mappedAuth;
         }
 
         for (AuthBuilder authBuilder : authBuilders.get(AND)) {
