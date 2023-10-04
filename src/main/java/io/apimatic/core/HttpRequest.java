@@ -112,13 +112,13 @@ public final class HttpRequest {
 
     private void applyAuthentication(Authentication authentication) {
         if (authentication != null) {
-        	if (!authentication.validate()) {
-        		throw new IllegalArgumentException(authentication.getErrorMessage());
-        	}
+            if (!authentication.validate()) {
+                throw new IllegalArgumentException(authentication.getErrorMessage());
+            }
 
             authentication.apply(coreHttpRequest);
         }
-	}
+    }
 
     /**
      * @param formParams
@@ -336,7 +336,7 @@ public final class HttpRequest {
          * @return Builder.
          */
         public Builder withAuth(Consumer<AuthBuilder> consumer) {
-        	consumer.accept(authBuilder);
+            consumer.accept(authBuilder);
             return this;
         }
 

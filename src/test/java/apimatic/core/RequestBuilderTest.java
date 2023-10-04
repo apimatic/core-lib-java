@@ -787,7 +787,7 @@ public class RequestBuilderTest extends MockCoreConfig {
 
         Map<String, String> headers = new HashMap<String, String>();
         Map<String, String> queryParams = new HashMap<String, String>();
-        
+
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -799,7 +799,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                 return null; // Return null for void method
             }
         }).when(getHttpHeaders()).add(anyString(), anyString());
-        
+
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -828,11 +828,11 @@ public class RequestBuilderTest extends MockCoreConfig {
                                                 .add("custom-query-auth"))))
                         .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
-        
+
         assertEquals("ABCDEF", headers.get("x-api-key-header"));
         assertEquals("123456", headers.get("x-custom-header"));
         assertEquals("password", headers.get("username"));
-        
+
         assertEquals("A1B2C3", queryParams.get("x-api-key-query"));
         assertEquals("QWERTY", queryParams.get("x-custom-query"));
     }

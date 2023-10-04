@@ -24,14 +24,14 @@ public abstract class AuthGroup extends Authentication {
     /**
      * @param authParticipants List of authentication participants.
      */
-    public AuthGroup(List<Authentication> authParticipants) {
+    public AuthGroup(final List<Authentication> authParticipants) {
         if (authParticipants == null) {
             throw new IllegalArgumentException("Auth Participants can not be null.");
         }
 
         this.authParticipants = authParticipants;
         errorMessages = new ArrayList<>();
-	}
+    }
 
     /**
      * Applies the authentication on the httpRequest.
