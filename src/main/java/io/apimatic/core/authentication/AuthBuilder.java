@@ -86,17 +86,17 @@ public class AuthBuilder {
      */
     public Authentication build(Map<String, Authentication> authManagers) {
         if (authManagers == null || authManagers.isEmpty()) {
-    		return null;
-    	}
+            return null;
+        }
 
         if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty()
-        		&& authKeys.isEmpty()) {
+                && authKeys.isEmpty()) {
             return null;
         }
 
         Authentication mappedAuth = null;
         if (authBuilders.get(AND).isEmpty() && authBuilders.get(OR).isEmpty()
-        		&& !authKeys.isEmpty()) {
+                && !authKeys.isEmpty()) {
             mappedAuth = new Single(authManagers.get(authKeys.get(0)));
             return mappedAuth;
         }
