@@ -31,7 +31,6 @@ public abstract class AuthCredential extends Authentication {
 
     /**
      * Validates the credentials for authentication.
-     * @return true if the auth credentials are valid, false otherwise.
      */
     public void validate() {
         // Check for null keys or values

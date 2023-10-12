@@ -119,7 +119,7 @@ public final class HttpRequest {
                 throw new IllegalArgumentException(authentication.getErrorMessage());
             }
 
-            // TODO: Should be removed with the next major version release.
+            // The following block should be removed with the next major version release.
             if (isSingleAuth && authentication.getErrorMessage() != null) {
                 throw new IllegalArgumentException(authentication.getErrorMessage());
             }
@@ -249,7 +249,7 @@ public final class HttpRequest {
 
         /**
          * Flag to use for backward compatibility.
-         * TODO: Should be removed with next major version release.
+         * It should be removed with the next major version release.
          */
         private boolean isSingleAuth = false;
 
@@ -497,7 +497,8 @@ public final class HttpRequest {
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat, isSingleAuth);
+                            body, bodySerializer, bodyParameters, arraySerializationFormat,
+                            isSingleAuth);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

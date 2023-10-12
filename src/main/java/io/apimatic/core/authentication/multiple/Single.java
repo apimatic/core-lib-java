@@ -31,7 +31,6 @@ public class Single extends Authentication {
 
     /**
      * Validates the single/leaf authentication.
-     * @return true if the auth is valid, false otherwise.
      */
     public void validate() {
         authentication.validate();
