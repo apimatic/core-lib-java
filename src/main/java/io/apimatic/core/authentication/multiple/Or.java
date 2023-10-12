@@ -14,29 +14,28 @@ public class Or extends AuthGroup {
      */
     public Or(final List<Authentication> authParticipants) {
         super(authParticipants);
+        setValidity(false);
     }
 
     /**
      * Validates the AND group authentication.
-     * @return true if the auth group is valid, false otherwise.
      */
-    public boolean validate() {
+    public void validate() {
         List<Authentication> authParticipants = getAuthParticipants();
 
         if (authParticipants.isEmpty()) {
-            return false;
+            setValidity(false);
+            return;
         }
 
-        boolean isValid = false;
         for (Authentication authParticipant : authParticipants) {
-            if (authParticipant.validate()) {
-                isValid = true;
+            authParticipant.validate();
+            if (authParticipant.isValid()) {
+                setValidity(true);
             } else {
                 getErrorMessages().add(authParticipant.getErrorMessage());
             }
         }
-
-        return isValid;
     }
 
     /**

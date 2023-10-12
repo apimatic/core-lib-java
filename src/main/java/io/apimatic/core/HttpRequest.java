@@ -66,6 +66,7 @@ public final class HttpRequest {
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
+     * @param isSingleAuth
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
@@ -75,7 +76,8 @@ public final class HttpRequest {
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
             final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
-            final ArraySerializationFormat arraySerializationFormat) throws IOException {
+            final ArraySerializationFormat arraySerializationFormat,
+            final boolean isSingleAuth) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
@@ -87,7 +89,7 @@ public final class HttpRequest {
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authentication);
+        applyAuthentication(authentication, isSingleAuth);
     }
 
     /**
@@ -110,9 +112,15 @@ public final class HttpRequest {
                 queryParams, formFields);
     }
 
-    private void applyAuthentication(Authentication authentication) {
+    private void applyAuthentication(Authentication authentication, boolean isSingleAuth) {
         if (authentication != null) {
-            if (!authentication.validate()) {
+            authentication.validate();
+            if (!authentication.isValid() && !isSingleAuth) {
+                throw new IllegalArgumentException(authentication.getErrorMessage());
+            }
+
+            // TODO: Should be removed with the next major version release.
+            if (isSingleAuth && authentication.getErrorMessage() != null) {
                 throw new IllegalArgumentException(authentication.getErrorMessage());
             }
 
@@ -240,6 +248,12 @@ public final class HttpRequest {
         private AuthBuilder authBuilder = new AuthBuilder();
 
         /**
+         * Flag to use for backward compatibility.
+         * TODO: Should be removed with next major version release.
+         */
+        private boolean isSingleAuth = false;
+
+        /**
          * A map of query parameters.
          */
         private Map<String, Object> queryParams = new HashMap<>();
@@ -327,6 +341,7 @@ public final class HttpRequest {
          */
         public Builder authenticationKey(String authenticationKey) {
             authBuilder = authBuilder.add(authenticationKey);
+            isSingleAuth = true;
             return this;
         }
 
@@ -482,7 +497,7 @@ public final class HttpRequest {
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat);
+                            body, bodySerializer, bodyParameters, arraySerializationFormat, isSingleAuth);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

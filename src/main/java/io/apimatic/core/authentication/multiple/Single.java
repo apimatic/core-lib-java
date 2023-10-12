@@ -33,12 +33,12 @@ public class Single extends Authentication {
      * Validates the single/leaf authentication.
      * @return true if the auth is valid, false otherwise.
      */
-    public boolean validate() {
-        boolean isValid = authentication.validate();
+    public void validate() {
+        authentication.validate();
+        boolean isValid = authentication.isValid();
+        setValidity(isValid);
         if (!isValid) {
             setErrorMessage(authentication.getErrorMessage());
         }
-
-        return isValid;
     }
 }

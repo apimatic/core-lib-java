@@ -46,7 +46,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -89,7 +89,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -102,7 +102,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
     }
 
@@ -115,9 +115,10 @@ public class AuthBuilderTest {
         };
 
         Authentication auth = new AuthBuilder().add("basic-auth").build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -130,7 +131,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -143,7 +144,7 @@ public class AuthBuilderTest {
         auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
     }
 
@@ -161,9 +162,10 @@ public class AuthBuilderTest {
         Authentication auth = new AuthBuilder()
                 .and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
     }
 
     @Test
@@ -178,9 +180,10 @@ public class AuthBuilderTest {
         Authentication auth = new AuthBuilder()
                 .and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -193,9 +196,10 @@ public class AuthBuilderTest {
         auth = new AuthBuilder()
                 .and(andAuth -> andAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[[Auth key and value cannot be null] "
                 + "and [Auth key and value cannot be null]]",
                 auth.getErrorMessage());
@@ -215,9 +219,10 @@ public class AuthBuilderTest {
         Authentication auth = new AuthBuilder()
                 .or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
 
         authManagers = new HashMap<String, Authentication>() {
             {
@@ -229,9 +234,10 @@ public class AuthBuilderTest {
         auth = new AuthBuilder()
                 .or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
     }
 
     @Test
@@ -247,9 +253,10 @@ public class AuthBuilderTest {
         Authentication auth = new AuthBuilder()
                 .or(orAuth -> orAuth.add("basic-auth").add("query-auth"))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[[Auth key and value cannot be null]"
                 + " or [Auth key and value cannot be null]]",
                 auth.getErrorMessage());
@@ -279,9 +286,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
 
         authManagers = new HashMap<String, Authentication>() {
             {
@@ -304,9 +312,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertTrue(auth.validate());
+        assertTrue(auth.isValid());
     }
 
     @Test
@@ -333,9 +342,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[Auth key and value cannot be null]", auth.getErrorMessage());
 
         authManagers = new HashMap<String, Authentication>() {
@@ -352,6 +362,7 @@ public class AuthBuilderTest {
                         new QueryAuth(Collections.singletonMap(null, null)));
             }
         };
+        auth.validate();
 
         auth = new AuthBuilder()
                 .and(andAuth -> andAuth
@@ -359,9 +370,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[[Auth key and value cannot be null]"
                 + " and [Auth key and value cannot be null]]",
                 auth.getErrorMessage());
@@ -387,9 +399,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals("[[Auth key and value cannot be null]"
                 + " or [Auth key and value cannot be null]]",
                 auth.getErrorMessage());
@@ -415,9 +428,10 @@ public class AuthBuilderTest {
                         .and(orAuth -> orAuth.add("query-auth").add("header-auth"))
                         .or(orAuth -> orAuth.add("custom-header-auth").add("custom-query-auth")))
                 .build(authManagers);
+        auth.validate();
 
         assertNotNull(auth);
-        assertFalse(auth.validate());
+        assertFalse(auth.isValid());
         assertEquals(
                 "[[Auth key and value cannot be null] and "
                         + "[[Auth key and value cannot be null] "
