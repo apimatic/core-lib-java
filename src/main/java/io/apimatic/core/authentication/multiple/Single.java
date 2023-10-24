@@ -26,10 +26,6 @@ public class Single extends Authentication {
      * @return {@link Request} The authenticated request.
      */
     public Request apply(Request httpRequest) {
-        if (!isValid()) {
-            return httpRequest;
-        }
-
         return authentication.apply(httpRequest);
     }
 
@@ -38,8 +34,8 @@ public class Single extends Authentication {
      */
     public void validate() {
         if (authentication == null) {
-        	setValidity(false);
-        	return;
+            setValidity(false);
+            return;
         }
 
         authentication.validate();

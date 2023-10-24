@@ -40,7 +40,9 @@ public abstract class AuthGroup extends Authentication {
      */
     public Request apply(Request httpRequest) {
         for (Authentication participant : authParticipants) {
-            httpRequest = participant.apply(httpRequest);
+            if (participant.isValid()) {
+                httpRequest = participant.apply(httpRequest);
+            }
         }
 
         return httpRequest;

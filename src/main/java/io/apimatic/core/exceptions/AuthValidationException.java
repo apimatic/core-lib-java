@@ -14,7 +14,7 @@ public class AuthValidationException extends RuntimeException {
      * Initialization constructor.
      * @param message The exception message.
      */
-    public AuthValidationException(String message) {
+    public AuthValidationException(final String message) {
         super(message);
     }
 }
