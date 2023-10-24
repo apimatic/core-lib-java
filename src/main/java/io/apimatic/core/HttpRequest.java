@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import io.apimatic.core.authentication.AuthBuilder;
+import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.core.utilities.CoreHelper;
@@ -116,12 +117,12 @@ public final class HttpRequest {
         if (authentication != null) {
             authentication.validate();
             if (!authentication.isValid() && !isSingleAuth) {
-                throw new IllegalArgumentException(authentication.getErrorMessage());
+                throw new AuthValidationException(authentication.getErrorMessage());
             }
 
             // The following block should be removed with the next major version release.
             if (isSingleAuth && authentication.getErrorMessage() != null) {
-                throw new IllegalArgumentException(authentication.getErrorMessage());
+                throw new AuthValidationException(authentication.getErrorMessage());
             }
 
             authentication.apply(coreHttpRequest);

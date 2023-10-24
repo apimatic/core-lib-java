@@ -38,6 +38,7 @@ import io.apimatic.core.ApiCall;
 import io.apimatic.core.HttpRequest;
 import io.apimatic.core.authentication.HeaderAuth;
 import io.apimatic.core.authentication.QueryAuth;
+import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
@@ -662,7 +663,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                 CoreHelper.getBase64EncodedCredentials("username", "password"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AuthValidationException.class)
     public void testHeaderAuthenticationWithNull() throws IOException {
         when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
         when(authentications.get("global"))
@@ -675,7 +676,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AuthValidationException.class)
     public void testHeaderAuthenticationWithValueNull() throws IOException {
         when(getCoreHttpRequest().getHeaders()).thenReturn(getHttpHeaders());
         when(authentications.get("global"))
@@ -709,7 +710,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertEquals(coreHttpRequest.getQueryParameters().get("api-key"), "apikey");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AuthValidationException.class)
     public void testQueryAuthenticationWithNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put(null, null);
@@ -722,7 +723,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AuthValidationException.class)
     public void testQueryAuthenticationWithKeyNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put(null, "api-token");
@@ -735,7 +736,7 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .build(getMockGlobalConfig());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AuthValidationException.class)
     public void testQueryAuthenticationWithValueNull() throws IOException {
         Map<String, String> authParams = new HashMap<>();
         authParams.put("token", null);
@@ -834,7 +835,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertEquals("password", headers.get("username"));
 
         assertEquals("A1B2C3", queryParams.get("x-api-key-query"));
-        assertEquals("QWERTY", queryParams.get("x-custom-query"));
+        assertNull(queryParams.get("x-custom-query"));
     }
 
     private void prepareCoreConfigStub() {

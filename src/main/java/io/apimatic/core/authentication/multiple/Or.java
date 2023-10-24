@@ -32,6 +32,7 @@ public class Or extends AuthGroup {
             authParticipant.validate();
             if (authParticipant.isValid()) {
                 setValidity(true);
+                return;
             } else {
                 getErrorMessages().add(authParticipant.getErrorMessage());
             }
