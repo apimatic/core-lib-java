@@ -23,7 +23,7 @@ public class HeaderAuth extends AuthCredential {
      */
     public Request apply(Request httpRequest) {
         getAuthParams().forEach((key, value) -> {
-        	httpRequest.getHeaders().remove(key);
+            httpRequest.getHeaders().remove(key);
             httpRequest.getHeaders().add(key, value);
         });
 
