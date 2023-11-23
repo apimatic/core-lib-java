@@ -34,8 +34,11 @@ public abstract class AuthCredential extends Authentication {
      */
     public void validate() {
         // Check for null keys or values
-        boolean hasNullKeyOrValue = authParams.entrySet().stream().anyMatch(entry -> entry.getKey() == null
-                || entry.getKey() == "" || entry.getValue() == null || entry.getValue() == "");
+        boolean hasNullKeyOrValue = authParams.entrySet().stream()
+                .anyMatch(entry -> entry.getKey() == null
+                        || entry.getKey() == ""
+                        || entry.getValue() == null
+                        || entry.getValue() == "");
 
         if (hasNullKeyOrValue) {
             setErrorMessage("[Auth key and value cannot be null]");
