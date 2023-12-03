@@ -1,6 +1,8 @@
 package apimatic.core.models;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -8,13 +10,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
+import io.apimatic.core.utilities.ZonedDateTimeHelper;
 
 /**
  * This is a model class for Rfc1123Date type.
  */
 public class Rfc1123Date {
-    private OptionalNullable<LocalDateTime> dateTime;
     private LocalDateTime dateTime1;
+    private OptionalNullable<LocalDateTime> dateTime;
+    private OptionalNullable<ZonedDateTime> zonedDateTime;
 
     /**
      * Default constructor.
@@ -25,21 +29,28 @@ public class Rfc1123Date {
      * Initialization constructor.
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
+     * @param dateTime ZonedDateTime value for zonedDateTime.
      */
-    public Rfc1123Date(final LocalDateTime dateTime1, final LocalDateTime dateTime) {
-        this.dateTime = OptionalNullable.of(dateTime);
+    public Rfc1123Date(final LocalDateTime dateTime1,
+            final LocalDateTime dateTime,
+            final ZonedDateTime zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = OptionalNullable.of(dateTime);
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
     }
 
     /**
      * Internal initialization constructor.
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
+     * @param dateTime ZonedDateTime value for zonedDateTime.
      */
     protected Rfc1123Date(final LocalDateTime dateTime1,
-            final OptionalNullable<LocalDateTime> dateTime) {
-        this.dateTime = dateTime;
+            final OptionalNullable<LocalDateTime> dateTime,
+            final OptionalNullable<ZonedDateTime> zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = dateTime;
+        this.zonedDateTime = zonedDateTime;
     }
 
     /**
@@ -79,6 +90,42 @@ public class Rfc1123Date {
     }
 
     /**
+     * Internal Getter for ZonedDateTime.
+     * @return Returns the Internal ZonedDateTime.
+     */
+    @JsonGetter("zonedDateTime")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonSerialize(using = OptionalNullable.ZonedRfc1123DateTimeSerializer.class)
+    protected OptionalNullable<ZonedDateTime> internalGetZonedDateTime() {
+        return this.zonedDateTime;
+    }
+
+    /**
+     * Getter for ZonedDateTime.
+     * @return Returns the ZonedDateTime.
+     */
+    public ZonedDateTime getZonedDateTime() {
+        return OptionalNullable.getFrom(zonedDateTime);
+    }
+
+    /**
+     * Setter for ZonedDateTime.
+     * @param dateTime Value for ZonedDateTime.
+     */
+    @JsonSetter("zonedDateTime")
+    @JsonDeserialize(using = ZonedDateTimeHelper.Rfc1123DateTimeDeserializer.class)
+    public void setDateTime(ZonedDateTime zonedDateTime) {
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+    }
+
+    /**
+     * UnSetter for ZonedDateTime.
+     */
+    public void unsetZonedDateTime() {
+        zonedDateTime = null;
+    }
+
+    /**
      * Getter for DateTime1.
      * @return Returns the LocalDateTime.
      */
@@ -104,7 +151,10 @@ public class Rfc1123Date {
      */
     @Override
     public String toString() {
-        return "Rfc1123Date [" + "dateTime1=" + dateTime1 + ", dateTime=" + dateTime + "]";
+        return "Rfc1123Date [" +
+                "dateTime1=" + dateTime1 +
+                ", dateTime=" + dateTime +
+                ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**
@@ -124,6 +174,7 @@ public class Rfc1123Date {
     public static class Builder {
         private LocalDateTime dateTime1;
         private OptionalNullable<LocalDateTime> dateTime;
+        private OptionalNullable<ZonedDateTime> zonedDateTime;
 
         /**
          * Initialization constructor.
@@ -168,11 +219,30 @@ public class Rfc1123Date {
         }
 
         /**
+         * Setter for zonedDateTime.
+         * @param zonedDateTime ZonedDateTime value for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder zonedDateTime(ZonedDateTime zonedDateTime) {
+            this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+            return this;
+        }
+
+        /**
+         * UnSetter for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder unsetZonedDateTime() {
+            zonedDateTime = null;
+            return this;
+        }
+
+        /**
          * Builds a new {@link Rfc1123Date} object using the set fields.
          * @return {@link Rfc1123Date}.
          */
         public Rfc1123Date build() {
-            return new Rfc1123Date(dateTime1, dateTime);
+            return new Rfc1123Date(dateTime1, dateTime, zonedDateTime);
         }
     }
 }
