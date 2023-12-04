@@ -84,10 +84,15 @@ public final class OptionalNullable<T> {
      */
     public static class Serializer extends JsonSerializer<OptionalNullable<Object>> {
 
-        public Object extractData(Object data) {
+        /**
+         * Override this method to extract the required data from given data instance
+         * @param data Input data instance
+         * @return Extracted/Converted data instance with required functionality
+         */
+        protected Object extractData(Object data) {
             return data;
         }
-        
+
         @Override
         public void serialize(
                 OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
@@ -103,7 +108,7 @@ public final class OptionalNullable<T> {
 
         @SuppressWarnings("unchecked")
         @Override
-        public Object extractData(Object data)
+        protected Object extractData(Object data)
         {
             if (data instanceof List<?>) {
                 return extractListData((List<Object>) data);
