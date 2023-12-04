@@ -1,6 +1,7 @@
 package apimatic.core.models;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,13 +10,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
+import io.apimatic.core.utilities.ZonedDateTimeHelper;
 
 /**
  * This is a model class for Rfc8601DateMap type.
  */
 public class Rfc8601DateMap {
-    private OptionalNullable<Map<String, LocalDateTime>> dateTime;
     private Map<String, LocalDateTime> dateTime1;
+    private OptionalNullable<Map<String, LocalDateTime>> dateTime;
+    private OptionalNullable<Map<String, ZonedDateTime>> zonedDateTime;
 
     /**
      * Default constructor.
@@ -26,22 +29,28 @@ public class Rfc8601DateMap {
      * Initialization constructor.
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
+     * @param zonedDateTime Map of String, value for zonedDateTime.
      */
     public Rfc8601DateMap(final Map<String, LocalDateTime> dateTime1,
-            final Map<String, LocalDateTime> dateTime) {
-        this.dateTime = OptionalNullable.of(dateTime);
+            final Map<String, LocalDateTime> dateTime,
+            final Map<String, ZonedDateTime> zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = OptionalNullable.of(dateTime);
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
     }
 
     /**
      * Internal initialization constructor.
      * @param dateTime1 Map of String, value for dateTime1.
      * @param dateTime Map of String, value for dateTime.
+     * @param zonedDateTime Map of String, value for zonedDateTime.
      */
     protected Rfc8601DateMap(final Map<String, LocalDateTime> dateTime1,
-            final OptionalNullable<Map<String, LocalDateTime>> dateTime) {
-        this.dateTime = dateTime;
+            final OptionalNullable<Map<String, LocalDateTime>> dateTime,
+            final OptionalNullable<Map<String, ZonedDateTime>> zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = dateTime;
+        this.zonedDateTime = zonedDateTime;
     }
 
     /**
@@ -81,6 +90,42 @@ public class Rfc8601DateMap {
     }
 
     /**
+     * Internal Getter for ZonedDateTime.
+     * @return Returns the Internal Map of String, ZonedDateTime.
+     */
+    @JsonGetter("zonedDateTime")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonSerialize(using = OptionalNullable.ZonedRfc8601DateTimeSerializer.class)
+    protected OptionalNullable<Map<String, ZonedDateTime>> internalGetZonedDateTime() {
+        return this.zonedDateTime;
+    }
+
+    /**
+     * Getter for ZonedDateTime.
+     * @return Returns the Map of String, ZonedDateTime.
+     */
+    public Map<String, ZonedDateTime> getZonedDateTime() {
+        return OptionalNullable.getFrom(zonedDateTime);
+    }
+
+    /**
+     * Setter for ZonedDateTime.
+     * @param dateTime Value for Map of String, ZonedDateTime.
+     */
+    @JsonSetter("zonedDateTime")
+    @JsonDeserialize(contentUsing = ZonedDateTimeHelper.Rfc8601DateTimeDeserializer.class)
+    public void setZonedDateTime(Map<String, ZonedDateTime> zonedDateTime) {
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+    }
+
+    /**
+     * UnSetter for ZonedDateTime.
+     */
+    public void unsetZonedDateTime() {
+        zonedDateTime = null;
+    }
+
+    /**
      * Getter for DateTime1.
      * @return Returns the Map of String, LocalDateTime.
      */
@@ -102,11 +147,13 @@ public class Rfc8601DateMap {
 
     /**
      * Converts this Rfc8601DateMap into string format.
-     * @return String representation of this class.
+     * @return String representation of this class
      */
     @Override
     public String toString() {
-        return "Rfc8601DateMap [" + "dateTime1=" + dateTime1 + ", dateTime=" + dateTime + "]";
+        return "Rfc8601DateMap [" + "dateTime1=" + dateTime1 +
+                ", dateTime=" + dateTime +
+                ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**
@@ -117,6 +164,7 @@ public class Rfc8601DateMap {
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
         builder.dateTime = internalGetDateTime();
+        builder.zonedDateTime = internalGetZonedDateTime();
         return builder;
     }
 
@@ -126,6 +174,7 @@ public class Rfc8601DateMap {
     public static class Builder {
         private Map<String, LocalDateTime> dateTime1;
         private OptionalNullable<Map<String, LocalDateTime>> dateTime;
+        private OptionalNullable<Map<String, ZonedDateTime>> zonedDateTime;
 
         /**
          * Initialization constructor.
@@ -170,11 +219,30 @@ public class Rfc8601DateMap {
         }
 
         /**
+         * Setter for zonedDateTime.
+         * @param zonedDateTime Map of String, value for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder zonedDateTime(Map<String, ZonedDateTime> zonedDateTime) {
+            this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+            return this;
+        }
+
+        /**
+         * UnSetter for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder unsetZonedDateTime() {
+            zonedDateTime = null;
+            return this;
+        }
+
+        /**
          * Builds a new {@link Rfc8601DateMap} object using the set fields.
          * @return {@link Rfc8601DateMap}.
          */
         public Rfc8601DateMap build() {
-            return new Rfc8601DateMap(dateTime1, dateTime);
+            return new Rfc8601DateMap(dateTime1, dateTime, zonedDateTime);
         }
     }
 }

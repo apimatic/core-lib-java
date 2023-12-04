@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -68,6 +69,7 @@ public class Rfc8601Date {
      * Getter for DateTime.
      * @return Returns the LocalDateTime.
      */
+    @JsonIgnore
     public LocalDateTime getDateTime() {
         return OptionalNullable.getFrom(dateTime);
     }
@@ -104,6 +106,7 @@ public class Rfc8601Date {
      * Getter for ZonedDateTime.
      * @return Returns the ZonedDateTime.
      */
+    @JsonIgnore
     public ZonedDateTime getZonedDateTime() {
         return OptionalNullable.getFrom(zonedDateTime);
     }
@@ -165,6 +168,7 @@ public class Rfc8601Date {
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
         builder.dateTime = internalGetDateTime();
+        builder.zonedDateTime = internalGetZonedDateTime();
         return builder;
     }
 

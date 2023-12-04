@@ -164,6 +164,7 @@ public class Rfc1123DateArray {
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
         builder.dateTime = internalGetDateTime();
+        builder.zonedDateTime = internalGetZonedDateTime();
         return builder;
     }
 

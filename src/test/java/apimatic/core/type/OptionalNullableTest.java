@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import apimatic.core.models.UnixDateMap;
 import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
+import io.apimatic.core.utilities.ZonedDateTimeHelper;
 
 public class OptionalNullableTest {
 
@@ -51,14 +54,16 @@ public class OptionalNullableTest {
      * RFC 1123 date string.
      */
     private static final String RFC1123_DATE =
-            "{\"dateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\",\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\""
+            + ",\"zonedDateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\"}";
 
     /**
      * RFC 1123 date array string.
      */
     private static final String RFC1123_DATE_ARRAY =
-            "{\"dateTime\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
-                    + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
+            + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"zonedDateTime\":["
+            + "\"Wed, 20 Jan 2021 12:12:41 GMT\",\"Wed, 20 Jan 2021 12:12:41 GMT\"]}";
     /**
      * RFC 1123 Date array string.
      */
@@ -69,33 +74,43 @@ public class OptionalNullableTest {
      * RFC 1123 map array.
      */
     private static final String RFC1123_DATE_MAP =
-            "{\"dateTime\":{\"key\":\"Wed, 20 Jan 2021 12:12:41 GMT\"},\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":{\"key\":\"Wed, 20 Jan 2021"
+            + " 12:12:41 GMT\"},\"zonedDateTime\":{\"key\":\"Wed, 20 Jan 2021"
+            + " 12:12:41 GMT\"}}";
 
     /**
      * RFC 8601 date string.
      */
     private static final String RFC8601_DATE =
-            "{\"dateTime\":\"2021-01-20T12:12:41Z\",\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":\"2021-01-20T12:12:41Z\""
+            + ",\"zonedDateTime\":\"2021-01-20T12:12:41Z[GMT]\"}";
     /**
      * RFC 8601 date array string.
      */
     private static final String RFC8601_DATE_ARRAY =
-            "{\"dateTime\":[\"2021-01-20T12:12:41Z\",\"2021-01-20T12:12:41Z\"],"
-                    + "\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":[\"2021-01-20T12:12:41Z\""
+            + ",\"2021-01-20T12:12:41Z\"],\"zonedDateTime\":["
+            + "\"2021-01-20T12:12:41Z[GMT]\",\"2021-01-20T12:12:41Z[GMT]\"]}";
     /**
      * RFC 8601 date map string.
      */
     private static final String RFC8601_DATE_MAP =
-            "{\"dateTime\":{\"key\":\"2021-01-20T12:12:41Z\"},\"dateTime1\":null}";
+            "{\"dateTime1\":null,\"dateTime\":{\"key\":\"2021-01-20T12:12:41Z\"}"
+            + ",\"zonedDateTime\":{\"key\":\"2021-01-20T12:12:41Z[GMT]\"}}";
     /**
      * RFC 8601 map to string.
      */
     private static final String RFC8601_DATE_MAP_TO_STRING =
-            "Rfc8601DateMap [dateTime1=null, dateTime={key=2021-01-20T12:12:41}]";
+            "Rfc8601DateMap [dateTime1=null, dateTime={key=2021-01-20T12:12:41},"
+            + " zonedDateTime={key=2021-01-20T12:12:41Z[GMT]}]";
     /**
      * An instance of {@link LocalDateTime}.
      */
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2021, 1, 20, 12, 12, 41);
+    /**
+     * An instance of {@link ZonedDateTime}.
+     */
+    private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("GMT"));
     /**
      * An instance of {@link LocalDate}.
      */
@@ -139,59 +154,75 @@ public class OptionalNullableTest {
     @Test
     public void testUnixTimeStamp() throws IOException {
         String unixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
-        String expected = "{\"dateTime\":" + unixDateTime + ",\"dateTime1\":null}";
-        UnixDate unixDate = new UnixDate.Builder().dateTime(LOCAL_DATE_TIME).build();
+        String unixZonedDateTime = ZonedDateTimeHelper.toUnixTimestamp(ZONED_DATE_TIME);
+        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTime +
+                ",\"zonedDateTime\":" + unixZonedDateTime + "}";
+        UnixDate unixDate = new UnixDate.Builder()
+                .dateTime(LOCAL_DATE_TIME)
+                .zonedDateTime(ZONED_DATE_TIME)
+                .build();
         String actual = CoreHelper.serialize(unixDate);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testUnixTimeStampArray() throws IOException {
         List<LocalDateTime> localDateTimes = Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME);
-        String unixDateTimeArray =
-                LocalDateTimeHelper.toUnixTimestamp(localDateTimes).toString().replace(" ", "");
-        String expected = "{\"dateTime\":" + unixDateTimeArray + ",\"dateTime1\":null}";
-        UnixDateArray unixDateArray =
-                new UnixDateArray.Builder()
-                        .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME)).build();
+        String unixDateTimeArray = LocalDateTimeHelper
+                .toUnixTimestamp(localDateTimes).toString().replace(" ", "");
+        List<ZonedDateTime> zonedDateTimes = Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME);
+        String unixZonedDateTimeArray = ZonedDateTimeHelper
+                .toUnixTimestamp(zonedDateTimes).toString().replace(" ", "");
+        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTimeArray +
+                ",\"zonedDateTime\":" + unixZonedDateTimeArray + "}";
+        UnixDateArray unixDateArray = new UnixDateArray.Builder()
+                .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME))
+                .zonedDateTime(Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME))
+                .build();
         String actual = CoreHelper.serialize(unixDateArray);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
 
     @Test
     public void testUnixTimeStampMap() throws IOException {
         String unixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
-        String expected =
-                "{\"dateTime\":{\"key\":" + unixDateTime + "},\"dateTime1\":{\"key\":"
-                        + unixDateTime + "}}";
+        String unixZonedDateTime = ZonedDateTimeHelper.toUnixTimestamp(ZONED_DATE_TIME);
+        String expected = "{\"dateTime1\":null,\"dateTime\":{\"key\":" + unixDateTime +
+                "},\"zonedDateTime\":{\"key\":" + unixZonedDateTime + "}}";
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
-        Map<String, LocalDateTime> mapOfLocalDateTime1 = new HashMap<>();
-        mapOfLocalDateTime1.put("key", LOCAL_DATE_TIME);
+        Map<String, ZonedDateTime> mapOfZonedDateTime = new HashMap<>();
+        mapOfZonedDateTime.put("key", ZONED_DATE_TIME);
         UnixDateMap unixDateMap =
-                new UnixDateMap.Builder().dateTime(mapOfLocalDateTime)
-                        .dateTime1(mapOfLocalDateTime1).build();
+                new UnixDateMap.Builder()
+                .dateTime(mapOfLocalDateTime)
+                .zonedDateTime(mapOfZonedDateTime)
+                .build();
         String actual = CoreHelper.serialize(unixDateMap);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testRfc1123Date() throws IOException {
         String expected = RFC1123_DATE;
-        Rfc1123Date rfc1123Date = new Rfc1123Date.Builder().dateTime(LOCAL_DATE_TIME).build();
+        Rfc1123Date rfc1123Date = new Rfc1123Date.Builder()
+                .dateTime(LOCAL_DATE_TIME)
+                .zonedDateTime(ZONED_DATE_TIME)
+                .build();
         String actual = CoreHelper.serialize(rfc1123Date);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testRfc1123DateArray() throws IOException {
         String expected = RFC1123_DATE_ARRAY;
-        Rfc1123DateArray rfc1123DateArray =
-                new Rfc1123DateArray.Builder()
-                        .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME)).build();
+        Rfc1123DateArray rfc1123DateArray = new Rfc1123DateArray.Builder()
+                .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME))
+                .zonedDateTime(Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME))
+                .build();
         String actual = CoreHelper.serialize(rfc1123DateArray);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -211,10 +242,14 @@ public class OptionalNullableTest {
         String expected = RFC1123_DATE_MAP;
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
-        Rfc1123DateMap rfc1123DateMap =
-                new Rfc1123DateMap.Builder().dateTime(mapOfLocalDateTime).build();
+        Map<String, ZonedDateTime> mapOfZonedDateTime = new HashMap<>();
+        mapOfZonedDateTime.put("key", ZONED_DATE_TIME);
+        Rfc1123DateMap rfc1123DateMap = new Rfc1123DateMap.Builder()
+                .dateTime(mapOfLocalDateTime)
+                .zonedDateTime(mapOfZonedDateTime)
+                .build();
         String actual = CoreHelper.serialize(rfc1123DateMap);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -232,19 +267,23 @@ public class OptionalNullableTest {
     @Test
     public void testRfc8601Date() throws IOException {
         String expected = RFC8601_DATE;
-        Rfc8601Date rfc8601Date = new Rfc8601Date.Builder().dateTime(LOCAL_DATE_TIME).build();
+        Rfc8601Date rfc8601Date = new Rfc8601Date.Builder()
+                .dateTime(LOCAL_DATE_TIME)
+                .zonedDateTime(ZONED_DATE_TIME)
+                .build();
         String actual = CoreHelper.serialize(rfc8601Date);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testRfc8601DateArray() throws IOException {
         String expected = RFC8601_DATE_ARRAY;
-        Rfc8601DateArray rfc8601DateArray =
-                new Rfc8601DateArray.Builder()
-                        .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME)).build();
+        Rfc8601DateArray rfc8601DateArray = new Rfc8601DateArray.Builder()
+                .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME))
+                .zonedDateTime(Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME))
+                .build();
         String actual = CoreHelper.serialize(rfc8601DateArray);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -252,10 +291,14 @@ public class OptionalNullableTest {
         String expected = RFC8601_DATE_MAP;
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
-        Rfc8601DateMap rfc8601DateMap =
-                new Rfc8601DateMap.Builder().dateTime(mapOfLocalDateTime).build();
+        Map<String, ZonedDateTime> mapOfZonedDateTime = new HashMap<>();
+        mapOfZonedDateTime.put("key", ZONED_DATE_TIME);
+        Rfc8601DateMap rfc8601DateMap = new Rfc8601DateMap.Builder()
+                .dateTime(mapOfLocalDateTime)
+                .zonedDateTime(mapOfZonedDateTime)
+                .build();
         String actual = CoreHelper.serialize(rfc8601DateMap);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -263,11 +306,15 @@ public class OptionalNullableTest {
         String expected = RFC8601_DATE_MAP_TO_STRING;
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
-        Rfc8601DateMap rfc8601DateMap =
-                new Rfc8601DateMap.Builder().dateTime(mapOfLocalDateTime).build();
+        Map<String, ZonedDateTime> mapOfZonedDateTime = new HashMap<>();
+        mapOfZonedDateTime.put("key", ZONED_DATE_TIME);
+        Rfc8601DateMap rfc8601DateMap = new Rfc8601DateMap.Builder()
+                .dateTime(mapOfLocalDateTime)
+                .zonedDateTime(mapOfZonedDateTime)
+                .build();
 
         String actual = rfc8601DateMap.toString();
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
