@@ -1,6 +1,7 @@
 package apimatic.core.models;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,13 +10,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.apimatic.core.types.OptionalNullable;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
+import io.apimatic.core.utilities.ZonedDateTimeHelper;
 
 /**
  * This is a model class for Rfc8601DateArray type.
  */
 public class Rfc8601DateArray {
-    private OptionalNullable<List<LocalDateTime>> dateTime;
     private List<LocalDateTime> dateTime1;
+    private OptionalNullable<List<LocalDateTime>> dateTime;
+    private OptionalNullable<List<ZonedDateTime>> zonedDateTime;
 
     /**
      * Default constructor.
@@ -26,22 +29,28 @@ public class Rfc8601DateArray {
      * Initialization constructor.
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
+     * @param zonedDateTime List of ZonedDateTime value for zonedDateTime.
      */
     public Rfc8601DateArray(final List<LocalDateTime> dateTime1,
-            final List<LocalDateTime> dateTime) {
-        this.dateTime = OptionalNullable.of(dateTime);
+            final List<LocalDateTime> dateTime,
+            final List<ZonedDateTime> zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = OptionalNullable.of(dateTime);
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
     }
 
     /**
      * Internal initialization constructor.
      * @param dateTime1 List of LocalDateTime value for dateTime1.
      * @param dateTime List of LocalDateTime value for dateTime.
+     * @param zonedDateTime List of ZonedDateTime value for zonedDateTime.
      */
     protected Rfc8601DateArray(final List<LocalDateTime> dateTime1,
-            final OptionalNullable<List<LocalDateTime>> dateTime) {
-        this.dateTime = dateTime;
+            final OptionalNullable<List<LocalDateTime>> dateTime,
+            final OptionalNullable<List<ZonedDateTime>> zonedDateTime) {
         this.dateTime1 = dateTime1;
+        this.dateTime = dateTime;
+        this.zonedDateTime = zonedDateTime;
     }
 
     /**
@@ -81,6 +90,42 @@ public class Rfc8601DateArray {
     }
 
     /**
+     * Internal Getter for zonedDateTime.
+     * @return Returns the Internal List of ZonedDateTime.
+     */
+    @JsonGetter("zonedDateTime")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonSerialize(using = OptionalNullable.ZonedRfc8601DateTimeSerializer.class)
+    protected OptionalNullable<List<ZonedDateTime>> internalGetZonedDateTime() {
+        return this.zonedDateTime;
+    }
+
+    /**
+     * Getter for zonedDateTime.
+     * @return Returns the List of ZonedDateTime.
+     */
+    public List<ZonedDateTime> getZonedDateTime() {
+        return OptionalNullable.getFrom(zonedDateTime);
+    }
+
+    /**
+     * Setter for zonedDateTime.
+     * @param zonedDateTime Value for List of ZonedDateTime.
+     */
+    @JsonSetter("zonedDateTime")
+    @JsonDeserialize(contentUsing = ZonedDateTimeHelper.Rfc8601DateTimeDeserializer.class)
+    public void setZonedDateTime(List<ZonedDateTime> zonedDateTime) {
+        this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+    }
+
+    /**
+     * UnSetter for zonedDateTime.
+     */
+    public void unsetZonedDateTime() {
+        zonedDateTime = null;
+    }
+
+    /**
      * Getter for DateTime1.
      * @return Returns the List of LocalDateTime.
      */
@@ -106,7 +151,9 @@ public class Rfc8601DateArray {
      */
     @Override
     public String toString() {
-        return "Rfc8601DateArray [" + "dateTime1=" + dateTime1 + ", dateTime=" + dateTime + "]";
+        return "Rfc8601DateArray [" + "dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**
@@ -117,6 +164,7 @@ public class Rfc8601DateArray {
     public Builder toBuilder() {
         Builder builder = new Builder(dateTime1);
         builder.dateTime = internalGetDateTime();
+        builder.zonedDateTime = internalGetZonedDateTime();
         return builder;
     }
 
@@ -126,6 +174,7 @@ public class Rfc8601DateArray {
     public static class Builder {
         private List<LocalDateTime> dateTime1;
         private OptionalNullable<List<LocalDateTime>> dateTime;
+        private OptionalNullable<List<ZonedDateTime>> zonedDateTime;
 
         /**
          * Initialization constructor.
@@ -170,11 +219,29 @@ public class Rfc8601DateArray {
         }
 
         /**
+         * Setter for zonedDateTime.
+         * @param zonedDateTime List of ZonedDateTime value for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder zonedDateTime(List<ZonedDateTime> zonedDateTime) {
+            this.zonedDateTime = OptionalNullable.of(zonedDateTime);
+            return this;
+        }
+
+        /**
+         * UnSetter for zonedDateTime.
+         * @return Builder.
+         */
+        public Builder unsetZonedDateTime() {
+            zonedDateTime = null;
+            return this;
+        }
+        /**
          * Builds a new {@link Rfc8601DateArray} object using the set fields.
          * @return {@link Rfc8601DateArray}.
          */
         public Rfc8601DateArray build() {
-            return new Rfc8601DateArray(dateTime1, dateTime);
+            return new Rfc8601DateArray(dateTime1, dateTime, zonedDateTime);
         }
     }
 }
