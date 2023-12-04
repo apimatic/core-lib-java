@@ -110,7 +110,7 @@ public class UnixDateMap {
 
     /**
      * Setter for ZonedDateTime.
-     * @param dateTime Value for Map of String, ZonedDateTime.
+     * @param zonedDateTime Value for Map of String, ZonedDateTime.
      */
     @JsonSetter("zonedDateTime")
     @JsonDeserialize(contentUsing = ZonedDateTimeHelper.UnixTimestampDeserializer.class)
@@ -151,9 +151,9 @@ public class UnixDateMap {
      */
     @Override
     public String toString() {
-        return "UnixDateMap [" + "dateTime1=" + dateTime1 +
-                ", dateTime=" + dateTime +
-                ", zonedDateTime=" + zonedDateTime + "]";
+        return "UnixDateMap [" + "dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**

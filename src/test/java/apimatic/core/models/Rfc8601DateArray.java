@@ -151,9 +151,9 @@ public class Rfc8601DateArray {
      */
     @Override
     public String toString() {
-        return "Rfc8601DateArray [" + "dateTime1=" + dateTime1 +
-                ", dateTime=" + dateTime +
-                ", zonedDateTime=" + zonedDateTime + "]";
+        return "Rfc8601DateArray [" + "dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**

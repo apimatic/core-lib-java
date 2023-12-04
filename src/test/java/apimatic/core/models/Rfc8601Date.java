@@ -30,7 +30,7 @@ public class Rfc8601Date {
      * Initialization constructor.
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
-     * @param dateTime ZonedDateTime value for zonedDateTime.
+     * @param zonedDateTime ZonedDateTime value for zonedDateTime.
      */
     public Rfc8601Date(final LocalDateTime dateTime1,
             final LocalDateTime dateTime,
@@ -44,7 +44,7 @@ public class Rfc8601Date {
      * Internal initialization constructor.
      * @param dateTime1 LocalDateTime value for dateTime1.
      * @param dateTime LocalDateTime value for dateTime.
-     * @param dateTime ZonedDateTime value for zonedDateTime.
+     * @param zonedDateTime ZonedDateTime value for zonedDateTime.
      */
     protected Rfc8601Date(final LocalDateTime dateTime1,
             final OptionalNullable<LocalDateTime> dateTime,
@@ -113,11 +113,11 @@ public class Rfc8601Date {
 
     /**
      * Setter for ZonedDateTime.
-     * @param dateTime Value for ZonedDateTime.
+     * @param zonedDateTime Value for ZonedDateTime.
      */
     @JsonSetter("zonedDateTime")
     @JsonDeserialize(using = ZonedDateTimeHelper.Rfc8601DateTimeDeserializer.class)
-    public void setDateTime(ZonedDateTime zonedDateTime) {
+    public void setZonedDateTime(ZonedDateTime zonedDateTime) {
         this.zonedDateTime = OptionalNullable.of(zonedDateTime);
     }
 
@@ -154,10 +154,9 @@ public class Rfc8601Date {
      */
     @Override
     public String toString() {
-        return "Rfc8601Date [" +
-                "dateTime1=" + dateTime1 +
-                ", dateTime=" + dateTime +
-                ", zonedDateTime=" + zonedDateTime + "]";
+        return "Rfc8601Date [dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**

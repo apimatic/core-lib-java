@@ -110,7 +110,8 @@ public class OptionalNullableTest {
     /**
      * An instance of {@link ZonedDateTime}.
      */
-    private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("GMT"));
+    private static final ZonedDateTime ZONED_DATE_TIME =
+            ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("GMT"));
     /**
      * An instance of {@link LocalDate}.
      */
@@ -155,8 +156,8 @@ public class OptionalNullableTest {
     public void testUnixTimeStamp() throws IOException {
         String unixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
         String unixZonedDateTime = ZonedDateTimeHelper.toUnixTimestamp(ZONED_DATE_TIME);
-        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTime +
-                ",\"zonedDateTime\":" + unixZonedDateTime + "}";
+        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTime
+                + ",\"zonedDateTime\":" + unixZonedDateTime + "}";
         UnixDate unixDate = new UnixDate.Builder()
                 .dateTime(LOCAL_DATE_TIME)
                 .zonedDateTime(ZONED_DATE_TIME)
@@ -173,8 +174,8 @@ public class OptionalNullableTest {
         List<ZonedDateTime> zonedDateTimes = Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME);
         String unixZonedDateTimeArray = ZonedDateTimeHelper
                 .toUnixTimestamp(zonedDateTimes).toString().replace(" ", "");
-        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTimeArray +
-                ",\"zonedDateTime\":" + unixZonedDateTimeArray + "}";
+        String expected = "{\"dateTime1\":null,\"dateTime\":" + unixDateTimeArray
+                + ",\"zonedDateTime\":" + unixZonedDateTimeArray + "}";
         UnixDateArray unixDateArray = new UnixDateArray.Builder()
                 .dateTime(Arrays.asList(LOCAL_DATE_TIME, LOCAL_DATE_TIME))
                 .zonedDateTime(Arrays.asList(ZONED_DATE_TIME, ZONED_DATE_TIME))
@@ -188,8 +189,8 @@ public class OptionalNullableTest {
     public void testUnixTimeStampMap() throws IOException {
         String unixDateTime = LocalDateTimeHelper.toUnixTimestamp(LOCAL_DATE_TIME);
         String unixZonedDateTime = ZonedDateTimeHelper.toUnixTimestamp(ZONED_DATE_TIME);
-        String expected = "{\"dateTime1\":null,\"dateTime\":{\"key\":" + unixDateTime +
-                "},\"zonedDateTime\":{\"key\":" + unixZonedDateTime + "}}";
+        String expected = "{\"dateTime1\":null,\"dateTime\":{\"key\":" + unixDateTime
+                + "},\"zonedDateTime\":{\"key\":" + unixZonedDateTime + "}}";
         Map<String, LocalDateTime> mapOfLocalDateTime = new HashMap<>();
         mapOfLocalDateTime.put("key", LOCAL_DATE_TIME);
         Map<String, ZonedDateTime> mapOfZonedDateTime = new HashMap<>();

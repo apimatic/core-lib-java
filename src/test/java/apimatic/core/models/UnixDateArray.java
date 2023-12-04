@@ -151,9 +151,9 @@ public class UnixDateArray {
      */
     @Override
     public String toString() {
-        return "UnixDateArray [" + "dateTime1=" + dateTime1 +
-                ", dateTime=" + dateTime +
-                ", zonedDateTime=" + zonedDateTime + "]";
+        return "UnixDateArray [" + "dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**

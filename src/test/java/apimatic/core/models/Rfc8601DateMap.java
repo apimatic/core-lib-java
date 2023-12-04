@@ -110,7 +110,7 @@ public class Rfc8601DateMap {
 
     /**
      * Setter for ZonedDateTime.
-     * @param dateTime Value for Map of String, ZonedDateTime.
+     * @param zonedDateTime Value for Map of String, ZonedDateTime.
      */
     @JsonSetter("zonedDateTime")
     @JsonDeserialize(contentUsing = ZonedDateTimeHelper.Rfc8601DateTimeDeserializer.class)
@@ -151,9 +151,9 @@ public class Rfc8601DateMap {
      */
     @Override
     public String toString() {
-        return "Rfc8601DateMap [" + "dateTime1=" + dateTime1 +
-                ", dateTime=" + dateTime +
-                ", zonedDateTime=" + zonedDateTime + "]";
+        return "Rfc8601DateMap [" + "dateTime1=" + dateTime1
+                + ", dateTime=" + dateTime
+                + ", zonedDateTime=" + zonedDateTime + "]";
     }
 
     /**
