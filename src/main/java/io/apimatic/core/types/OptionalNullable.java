@@ -102,14 +102,14 @@ public final class OptionalNullable<T> {
     }
 
     /**
-     * A class to handle serialization of LocalDate objects to date strings.
+     * A class to handle serialization of all Date formats.
+     * @param <M> Type of the extracted data.
      */
-    private static abstract class DateSerializer<M> extends Serializer {
+    private abstract static class DateSerializer<M> extends Serializer {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected Object extractData(Object data)
-        {
+        protected Object extractData(Object data) {
             if (data instanceof List<?>) {
                 return extractListData((List<Object>) data);
             }
