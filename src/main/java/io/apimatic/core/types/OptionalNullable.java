@@ -3,6 +3,7 @@ package io.apimatic.core.types;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import io.apimatic.core.utilities.LocalDateTimeHelper;
+import io.apimatic.core.utilities.ZonedDateTimeHelper;
 
 /**
  * Class to encapsulate fields which are Optional as well as Nullable. It also provides helper.
@@ -81,97 +83,209 @@ public final class OptionalNullable<T> {
      * {@link OptionalNullable} as its encapsulated object.
      */
     public static class Serializer extends JsonSerializer<OptionalNullable<Object>> {
+
+        /**
+         * Override this method to extract the required data from given data instance
+         * @param data Input data instance
+         * @return Extracted/Converted data instance with required functionality
+         */
+        protected Object extractData(Object data) {
+            return data;
+        }
+
         @Override
         public void serialize(
                 OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException {
-            jgen.writeObject(object.value);
+            jgen.writeObject(extractData(object.value));
+        }
+    }
+
+    /**
+     * A class to handle serialization of all Date formats.
+     * @param <M> Type of the extracted data.
+     */
+    private abstract static class DateSerializer<M> extends Serializer {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Object extractData(Object data) {
+            if (data instanceof List<?>) {
+                return extractListData((List<Object>) data);
+            }
+
+            if (data instanceof Map<?, ?>) {
+                return extractMapData((Map<String, Object>) data);
+            }
+
+            return extractSimpleData(data);
+        }
+
+        public abstract M extractSimpleData(Object data);
+
+        public abstract List<M> extractListData(Object data);
+
+        public abstract Map<String, M> extractMapData(Object data);
+    }
+
+    /**
+     * A class to handle serialization of LocalDate objects to date strings.
+     */
+    public static class SimpleDateSerializer extends DateSerializer<String> {
+
+        @Override
+        public String extractSimpleData(Object data) {
+            return LocalDateTimeHelper.toSimpleDate((LocalDate) data);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public List<String> extractListData(Object data) {
+            return LocalDateTimeHelper.toSimpleDate((List<LocalDate>) data);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public Map<String, String> extractMapData(Object data) {
+            return LocalDateTimeHelper.toSimpleDate((Map<String, LocalDate>) data);
         }
     }
 
     /**
      * A class to handle serialization of Unix Timestamps to DateTime objects.
      */
-    public static class UnixTimestampSerializer extends JsonSerializer<OptionalNullable<Object>> {
-        @SuppressWarnings("unchecked")
+    public static class UnixTimestampSerializer extends DateSerializer<Long> {
+
         @Override
-        public void serialize(
-                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException {
-            if (object.value instanceof List<?>) {
-                jgen.writeObject(LocalDateTimeHelper
-                        .toUnixTimestampLong((List<LocalDateTime>) object.value));
-            } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(LocalDateTimeHelper
-                        .toUnixTimestampLong((Map<String, LocalDateTime>) object.value));
-            } else {
-                jgen.writeObject(
-                        LocalDateTimeHelper.toUnixTimestampLong((LocalDateTime) object.value));
-            }
+        public Long extractSimpleData(Object data) {
+            return LocalDateTimeHelper.toUnixTimestampLong((LocalDateTime) data);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public List<Long> extractListData(Object data) {
+            return LocalDateTimeHelper.toUnixTimestampLong((List<LocalDateTime>) data);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public Map<String, Long> extractMapData(Object data) {
+            return LocalDateTimeHelper.toUnixTimestampLong((Map<String, LocalDateTime>) data);
         }
     }
 
     /**
      * A class to handle serialization of Rfc1123 format strings to DateTime objects.
      */
-    public static class Rfc1123DateTimeSerializer extends JsonSerializer<OptionalNullable<Object>> {
+    public static class Rfc1123DateTimeSerializer extends DateSerializer<String> {
+
+        @Override
+        public String extractSimpleData(Object data) {
+            return LocalDateTimeHelper.toRfc1123DateTime((LocalDateTime) data);
+        }
+
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(
-                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException {
-            if (object.value instanceof List<?>) {
-                jgen.writeObject(
-                        LocalDateTimeHelper.toRfc1123DateTime((List<LocalDateTime>) object.value));
-            } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(LocalDateTimeHelper
-                        .toRfc1123DateTime((Map<String, LocalDateTime>) object.value));
-            } else {
-                jgen.writeString(
-                        LocalDateTimeHelper.toRfc1123DateTime((LocalDateTime) object.value));
-            }
+        public List<String> extractListData(Object data) {
+            return LocalDateTimeHelper.toRfc1123DateTime((List<LocalDateTime>) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Map<String, String> extractMapData(Object data) {
+            return LocalDateTimeHelper.toRfc1123DateTime((Map<String, LocalDateTime>) data);
         }
     }
 
     /**
      * A class to handle serialization of Rfc8601(Rfc3339) format strings to DateTime objects.
      */
-    public static class Rfc8601DateTimeSerializer extends JsonSerializer<OptionalNullable<Object>> {
+    public static class Rfc8601DateTimeSerializer extends DateSerializer<String> {
+
+        @Override
+        public String extractSimpleData(Object data) {
+            return LocalDateTimeHelper.toRfc8601DateTime((LocalDateTime) data);
+        }
+
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(
-                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException {
-            if (object.value instanceof List<?>) {
-                jgen.writeObject(
-                        LocalDateTimeHelper.toRfc8601DateTime((List<LocalDateTime>) object.value));
-            } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(LocalDateTimeHelper
-                        .toRfc8601DateTime((Map<String, LocalDateTime>) object.value));
-            } else {
-                jgen.writeString(
-                        LocalDateTimeHelper.toRfc8601DateTime((LocalDateTime) object.value));
-            }
+        public List<String> extractListData(Object data) {
+            return LocalDateTimeHelper.toRfc8601DateTime((List<LocalDateTime>) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Map<String, String> extractMapData(Object data) {
+            return LocalDateTimeHelper.toRfc8601DateTime((Map<String, LocalDateTime>) data);
         }
     }
 
     /**
-     * A class to handle serialization of LocalDate objects to date strings.
+     * A class to handle serialization of Unix Timestamps to DateTime objects.
      */
-    public static class SimpleDateSerializer extends JsonSerializer<OptionalNullable<Object>> {
+    public static class ZonedUnixTimestampSerializer extends DateSerializer<Long> {
+
+        @Override
+        public Long extractSimpleData(Object data) {
+            return ZonedDateTimeHelper.toUnixTimestampLong((ZonedDateTime) data);
+        }
+
         @SuppressWarnings("unchecked")
         @Override
-        public void serialize(
-                OptionalNullable<Object> object, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException {
-            if (object.value instanceof List<?>) {
-                jgen.writeObject(LocalDateTimeHelper.toSimpleDate((List<LocalDate>) object.value));
-            } else if (object.value instanceof Map<?, ?>) {
-                jgen.writeObject(
-                        LocalDateTimeHelper.toSimpleDate((Map<String, LocalDate>) object.value));
-            } else {
-                jgen.writeString(LocalDateTimeHelper.toSimpleDate((LocalDate) object.value));
-            }
+        public List<Long> extractListData(Object data) {
+            return ZonedDateTimeHelper.toUnixTimestampLong((List<ZonedDateTime>) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Map<String, Long> extractMapData(Object data) {
+            return ZonedDateTimeHelper.toUnixTimestampLong((Map<String, ZonedDateTime>) data);
+        }
+    }
+
+    /**
+     * A class to handle serialization of Rfc1123 format strings to DateTime objects.
+     */
+    public static class ZonedRfc1123DateTimeSerializer extends DateSerializer<String> {
+
+        @Override
+        public String extractSimpleData(Object data) {
+            return ZonedDateTimeHelper.toRfc1123DateTime((ZonedDateTime) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public List<String> extractListData(Object data) {
+            return ZonedDateTimeHelper.toRfc1123DateTime((List<ZonedDateTime>) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Map<String, String> extractMapData(Object data) {
+            return ZonedDateTimeHelper.toRfc1123DateTime((Map<String, ZonedDateTime>) data);
+        }
+    }
+
+    /**
+     * A class to handle serialization of Rfc8601(Rfc3339) format strings to DateTime objects.
+     */
+    public static class ZonedRfc8601DateTimeSerializer extends DateSerializer<String> {
+
+        @Override
+        public String extractSimpleData(Object data) {
+            return ZonedDateTimeHelper.toRfc8601DateTime((ZonedDateTime) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public List<String> extractListData(Object data) {
+            return ZonedDateTimeHelper.toRfc8601DateTime((List<ZonedDateTime>) data);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Map<String, String> extractMapData(Object data) {
+            return ZonedDateTimeHelper.toRfc8601DateTime((Map<String, ZonedDateTime>) data);
         }
     }
 }
