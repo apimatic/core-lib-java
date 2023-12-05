@@ -58,7 +58,7 @@ public abstract class AuthGroup extends Authentication {
 
     /**
      * Getter for the list of participants in this authentication group.
-     * @return List<{@link Authentication}> The list of error messages.
+     * @return List&lt;{@link Authentication}&gt; The list of error messages.
      */
     protected List<Authentication> getAuthParticipants() {
         return authParticipants;
