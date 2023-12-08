@@ -1,32 +1,48 @@
 package io.apimatic.core.authentication;
 
+import java.util.HashMap;
 import java.util.Map;
+import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.http.request.Request;
 
 /**
- * HeaderAuth is an implementation of Authentication that supports HTTP authentication
+ * HeaderAuth is an implementation of {@link Authentication} that supports HTTP authentication
  * through HTTP Headers.
  */
-public class HeaderAuth extends AuthCredential {
+public class HeaderAuth implements Authentication {
+
+    /**
+     * A map for authentication parameters.
+     */
+    private Map<String, String> authParams = new HashMap<>();
 
     /**
      * @param authParams Map of authentication parameters.
      */
     public HeaderAuth(final Map<String, String> authParams) {
-        super(authParams);
+        this.authParams = authParams;
     }
 
     /**
-     * Apply the Header authentication.
-     * @param httpRequest The HTTP request on which the auth is to be applied.
-     * @return {@link Request} The HTTP request after applying auth.
+     * @param httpRequest A request.
      */
+    @Override
     public Request apply(Request httpRequest) {
-        getAuthParams().forEach((key, value) -> {
-            httpRequest.getHeaders().remove(key);
+        authParams.forEach((key, value) -> {
             httpRequest.getHeaders().add(key, value);
         });
-
         return httpRequest;
+    }
+
+    /**
+     * Validate the header authentication.
+     */
+    @Override
+    public void validate() {
+        authParams.forEach((key, value) -> {
+            if (key == null || value == null) {
+                throw new IllegalStateException("Auth key or value cannot be null.");
+            }
+        });
     }
 }
