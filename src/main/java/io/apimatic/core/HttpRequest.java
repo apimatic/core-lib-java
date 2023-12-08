@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import io.apimatic.core.authentication.AuthBuilder;
+import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.core.utilities.CoreHelper;
@@ -55,7 +57,7 @@ public final class HttpRequest {
      * @param server
      * @param path
      * @param httpMethod
-     * @param authenticationKey
+     * @param authentication
      * @param queryParams
      * @param templateParams
      * @param headerParams
@@ -65,16 +67,18 @@ public final class HttpRequest {
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
+     * @param isSingleAuth
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
-            final String path, final Method httpMethod, final String authenticationKey,
+            final String path, final Method httpMethod, final Authentication authentication,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
             final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
-            final ArraySerializationFormat arraySerializationFormat) throws IOException {
+            final ArraySerializationFormat arraySerializationFormat,
+            final boolean isSingleAuth) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
@@ -86,7 +90,7 @@ public final class HttpRequest {
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authenticationKey);
+        applyAuthentication(authentication, isSingleAuth);
     }
 
     /**
@@ -94,21 +98,6 @@ public final class HttpRequest {
      */
     public Request getCoreHttpRequest() {
         return coreHttpRequest;
-    }
-
-    private void applyAuthentication(String authenticationKey) {
-        if (authenticationKey == null) {
-            return;
-        }
-
-        Map<String, Authentication> authentications = coreConfig.getAuthentications();
-        if (authentications != null) {
-            Authentication authManager = authentications.get(authenticationKey);
-            if (authManager != null) {
-                authManager.validate();
-                authManager.apply(coreHttpRequest);
-            }
-        }
     }
 
     private Request buildRequest(
@@ -122,6 +111,22 @@ public final class HttpRequest {
 
         return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
                 queryParams, formFields);
+    }
+
+    private void applyAuthentication(Authentication authentication, boolean isSingleAuth) {
+        if (authentication != null) {
+            authentication.validate();
+            if (!authentication.isValid() && !isSingleAuth) {
+                throw new AuthValidationException(authentication.getErrorMessage());
+            }
+
+            // The following block should be removed with the next major version release.
+            if (isSingleAuth && authentication.getErrorMessage() != null) {
+                throw new AuthValidationException(authentication.getErrorMessage());
+            }
+
+            authentication.apply(coreHttpRequest);
+        }
     }
 
     /**
@@ -239,9 +244,15 @@ public final class HttpRequest {
         private Method httpMethod;
 
         /**
-         * A authentication key string.
+         * An auth builder for the request.
          */
-        private String authenticationKey;
+        private AuthBuilder authBuilder = new AuthBuilder();
+
+        /**
+         * Flag to use for backward compatibility.
+         * It should be removed with the next major version release.
+         */
+        private boolean isSingleAuth = false;
 
         /**
          * A map of query parameters.
@@ -325,12 +336,23 @@ public final class HttpRequest {
         }
 
         /**
-         * Setter for requiresAuth.
+         * Setter for authentication key.
          * @param authenticationKey string value for authenticationKey.
          * @return Builder.
          */
         public Builder authenticationKey(String authenticationKey) {
-            this.authenticationKey = authenticationKey;
+            authBuilder = authBuilder.add(authenticationKey);
+            isSingleAuth = true;
+            return this;
+        }
+
+        /**
+         * Setter for Authentication Builder, used for authenticating the request.
+         * @param consumer the builder consumer for authentication.
+         * @return Builder.
+         */
+        public Builder withAuth(Consumer<AuthBuilder> consumer) {
+            consumer.accept(authBuilder);
             return this;
         }
 
@@ -472,10 +494,12 @@ public final class HttpRequest {
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
+            Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
-                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
+                    new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat);
+                            body, bodySerializer, bodyParameters, arraySerializationFormat,
+                            isSingleAuth);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {
