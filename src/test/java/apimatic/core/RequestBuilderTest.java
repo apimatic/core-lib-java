@@ -651,7 +651,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
 
 
@@ -672,7 +673,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
 
@@ -685,7 +687,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
 
@@ -698,7 +701,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);
@@ -719,7 +723,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
 
@@ -732,7 +737,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
 
@@ -745,7 +751,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
     }
 
@@ -756,7 +763,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
-                        .authenticationKey("global").httpMethod(Method.GET)
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET)
                         .build(getMockGlobalConfig());
 
         when(coreHttpRequest.getQueryParameters()).thenReturn(queryParameters);

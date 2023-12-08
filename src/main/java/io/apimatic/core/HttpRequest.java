@@ -67,7 +67,6 @@ public final class HttpRequest {
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
-     * @param isSingleAuth
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
@@ -77,8 +76,7 @@ public final class HttpRequest {
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
             final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
-            final ArraySerializationFormat arraySerializationFormat,
-            final boolean isSingleAuth) throws IOException {
+            final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         urlBuilder = getStringBuilder(server, path);
@@ -90,7 +88,7 @@ public final class HttpRequest {
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authentication, isSingleAuth);
+        applyAuthentication(authentication);
     }
 
     /**
@@ -113,15 +111,10 @@ public final class HttpRequest {
                 queryParams, formFields);
     }
 
-    private void applyAuthentication(Authentication authentication, boolean isSingleAuth) {
+    private void applyAuthentication(Authentication authentication) {
         if (authentication != null) {
             authentication.validate();
-            if (!authentication.isValid() && !isSingleAuth) {
-                throw new AuthValidationException(authentication.getErrorMessage());
-            }
-
-            // The following block should be removed with the next major version release.
-            if (isSingleAuth && authentication.getErrorMessage() != null) {
+            if (!authentication.isValid()) {
                 throw new AuthValidationException(authentication.getErrorMessage());
             }
 
@@ -249,12 +242,6 @@ public final class HttpRequest {
         private AuthBuilder authBuilder = new AuthBuilder();
 
         /**
-         * Flag to use for backward compatibility.
-         * It should be removed with the next major version release.
-         */
-        private boolean isSingleAuth = false;
-
-        /**
          * A map of query parameters.
          */
         private Map<String, Object> queryParams = new HashMap<>();
@@ -332,17 +319,6 @@ public final class HttpRequest {
          */
         public Builder httpMethod(Method httpMethod) {
             this.httpMethod = httpMethod;
-            return this;
-        }
-
-        /**
-         * Setter for authentication key.
-         * @param authenticationKey string value for authenticationKey.
-         * @return Builder.
-         */
-        public Builder authenticationKey(String authenticationKey) {
-            authBuilder = authBuilder.add(authenticationKey);
-            isSingleAuth = true;
             return this;
         }
 
@@ -498,8 +474,7 @@ public final class HttpRequest {
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat,
-                            isSingleAuth);
+                            body, bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {
