@@ -83,20 +83,20 @@ public class OptionalNullableTest {
      */
     private static final String RFC8601_DATE =
             "{\"dateTime1\":null,\"dateTime\":\"2021-01-20T12:12:41Z\""
-            + ",\"zonedDateTime\":\"2021-01-20T12:12:41Z[GMT]\"}";
+            + ",\"zonedDateTime\":\"2021-01-20T12:12:41Z\"}";
     /**
      * RFC 8601 date array string.
      */
     private static final String RFC8601_DATE_ARRAY =
             "{\"dateTime1\":null,\"dateTime\":[\"2021-01-20T12:12:41Z\""
             + ",\"2021-01-20T12:12:41Z\"],\"zonedDateTime\":["
-            + "\"2021-01-20T12:12:41Z[GMT]\",\"2021-01-20T12:12:41Z[GMT]\"]}";
+            + "\"2021-01-20T12:12:41Z\",\"2021-01-20T12:12:41Z\"]}";
     /**
      * RFC 8601 date map string.
      */
     private static final String RFC8601_DATE_MAP =
             "{\"dateTime1\":null,\"dateTime\":{\"key\":\"2021-01-20T12:12:41Z\"}"
-            + ",\"zonedDateTime\":{\"key\":\"2021-01-20T12:12:41Z[GMT]\"}}";
+            + ",\"zonedDateTime\":{\"key\":\"2021-01-20T12:12:41Z\"}}";
     /**
      * RFC 8601 map to string.
      */

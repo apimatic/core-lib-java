@@ -20,7 +20,7 @@ public class XmlZonedDateTimeHelperTest {
         String rootName = "XmlRootName";
 
         // stub
-        String expected = "<XmlRootName>1997-07-13T06:10Z[GMT]</XmlRootName>";
+        String expected = "<XmlRootName>1997-07-13T06:10:00Z</XmlRootName>";
         String actual = XmlZonedDateTimeHelper.serializeRfc8601DateTime(zonedDateTime, rootName);
 
         assertEquals(actual, expected);
