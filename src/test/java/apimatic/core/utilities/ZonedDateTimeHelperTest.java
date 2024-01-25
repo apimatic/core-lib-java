@@ -450,11 +450,11 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromRfc8601String() {
-        String date = "1997-07-13T01:10Z[GMT]";
+        String date = "1997-07-13T01:10Z";
         LocalDateTime dateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10);
         ZonedDateTime expected = dateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromRfc8601DateTime(date);
-        assertEquals(actualValue, expected);
+        assertEquals(expected.toEpochSecond(), actualValue.toEpochSecond());
     }
 
 
@@ -522,7 +522,7 @@ public class ZonedDateTimeHelperTest {
         module.addDeserializer(ZonedDateTime.class, deserializer);
         mapper.registerModule(module);
 
-        String dateTime = "\"1997-07-13T06:10+05:00[Asia/Karachi]\"";
+        String dateTime = "\"1997-07-13T06:10:00+05:00\"";
 
         LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10);
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));

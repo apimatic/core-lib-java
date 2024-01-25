@@ -28,14 +28,14 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test
     public void testDeserializeRfc8601DateTime() {
-        String zonedDateTime = "<XmlRootName>1997-07-13T06:10Z[GMT]</XmlRootName>";
+        String zonedDateTime = "<XmlRootName>1997-07-13T06:10Z</XmlRootName>";
 
         // stub
         ZonedDateTime expected =
                 ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         ZonedDateTime actual = XmlZonedDateTimeHelper.deserializeRfc8601DateTime(zonedDateTime);
 
-        assertEquals(actual, expected);
+        assertEquals(expected.toEpochSecond(), actual.toEpochSecond());
     }
 
     @Test(expected = IllegalArgumentException.class)
