@@ -59,7 +59,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 [license-badge]: https://img.shields.io/badge/licence-MIT-blue
 [license-url]: LICENSE
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
-[maven-url]: https://central.sonatype.dev/artifact/io.apimatic/core/0.2.0
+[maven-url]: https://central.sonatype.com/artifact/io.apimatic/core
 [test-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml/badge.svg
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
 [code-climate-url]: https://codeclimate.com/github/apimatic/core-lib-java

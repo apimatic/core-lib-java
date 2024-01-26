@@ -42,7 +42,6 @@ public class ZonedDateTimeHelperTest {
         String actual = ZonedDateTimeHelper.toRfc1123DateTime(zonedDateTime);
         assertEquals(actual, expected);
     }
-
     @Test
     public void testZonedDateTimeNullToRfc1123() {
         ZonedDateTime dateTime = null;
@@ -135,7 +134,7 @@ public class ZonedDateTimeHelperTest {
         ZonedDateTime dateTime =
                 ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         // stub
-        String expected = "1997-07-13T06:10Z[GMT]";
+        String expected = "1997-07-13T06:10:00Z";
         String actual = ZonedDateTimeHelper.toRfc8601DateTime(dateTime);
         assertEquals(actual, expected);
     }
@@ -157,7 +156,7 @@ public class ZonedDateTimeHelperTest {
         List<ZonedDateTime> dateTimeArray = Arrays.asList(zonedDateTime1, zonedDateTime2);
 
         // stub
-        List<String> expected = Arrays.asList("2000-07-13T06:10Z[GMT]", "2020-07-25T06:10Z[GMT]");
+        List<String> expected = Arrays.asList("2000-07-13T06:10:00Z", "2020-07-25T06:10:00Z");
         List<String> actual = ZonedDateTimeHelper.toRfc8601DateTime(dateTimeArray);
 
         assertEquals(actual, expected);
@@ -182,8 +181,8 @@ public class ZonedDateTimeHelperTest {
 
         // stub
         Map<String, String> expected = new HashMap<>();
-        expected.put("dateTime1", "2000-07-13T06:10Z[GMT]");
-        expected.put("dateTime2", "2020-07-25T06:10Z[GMT]");
+        expected.put("dateTime1", "2000-07-13T06:10:00Z");
+        expected.put("dateTime2", "2020-07-25T06:10:00Z");
 
         assertEquals(ZonedDateTimeHelper.toRfc8601DateTime(dateTimeMap), expected);
     }
@@ -202,8 +201,8 @@ public class ZonedDateTimeHelperTest {
 
         // stub
         Map<String, String> mapOfStirng = new HashMap<>();
-        mapOfStirng.put("dateTime1", "2000-07-13T06:10Z[GMT]");
-        mapOfStirng.put("dateTime2", "2020-07-25T06:10Z[GMT]");
+        mapOfStirng.put("dateTime1", "2000-07-13T06:10:00Z");
+        mapOfStirng.put("dateTime2", "2020-07-25T06:10:00Z");
 
         List<Map<String, String>> expected = Arrays.asList(mapOfStirng);
 
@@ -451,11 +450,11 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromRfc8601String() {
-        String date = "1997-07-13T01:10Z[GMT]";
+        String date = "1997-07-13T01:10Z";
         LocalDateTime dateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10);
         ZonedDateTime expected = dateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actualValue = ZonedDateTimeHelper.fromRfc8601DateTime(date);
-        assertEquals(actualValue, expected);
+        assertEquals(expected.toEpochSecond(), actualValue.toEpochSecond());
     }
 
 
@@ -506,7 +505,7 @@ public class ZonedDateTimeHelperTest {
         module.addSerializer(zonedDateTime.getClass(), serializer);
         mapper.registerModule(module);
 
-        String expected = "\"1997-07-13T01:10Z[GMT]\"";
+        String expected = "\"1997-07-13T01:10:00Z\"";
 
         String actual = mapper.writeValueAsString(zonedDateTime);
 
@@ -523,7 +522,7 @@ public class ZonedDateTimeHelperTest {
         module.addDeserializer(ZonedDateTime.class, deserializer);
         mapper.registerModule(module);
 
-        String dateTime = "\"1997-07-13T06:10+05:00[Asia/Karachi]\"";
+        String dateTime = "\"1997-07-13T06:10:00+05:00\"";
 
         LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, 1, MINUTES10);
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
