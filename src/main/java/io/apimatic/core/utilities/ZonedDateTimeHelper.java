@@ -236,7 +236,7 @@ public class ZonedDateTimeHelper extends DateHelper {
      * @return The parsed DateTime object.
      */
     public static ZonedDateTime fromRfc8601DateTime(String date) {
-        return ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
+        return ZonedDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     /**
@@ -245,7 +245,7 @@ public class ZonedDateTimeHelper extends DateHelper {
      * @return The converted String.
      */
     public static String toRfc8601DateTime(ZonedDateTime value) {
-        return value == null ? null : value.toString();
+        return value == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(value);
     }
 
     /**
