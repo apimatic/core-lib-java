@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import io.apimatic.core.authentication.AuthBuilder;
+import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.core.utilities.CoreHelper;
@@ -55,7 +57,7 @@ public final class HttpRequest {
      * @param server
      * @param path
      * @param httpMethod
-     * @param authenticationKey
+     * @param authentication
      * @param queryParams
      * @param templateParams
      * @param headerParams
@@ -68,7 +70,7 @@ public final class HttpRequest {
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
-            final String path, final Method httpMethod, final String authenticationKey,
+            final String path, final Method httpMethod, final Authentication authentication,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
             final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
@@ -86,7 +88,7 @@ public final class HttpRequest {
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authenticationKey);
+        applyAuthentication(authentication);
     }
 
     /**
@@ -94,21 +96,6 @@ public final class HttpRequest {
      */
     public Request getCoreHttpRequest() {
         return coreHttpRequest;
-    }
-
-    private void applyAuthentication(String authenticationKey) {
-        if (authenticationKey == null) {
-            return;
-        }
-
-        Map<String, Authentication> authentications = coreConfig.getAuthentications();
-        if (authentications != null) {
-            Authentication authManager = authentications.get(authenticationKey);
-            if (authManager != null) {
-                authManager.validate();
-                authManager.apply(coreHttpRequest);
-            }
-        }
     }
 
     private Request buildRequest(
@@ -122,6 +109,17 @@ public final class HttpRequest {
 
         return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
                 queryParams, formFields);
+    }
+
+    private void applyAuthentication(Authentication authentication) {
+        if (authentication != null) {
+            authentication.validate();
+            if (!authentication.isValid()) {
+                throw new AuthValidationException(authentication.getErrorMessage());
+            }
+
+            authentication.apply(coreHttpRequest);
+        }
     }
 
     /**
@@ -239,9 +237,9 @@ public final class HttpRequest {
         private Method httpMethod;
 
         /**
-         * A authentication key string.
+         * An auth builder for the request.
          */
-        private String authenticationKey;
+        private AuthBuilder authBuilder = new AuthBuilder();
 
         /**
          * A map of query parameters.
@@ -325,12 +323,12 @@ public final class HttpRequest {
         }
 
         /**
-         * Setter for requiresAuth.
-         * @param authenticationKey string value for authenticationKey.
+         * Setter for Authentication Builder, used for authenticating the request.
+         * @param consumer the builder consumer for authentication.
          * @return Builder.
          */
-        public Builder authenticationKey(String authenticationKey) {
-            this.authenticationKey = authenticationKey;
+        public Builder withAuth(Consumer<AuthBuilder> consumer) {
+            consumer.accept(authBuilder);
             return this;
         }
 
@@ -472,8 +470,9 @@ public final class HttpRequest {
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
+            Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
-                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
+                    new HttpRequest(coreConfig, server, path, httpMethod, authentication,
                             queryParams, templateParams, headerParams, formParams, formParamaters,
                             body, bodySerializer, bodyParameters, arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();

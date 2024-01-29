@@ -17,13 +17,19 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 |-------------------------------------------------------------------------|--------------------------------------------------------------------|
 | [`ApiCall`](./src/main/java/io/apimatic/core/ApiCall.java)                     | An API call, or API request, is a message sent to a server asking an API to provide a service or information |
 | [`Parameter`](./src/main/java/io/apimatic/core/Parameter.java)                     | HTTP parameters consist of a type, a name, and a value. These parameters appear in the header and body of an HTTP request. |
-| [`ErrorCase`](./src/main/java/io/apimatic/core/ErrorCase.java)                     | A class is responsible to generate the SDK Exception |
+| [`ErrorCase`](./src/main/java/io/apimatic/core/ErrorCase.java)                     | A class which is responsible to generate the SDK Exception |
 | [`GlobalConfiguration`](./src/main/java/io/apimatic/core/GlobalConfiguration.java)                     | A class which hold the global configuration properties to make a successful Api Call |
 | [`HttpRequest`](./src/main/java/io/apimatic/core/HttpRequest.java)                     | An HTTP request is made by a client, to a named host, which is located on a server |
 | [`ResponseHandler`](./src/main/java/io/apimatic/core/ResponseHandler.java)                     | Handler that encapsulates the process of generating a response object from a Response |
 | [`HttpLogger`](./src/main/java/io/apimatic/core/logger/HttpLogger.java)              | A class to log the Http events. |
+| [`AuthBuilder`](./src/main/java/io/apimatic/core/authentication/AuthBuilder.java)              | A class to build and validate provided combination of auth schemes. |
+| [`AuthCredential`](./src/main/java/io/apimatic/core/authentication/AuthCredential.java)              | A parent class of [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java) and [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java) to hold the common implementation for header and query parameters |
 | [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java)              | A class supports HTTP authentication through HTTP Headers |
 | [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java)                | A class supports HTTP authentication through query parameters |
+| [`AuthGroup`](./src/main/java/io/apimatic/core/authentication/multiple/AuthGroup.java)                | A parent class of [`And`](./src/main/java/io/apimatic/core/authentication/multiple/And.java) and [`Or`](./src/main/java/io/apimatic/core/authentication/multiple/Or.java) to hold the common functionality of multiple auth |
+| [`And`](./src/main/java/io/apimatic/core/authentication/multiple/And.java)                | A class to hold the algorithm for `And` combination of auth schemes|
+| [`Or`](./src/main/java/io/apimatic/core/authentication/multiple/Or.java)                | A class to hold the algorithm for `Or` combination of auth schemes |
+| [`Single`](./src/main/java/io/apimatic/core/authentication/multiple/Single.java)                | A class to hold the logic for single auth scheme, it is used as leaf node for auth combination or it could be used directly to apply one auth only to the http request  |
 | [`CoreHttpClientConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/CoreHttpClientConfiguration.java)                     | To hold HTTP Client Configuration |
 | [`ApiLoggingConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/ApiLoggingConfiguration.java)                     | To hold logging configuration |
 | [`EndpointConfiguration`](./src/main/java/io/apimatic/core/configurations/http/request/EndpointConfiguration.java)                     | The configuration for an endpoint |
