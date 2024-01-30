@@ -96,10 +96,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         if (!isErrorTemplate) {
             return reason;
         }
-        String reason = replaceStatusCodeFromTemplate(response.getStatusCode(), this.reason);
-        reason = replaceHeadersFromTemplate(response.getHeaders(), reason);
-        reason = replaceBodyFromTemplate(response.getBody(), reason);
-        return reason;
+        String newReason = replaceStatusCodeFromTemplate(response.getStatusCode(), this.reason);
+        newReason = replaceHeadersFromTemplate(response.getHeaders(), newReason);
+        newReason = replaceBodyFromTemplate(response.getBody(), newReason);
+        return newReason;
     }
 
     private String replaceStatusCodeFromTemplate(int statusCode, String reason) {
@@ -154,7 +154,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
             String pointerKey = key;
             replaceBodyString(responseBody, formatter, jsonStructure, key, pointerKey);
         }
-        return formatter.toString().replaceAll("\"", "");
+        return formatter.toString().replace("\"", "");
     }
 
     private void replaceBodyString(String responseBody, StringBuilder formatter,

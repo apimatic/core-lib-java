@@ -51,7 +51,7 @@ public class EndToEndTest extends MockCoreConfig {
     /**
      * Map of Global Error Cases
      */
-    private static final Map<String, ErrorCase<CoreApiException>> globalErrorCases =
+    private static final Map<String, ErrorCase<CoreApiException>> GLOBAL_ERROR_CASES =
             new HashMap<String, ErrorCase<CoreApiException>>() {
         private static final long serialVersionUID = 1L;
         {
@@ -456,7 +456,7 @@ public class EndToEndTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(globalErrorCases))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
@@ -482,7 +482,7 @@ public class EndToEndTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(globalErrorCases))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
