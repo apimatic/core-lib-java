@@ -402,7 +402,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .nullify404(false).globalErrorCase(Collections.emptyMap()))
@@ -424,7 +425,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .localErrorCase("400",
@@ -453,7 +455,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
@@ -479,7 +482,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
