@@ -96,10 +96,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         if (!isErrorTemplate) {
             return reason;
         }
-        String newReason = replaceStatusCodeFromTemplate(response.getStatusCode(), this.reason);
-        newReason = replaceHeadersFromTemplate(response.getHeaders(), newReason);
-        newReason = replaceBodyFromTemplate(response.getBody(), newReason);
-        return newReason;
+        String resolvedReason = replaceStatusCodeFromTemplate(response.getStatusCode(), reason);
+        resolvedReason = replaceHeadersFromTemplate(response.getHeaders(), resolvedReason);
+        resolvedReason = replaceBodyFromTemplate(response.getBody(), resolvedReason);
+        return resolvedReason;
     }
 
     private String replaceStatusCodeFromTemplate(int statusCode, String reason) {
