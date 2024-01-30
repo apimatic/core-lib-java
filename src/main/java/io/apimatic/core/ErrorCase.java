@@ -59,10 +59,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
      * @throws ExceptionType Represents error response from the server.
      */
     public void throwException(Context httpContext) throws ExceptionType {
-        if (isErrorTemplate) {
-            replacePlaceHolder(httpContext.getResponse());
-        }
-        throw exceptionCreator.apply(reason, httpContext);
+        throw exceptionCreator.apply(getReason(httpContext.getResponse()), httpContext);
     }
 
     /**
@@ -95,13 +92,33 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
         return new ErrorCase<ExceptionType>(reason, exceptionCreator, true);
     }
 
-    private void replacePlaceHolder(Response response) {
-        replaceStatusCodeFromTemplate(response.getStatusCode());
-        replaceHeadersFromTemplate(response.getHeaders());
-        replaceBodyFromTemplate(response.getBody());
+    private String getReason(Response response) {
+        if (!isErrorTemplate) {
+            return reason;
+        }
+        String resolvedReason = replaceStatusCodeFromTemplate(response.getStatusCode(), reason);
+        resolvedReason = replaceHeadersFromTemplate(response.getHeaders(), resolvedReason);
+        resolvedReason = replaceBodyFromTemplate(response.getBody(), resolvedReason);
+        return resolvedReason;
     }
 
-    private void replaceHeadersFromTemplate(HttpHeaders headers) {
+    private String replaceStatusCodeFromTemplate(int statusCode, String reason) {
+        StringBuilder formatter = new StringBuilder(reason);
+        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            if (key.equals("$statusCode")) {
+                String formatKey = String.format("{%s}", key);
+                int index = formatter.indexOf(formatKey);
+                if (index != -1) {
+                    formatter.replace(index, index + formatKey.length(), "" + statusCode);
+                }
+            }
+        }
+        return formatter.toString();
+    }
+
+    private String replaceHeadersFromTemplate(HttpHeaders headers, String reason) {
         StringBuilder formatter = new StringBuilder(reason);
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
@@ -118,10 +135,10 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
                 }
             }
         }
-        reason = formatter.toString();
+        return formatter.toString();
     }
 
-    private void replaceBodyFromTemplate(String responseBody) {
+    private String replaceBodyFromTemplate(String responseBody, String reason) {
         StringBuilder formatter = new StringBuilder(reason);
         JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
         JsonStructure jsonStructure = null;
@@ -137,7 +154,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
             String pointerKey = key;
             replaceBodyString(responseBody, formatter, jsonStructure, key, pointerKey);
         }
-        reason = formatter.toString().replaceAll("\"", "");
+        return formatter.toString().replace("\"", "");
     }
 
     private void replaceBodyString(String responseBody, StringBuilder formatter,
@@ -173,21 +190,5 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
             }
         }
         return toReplaceString;
-    }
-
-    private void replaceStatusCodeFromTemplate(int statusCode) {
-        StringBuilder formatter = new StringBuilder(reason);
-        Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            if (key.equals("$statusCode")) {
-                String formatKey = String.format("{%s}", key);
-                int index = formatter.indexOf(formatKey);
-                if (index != -1) {
-                    formatter.replace(index, index + formatKey.length(), "" + statusCode);
-                }
-            }
-        }
-        reason = formatter.toString();
     }
 }
