@@ -1,6 +1,6 @@
 name: Release To Maven Central
 run-name: Publishing Package Version ${{ github.event.inputs.Version }}
-# Run workflow on commits to the `main` branch
+
 on:
    workflow_dispatch:
     inputs:
@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out git repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: Install Java and Maven setup
         uses: actions/setup-java@v1
@@ -45,7 +47,7 @@ jobs:
         uses: CasperWA/push-protected@v2
         with:
            token: ${{ secrets.PAT }}
-           branch: main
+           branch: ${{ github.ref_name }}
       - name: Delete the intermediate branch
         if: steps.release.outputs.exit_code == 0
         run: |
