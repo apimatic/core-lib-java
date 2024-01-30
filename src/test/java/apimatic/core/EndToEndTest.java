@@ -49,6 +49,47 @@ public class EndToEndTest extends MockCoreConfig {
     private static final int GONE_CLIENT = 410;
 
     /**
+     * Map of Global Error Cases
+     */
+    private static final Map<String, ErrorCase<CoreApiException>> GLOBAL_ERROR_CASES =
+            new HashMap<String, ErrorCase<CoreApiException>>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put("400", ErrorCase.setTemplate(
+                    "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - "
+                            + "{$response.body#/errors/0/detail}",
+                    (reason, context) -> new GlobalTestException(reason, context)));
+            put("404", ErrorCase.setReason("Not found",
+                    (reason, context) -> new CoreApiException(reason, context)));
+            put("401",
+                    ErrorCase.setTemplate("Failed to make the request, "
+                            + "{$response.header.content-type} {$response.body#/errors/0/code}"
+                            + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("410",
+                    ErrorCase.setTemplate("Failed to make the request, {$response.body}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("405",
+                    ErrorCase.setTemplate("Failed to make the request, {$response.header.accept} "
+                            + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("500",
+                    ErrorCase.setTemplate("Failed to make the request, http status code:"
+                            + " {$statusCode}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("4XX",
+                    ErrorCase.setTemplate(
+                            "Failed to make the request, {$response.body#/errors/0/code}"
+                                    + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put(ErrorCase.DEFAULT,
+                    ErrorCase.setReason(
+                            "Failed to make the request, {$response.body#/errors/0/code}"
+                                    + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+        }};
+
+    /**
      * Initializes mocks annotated with Mock.
      */
     @Rule
@@ -415,7 +456,7 @@ public class EndToEndTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(getGlobalErrorCases()))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
@@ -441,7 +482,7 @@ public class EndToEndTest extends MockCoreConfig {
                         .authenticationKey("global").httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(getGlobalErrorCases()))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
@@ -475,49 +516,4 @@ public class EndToEndTest extends MockCoreConfig {
         when(context.getResponse()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
     }
-
-    private Map<String, ErrorCase<CoreApiException>> getGlobalErrorCases() {
-        Map<String, ErrorCase<CoreApiException>> globalErrorCase = new HashMap<>();
-        globalErrorCase.put("400", ErrorCase.setTemplate(
-                "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - "
-                        + "{$response.body#/errors/0/detail}",
-                (reason, context) -> new GlobalTestException(reason, context)));
-
-        globalErrorCase.put("404", ErrorCase.setReason("Not found",
-                (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("401",
-                ErrorCase.setTemplate("Failed to make the request, {$response.header.content-type} "
-                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("410",
-                ErrorCase.setTemplate("Failed to make the request, {$response.body}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("405",
-                ErrorCase.setTemplate("Failed to make the request, {$response.header.accept} "
-                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("500",
-                ErrorCase.setTemplate("Failed to make the request, http status code: {$statusCode}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("4XX",
-                ErrorCase.setTemplate(
-                        "Failed to make the request, {$response.body#/errors/0/code} -"
-                                + " {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put(ErrorCase.DEFAULT,
-                ErrorCase.setReason(
-                        "Failed to make the request, {$response.body#/errors/0/code} - "
-                                + "{$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        return globalErrorCase;
-
-    }
-
 }
