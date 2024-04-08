@@ -12,6 +12,7 @@ import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
+import io.apimatic.coreinterfaces.logger.ApiLogger;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
@@ -61,6 +62,8 @@ public final class GlobalConfiguration {
      * A function to apply baseUri.
      */
     private Function<String, String> baseUri;
+    
+    private ApiLogger apiLogger;
 
     /**
      * A private constructor.
@@ -78,7 +81,8 @@ public final class GlobalConfiguration {
             final String userAgent, final Map<String, String> userAgentConfig,
             final Map<String, Authentication> authentications, final Callback callback,
             final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
-            final HttpHeaders additionalHeaders, final Function<String, String> baseUri) {
+            final HttpHeaders additionalHeaders, final Function<String, String> baseUri,
+            final ApiLogger apiLogger) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -88,7 +92,8 @@ public final class GlobalConfiguration {
         this.globalHeaders = globalHeaders != null ? globalHeaders : new HashMap<>();
         this.additionalHeaders = additionalHeaders;
         this.baseUri = baseUri;
-
+        this.apiLogger = apiLogger;
+        
         if (this.userAgent != null) {
             this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
             this.globalHeaders.put("user-agent", Arrays.asList(this.userAgent));
@@ -157,6 +162,10 @@ public final class GlobalConfiguration {
     public Function<String, String> getBaseUri() {
         return baseUri;
     }
+    
+    public ApiLogger getApiLogger() {
+    	return apiLogger;
+    }
 
     public static class Builder {
         /**
@@ -203,6 +212,8 @@ public final class GlobalConfiguration {
          * A function to retrieve baseUri.
          */
         private Function<String, String> baseUri;
+        
+        private ApiLogger apiLogger;
 
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
@@ -292,6 +303,11 @@ public final class GlobalConfiguration {
             this.baseUri = baseUri;
             return this;
         }
+        
+        public Builder apiLogger(ApiLogger apiLogger) {
+        	this.apiLogger = apiLogger;
+        	return this;
+        }
 
         /**
          * Builds a new {@link GlobalConfiguration} object using the set fields.
@@ -300,7 +316,7 @@ public final class GlobalConfiguration {
         public GlobalConfiguration build() {
             return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig,
                     authentications, callback, httpClient, globalHeaders, additionalheaders,
-                    baseUri);
+                    baseUri, apiLogger);
         }
     }
 

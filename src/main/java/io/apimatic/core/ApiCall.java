@@ -1,14 +1,19 @@
 package io.apimatic.core;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
+import org.slf4j.MDC;
+
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
+import io.apimatic.coreinterfaces.logger.ApiLogger;
 
 /**
  * An API call, or API request, is a message sent to a server asking an API to provide a service or
@@ -37,6 +42,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * An instance of {@link CoreEndpointConfiguration}.
      */
     private final CoreEndpointConfiguration endpointConfiguration;
+    
+    private final ApiLogger apiLogger;
 
     /**
      * ApiCall constructor.
@@ -52,6 +59,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
+        this.apiLogger = globalConfig.getApiLogger();
     }
 
     /**
@@ -61,8 +69,22 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse =
-                globalConfig.getHttpClient().execute(request, endpointConfiguration);
+    	MDC.put("apiCallId", UUID.randomUUID().toString());
+    	
+    	Response httpResponse = null;
+    	// request logging
+    	apiLogger.logRequest(request, null);
+    	try {
+    		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+    		apiLogger.logResponse(request, httpResponse);
+    	}
+    	catch(IOException ex) {
+    		// IO Error logging
+    	}
+    	finally {
+    		MDC.clear();
+    	}
+    	
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
     }
 

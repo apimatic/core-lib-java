@@ -68,9 +68,7 @@ public class HttpLogger implements ApiLogger {
         mapper.addMixIn(MultipartWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(MultipartFileWrapper.class, LoggingMixIn.class);
         mapper.addMixIn(HttpHeaders.class, LoggingMixIn.class);
-        this.writer =
-                !config.isPrettyPrinting() ? mapper.writer()
-                        : mapper.writerWithDefaultPrettyPrinter();
+        this.writer = mapper.writerWithDefaultPrettyPrinter();
     }
 
     /**
@@ -80,53 +78,6 @@ public class HttpLogger implements ApiLogger {
      */
     public void logRequest(Request request, String url) {
         this.logRequest(request, url, null);
-    }
-
-    /**
-     * Log requests.
-     * @param request HttpRequest to be logged.
-     * @param url String request URL.
-     * @param additionalMessage Any additional message to be logged.
-     */
-    public void logRequest(Request request, String url, String additionalMessage) {
-        if (request == null) {
-            return;
-        }
-
-        String requestId = UUID.randomUUID().toString();
-        RequestEntry requestEntry = new RequestEntry(requestId, System.nanoTime(), url);
-        requestQueue.put(request, requestEntry);
-
-        if (!config.isLoggingRequestInfo() && !config.isLoggingRequestHeaders()
-                && !config.isLoggingRequestBody()) {
-            // if log request disabled
-            return;
-        }
-
-        RequestMessage message = new RequestMessage();
-        message.setType("Request");
-        message.setRequestId(requestId);
-        if (config.isLoggingRequestInfo()) {
-            message.method = request.getHttpMethod();
-            message.setUrl(url);
-            message.setAdditionalMessage(additionalMessage);
-        }
-
-        if (config.isLoggingRequestHeaders()) {
-            message.setHeaders(getFilteredHeaders(request.getHeaders()));
-        }
-
-        if (config.isLoggingRequestBody()) {
-            if (request.getBody() != null) {
-                // As request.getBody() is always a non null serialized string.
-                // Hence we are calling getBody().toString().
-                message.setBody(CoreHelper.deserializeAsObject(request.getBody().toString()));
-            } else if (request.getParameters() != null && !request.getParameters().isEmpty()) {
-                message.setBody(request.getParameters());
-            }
-        }
-
-        log(message, config.getLevel(), true);
     }
 
     /**
@@ -140,6 +91,20 @@ public class HttpLogger implements ApiLogger {
             requestEntry.error = error;
             requestQueue.put(request, requestEntry);
         }
+    }
+    
+    /**
+     * Log requests.
+     * @param request HttpRequest to be logged.
+     * @param url String request URL.
+     * @param additionalMessage Any additional message to be logged.
+     */
+    public void logRequest(Request request, String url, String additionalMessage) {
+    	log("Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
+        		   url,
+	        	   request.getHttpMethod(),
+	        	   request.getHeaders().value("content-type"),
+	        	   request.getHeaders().value("content-length"));
     }
 
     /**
@@ -158,68 +123,20 @@ public class HttpLogger implements ApiLogger {
      * @param additionalMessage Any additional message to be logged.
      */
     public void logResponse(Request request, Response response, String additionalMessage) {
-        RequestEntry requestEntry = requestQueue.get(request);
-        if (requestEntry == null) {
-            return;
-        }
-        requestQueue.remove(request);
-        if (!config.isLoggingResponseInfo() && !config.isLoggingResponseHeaders()
-                && !config.isLoggingResponseBody()) {
-            // if log response disabled
-            return;
-        }
-        ResponseMessage message = new ResponseMessage();
-        message.setType("Response");
-        message.setRequestId(requestEntry.requestId);
-        long timeTaken = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - requestEntry.startTime);
-        if (response == null) {
-            message.success = false;
-            message.failureReason = "HTTP REQUEST FAILED: " + requestEntry.error;
-            message.setUrl(requestEntry.url);
-            message.timeTakenMillis = timeTaken;
-            message.setAdditionalMessage(additionalMessage);
-        } else {
-            if (config.isLoggingResponseInfo()) {
-                message.statusCode = response.getStatusCode();
-                message.setUrl(requestEntry.url);
-                message.timeTakenMillis = timeTaken;
-                message.setAdditionalMessage(additionalMessage);
-            }
-
-            if (config.isLoggingResponseHeaders()) {
-                message.setHeaders(getFilteredHeaders(response.getHeaders()));
-            }
-
-            if (config.isLoggingResponseBody()) {
-                message.setBody(CoreHelper.deserializeAsObject(response.getBody()));
-            }
-        }
-
-        log(message, config.getLevel(), true);
+    	log("Response - ContentType: {}, ContentLength: {}",
+    			response.getHeaders().value("content-type"),
+    			response.getHeaders().value("content-length"));
     }
-
-    private Map<String, List<String>> getFilteredHeaders(HttpHeaders headers) {
-        Map<String, List<String>> filteredHeders = headers.asMultimap();
-        headers.names().forEach(name -> {
-            boolean isNameInFilter = config.getHeaderFilters().contains(name);
-            switch (HeaderLoggingPolicyLevel.valueOf(config.getHeaderLoggingPolicy().toString())) {
-                case EXCLUDE:
-                    if (isNameInFilter) {
-                        filteredHeders.remove(name);
-                    }
-                    break;
-                case INCLUDE:
-                    if (!isNameInFilter) {
-                        filteredHeders.remove(name);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        });
-        return filteredHeders.isEmpty() ? null : filteredHeders;
+    
+    private void log(String format, Object... arguments) {
+    	if(config.getEnableDefaultConsoleLogging()) {
+    		System.out.printf(format, arguments);
+    		return;
+    	}
+    	logger.info(format, arguments);
     }
-
+    
+    
     /**
      * Log provided message according to logging level.
      * @param message Message instance to be logged as JSON.
@@ -258,6 +175,7 @@ public class HttpLogger implements ApiLogger {
             }
         }
     }
+    
 
     /**
      * MixIn interface to update how certain fields are shown in the logs.
