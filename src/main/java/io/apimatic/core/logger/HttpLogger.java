@@ -2,6 +2,7 @@ package io.apimatic.core.logger;
 
 import org.slf4j.Logger;
 import org.slf4j.MDC;
+import org.slf4j.helpers.MessageFormatter;
 
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -68,7 +69,8 @@ public class HttpLogger implements ApiLogger {
     
     private void log(String format, Object... arguments) {
     	if(config.getEnableDefaultConsoleLogging()) {
-    		System.out.printf(format, arguments);
+            String message = MessageFormatter.arrayFormat(format, arguments).getMessage();
+    		System.out.println(message);
     		return;
     	}
     	logger.info(format, arguments);
