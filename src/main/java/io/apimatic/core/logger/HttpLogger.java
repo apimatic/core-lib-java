@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.MDC;
 import org.slf4j.helpers.MessageFormatter;
 
+import io.apimatic.coreinterfaces.http.LoggingLevelType;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
@@ -51,7 +52,7 @@ public class HttpLogger implements ApiLogger {
      * @param additionalMessage Any additional message to be logged.
      */
     public void logRequest(Request request, String url, String additionalMessage) {
-    	log("Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
+    	log(LoggingLevelType.INFO, "Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
     		 url,
         	 request.getHttpMethod(),
         	 request.getHeaders().value("content-type"),
@@ -64,18 +65,37 @@ public class HttpLogger implements ApiLogger {
      * @param response HttpResponse to be logged.
      */
     public void logResponse(Request request, Response response) {
-    	log("Response - ContentType: {}, ContentLength: {}",
+    	log(LoggingLevelType.INFO, "Response - ContentType: {}, ContentLength: {}",
 			 response.getHeaders().value("content-type"),
 			 response.getHeaders().value("content-length"));
     }
     
-    private void log(String format, Object... arguments) {
+    private void log(LoggingLevelType level, String format, Object... arguments) {
     	if(config.getEnableDefaultConsoleLogging()) {
             String message = MessageFormatter.arrayFormat(format, arguments).getMessage();
     		System.out.println(message);
     		return;
     	}
-    	logger.info(format, arguments);
+
+        switch (level) {
+            case TRACE:
+                logger.trace(format, arguments);
+                break;
+            case DEBUG:
+                logger.debug(format, arguments);
+                break;
+            case INFO:
+    	        logger.info(format, arguments);
+                break;
+            case WARN:
+                logger.warn(format, arguments);
+                break;
+            case ERROR:
+                logger.error(format, arguments);
+                break;
+            default:
+                break;
+        }
     }
 
     public void startScope() {
