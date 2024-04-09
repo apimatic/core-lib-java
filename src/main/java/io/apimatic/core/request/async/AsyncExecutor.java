@@ -42,9 +42,9 @@ public final class AsyncExecutor {
 			request = requestSupplier.supply();
 			apiLogger.logRequest(request, request.getUrl(ArraySerializationFormat.PLAIN));
 		} catch (Exception e) {
+			apiLogger.closeScope();
 			CompletableFuture<ResponseType> futureResponse = new CompletableFuture<>();
 			futureResponse.completeExceptionally(e);
-			apiLogger.closeScope();
 			return futureResponse;
 		}
 
