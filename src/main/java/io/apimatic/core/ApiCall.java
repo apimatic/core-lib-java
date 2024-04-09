@@ -78,7 +78,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     		apiLogger.logResponse(request, httpResponse);
     	}
     	catch(IOException ex) {
-    		// IO Error logging
+    		apiLogger.logRequestError(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()), ex);
     	}
     	finally {
     		apiLogger.clearScope();
@@ -96,7 +96,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 request -> globalConfig.getHttpClient().executeAsync(request,
                         endpointConfiguration),
                 (httpRequest, httpResponse) -> responseHandler.handle(httpRequest, httpResponse,
-                        globalConfig, endpointConfiguration));
+                        globalConfig, endpointConfiguration), apiLogger);
     }
 
     /**
