@@ -1,5 +1,6 @@
 package io.apimatic.core.logger;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -64,7 +65,8 @@ public class HttpLogger implements ApiLogger {
      * @param response HttpResponse to be logged.
      */
     public void logResponse(Request request, Response response) {
-    	log("Response - ContentType: {}, ContentLength: {}",
+    	log("Response - StatusCode: {}, ContentType: {}, ContentLength: {}",
+    		 response.getStatusCode(),
 			 response.getHeaders().value("content-type"),
 			 response.getHeaders().value("content-length"));
     }
@@ -82,6 +84,17 @@ public class HttpLogger implements ApiLogger {
         MDC.put("apiCallId", UUID.randomUUID().toString());
     }
 
+    public Map<String, String> getScopeContext() {
+    	return MDC.getCopyOfContextMap();
+    }
+    
+	public void startScope(Map<String, String> contextMap) {
+	   MDC.clear();
+	   if (contextMap != null) {
+	       MDC.setContextMap(contextMap);
+	    }
+	}
+    
     public void closeScope() {
         MDC.clear();
     }
