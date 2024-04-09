@@ -1,5 +1,7 @@
 package io.apimatic.core.logger;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 import org.slf4j.helpers.MessageFormatter;
@@ -76,11 +78,11 @@ public class HttpLogger implements ApiLogger {
     	logger.info(format, arguments);
     }
 
-    public void addToScope(String key, String val) {
-        MDC.put(key, val);
+    public void startScope() {
+        MDC.put("apiCallId", UUID.randomUUID().toString());
     }
 
-    public void clearScope() {
+    public void closeScope() {
         MDC.clear();
     }
 

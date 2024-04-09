@@ -1,11 +1,8 @@
 package io.apimatic.core;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-
-import org.slf4j.MDC;
 
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
@@ -69,9 +66,9 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-    	apiLogger.addToScope("apiCallId", UUID.randomUUID().toString());
-
-    	Response httpResponse = null;
+        Response httpResponse = null;
+        
+    	apiLogger.startScope();
     	apiLogger.logRequest(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()));
     	try {
     		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
@@ -81,7 +78,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     		apiLogger.logRequestError(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()), ex);
     	}
     	finally {
-    		apiLogger.clearScope();
+    		apiLogger.closeScope();
     	}
     	
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
