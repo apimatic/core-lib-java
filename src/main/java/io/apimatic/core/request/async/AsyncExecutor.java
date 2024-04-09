@@ -1,5 +1,6 @@
 package io.apimatic.core.request.async;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -7,6 +8,7 @@ import java.util.concurrent.CompletionException;
 import org.slf4j.MDC;
 
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 
@@ -34,27 +36,30 @@ public final class AsyncExecutor {
 	public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
 			RequestSupplier requestSupplier, RequestExecutor requestExecutor,
 			AsyncResponseHandler<ResponseType, ExceptionType> responseHandler, ApiLogger apiLogger) {
-		MDC.put("apiCallId", UUID.randomUUID().toString());
+		apiLogger.startScope();
 		final Request request;
 		try {
 			request = requestSupplier.supply();
-			apiLogger.logRequest(request, request.getQueryUrl());
+			apiLogger.logRequest(request, request.getUrl(ArraySerializationFormat.PLAIN));
 		} catch (Exception e) {
 			CompletableFuture<ResponseType> futureResponse = new CompletableFuture<>();
 			futureResponse.completeExceptionally(e);
-			MDC.clear();
+			apiLogger.closeScope();
 			return futureResponse;
 		}
 
+		Map<String, String> contextMap = apiLogger.getScopeContext();
+	
 		// Invoke request and get response
 		return requestExecutor.execute(request).thenApplyAsync(response -> {
+			apiLogger.startScope(contextMap);
 			apiLogger.logResponse(request, response);
 			try {
 				return responseHandler.handle(request, response);
 			} catch (Exception e) {
 				throw new CompletionException(e);
 			} finally {
-				MDC.clear();
+				apiLogger.closeScope();
 			}
 		});
 	}
