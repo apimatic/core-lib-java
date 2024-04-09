@@ -125,7 +125,7 @@ public class HttpLogger implements ApiLogger {
      * @param error Throwable occurred
 	 */
 	public void logRequestError(Request request, String url, Throwable error) {
-		log("Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
+		log(LoggingLevelType.ERROR,"Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
 			 url,
 	         request.getHttpMethod(),
 	         request.getHeaders().value("content-type"),
