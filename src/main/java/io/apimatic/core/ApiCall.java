@@ -72,8 +72,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     	MDC.put("apiCallId", UUID.randomUUID().toString());
     	
     	Response httpResponse = null;
-    	// request logging
-    	apiLogger.logRequest(request, null);
+    	apiLogger.logRequest(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()));
     	try {
     		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
     		apiLogger.logResponse(request, httpResponse);
