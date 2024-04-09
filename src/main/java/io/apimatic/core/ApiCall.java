@@ -69,8 +69,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-    	MDC.put("apiCallId", UUID.randomUUID().toString());
-    	
+    	apiLogger.addToScope("apiCallId", UUID.randomUUID().toString());
+
     	Response httpResponse = null;
     	// request logging
     	apiLogger.logRequest(request, null);
@@ -82,7 +82,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     		// IO Error logging
     	}
     	finally {
-    		MDC.clear();
+    		apiLogger.clearScope();
     	}
     	
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);

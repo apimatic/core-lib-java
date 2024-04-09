@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
+import org.slf4j.MDC;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -391,5 +393,15 @@ public class HttpLogger implements ApiLogger {
             this.startTime = startTime;
             this.url = url;
         }
+    }
+
+    @Override
+    public void addToScope(String key, String val) {
+        MDC.put(key, val);
+    }
+
+    @Override
+    public void clearScope() {
+        MDC.clear();
     }
 }
