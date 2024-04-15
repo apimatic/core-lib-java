@@ -49,11 +49,10 @@ public class HttpLogger implements ApiLogger {
      * @param additionalMessage Any additional message to be logged.
      */
     public void logRequest(Request request, String url, String additionalMessage) {
-    	log(LoggingLevelType.INFO, "Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
-    		 url,
-        	 request.getHttpMethod(),
-        	 request.getHeaders().value("content-type"),
-        	 request.getHeaders().value("content-length"));
+    	log(LoggingLevelType.INFO, "Request {} Url: {}, ContentType: {}.",
+			request.getHttpMethod(),
+			url,
+        	request.getHeaders().value("content-type"));
     }
 
     /**
@@ -62,7 +61,7 @@ public class HttpLogger implements ApiLogger {
      * @param response HttpResponse to be logged.
      */
     public void logResponse(Request request, Response response) {
-    	log(LoggingLevelType.INFO, "Response - StatusCode: {}, ContentType: {}, ContentLength: {}",
+    	log(LoggingLevelType.INFO, "Response StatusCode: {}, ContentType: {}, ContentLength: {}",
     		 response.getStatusCode(),
 			 response.getHeaders().value("content-type"),
 			 response.getHeaders().value("content-length"));
