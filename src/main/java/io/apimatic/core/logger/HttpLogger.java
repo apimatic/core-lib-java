@@ -1,10 +1,6 @@
 package io.apimatic.core.logger;
 
-import java.util.Map;
-import java.util.UUID;
-
 import org.slf4j.Logger;
-import org.slf4j.MDC;
 import org.slf4j.helpers.MessageFormatter;
 
 import io.apimatic.coreinterfaces.http.LoggingLevelType;
@@ -98,25 +94,6 @@ public class HttpLogger implements ApiLogger {
             default:
                 break;
         }
-    }
-
-    public void startScope() {
-        MDC.put("apiCallId", UUID.randomUUID().toString());
-    }
-
-    public Map<String, String> getScopeContext() {
-    	return MDC.getCopyOfContextMap();
-    }
-    
-	public void startScope(Map<String, String> contextMap) {
-	   MDC.clear();
-	   if (contextMap != null) {
-	       MDC.setContextMap(contextMap);
-	    }
-	}
-    
-    public void closeScope() {
-        MDC.clear();
     }
 
 	/**

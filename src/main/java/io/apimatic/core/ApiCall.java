@@ -68,7 +68,6 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     public ResponseType execute() throws IOException, ExceptionType {
         Response httpResponse = null;
         
-    	apiLogger.startScope();
     	apiLogger.logRequest(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()));
     	try {
     		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
@@ -76,9 +75,6 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     	}
     	catch(IOException ex) {
     		apiLogger.logRequestError(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()), ex);
-    	}
-    	finally {
-    		apiLogger.closeScope();
     	}
     	
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);

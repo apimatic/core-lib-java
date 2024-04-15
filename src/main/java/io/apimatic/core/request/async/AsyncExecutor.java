@@ -36,30 +36,23 @@ public final class AsyncExecutor {
 	public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
 			RequestSupplier requestSupplier, RequestExecutor requestExecutor,
 			AsyncResponseHandler<ResponseType, ExceptionType> responseHandler, ApiLogger apiLogger) {
-		apiLogger.startScope();
 		final Request request;
 		try {
 			request = requestSupplier.supply();
 			apiLogger.logRequest(request, request.getUrl(ArraySerializationFormat.PLAIN));
 		} catch (Exception e) {
-			apiLogger.closeScope();
 			CompletableFuture<ResponseType> futureResponse = new CompletableFuture<>();
 			futureResponse.completeExceptionally(e);
 			return futureResponse;
 		}
 
-		Map<String, String> contextMap = apiLogger.getScopeContext();
-	
 		// Invoke request and get response
 		return requestExecutor.execute(request).thenApplyAsync(response -> {
-			apiLogger.startScope(contextMap);
 			apiLogger.logResponse(request, response);
 			try {
 				return responseHandler.handle(request, response);
 			} catch (Exception e) {
 				throw new CompletionException(e);
-			} finally {
-				apiLogger.closeScope();
 			}
 		});
 	}
