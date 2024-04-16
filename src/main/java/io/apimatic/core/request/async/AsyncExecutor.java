@@ -1,11 +1,7 @@
 package io.apimatic.core.request.async;
 
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-
-import org.slf4j.MDC;
 
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
@@ -35,11 +31,12 @@ public final class AsyncExecutor {
 	 */
 	public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(
 			RequestSupplier requestSupplier, RequestExecutor requestExecutor,
-			AsyncResponseHandler<ResponseType, ExceptionType> responseHandler, ApiLogger apiLogger) {
+			AsyncResponseHandler<ResponseType, ExceptionType> responseHandler,
+			ApiLogger apiLogger, ArraySerializationFormat arraySerlizationFormat) {
 		final Request request;
 		try {
 			request = requestSupplier.supply();
-			apiLogger.logRequest(request, request.getUrl(ArraySerializationFormat.PLAIN));
+			apiLogger.logRequest(request, request.getUrl(arraySerlizationFormat));
 		} catch (Exception e) {
 			CompletableFuture<ResponseType> futureResponse = new CompletableFuture<>();
 			futureResponse.completeExceptionally(e);

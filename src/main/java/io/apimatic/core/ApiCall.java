@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -41,6 +42,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     private final CoreEndpointConfiguration endpointConfiguration;
     
     private final ApiLogger apiLogger;
+    
+    private final ArraySerializationFormat arraySerlizationFormat;
 
     /**
      * ApiCall constructor.
@@ -57,6 +60,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
         this.apiLogger = globalConfig.getApiLogger();
+        this.arraySerlizationFormat = endpointConfiguration.getArraySerializationFormat();
     }
 
     /**
@@ -68,7 +72,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     public ResponseType execute() throws IOException, ExceptionType {
         Response httpResponse = null;
         
-    	apiLogger.logRequest(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()));
+    	apiLogger.logRequest(request, request.getUrl(arraySerlizationFormat));
     	try {
     		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
     		apiLogger.logResponse(request, httpResponse);
@@ -89,7 +93,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 request -> globalConfig.getHttpClient().executeAsync(request,
                         endpointConfiguration),
                 (httpRequest, httpResponse) -> responseHandler.handle(httpRequest, httpResponse,
-                        globalConfig, endpointConfiguration), apiLogger);
+                        globalConfig, endpointConfiguration), apiLogger, arraySerlizationFormat);
     }
 
     /**
