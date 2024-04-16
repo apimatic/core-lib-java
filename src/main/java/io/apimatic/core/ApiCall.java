@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
-import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -43,7 +42,6 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     
     private final ApiLogger apiLogger;
     
-    private final ArraySerializationFormat arraySerlizationFormat;
 
     /**
      * ApiCall constructor.
@@ -60,7 +58,6 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
         this.apiLogger = globalConfig.getApiLogger();
-        this.arraySerlizationFormat = endpointConfiguration.getArraySerializationFormat();
     }
 
     /**
@@ -70,7 +67,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-    	apiLogger.logRequest(request, arraySerlizationFormat);
+    	apiLogger.logRequest(request);
     	Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
 		apiLogger.logResponse(httpResponse);
     	
@@ -86,7 +83,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 request -> globalConfig.getHttpClient().executeAsync(request,
                         endpointConfiguration),
                 (httpRequest, httpResponse) -> responseHandler.handle(httpRequest, httpResponse,
-                        globalConfig, endpointConfiguration), apiLogger, arraySerlizationFormat);
+                        globalConfig, endpointConfiguration), apiLogger);
     }
 
     /**

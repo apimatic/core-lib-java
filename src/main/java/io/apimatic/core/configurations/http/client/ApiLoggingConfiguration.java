@@ -1,20 +1,21 @@
 package io.apimatic.core.configurations.http.client;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.function.Consumer;
+
+import io.apimatic.core.logger.configurations.RequestLogOptions;
+import io.apimatic.core.logger.configurations.ResponseLogOptions;
 import io.apimatic.coreinterfaces.http.LoggingLevel;
-import io.apimatic.coreinterfaces.http.LoggingPolicy;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
 
 /**
  * To hold logging configuration.
  */
 public final class ApiLoggingConfiguration implements ReadonlyLogging {
-
     /**
      * Level enum to use with level in {@link ApiLoggingConfiguration.Builder}.
+     * An instance of {@link LoggingLevel}.
      */
     public enum Level {
         /**
@@ -42,22 +43,33 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
          */
         TRACE
     }
-
+    
     /**
      * An instance of {@link LoggingLevel}.
      */
     private LoggingLevel level;
-    
-    private boolean enableDefaultConsoleLogging;
 
+    /**
+     * Options for logging requests.
+     */
+    private RequestLogOptions requestLogOptions;
+    
+    /**
+     * Options for logging responses.
+     */
+    private ResponseLogOptions responseLogOptions;
+    
     /**
      * @param level
      */
-    private ApiLoggingConfiguration(final LoggingLevel level, boolean enableDefaultConsoleLogging) {
+    private ApiLoggingConfiguration(final LoggingLevel level,
+    		final RequestLogOptions requestLogOptions,
+    		final ResponseLogOptions responseLogOptions) {
         this.level = level;
-        this.enableDefaultConsoleLogging = enableDefaultConsoleLogging;
+        this.requestLogOptions = requestLogOptions;
+        this.responseLogOptions = responseLogOptions;
     }
-
+    
     /**
      * Getter for level.
      * @return Level of logging.
@@ -65,13 +77,21 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     public LoggingLevel getLevel() {
         return level;
     }
+    
+    /**
+     * Getter for the RequestLogOptions.
+     * @return The RequestLogOptions object.
+     */
+    public ReadonlyRequestLogging getRequestLogOptions() {
+        return requestLogOptions;
+    }
 
     /**
-     * Getter for getEnableDefaultConsoleLogging.
-     * @return .
+     * Getter for the ResponseLogOptions.
+     * @return The ResponseLogOptions object.
      */
-    public boolean getEnableDefaultConsoleLogging() {
-        return enableDefaultConsoleLogging;
+    public ReadonlyResponseLogging getResponseLogOptions() {
+        return responseLogOptions;
     }
     
     /**
@@ -84,13 +104,14 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
     }
 
     /**
-     * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the instance with the
-     * current state.
+     * Builds a new {@link ApiLoggingConfiguration.Builder} object.
+     * Creates the instance with the current state.
      * @return a new {@link ApiLoggingConfiguration.Builder} object.
      */
     public Builder newBuilder() {
-        return new Builder().level(level)
-        		            .enableDefaultConsoleLogging(enableDefaultConsoleLogging);
+    	return new Builder().level(level)
+    			.requestLogOptions(builder -> builder = requestLogOptions.newBuilder())
+    			.responseLogOptions(builder -> builder = responseLogOptions.newBuilder());
     }
 
     /**
@@ -101,10 +122,17 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
          * An instance of {@link LoggingLevel}.
          */
         private LoggingLevel level = LoggingLevel.INFO;
+
+        /**
+         * Options for logging requests.
+         */
+        private RequestLogOptions.Builder requestLogOptionsBuilder = new RequestLogOptions.Builder();
         
-		private boolean enableDefaultConsoleLogging;
-
-
+        /**
+         * Options for logging responses.
+         */
+        private ResponseLogOptions.Builder responseLogOptionsBuilder = new ResponseLogOptions.Builder();
+        
         /**
          * Set level for logging.
          * @param level specify level of all logs.
@@ -114,18 +142,40 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
             this.level = level;
             return this;
         }
+        
+        /**
+         * Sets the RequestLogOptions.Builder for the builder.
+         * @param requestOptions The RequestOptions object.
+         * @return This Builder object.
+         */
+        public Builder requestLogOptions(Consumer<RequestLogOptions.Builder> requestLogOptionsBuilderAction) {
+        	if(requestLogOptionsBuilder != null) {
+        		requestLogOptionsBuilderAction.accept(this.requestLogOptionsBuilder);
+        	}
+            return this;
+        }
 
-        public Builder enableDefaultConsoleLogging(boolean enableDefaultConsoleLogging) {
-			this.enableDefaultConsoleLogging = enableDefaultConsoleLogging;
-			return this;
-		}
+        /**
+         * Sets the ResponseLogOptions.Builder for the builder.
+         * @param responseOptions The ResponseOptions object.
+         * @return This Builder object.
+         */
+        public Builder responseLogOptions(Consumer<ResponseLogOptions.Builder> responseLogOptionsBuilderAction) {
+        	if(responseLogOptionsBuilder != null) {
+        		responseLogOptionsBuilderAction.accept(this.responseLogOptionsBuilder);
+        	}
+            return this;
+        }
+
 
 		/**
          * Builds a new LoggingConfiguration object using the set fields.
          * @return {@link ApiLoggingConfiguration}.
          */
         public ApiLoggingConfiguration build() {
-            return new ApiLoggingConfiguration(level, enableDefaultConsoleLogging);
+        	RequestLogOptions requestLogOptions = requestLogOptionsBuilder.build();
+        	ResponseLogOptions responseLogOptions = responseLogOptionsBuilder.build();
+            return new ApiLoggingConfiguration(level, requestLogOptions, responseLogOptions);
         }
     }
 }
