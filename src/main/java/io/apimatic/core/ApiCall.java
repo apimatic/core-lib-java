@@ -70,16 +70,9 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse = null;
-        
-    	apiLogger.logRequest(request, request.getUrl(arraySerlizationFormat));
-    	try {
-    		httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
-    		apiLogger.logResponse(request, httpResponse);
-    	}
-    	catch(IOException ex) {
-    		apiLogger.logRequestError(request, request.getUrl(endpointConfiguration.getArraySerializationFormat()), ex);
-    	}
+    	apiLogger.logRequest(request, arraySerlizationFormat);
+    	Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+		apiLogger.logResponse(httpResponse);
     	
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
     }

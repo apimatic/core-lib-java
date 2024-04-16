@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.helpers.MessageFormatter;
 
 import io.apimatic.coreinterfaces.http.LoggingLevelType;
+import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
@@ -36,31 +37,20 @@ public class HttpLogger implements ApiLogger {
     /**
      * Log requests.
      * @param request HttpRequest to be logged.
-     * @param url String request URL.
+     * @param arraySerializationFormat Enumeration for all ArraySerialization formats.
      */
-    public void logRequest(Request request, String url) {
-        this.logRequest(request, url, null);
-    }
-    
-    /**
-     * Log requests.
-     * @param request HttpRequest to be logged.
-     * @param url String request URL.
-     * @param additionalMessage Any additional message to be logged.
-     */
-    public void logRequest(Request request, String url, String additionalMessage) {
+    public void logRequest(Request request, ArraySerializationFormat arraySerializationFormat) {
     	log(LoggingLevelType.INFO, "Request {} Url: {}, ContentType: {}.",
 			request.getHttpMethod(),
-			url,
+			request.getQueryUrl(),
         	request.getHeaders().value("content-type"));
     }
 
     /**
      * Log Responses.
-     * @param request HttpRequest that completed.
      * @param response HttpResponse to be logged.
      */
-    public void logResponse(Request request, Response response) {
+    public void logResponse(Response response) {
     	log(LoggingLevelType.INFO, "Response StatusCode: {}, ContentType: {}, ContentLength: {}",
     		 response.getStatusCode(),
 			 response.getHeaders().value("content-type"),
@@ -94,17 +84,4 @@ public class HttpLogger implements ApiLogger {
                 break;
         }
     }
-
-	/**
-     * Log error occurred on executing Request
-     * @param request HttpRequest to be logged.
-     * @param error Throwable occurred
-	 */
-	public void logRequestError(Request request, String url, Throwable error) {
-		log(LoggingLevelType.ERROR,"Request - Url: {}, HttpMethod: {}, ContentType: {}, ContentLength: {}",
-			 url,
-	         request.getHttpMethod(),
-	         request.getHeaders().value("content-type"),
-	         request.getHeaders().value("content-length"));
-	}
 }

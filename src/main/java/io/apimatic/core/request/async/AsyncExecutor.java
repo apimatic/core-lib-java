@@ -36,7 +36,7 @@ public final class AsyncExecutor {
 		final Request request;
 		try {
 			request = requestSupplier.supply();
-			apiLogger.logRequest(request, request.getUrl(arraySerlizationFormat));
+			apiLogger.logRequest(request, arraySerlizationFormat);
 		} catch (Exception e) {
 			CompletableFuture<ResponseType> futureResponse = new CompletableFuture<>();
 			futureResponse.completeExceptionally(e);
@@ -45,7 +45,7 @@ public final class AsyncExecutor {
 
 		// Invoke request and get response
 		return requestExecutor.execute(request).thenApplyAsync(response -> {
-			apiLogger.logResponse(request, response);
+			apiLogger.logResponse(response);
 			try {
 				return responseHandler.handle(request, response);
 			} catch (Exception e) {
