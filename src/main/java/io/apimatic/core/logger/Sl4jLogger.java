@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 
 import io.apimatic.coreinterfaces.http.LoggingLevel;
 import io.apimatic.coreinterfaces.http.LoggingLevelType;
-import io.apimatic.coreinterfaces.logger.Loggable;
 
-public class Sl4jLogger implements Loggable {
+
+public class Sl4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	private Logger logger;
 	
 	public Sl4jLogger(Logger logger) {

@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.LoggingLevel;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
-import io.apimatic.coreinterfaces.logger.Loggable;
+import io.apimatic.coreinterfaces.logger.Logger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 /**
@@ -21,7 +19,7 @@ public class HttpLogger implements ApiLogger {
 	/**
 	 * An instance of {@link Logger}.
 	 */
-	private Loggable logger;
+	private Logger logger;
 
 	/**
 	 * An instance of {@link ReadonlyLogging}.
@@ -30,6 +28,7 @@ public class HttpLogger implements ApiLogger {
 
 	/**
 	 * Default Constructor.
+	 * 
 	 * @param config {@link ReadonlyLogging} as logging properties.
 	 */
 	public HttpLogger(final ReadonlyLogging config) {
@@ -91,7 +90,8 @@ public class HttpLogger implements ApiLogger {
 		if (contentLength == null) {
 			logger.log(level, "Response {} {}", response.getStatusCode(), contentType);
 		} else {
-			logger.log(level, "Response {} {} content-length: {}", response.getStatusCode(), contentType, contentLength);
+			logger.log(level, "Response {} {} content-length: {}", response.getStatusCode(), contentType,
+					contentLength);
 		}
 
 		if (config.getResponseLogOptions().shouldLogHeaders()) {

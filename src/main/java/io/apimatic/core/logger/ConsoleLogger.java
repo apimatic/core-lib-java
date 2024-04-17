@@ -3,9 +3,9 @@ package io.apimatic.core.logger;
 import org.slf4j.helpers.MessageFormatter;
 
 import io.apimatic.coreinterfaces.http.LoggingLevel;
-import io.apimatic.coreinterfaces.logger.Loggable;
+import io.apimatic.coreinterfaces.logger.Logger;
 
-public class ConsoleLogger implements Loggable {
+public class ConsoleLogger implements Logger {
 
 	@Override
 	public void log(LoggingLevel level, String format, Object... arguments) {
