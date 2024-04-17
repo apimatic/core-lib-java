@@ -1,6 +1,7 @@
 package io.apimatic.core.logger.configurations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public abstract class LogBaseOptions {
      * @param excludeHeaders The headers to exclude from logging.
      */
     public void excludeHeaders(String... excludeHeaders) {
-        headersToExclude = new ArrayList<>(List.of(excludeHeaders));
+        headersToExclude = new ArrayList<>(Arrays.asList(excludeHeaders));
     }
 
     /**
@@ -74,7 +75,7 @@ public abstract class LogBaseOptions {
      * @param includeHeaders The headers to include in logging.
      */
     public void includeHeaders(String... includeHeaders) {
-        headersToInclude = new ArrayList<>(List.of(includeHeaders));
+        headersToInclude = new ArrayList<>(Arrays.asList(includeHeaders));
     }
 }
 

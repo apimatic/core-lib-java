@@ -3,6 +3,7 @@ package io.apimatic.core.logger.configurations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 
@@ -79,7 +80,7 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 		 * @return The builder instance.
 		 */
 		public Builder excludeHeaders(String... excludeHeaders) {
-			this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase).toList();
+			this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase).collect(Collectors.toList());
 			return this;
 		}
 
@@ -90,7 +91,7 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 		 * @return The builder instance.
 		 */
 		public Builder includeHeaders(String... includeHeaders) {
-			this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase).toList();
+			this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase).collect(Collectors.toList());
 			return this;
 		}
 
