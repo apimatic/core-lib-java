@@ -5,6 +5,9 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
+import io.apimatic.core.logger.ConsoleLogger;
+import io.apimatic.core.logger.NullSdkLogger;
+import io.apimatic.core.logger.Sl4jLogger;
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
@@ -18,7 +21,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	/***
 	 * An instance of Logger
 	 */
-	private Logger logger;
+	private io.apimatic.coreinterfaces.logger.Logger logger;
 
 	/**
 	 * An instance of {@link Level}.
@@ -43,8 +46,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	/**
 	 * @param level
 	 */
-	private ApiLoggingConfiguration(final Logger logger, final Level level, final boolean maskSensitiveHeaders,
-			final RequestLogOptions requestLogOptions, final ResponseLogOptions responseLogOptions) {
+	private ApiLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger, final Level level,
+			final boolean maskSensitiveHeaders, final RequestLogOptions requestLogOptions,
+			final ResponseLogOptions responseLogOptions) {
 		this.logger = logger;
 		this.level = level;
 		this.maskSensitiveHeaders = maskSensitiveHeaders;
@@ -57,7 +61,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	 * 
 	 * @return Logger instance.
 	 */
-	public Logger getLogger() {
+	public io.apimatic.coreinterfaces.logger.Logger getLogger() {
 		return logger;
 	}
 
@@ -123,7 +127,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		/***
 		 * An instance of Logger
 		 */
-		private Logger logger;
+		private io.apimatic.coreinterfaces.logger.Logger logger = null;
 		/**
 		 * An instance of {@link Level}.
 		 */
@@ -143,7 +147,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		 * Options for logging responses.
 		 */
 		private ResponseLogOptions.Builder responseLogOptionsBuilder = new ResponseLogOptions.Builder();
-
+		
 		/***
 		 * Set Logger for logging
 		 * 
@@ -151,10 +155,15 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
 		public Builder logger(Logger logger) {
-			this.logger = logger;
+			this.logger = new Sl4jLogger(logger);
 			return this;
 		}
 
+		private Builder logger(io.apimatic.coreinterfaces.logger.Logger logger) {
+			this.logger = logger;
+			return this;
+		}
+		
 		/**
 		 * Set level for logging.
 		 * 
@@ -200,6 +209,11 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 			if (responseLogOptionsBuilder != null) {
 				responseLogOptionsBuilderAction.accept(this.responseLogOptionsBuilder);
 			}
+			return this;
+		}
+		
+		public Builder useConsole() {
+			this.logger = new ConsoleLogger();
 			return this;
 		}
 

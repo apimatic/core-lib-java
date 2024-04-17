@@ -17,7 +17,7 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 /**
  * Class to log the Http api messages.
  */
-public class HttpLogger implements ApiLogger {
+public class SdkLogger implements ApiLogger {
 	/**
 	 * An instance of {@link Logger}.
 	 */
@@ -39,9 +39,9 @@ public class HttpLogger implements ApiLogger {
 	 * 
 	 * @param config {@link ReadonlyLogging} as logging properties.
 	 */
-	public HttpLogger(final ReadonlyLogging config) {
+	public SdkLogger(final ReadonlyLogging config) {
 		this.config = config;
-		this.logger = config.getLogger() != null ? new Sl4jLogger(this.config.getLogger()) : new ConsoleLogger();
+		this.logger = config.getLogger();
 	}
 
 	/**

@@ -5,7 +5,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
-import io.apimatic.core.logger.HttpLogger;
+import io.apimatic.core.logger.LoggerFactory;
+import io.apimatic.core.logger.SdkLogger;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
@@ -61,7 +62,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
-        this.apiLogger = new HttpLogger(globalConfig.getLoggingConfiguration());
+        this.apiLogger = LoggerFactory.getLogger(globalConfig.getLoggingConfiguration());
     }
 
     /**

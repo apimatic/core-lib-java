@@ -21,6 +21,7 @@ import apimatic.core.mocks.MockCoreConfig;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.GlobalConfiguration;
+import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Callback;
@@ -500,7 +501,9 @@ public class EndToEndTest extends MockCoreConfig {
                 .compatibilityFactory(getCompatibilityFactory()).httpClient(httpClient)
                 .baseUri(server -> getBaseUri(server)).callback(callback).userAgent(userAgent)
                 .userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
-                .globalHeader("version", "0.1").globalHeader("version", "1.2").build();
+                .globalHeader("version", "0.1").globalHeader("version", "1.2")
+                .loggingConfiguration(new ApiLoggingConfiguration.Builder().build())
+                .build();
         return globalConfig;
     }
 
