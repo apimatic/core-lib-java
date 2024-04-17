@@ -26,6 +26,7 @@ public final class AsyncExecutor {
 	 *                        request.
 	 * @param responseHandler An object of ResponseHandler to handle the endpoint
 	 *                        response.
+	 * @param apiLogger		  The logger to use.
 	 * @return An object of type CompletableFuture of T.
 	 */
 	public static <ResponseType, ExceptionType extends CoreApiException> CompletableFuture<ResponseType> makeHttpCallAsync(

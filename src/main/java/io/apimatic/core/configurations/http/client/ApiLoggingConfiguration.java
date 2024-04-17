@@ -145,7 +145,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
         
         /**
          * Sets the RequestLogOptions.Builder for the builder.
-         * @param requestOptions The RequestOptions object.
+         * @param requestLogOptionsBuilderAction The RequestLogOptions.Builder Consumer object.
          * @return This Builder object.
          */
         public Builder requestLogOptions(Consumer<RequestLogOptions.Builder> requestLogOptionsBuilderAction) {
@@ -157,7 +157,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 
         /**
          * Sets the ResponseLogOptions.Builder for the builder.
-         * @param responseOptions The ResponseOptions object.
+         * @param responseLogOptionsBuilderAction The ResponseLogOptions.Builder Consumer object.
          * @return This Builder object.
          */
         public Builder responseLogOptions(Consumer<ResponseLogOptions.Builder> responseLogOptionsBuilderAction) {

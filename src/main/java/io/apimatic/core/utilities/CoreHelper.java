@@ -1452,8 +1452,8 @@ public class CoreHelper {
     
     /**
      * Returns Url without query parameters
-     * @param queryUrl
-     * @return
+     * @param queryUrl Url to remove query parameters from.
+     * @return Url without query parameters.
      */
 	public static String removeQueryParametersFromUrl(String queryUrl) {
 		int queryStringIndex = queryUrl.indexOf('?');
@@ -1462,8 +1462,8 @@ public class CoreHelper {
 	
     /**
      * Returns query parameters from url
-     * @param queryUrl
-     * @return
+     * @param queryUrl Url to get query parameters from.
+     * @return Query parameters string.
      */
 	public static String getQueryParametersFromUrl(String queryUrl) {
 		int queryStringIndex = queryUrl.indexOf('?');
