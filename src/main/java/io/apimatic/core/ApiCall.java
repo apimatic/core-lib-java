@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.logger.LoggerFactory;
-import io.apimatic.core.logger.SdkLogger;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;

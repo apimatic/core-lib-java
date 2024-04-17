@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 import io.apimatic.core.logger.ConsoleLogger;
-import io.apimatic.core.logger.NullSdkLogger;
 import io.apimatic.core.logger.Sl4jLogger;
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
@@ -189,12 +188,12 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		/**
 		 * Sets the RequestLogOptions.Builder for the builder.
 		 * 
-		 * @param requestLogOptionsBuilderAction The RequestOptions Builder object.
-		 * @return This Builder object.
+		 * @param action The RequestOptions Builder object.
+		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
-		public Builder requestLogOptions(Consumer<RequestLogOptions.Builder> requestLogOptionsBuilderAction) {
+		public Builder requestLogOptions(Consumer<RequestLogOptions.Builder> action) {
 			if (requestLogOptionsBuilder != null) {
-				requestLogOptionsBuilderAction.accept(this.requestLogOptionsBuilder);
+				action.accept(this.requestLogOptionsBuilder);
 			}
 			return this;
 		}
@@ -202,16 +201,21 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		/**
 		 * Sets the ResponseLogOptions.Builder for the builder.
 		 * 
-		 * @param requestLogOptionsBuilderAction The ResponseOptions Builder object.
-		 * @return This Builder object.
+		 * @param action The ResponseOptions Builder object.
+		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
-		public Builder responseLogOptions(Consumer<ResponseLogOptions.Builder> responseLogOptionsBuilderAction) {
+		public Builder responseLogOptions(Consumer<ResponseLogOptions.Builder> action) {
 			if (responseLogOptionsBuilder != null) {
-				responseLogOptionsBuilderAction.accept(this.responseLogOptionsBuilder);
+				action.accept(this.responseLogOptionsBuilder);
 			}
 			return this;
 		}
-		
+
+		/**
+		 * Sets the logger instance to ConsoleLogger.
+		 * 
+		 * @return {@link ApiLoggingConfiguration.Builder}.
+		 */
 		public Builder useConsole() {
 			this.logger = new ConsoleLogger();
 			return this;
