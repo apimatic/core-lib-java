@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
-import io.apimatic.coreinterfaces.logger.ApiLogger;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
@@ -63,7 +64,10 @@ public final class GlobalConfiguration {
      */
     private Function<String, String> baseUri;
     
-    private ApiLogger apiLogger;
+    /***
+     * An instance of {@link ReadonlyLogging}
+     */
+    private ReadonlyLogging loggingConfiguration;
 
     /**
      * A private constructor.
@@ -82,7 +86,7 @@ public final class GlobalConfiguration {
             final Map<String, Authentication> authentications, final Callback callback,
             final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
             final HttpHeaders additionalHeaders, final Function<String, String> baseUri,
-            final ApiLogger apiLogger) {
+            final ReadonlyLogging loggingConfiguration) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -92,7 +96,7 @@ public final class GlobalConfiguration {
         this.globalHeaders = globalHeaders != null ? globalHeaders : new HashMap<>();
         this.additionalHeaders = additionalHeaders;
         this.baseUri = baseUri;
-        this.apiLogger = apiLogger;
+        this.loggingConfiguration = loggingConfiguration;
         
         if (this.userAgent != null) {
             this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
@@ -163,8 +167,11 @@ public final class GlobalConfiguration {
         return baseUri;
     }
     
-    public ApiLogger getApiLogger() {
-    	return apiLogger;
+    /***
+     * @return Logging configuration for Logger
+     */
+    public ReadonlyLogging getLoggingConfiguration() {
+    	return loggingConfiguration;
     }
 
     public static class Builder {
@@ -213,8 +220,11 @@ public final class GlobalConfiguration {
          */
         private Function<String, String> baseUri;
         
-        private ApiLogger apiLogger;
-
+        /***
+         * An instance of {@link ReadonlyLogging}
+         */
+        private ReadonlyLogging loggingConfiguration;
+        
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
          * @return Builder.
@@ -304,8 +314,12 @@ public final class GlobalConfiguration {
             return this;
         }
         
-        public Builder apiLogger(ApiLogger apiLogger) {
-        	this.apiLogger = apiLogger;
+        /**
+         * @param config Logging configuration for Logger
+         * @return Builder
+         */
+        public Builder loggingConfiguration(ReadonlyLogging config) {
+        	this.loggingConfiguration = config;
         	return this;
         }
 
@@ -316,7 +330,7 @@ public final class GlobalConfiguration {
         public GlobalConfiguration build() {
             return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig,
                     authentications, callback, httpClient, globalHeaders, additionalheaders,
-                    baseUri, apiLogger);
+                    baseUri, loggingConfiguration);
         }
     }
 

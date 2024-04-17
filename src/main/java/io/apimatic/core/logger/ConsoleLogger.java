@@ -1,21 +1,18 @@
 package io.apimatic.core.logger;
 
-import io.apimatic.coreinterfaces.http.request.Request;
-import io.apimatic.coreinterfaces.http.response.Response;
-import io.apimatic.coreinterfaces.logger.ApiLogger;
+import org.slf4j.helpers.MessageFormatter;
 
-public class ConsoleLogger implements ApiLogger {
+import io.apimatic.coreinterfaces.http.LoggingLevel;
+import io.apimatic.coreinterfaces.logger.Loggable;
 
-	@Override
-	public void logRequest(Request request) {
-		// TODO Auto-generated method stub
-		
-	}
+public class ConsoleLogger implements Loggable {
 
 	@Override
-	public void logResponse(Response response) {
-		// TODO Auto-generated method stub
-		
+	public void log(LoggingLevel level, String format, Object... arguments) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(level);
+		builder.append(": ");
+		builder.append(MessageFormatter.basicArrayFormat(format, arguments));
+		System.out.println(builder.toString());
 	}
-	
 }

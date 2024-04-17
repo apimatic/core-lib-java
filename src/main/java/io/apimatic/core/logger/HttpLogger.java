@@ -8,10 +8,10 @@ import org.slf4j.Logger;
 
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.LoggingLevel;
-import io.apimatic.coreinterfaces.http.LoggingLevelType;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
+import io.apimatic.coreinterfaces.logger.Loggable;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 
 /**
@@ -21,7 +21,7 @@ public class HttpLogger implements ApiLogger {
 	/**
 	 * An instance of {@link Logger}.
 	 */
-	private Logger logger;
+	private Loggable logger;
 
 	/**
 	 * An instance of {@link ReadonlyLogging}.
@@ -30,13 +30,11 @@ public class HttpLogger implements ApiLogger {
 
 	/**
 	 * Default Constructor.
-	 * 
-	 * @param logger Logger instance for logging.
 	 * @param config {@link ReadonlyLogging} as logging properties.
 	 */
-	public HttpLogger(final Logger logger, final ReadonlyLogging config) {
-		this.logger = logger;
+	public HttpLogger(final ReadonlyLogging config) {
 		this.config = config;
+		this.logger = config.getLogger() != null ? new Sl4jLogger(this.config.getLogger()) : new ConsoleLogger();
 	}
 
 	/**
@@ -45,7 +43,7 @@ public class HttpLogger implements ApiLogger {
 	 * @param request HttpRequest to be logged.
 	 */
 	public void logRequest(Request request) {
-		LoggingLevel level = (config.getLevel() != null) ? config.getLevel() : LoggingLevel.INFO;
+		LoggingLevel level = config.getLevel() != null ? config.getLevel() : LoggingLevel.INFO;
 
 		String url = request.getUrl();
 		String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
@@ -54,10 +52,10 @@ public class HttpLogger implements ApiLogger {
 				: "";
 
 		if (config.getRequestLogOptions().shouldIncludeQueryInPath() && !queryParameter.isEmpty()) {
-			log(level, "Request {} {} {} queryParameters: {}", request.getHttpMethod(), url, contentType,
+			logger.log(level, "Request {} {} {} queryParameters: {}", request.getHttpMethod(), url, contentType,
 					queryParameter);
 		} else {
-			log(level, "Request {} {} {}", request.getHttpMethod(), url, contentType);
+			logger.log(level, "Request {} {} {}", request.getHttpMethod(), url, contentType);
 		}
 
 		if (config.getRequestLogOptions().shouldLogHeaders()) {
@@ -65,14 +63,14 @@ public class HttpLogger implements ApiLogger {
 					config.getRequestLogOptions().getHeadersToInclude(),
 					config.getRequestLogOptions().getHeadersToExclude());
 
-			log(level, "Request Headers {}", headersToLog);
+			logger.log(level, "Request Headers {}", headersToLog);
 		}
 
 		if (config.getRequestLogOptions().shouldLogBody()) {
 			if (request.getBody() != null) {
-				log(level, "Request Body {}", request.getBody());
+				logger.log(level, "Request Body {}", request.getBody());
 			} else if (request.getParameters() != null && !request.getParameters().isEmpty()) {
-				log(level, "Request Body {}", request.getParameters());
+				logger.log(level, "Request Body {}", request.getParameters());
 			}
 		}
 	}
@@ -83,7 +81,7 @@ public class HttpLogger implements ApiLogger {
 	 * @param response HttpResponse to be logged.
 	 */
 	public void logResponse(Response response) {
-		LoggingLevel level = (config.getLevel() != null) ? config.getLevel() : LoggingLevel.INFO;
+		LoggingLevel level = config.getLevel() != null ? config.getLevel() : LoggingLevel.INFO;
 
 		String contentLength = response.getHeaders().value("content-length");
 		String contentType = response.getHeaders().value("content-type") != null
@@ -91,9 +89,9 @@ public class HttpLogger implements ApiLogger {
 				: "";
 
 		if (contentLength == null) {
-			log(level, "Response {} {}", response.getStatusCode(), contentType);
+			logger.log(level, "Response {} {}", response.getStatusCode(), contentType);
 		} else {
-			log(level, "Response {} {} content-length: {}", response.getStatusCode(), contentType, contentLength);
+			logger.log(level, "Response {} {} content-length: {}", response.getStatusCode(), contentType, contentLength);
 		}
 
 		if (config.getResponseLogOptions().shouldLogHeaders()) {
@@ -101,11 +99,11 @@ public class HttpLogger implements ApiLogger {
 					config.getResponseLogOptions().getHeadersToInclude(),
 					config.getResponseLogOptions().getHeadersToExclude());
 
-			log(level, "Response Headers {}", headersToLog);
+			logger.log(level, "Response Headers {}", headersToLog);
 		}
 
 		if (config.getResponseLogOptions().shouldLogBody()) {
-			log(level, "Response Body {}", response.getBody());
+			logger.log(level, "Response Body {}", response.getBody());
 		}
 	}
 
@@ -162,34 +160,5 @@ public class HttpLogger implements ApiLogger {
 			}
 		}
 		return extractedHeaders;
-	}
-
-	/***
-	 * Log provided message according to logging level.
-	 * 
-	 * @param level     To provide the LoggingLevelType conversion.
-	 * @param format    The format string
-	 * @param arguments List of arguments
-	 */
-	private void log(LoggingLevel level, String format, Object... arguments) {
-		switch (LoggingLevelType.valueOf(level.toString())) {
-		case TRACE:
-			logger.trace(format, arguments);
-			break;
-		case DEBUG:
-			logger.debug(format, arguments);
-			break;
-		case INFO:
-			logger.info(format, arguments);
-			break;
-		case WARN:
-			logger.warn(format, arguments);
-			break;
-		case ERROR:
-			logger.error(format, arguments);
-			break;
-		default:
-			break;
-		}
 	}
 }
