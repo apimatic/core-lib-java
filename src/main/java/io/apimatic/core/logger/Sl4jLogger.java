@@ -1,28 +1,25 @@
 package io.apimatic.core.logger;
 
 import org.slf4j.Logger;
-
-import io.apimatic.coreinterfaces.http.LoggingLevel;
-import io.apimatic.coreinterfaces.http.LoggingLevelType;
-
+import org.slf4j.event.Level;
 
 public class Sl4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	private Logger logger;
-	
+
 	public Sl4jLogger(Logger logger) {
 		this.logger = logger;
 	}
-	
+
 	/***
 	 * Log provided message according to logging level.
 	 * 
-	 * @param level     To provide the LoggingLevelType conversion.
+	 * @param level     To provide the Level conversion.
 	 * @param format    The format string
 	 * @param arguments List of arguments
 	 */
 	@Override
-	public void log(LoggingLevel level, String format, Object... arguments) {
-		switch (LoggingLevelType.valueOf(level.toString())) {
+	public void log(Level level, String format, Object... arguments) {
+		switch (level) {
 		case TRACE:
 			logger.trace(format, arguments);
 			break;

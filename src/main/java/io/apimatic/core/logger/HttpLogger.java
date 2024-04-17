@@ -1,11 +1,13 @@
 package io.apimatic.core.logger;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.event.Level;
+
 import io.apimatic.core.utilities.CoreHelper;
-import io.apimatic.coreinterfaces.http.LoggingLevel;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
@@ -27,6 +29,12 @@ public class HttpLogger implements ApiLogger {
 	private ReadonlyLogging config;
 
 	/**
+	 * List of sensitive headers that need to be filtered.
+	 */
+	private static final List<String> sensitiveHeaders = Arrays.asList("authorization", "www-authenticate",
+			"proxy-authorization", "set-cookie");
+
+	/**
 	 * Default Constructor.
 	 * 
 	 * @param config {@link ReadonlyLogging} as logging properties.
@@ -42,7 +50,7 @@ public class HttpLogger implements ApiLogger {
 	 * @param request HttpRequest to be logged.
 	 */
 	public void logRequest(Request request) {
-		LoggingLevel level = config.getLevel() != null ? config.getLevel() : LoggingLevel.INFO;
+		Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
 		String url = request.getUrl();
 		String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
@@ -58,9 +66,12 @@ public class HttpLogger implements ApiLogger {
 		}
 
 		if (config.getRequestLogOptions().shouldLogHeaders()) {
-			Map<String, String> headersToLog = extractHeadersToLog(request.getHeaders().asSimpleMap(),
+			Map<String, String> extractedHeaders = extractHeadersToLog(request.getHeaders().asSimpleMap(),
 					config.getRequestLogOptions().getHeadersToInclude(),
 					config.getRequestLogOptions().getHeadersToExclude());
+
+			Map<String, String> headersToLog = filterSensitiveHeaders(extractedHeaders,
+					config.getMaskSensitiveHeaders());
 
 			logger.log(level, "Request Headers {}", headersToLog);
 		}
@@ -80,7 +91,7 @@ public class HttpLogger implements ApiLogger {
 	 * @param response HttpResponse to be logged.
 	 */
 	public void logResponse(Response response) {
-		LoggingLevel level = config.getLevel() != null ? config.getLevel() : LoggingLevel.INFO;
+		Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
 		String contentLength = response.getHeaders().value("content-length");
 		String contentType = response.getHeaders().value("content-type") != null
@@ -95,9 +106,12 @@ public class HttpLogger implements ApiLogger {
 		}
 
 		if (config.getResponseLogOptions().shouldLogHeaders()) {
-			Map<String, String> headersToLog = extractHeadersToLog(response.getHeaders().asSimpleMap(),
+			Map<String, String> extractedHeaders = extractHeadersToLog(response.getHeaders().asSimpleMap(),
 					config.getResponseLogOptions().getHeadersToInclude(),
 					config.getResponseLogOptions().getHeadersToExclude());
+
+			Map<String, String> headersToLog = filterSensitiveHeaders(extractedHeaders,
+					config.getMaskSensitiveHeaders());
 
 			logger.log(level, "Response Headers {}", headersToLog);
 		}
@@ -123,6 +137,31 @@ public class HttpLogger implements ApiLogger {
 
 		if (!headersToExclude.isEmpty()) {
 			return extractExcludedHeaders(headers, headersToExclude);
+		}
+
+		return headers;
+	}
+
+	/**
+	 * Filter sensitive headers from the given list of request headers.
+	 *
+	 * @param requestHeaders       The list of headers to filter.
+	 * @param maskSensitiveHeaders Whether to mask sensitive headers or not.
+	 * @return A map containing filtered headers.
+	 */
+	public static Map<String, String> filterSensitiveHeaders(Map<String, String> headers,
+			boolean maskSensitiveHeaders) {
+		if (maskSensitiveHeaders) {
+			Map<String, String> filteredHeaders = new HashMap<>();
+			for (Map.Entry<String, String> entry : headers.entrySet()) {
+				String key = entry.getKey().toLowerCase();
+				if (sensitiveHeaders.contains(key)) {
+					filteredHeaders.put(entry.getKey(), "**Redacted**");
+				} else {
+					filteredHeaders.put(entry.getKey(), entry.getValue());
+				}
+			}
+			return filteredHeaders;
 		}
 
 		return headers;

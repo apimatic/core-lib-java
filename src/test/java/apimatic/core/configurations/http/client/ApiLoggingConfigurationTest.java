@@ -3,8 +3,9 @@ package apimatic.core.configurations.http.client;
 import static org.junit.Assert.assertEquals;
 import java.util.TreeSet;
 import org.junit.Test;
+import org.slf4j.event.Level;
+
 import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
-import io.apimatic.coreinterfaces.http.LoggingLevel;
 
 public class ApiLoggingConfigurationTest {
     @Test
@@ -13,7 +14,7 @@ public class ApiLoggingConfigurationTest {
         headerFilters.add("accept");
         ApiLoggingConfiguration apiLoggingConfiguration =
                 new ApiLoggingConfiguration.Builder()
-                        .level(LoggingLevel.ERROR).build();
-        assertEquals(apiLoggingConfiguration.getLevel(), LoggingLevel.ERROR);
+                        .level(Level.ERROR).build();
+        assertEquals(apiLoggingConfiguration.getLevel(), Level.ERROR);
     }
 }

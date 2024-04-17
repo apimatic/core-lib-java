@@ -3,10 +3,10 @@ package io.apimatic.core.configurations.http.client;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
-import io.apimatic.coreinterfaces.http.LoggingLevel;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
@@ -15,46 +15,20 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
  * To hold logging configuration.
  */
 public final class ApiLoggingConfiguration implements ReadonlyLogging {
-	/**
-	 * Level enum to use with level in {@link ApiLoggingConfiguration.Builder}. An
-	 * instance of {@link LoggingLevel}.
-	 */
-	public enum Level {
-		/**
-		 * To log with logging level 'INFO'.
-		 */
-		INFO,
-
-		/**
-		 * To log with logging level 'Error'.
-		 */
-		ERROR,
-
-		/**
-		 * To log with logging level 'WARN'.
-		 */
-		WARN,
-
-		/**
-		 * To log with logging level 'DEBUG'.
-		 */
-		DEBUG,
-
-		/**
-		 * To log with logging level 'TRACE'.
-		 */
-		TRACE
-	}
-
 	/***
 	 * An instance of Logger
 	 */
 	private Logger logger;
 
 	/**
-	 * An instance of {@link LoggingLevel}.
+	 * An instance of {@link Level}.
 	 */
-	private LoggingLevel level;
+	private Level level;
+
+	/**
+	 * Options for masking sensitive headers
+	 */
+	private boolean maskSensitiveHeaders;
 
 	/**
 	 * Options for logging requests.
@@ -69,10 +43,11 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	/**
 	 * @param level
 	 */
-	private ApiLoggingConfiguration(final Logger logger, final LoggingLevel level,
+	private ApiLoggingConfiguration(final Logger logger, final Level level, final boolean maskSensitiveHeaders,
 			final RequestLogOptions requestLogOptions, final ResponseLogOptions responseLogOptions) {
 		this.logger = logger;
 		this.level = level;
+		this.maskSensitiveHeaders = maskSensitiveHeaders;
 		this.requestLogOptions = requestLogOptions;
 		this.responseLogOptions = responseLogOptions;
 	}
@@ -91,8 +66,12 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	 * 
 	 * @return Level of logging.
 	 */
-	public LoggingLevel getLevel() {
+	public Level getLevel() {
 		return level;
+	}
+
+	public boolean getMaskSensitiveHeaders() {
+		return maskSensitiveHeaders;
 	}
 
 	/**
@@ -120,8 +99,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	 */
 	@Override
 	public String toString() {
-		return "LoggingConfiguration [logger=" + getLogger() + "level=" + getLevel() + "requestLogOptions"
-				+ getRequestLogOptions() + "responseLogOptions" + getResponseLogOptions() + "]";
+		return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel() + " maskSensitiveHeaders="
+				+ getMaskSensitiveHeaders() + " requestLogOptions" + getRequestLogOptions() + " responseLogOptions"
+				+ getResponseLogOptions() + "]";
 	}
 
 	/**
@@ -131,7 +111,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 	 * @return a new {@link ApiLoggingConfiguration.Builder} object.
 	 */
 	public Builder newBuilder() {
-		return new Builder().logger(logger).level(level)
+		return new Builder().logger(logger).level(level).maskSensitiveHeaders(maskSensitiveHeaders)
 				.requestLogOptions(builder -> builder = requestLogOptions.newBuilder())
 				.responseLogOptions(builder -> builder = responseLogOptions.newBuilder());
 	}
@@ -145,9 +125,14 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		 */
 		private Logger logger;
 		/**
-		 * An instance of {@link LoggingLevel}.
+		 * An instance of {@link Level}.
 		 */
-		private LoggingLevel level;
+		private Level level;
+
+		/**
+		 * Options for masking sensitive headers
+		 */
+		private boolean maskSensitiveHeaders = true;
 
 		/**
 		 * Options for logging requests.
@@ -176,8 +161,19 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		 * @param level specify level of all logs.
 		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
-		public Builder level(LoggingLevel level) {
+		public Builder level(Level level) {
 			this.level = level;
+			return this;
+		}
+
+		/**
+		 * Set mask sensitive headers flag.
+		 * 
+		 * @param maskSensitiveHeaders flag to enable disable masking.
+		 * @return {@link ApiLoggingConfiguration.Builder}.
+		 */
+		public Builder maskSensitiveHeaders(boolean maskSensitiveHeaders) {
+			this.maskSensitiveHeaders = maskSensitiveHeaders;
 			return this;
 		}
 
@@ -215,7 +211,8 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		public ApiLoggingConfiguration build() {
 			RequestLogOptions requestLogOptions = requestLogOptionsBuilder.build();
 			ResponseLogOptions responseLogOptions = responseLogOptionsBuilder.build();
-			return new ApiLoggingConfiguration(logger, level, requestLogOptions, responseLogOptions);
+			return new ApiLoggingConfiguration(logger, level, maskSensitiveHeaders, requestLogOptions,
+					responseLogOptions);
 		}
 	}
 }
