@@ -1391,7 +1391,7 @@ public class CoreHelperTest {
         String actual = queryBuilder.toString();
         assertEquals(actual, expected);
     }
-    
+
     @Test
     public void testRemoveQueryParametersFromUrl() {
         // Test cases with query parameters
