@@ -1410,6 +1410,45 @@ public class CoreHelperTest {
         assertEquals("https://example.com/page",
         CoreHelper.removeQueryParametersFromUrl("https://example.com/page"));
     }
+    
+    @Test
+    public void testGetQueryParametersFromUrlWithQueryString() {
+        // Arrange
+        String queryUrl = "http://example.com/test?param1=value1&param2=value2";
+        String expectedQueryString = "param1=value1&param2=value2";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testGetQueryParametersFromUrlWithoutQueryString() {
+        // Arrange
+        String queryUrl = "http://example.com/test";
+        String expectedQueryString = "";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testGetQueryParametersFromUrlWithEmptyUrl() {
+        // Arrange
+        String queryUrl = "";
+        String expectedQueryString = "";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
 
     private Map<String, ComplexType> getComplexType() throws IOException {
         Map<String, ComplexType> complexType = CoreHelper

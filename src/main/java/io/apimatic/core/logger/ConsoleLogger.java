@@ -18,9 +18,8 @@ public class ConsoleLogger implements Logger {
     @Override
     public void log(Level level, String format, Map<String, Object> arguments) {
         StringBuilder builder = new StringBuilder();
-        builder.append(level);
-        builder.append(": ");
-        builder.append(MessageFormatter.basicArrayFormat(format, arguments.values().toArray()));
+        builder.append(String.format("%s: %s", level,
+                MessageFormatter.basicArrayFormat(format, arguments.values().toArray())));
         System.out.println(builder.toString());
     }
 }

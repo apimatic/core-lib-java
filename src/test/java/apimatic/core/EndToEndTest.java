@@ -502,7 +502,6 @@ public class EndToEndTest extends MockCoreConfig {
                 .baseUri(server -> getBaseUri(server)).callback(callback).userAgent(userAgent)
                 .userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
                 .globalHeader("version", "0.1").globalHeader("version", "1.2")
-                .loggingConfiguration(new ApiLoggingConfiguration.Builder().build())
                 .build();
         return globalConfig;
     }
