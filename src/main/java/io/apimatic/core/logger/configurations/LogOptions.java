@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 /**
  * Represents options for logging requests and responses.
+ * @param <T> Name of your LogOptions type
+ * @param <B> Name of the Builder for your LogOptions type
  */
 public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
     protected boolean logBody = false;
@@ -28,8 +30,10 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
 
     /**
      * Builder class for LogOptions.
+     * @param <T> Name of your LogOptions type
+     * @param <B> Name of the Builder for your LogOptions type
      */
-    public static abstract class Builder<T extends LogOptions<T, B>, B extends Builder<T, B>> {
+    public abstract static class Builder<T extends LogOptions<T, B>, B extends Builder<T, B>> {
         protected boolean logBody = false;
         protected boolean logHeaders = false;
         protected List<String> excludeHeaders = new ArrayList<>();
