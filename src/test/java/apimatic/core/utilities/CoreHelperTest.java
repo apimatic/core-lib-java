@@ -1395,13 +1395,20 @@ public class CoreHelperTest {
     @Test
     public void testRemoveQueryParametersFromUrl() {
         // Test cases with query parameters
-        assertEquals("https://example.com/path", CoreHelper.removeQueryParametersFromUrl("https://example.com/path?param1=value1&param2=value2"));
-        assertEquals("https://example.com/page", CoreHelper.removeQueryParametersFromUrl("https://example.com/page?query=value"));
-        assertEquals("https://example.com", CoreHelper.removeQueryParametersFromUrl("https://example.com?param=value"));
+        assertEquals("https://example.com/path",
+        CoreHelper.removeQueryParametersFromUrl(
+            "https://example.com/path?param1=value1&param2=value2"));
+        assertEquals("https://example.com/page",
+        CoreHelper.removeQueryParametersFromUrl(
+            "https://example.com/page?query=value"));
+        assertEquals("https://example.com",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com?param=value"));
 
         // Test cases without query parameters
-        assertEquals("https://example.com", CoreHelper.removeQueryParametersFromUrl("https://example.com"));
-        assertEquals("https://example.com/page", CoreHelper.removeQueryParametersFromUrl("https://example.com/page"));
+        assertEquals("https://example.com",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com"));
+        assertEquals("https://example.com/page",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com/page"));
     }
 
     private Map<String, ComplexType> getComplexType() throws IOException {

@@ -23,8 +23,8 @@ public class LoggerUtilitiesTest {
 
         List<String> headersToInclude = Arrays.asList("header1", "header2");
 
-        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers, headersToInclude,
-                Collections.emptyList());
+        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
+        headersToInclude, Collections.emptyList());
 
         assertEquals(2, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
@@ -40,8 +40,8 @@ public class LoggerUtilitiesTest {
 
         List<String> headersToExclude = Arrays.asList("header2", "header3");
 
-        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers, Collections.emptyList(),
-                headersToExclude);
+        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
+        Collections.emptyList(), headersToExclude);
 
         assertEquals(1, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
@@ -54,8 +54,8 @@ public class LoggerUtilitiesTest {
         headers.put("Header2", "Value2");
         headers.put("Header3", "Value3");
 
-        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers, Collections.emptyList(),
-                Collections.emptyList());
+        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
+        Collections.emptyList(), Collections.emptyList());
 
         assertEquals(3, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
