@@ -5,7 +5,8 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOption
 /**
  * Represents options for logging responses.
  */
-public final class ResponseLogOptions extends LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyResponseLogOptions {
+public final class ResponseLogOptions extends
+LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyResponseLogOptions {
 
     /**
      * Constructs a new ResponseLogOptions instance with default values.
