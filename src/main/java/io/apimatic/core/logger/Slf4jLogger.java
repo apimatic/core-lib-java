@@ -13,20 +13,20 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
         this.logger = logger;
     }
 
-	/***
-	 * Log provided message according to logging level.
-	 * 
-	 * @param level     To provide the Level conversion.
-	 * @param format    The format string
-	 * @param arguments List of arguments
-	 */
-	@Override
-	public void log(Level level, String format, Map<String, Object> arguments) {
-		LoggingEventBuilder builder = logger.atLevel(level);
-		
-		for (Map.Entry<String, Object> entry : arguments.entrySet()) {
-			builder.addKeyValue(entry.getKey(), entry.getValue());
-		}
-		builder.log(format, arguments.values().toArray());
-	}
+    /***
+     * Log provided message according to logging level.
+     *
+     * @param level     To provide the Level conversion.
+     * @param format    The format string
+     * @param arguments List of arguments
+     */
+    @Override
+    public void log(Level level, String format, Map<String, Object> arguments) {
+        LoggingEventBuilder builder = logger.atLevel(level);
+
+        for (Map.Entry<String, Object> entry : arguments.entrySet()) {
+            builder.addKeyValue(entry.getKey(), entry.getValue());
+        }
+        builder.log(format, arguments.values().toArray());
+    }
 }
