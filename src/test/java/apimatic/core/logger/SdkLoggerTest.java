@@ -40,6 +40,9 @@ public class SdkLoggerTest {
      */
     private Logger logger;
 
+    /**
+     * Setup method for Sdk logger test class
+     */
     @Before
     public void setUp() {
         config = mock(ReadonlyLoggingConfiguration.class);
@@ -236,7 +239,7 @@ public class SdkLoggerTest {
     @Test
     public void testLogResponseWithHeaders() {
         final int statusCode = 200;
-        
+
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
         when(response.getStatusCode()).thenReturn(statusCode);

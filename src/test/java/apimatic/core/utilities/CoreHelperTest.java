@@ -1410,7 +1410,7 @@ public class CoreHelperTest {
         assertEquals("https://example.com/page",
         CoreHelper.removeQueryParametersFromUrl("https://example.com/page"));
     }
-    
+
     @Test
     public void testGetQueryParametersFromUrlWithQueryString() {
         // Arrange
