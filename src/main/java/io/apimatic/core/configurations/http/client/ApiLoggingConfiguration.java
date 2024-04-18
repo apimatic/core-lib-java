@@ -10,8 +10,8 @@ import io.apimatic.core.logger.Slf4jLogger;
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
 
 /**
  * To hold logging configuration.
@@ -87,7 +87,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
 	 * 
 	 * @return The RequestLogOptions object.
 	 */
-	public ReadonlyRequestLogging getRequestLogOptions() {
+	public ReadonlyRequestLogOptions getRequestLogOptions() {
 		return requestLogOptions;
 	}
 
@@ -96,7 +96,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
 	 * 
 	 * @return The ResponseLogOptions object.
 	 */
-	public ReadonlyResponseLogging getResponseLogOptions() {
+	public ReadonlyResponseLogOptions getResponseLogOptions() {
 		return responseLogOptions;
 	}
 

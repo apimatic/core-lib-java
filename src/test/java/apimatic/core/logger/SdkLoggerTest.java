@@ -19,8 +19,8 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.Logger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
 
 public class SdkLoggerTest {
 	/**
@@ -44,8 +44,8 @@ public class SdkLoggerTest {
 		logger = mock(Logger.class);
 		when(config.getLogger()).thenReturn(logger);
 		when(config.getLevel()).thenReturn(Level.INFO);
-		when(config.getRequestLogOptions()).thenReturn(mock(ReadonlyRequestLogging.class));
-		when(config.getResponseLogOptions()).thenReturn(mock(ReadonlyResponseLogging.class));
+		when(config.getRequestLogOptions()).thenReturn(mock(ReadonlyRequestLogOptions.class));
+		when(config.getResponseLogOptions()).thenReturn(mock(ReadonlyResponseLogOptions.class));
 		sdkLogger = new SdkLogger(config);
 	}
 

@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
 
 /**
  * Represents options for logging requests.
  */
-public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequestLogging {
+public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequestLogOptions {
 
 	/**
 	 * Stores the value for flag to include query parameters.

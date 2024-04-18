@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
 
 /**
  * Represents options for logging responses.
  */
-public class ResponseLogOptions extends LogBaseOptions implements ReadonlyResponseLogging {
+public class ResponseLogOptions extends LogBaseOptions implements ReadonlyResponseLogOptions {
 
 	/**
 	 * Constructs a new ResponseLogOptions instance with default values.
