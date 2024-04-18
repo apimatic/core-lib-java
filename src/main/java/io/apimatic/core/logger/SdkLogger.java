@@ -16,39 +16,39 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfigurat
  * Class to log the Http api messages.
  */
 public class SdkLogger implements ApiLogger {
-	/**
-	 * An instance of {@link Logger}.
-	 */
-	private Logger logger;
+    /**
+     * An instance of {@link Logger}.
+     */
+    private Logger logger;
 
-	/**
-	 * An instance of {@link ReadonlyLoggingConfiguration}.
-	 */
-	private ReadonlyLoggingConfiguration config;
+    /**
+     * An instance of {@link ReadonlyLoggingConfiguration}.
+     */
+    private ReadonlyLoggingConfiguration config;
 
-	/**
-	 * Default Constructor.
-	 * 
-	 * @param config {@link ReadonlyLoggingConfiguration} as logging properties.
-	 */
-	public SdkLogger(final ReadonlyLoggingConfiguration config) {
-		this.config = config;
-		this.logger = config.getLogger();
-	}
+    /**
+     * Default Constructor.
+     *
+     * @param config {@link ReadonlyLoggingConfiguration} as logging properties.
+     */
+    public SdkLogger(final ReadonlyLoggingConfiguration config) {
+        this.config = config;
+        this.logger = config.getLogger();
+    }
 
-	/**
-	 * Log requests.
-	 * 
-	 * @param request HttpRequest to be logged.
-	 */
-	public void logRequest(Request request) {
-		Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
+    /**
+     * Log requests.
+     *
+     * @param request HttpRequest to be logged.
+     */
+    public void logRequest(Request request) {
+        Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
-		String url = request.getUrl();
-		String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
-		String contentType = request.getHeaders().value("content-type") != null
-				? request.getHeaders().value("content-type")
-				: "";
+        String url = request.getUrl();
+        String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
+        String contentType = request.getHeaders().value("content-type") != null
+                ? request.getHeaders().value("content-type")
+                : "";
 
 		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
 		requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
@@ -61,13 +61,13 @@ public class SdkLogger implements ApiLogger {
 			logger.log(level, "Request {} {} {}", requestArguments);
 		}
 
-		if (config.getRequestLogOptions().shouldLogHeaders()) {
-			Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-					request.getHeaders().asSimpleMap(), config.getRequestLogOptions().getHeadersToInclude(),
-					config.getRequestLogOptions().getHeadersToExclude());
+        if (config.getRequestLogOptions().shouldLogHeaders()) {
+            Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
+                    request.getHeaders().asSimpleMap(), config.getRequestLogOptions().getHeadersToInclude(),
+                    config.getRequestLogOptions().getHeadersToExclude());
 
-			Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
-					config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
+                    config.getMaskSensitiveHeaders());
 
 			Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
 			requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
@@ -82,13 +82,13 @@ public class SdkLogger implements ApiLogger {
 		}
 	}
 
-	/**
-	 * Log Responses.
-	 * 
-	 * @param response HttpResponse to be logged.
-	 */
-	public void logResponse(Response response) {
-		Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
+    /**
+     * Log Responses.
+     *
+     * @param response HttpResponse to be logged.
+     */
+    public void logResponse(Response response) {
+        Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
 		String contentLength = response.getHeaders().value("content-length");
 		String contentType = response.getHeaders().value("content-type");
@@ -99,13 +99,13 @@ public class SdkLogger implements ApiLogger {
 		responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
 		logger.log(level, "Response {} {} content-length: {}", responseArguments);
 
-		if (config.getResponseLogOptions().shouldLogHeaders()) {
-			Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-					response.getHeaders().asSimpleMap(), config.getResponseLogOptions().getHeadersToInclude(),
-					config.getResponseLogOptions().getHeadersToExclude());
+        if (config.getResponseLogOptions().shouldLogHeaders()) {
+            Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
+                    response.getHeaders().asSimpleMap(), config.getResponseLogOptions().getHeadersToInclude(),
+                    config.getResponseLogOptions().getHeadersToExclude());
 
-			Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
-					config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
+                    config.getMaskSensitiveHeaders());
 
 			Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
 			responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);

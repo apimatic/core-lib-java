@@ -40,12 +40,12 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * An instance of {@link CoreEndpointConfiguration}.
      */
     private final CoreEndpointConfiguration endpointConfiguration;
-    
+
     /**
      * An instance of {@link ApiLogger} for logging.
      */
     private final ApiLogger apiLogger;
-    
+
 
     /**
      * ApiCall constructor.
@@ -71,10 +71,10 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-    	apiLogger.logRequest(request);
-    	Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
-		apiLogger.logResponse(httpResponse);
-    	
+        apiLogger.logRequest(request);
+        Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        apiLogger.logResponse(httpResponse);
+
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
     }
 

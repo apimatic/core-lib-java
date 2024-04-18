@@ -64,7 +64,7 @@ public final class GlobalConfiguration {
      * A function to apply baseUri.
      */
     private Function<String, String> baseUri;
-    
+
     /***
      * An instance of {@link ReadonlyLoggingConfiguration}
      */
@@ -81,6 +81,7 @@ public final class GlobalConfiguration {
      * @param globalHeaders
      * @param additionalHeaders
      * @param baseUri
+     * @param loggingConfiguration
      */
     private GlobalConfiguration(final CompatibilityFactory compatibilityFactory,
             final String userAgent, final Map<String, String> userAgentConfig,
@@ -98,7 +99,7 @@ public final class GlobalConfiguration {
         this.additionalHeaders = additionalHeaders;
         this.baseUri = baseUri;
         this.loggingConfiguration = loggingConfiguration;
-        
+
         if (this.userAgent != null) {
             this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
             this.globalHeaders.put("user-agent", Arrays.asList(this.userAgent));
@@ -167,12 +168,12 @@ public final class GlobalConfiguration {
     public Function<String, String> getBaseUri() {
         return baseUri;
     }
-    
+
     /***
      * @return Logging configuration for Logger
      */
     public ReadonlyLoggingConfiguration getLoggingConfiguration() {
-    	return loggingConfiguration;
+        return loggingConfiguration;
     }
 
     public static class Builder {
@@ -220,12 +221,12 @@ public final class GlobalConfiguration {
          * A function to retrieve baseUri.
          */
         private Function<String, String> baseUri;
-        
+
         /***
          * An instance of {@link ReadonlyLoggingConfiguration}
          */
         private ReadonlyLoggingConfiguration loggingConfiguration = new ApiLoggingConfiguration.Builder().build();
-        
+
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
          * @return Builder.
@@ -314,14 +315,14 @@ public final class GlobalConfiguration {
             this.baseUri = baseUri;
             return this;
         }
-        
+
         /**
          * @param config Logging configuration for Logger
          * @return Builder
          */
         public Builder loggingConfiguration(ReadonlyLoggingConfiguration config) {
-        	this.loggingConfiguration = config;
-        	return this;
+            this.loggingConfiguration = config;
+            return this;
         }
 
         /**

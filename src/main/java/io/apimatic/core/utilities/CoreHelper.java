@@ -1449,24 +1449,24 @@ public class CoreHelper {
             return super.deserialize(p, ctxt);
         }
     }
-    
+
     /**
      * Returns Url without query parameters
      * @param queryUrl Url to remove query parameters from.
      * @return Url without query parameters.
      */
-	public static String removeQueryParametersFromUrl(String queryUrl) {
-		int queryStringIndex = queryUrl.indexOf('?');
+    public static String removeQueryParametersFromUrl(String queryUrl) {
+        int queryStringIndex = queryUrl.indexOf('?');
         return queryStringIndex != -1 ? queryUrl.substring(0, queryStringIndex) : queryUrl;
-	}
-	
+    }
+
     /**
      * Returns query parameters from url
      * @param queryUrl Url to get query parameters from.
      * @return Query parameters string.
      */
-	public static String getQueryParametersFromUrl(String queryUrl) {
-		int queryStringIndex = queryUrl.indexOf('?');
+    public static String getQueryParametersFromUrl(String queryUrl) {
+        int queryStringIndex = queryUrl.indexOf('?');
         return queryStringIndex != -1 ? queryUrl.substring(queryStringIndex + 1) : "";
-	}
+    }
 }

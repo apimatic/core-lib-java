@@ -7,11 +7,11 @@ import org.slf4j.event.Level;
 import org.slf4j.spi.LoggingEventBuilder;
 
 public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
-	private Logger logger;
+    private Logger logger;
 
-	public Slf4jLogger(Logger logger) {
-		this.logger = logger;
-	}
+    public Slf4jLogger(Logger logger) {
+        this.logger = logger;
+    }
 
 	/***
 	 * Log provided message according to logging level.

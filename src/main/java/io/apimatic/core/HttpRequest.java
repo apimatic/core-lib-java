@@ -151,15 +151,15 @@ public final class HttpRequest {
     }
 
     private StringBuilder getStringBuilder(String server, String path,
-    		Map<String, Object> queryParams,
-    		ArraySerializationFormat arraySerializationFormat) {
-    	
-    	StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+            Map<String, Object> queryParams,
+            ArraySerializationFormat arraySerializationFormat) {
+
+        StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
 
         // set query parameters
         CoreHelper.appendUrlWithQueryParameters(urlBuilder, queryParams,
                 arraySerializationFormat);
-    	
+
         return new StringBuilder(CoreHelper.cleanUrl(urlBuilder));
     }
 

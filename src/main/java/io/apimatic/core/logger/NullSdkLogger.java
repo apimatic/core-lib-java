@@ -6,14 +6,14 @@ import io.apimatic.coreinterfaces.logger.ApiLogger;
 
 public class NullSdkLogger implements ApiLogger {
 
-	@Override
-	public void logRequest(Request request) {
-		
-	}
+    @Override
+    public void logRequest(Request request) {
 
-	@Override
-	public void logResponse(Response response) {
-		
-	}
+    }
+
+    @Override
+    public void logResponse(Response response) {
+
+    }
 
 }
