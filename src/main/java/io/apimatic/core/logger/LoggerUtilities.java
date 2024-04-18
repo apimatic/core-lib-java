@@ -36,7 +36,7 @@ public class LoggerUtilities {
 	/**
 	 * Filter sensitive headers from the given list of request headers.
 	 *
-	 * @param requestHeaders       The list of headers to filter.
+	 * @param headers       The list of headers to filter.
 	 * @param maskSensitiveHeaders Whether to mask sensitive headers or not.
 	 * @return A map containing filtered headers.
 	 */
