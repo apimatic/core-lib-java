@@ -10,11 +10,8 @@ import java.util.stream.Collectors;
  * @param <T> Name of your LogOptions type
  * @param <B> Name of the Builder for your LogOptions type
  */
-public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
-    protected boolean logBody = false;
-    protected boolean logHeaders = false;
-    protected List<String> excludeHeaders = new ArrayList<>();
-    protected List<String> includeHeaders = new ArrayList<>();
+public abstract class LogOptions<T extends
+LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
 
     /**
      * Constructs a new LogOptions instance with default values.
@@ -34,10 +31,10 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
      * @param <B> Name of the Builder for your LogOptions type
      */
     public abstract static class Builder<T extends LogOptions<T, B>, B extends Builder<T, B>> {
-        protected boolean logBody = false;
-        protected boolean logHeaders = false;
-        protected List<String> excludeHeaders = new ArrayList<>();
-        protected List<String> includeHeaders = new ArrayList<>();
+        private boolean logBody = false;
+        private boolean logHeaders = false;
+        private List<String> excludeHeaders = new ArrayList<>();
+        private List<String> includeHeaders = new ArrayList<>();
 
         /**
          * Sets whether to log the body.

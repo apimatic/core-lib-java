@@ -9,10 +9,10 @@ import java.util.List;
  * Represents base options for logging.
  */
 public abstract class LogBaseOptions {
-    private boolean logBody;
-    private boolean logHeaders;
-    private List<String> headersToInclude;
-    private List<String> headersToExclude;
+    private boolean logBody = false;
+    private boolean logHeaders = false;
+    private List<String> headersToInclude = new ArrayList<>();
+    private List<String> headersToExclude = new ArrayList<>();
 
     /**
      * Checks if logging of request body is enabled.
