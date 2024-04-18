@@ -21,7 +21,15 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`GlobalConfiguration`](./src/main/java/io/apimatic/core/GlobalConfiguration.java)                     | A class which hold the global configuration properties to make a successful Api Call |
 | [`HttpRequest`](./src/main/java/io/apimatic/core/HttpRequest.java)                     | An HTTP request is made by a client, to a named host, which is located on a server |
 | [`ResponseHandler`](./src/main/java/io/apimatic/core/ResponseHandler.java)                     | Handler that encapsulates the process of generating a response object from a Response |
-| [`HttpLogger`](./src/main/java/io/apimatic/core/logger/HttpLogger.java)              | A class to log the Http events. |
+| [`SdkLogger`](./src/main/java/io/apimatic/core/logger/SdkLogger.java)              | A class to log Request and Response. |
+| [`NullSdkLogger`](./src/main/java/io/apimatic/core/logger/NullSdkLogger.java)              | Null SdkLogger implementation where logger is not configured. |
+| [`Slf4jLogger`](./src/main/java/io/apimatic/core/logger/Slf4jLogger.java)              | Logger implementation supporting Slf4j Facade. |
+| [`ConsoleLogger`](./src/main/java/io/apimatic/core/logger/ConsoleLogger.java)              | Default Logger implementation if logging is enabled. |
+| [`LoggerFactory`](./src/main/java/io/apimatic/core/logger/LoggerFactory.java)              | Returns an instance of ApiLogger based on the provided configuration. |
+| [`LoggerUtilities`](./src/main/java/io/apimatic/core/logger/LoggerUtilities.java)              | Utilitiy methods for Logger. |
+| [`LogBaseOptions`](./src/main/java/io/apimatic/core/logger/configurations/LogBaseOptions.java)              | Represents base options for logging. |
+| [`RequestLogOptions`](./src/main/java/io/apimatic/core/logger/configurations/RequestLogOptions.java)              | Represents options for logging requests. |
+| [`ResponseLogOptions`](./src/main/java/io/apimatic/core/logger/configurations/ResponseLogOptions.java)              | Represents options for logging responses. |
 | [`AuthBuilder`](./src/main/java/io/apimatic/core/authentication/AuthBuilder.java)              | A class to build and validate provided combination of auth schemes. |
 | [`AuthCredential`](./src/main/java/io/apimatic/core/authentication/AuthCredential.java)              | A parent class of [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java) and [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java) to hold the common implementation for header and query parameters |
 | [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java)              | A class supports HTTP authentication through HTTP Headers |
