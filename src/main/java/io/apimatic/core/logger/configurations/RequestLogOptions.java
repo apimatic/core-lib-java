@@ -10,7 +10,7 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions
 /**
  * Represents options for logging requests.
  */
-public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequestLogOptions {
+public final class RequestLogOptions extends LogBaseOptions implements ReadonlyRequestLogOptions {
 
     /**
      * Stores the value for flag to include query parameters.
@@ -19,8 +19,9 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 
     /**
      * Constructs a new RequestLogOptions instance with default values.
+     * @param builder Builder instance of {@link RequestLogOptions.Builder}
      */
-    private RequestLogOptions(Builder builder) {
+    private RequestLogOptions(final Builder builder) {
         super();
         this.setLogBody(builder.logBody);
         this.setLogHeaders(builder.logHeaders);
@@ -39,9 +40,8 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
     }
 
     /**
-     * Builds a new {@link RequestLogOptions.Builder} object. Creates the
-     * instance with the current state.
-     *
+     * Builds a new {@link RequestLogOptions.Builder} object. Creates the instance
+     * with the current state.
      * @return a new {@link RequestLogOptions.Builder} object.
      */
     public Builder newBuilder() {
@@ -74,7 +74,6 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 
         /**
          * Sets whether to log the headers of the request.
-         *
          * @param logHeaders True to log the headers, otherwise false.
          * @return The builder instance.
          */
@@ -85,29 +84,28 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 
         /**
          * Sets the headers to be excluded from logging.
-         *
          * @param excludeHeaders The headers to exclude.
          * @return The builder instance.
          */
         public Builder excludeHeaders(String... excludeHeaders) {
-            this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase).collect(Collectors.toList());
+            this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase)
+                    .collect(Collectors.toList());
             return this;
         }
 
         /**
          * Sets the headers to be included in logging.
-         *
          * @param includeHeaders The headers to include.
          * @return The builder instance.
          */
         public Builder includeHeaders(String... includeHeaders) {
-            this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase).collect(Collectors.toList());
+            this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase)
+                    .collect(Collectors.toList());
             return this;
         }
 
         /**
          * Sets whether to include query parameters in the request path.
-         *
          * @param includeQueryInPath True to include query parameters in the path,
          *                           otherwise false.
          * @return The builder instance.
@@ -119,7 +117,6 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 
         /**
          * Constructs a RequestLogOptions object with the set values.
-         *
          * @return The constructed RequestOptions object.
          */
         public RequestLogOptions build() {

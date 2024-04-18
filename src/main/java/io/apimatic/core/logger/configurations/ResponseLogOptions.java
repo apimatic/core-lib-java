@@ -10,12 +10,13 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOption
 /**
  * Represents options for logging responses.
  */
-public class ResponseLogOptions extends LogBaseOptions implements ReadonlyResponseLogOptions {
+public final class ResponseLogOptions extends LogBaseOptions implements ReadonlyResponseLogOptions {
 
     /**
      * Constructs a new ResponseLogOptions instance with default values.
+     * @param builder Builder instance of {@link RequestLogOptions.Builder}
      */
-    private ResponseLogOptions(Builder builder) {
+    private ResponseLogOptions(final Builder builder) {
         super();
         this.setLogBody(builder.logBody);
         this.setLogHeaders(builder.logHeaders);
@@ -24,9 +25,8 @@ public class ResponseLogOptions extends LogBaseOptions implements ReadonlyRespon
     }
 
     /**
-     * Builds a new {@link ResponseLogOptions.Builder} object. Creates the
-     * instance with the current state.
-     *
+     * Builds a new {@link ResponseLogOptions.Builder} object. Creates the instance
+     * with the current state.
      * @return a new {@link ResponseLogOptions.Builder} object.
      */
     public Builder newBuilder() {
@@ -46,7 +46,6 @@ public class ResponseLogOptions extends LogBaseOptions implements ReadonlyRespon
 
         /**
          * Sets whether to log the response body.
-         *
          * @param logBody True to enable logging of response body, otherwise false.
          * @return The builder instance.
          */
@@ -57,7 +56,6 @@ public class ResponseLogOptions extends LogBaseOptions implements ReadonlyRespon
 
         /**
          * Sets whether to log the response headers.
-         *
          * @param logHeaders True to enable logging of response headers, otherwise
          *                   false.
          * @return The builder instance.
@@ -69,29 +67,28 @@ public class ResponseLogOptions extends LogBaseOptions implements ReadonlyRespon
 
         /**
          * Sets the headers to be excluded from logging.
-         *
          * @param excludeHeaders The headers to exclude from logging.
          * @return The builder instance.
          */
         public Builder excludeHeaders(String... excludeHeaders) {
-            this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase).collect(Collectors.toList());
+            this.excludeHeaders = Arrays.stream(excludeHeaders).map(String::toLowerCase)
+                    .collect(Collectors.toList());
             return this;
         }
 
         /**
          * Sets the headers to be included in logging.
-         *
          * @param includeHeaders The headers to include in logging.
          * @return The builder instance.
          */
         public Builder includeHeaders(String... includeHeaders) {
-            this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase).collect(Collectors.toList());
+            this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase)
+                    .collect(Collectors.toList());
             return this;
         }
 
         /**
          * Constructs a ResponseLogOptions object with the set values.
-         *
          * @return The constructed ResponseLogOptions object.
          */
         public ResponseLogOptions build() {

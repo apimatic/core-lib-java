@@ -9,8 +9,8 @@ public class LoggerUtilities {
     /**
      * List of sensitive headers that need to be filtered.
      */
-    private static final List<String> sensitiveHeaders = Arrays.asList("authorization", "www-authenticate",
-            "proxy-authorization", "set-cookie");
+    private static final List<String> SENSITIVE_HEADERS = Arrays.asList("authorization",
+            "www-authenticate", "proxy-authorization", "set-cookie");
 
     /**
      * Extracts headers to log based on inclusion and exclusion criteria.
@@ -20,8 +20,8 @@ public class LoggerUtilities {
      * @param headersToExclude The set of headers to exclude.
      * @return The extracted headers to log.
      */
-    public static Map<String, String> extractHeadersToLog(Map<String, String> headers, List<String> headersToInclude,
-            List<String> headersToExclude) {
+    public static Map<String, String> extractHeadersToLog(Map<String, String> headers,
+            List<String> headersToInclude, List<String> headersToExclude) {
         if (!headersToInclude.isEmpty()) {
             return extractIncludedHeaders(headers, headersToInclude);
         }
@@ -36,7 +36,7 @@ public class LoggerUtilities {
     /**
      * Filter sensitive headers from the given list of request headers.
      *
-     * @param headers       The list of headers to filter.
+     * @param headers              The list of headers to filter.
      * @param maskSensitiveHeaders Whether to mask sensitive headers or not.
      * @return A map containing filtered headers.
      */
@@ -46,7 +46,7 @@ public class LoggerUtilities {
             Map<String, String> filteredHeaders = new HashMap<>();
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 String key = entry.getKey().toLowerCase();
-                if (sensitiveHeaders.contains(key)) {
+                if (SENSITIVE_HEADERS.contains(key)) {
                     filteredHeaders.put(entry.getKey(), "**Redacted**");
                 } else {
                     filteredHeaders.put(entry.getKey(), entry.getValue());
@@ -65,7 +65,8 @@ public class LoggerUtilities {
      * @param headersToInclude The set of headers to include.
      * @return The extracted headers to log.
      */
-    public static Map<String, String> extractIncludedHeaders(Map<String, String> headers, List<String> headersToInclude) {
+    public static Map<String, String> extractIncludedHeaders(Map<String, String> headers,
+            List<String> headersToInclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (headersToInclude.contains(entry.getKey().toLowerCase())) {
@@ -82,7 +83,8 @@ public class LoggerUtilities {
      * @param headersToExclude The set of headers to exclude.
      * @return The extracted headers to log.
      */
-    public static Map<String, String> extractExcludedHeaders(Map<String, String> headers, List<String> headersToExclude) {
+    public static Map<String, String> extractExcludedHeaders(Map<String, String> headers,
+            List<String> headersToExclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (!headersToExclude.contains(entry.getKey().toLowerCase())) {
