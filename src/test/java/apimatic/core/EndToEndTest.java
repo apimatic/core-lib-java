@@ -21,7 +21,7 @@ import apimatic.core.mocks.MockCoreConfig;
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.GlobalConfiguration;
-import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
+import io.apimatic.core.logger.configurations.ApiLoggingConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Callback;

@@ -5,7 +5,7 @@ import java.util.TreeSet;
 import org.junit.Test;
 import org.slf4j.event.Level;
 
-import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
+import io.apimatic.core.logger.configurations.ApiLoggingConfiguration;
 
 public class ApiLoggingConfigurationTest {
     @Test

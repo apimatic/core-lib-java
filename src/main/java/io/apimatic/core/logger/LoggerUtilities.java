@@ -13,6 +13,12 @@ public class LoggerUtilities {
             "www-authenticate", "proxy-authorization", "set-cookie");
 
     /**
+     * Private constructor to prevent instantiation
+     */
+    private LoggerUtilities() { 
+    }
+    
+    /**
      * Extracts headers to log based on inclusion and exclusion criteria.
      *
      * @param headers          The map of headers.

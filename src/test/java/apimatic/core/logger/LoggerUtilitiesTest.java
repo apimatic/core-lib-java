@@ -15,7 +15,7 @@ import io.apimatic.core.logger.LoggerUtilities;
 
 public class LoggerUtilitiesTest {
     @Test
-    public void testExtractHeadersToLog_IncludeHeaders() {
+    public void testExtractHeadersToLogIncludeHeaders() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Header1", "Value1");
         headers.put("Header2", "Value2");
@@ -26,13 +26,14 @@ public class LoggerUtilitiesTest {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         headersToInclude, Collections.emptyList());
 
-        assertEquals(2, extractedHeaders.size());
+        final int EXPECTED_HEADER_SIZE = 2;
+        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
         assertTrue(extractedHeaders.containsKey("Header2"));
     }
 
     @Test
-    public void testExtractHeadersToLog_ExcludeHeaders() {
+    public void testExtractHeadersToLogExcludeHeaders() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Header1", "Value1");
         headers.put("Header2", "Value2");
@@ -43,12 +44,13 @@ public class LoggerUtilitiesTest {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         Collections.emptyList(), headersToExclude);
 
-        assertEquals(1, extractedHeaders.size());
+        final int EXPECTED_HEADER_SIZE = 1;
+        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
     }
 
     @Test
-    public void testExtractHeadersToLog_NoFilter() {
+    public void testExtractHeadersToLogNoFilter() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Header1", "Value1");
         headers.put("Header2", "Value2");
@@ -56,8 +58,9 @@ public class LoggerUtilitiesTest {
 
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         Collections.emptyList(), Collections.emptyList());
-
-        assertEquals(3, extractedHeaders.size());
+        
+        final int EXPECTED_HEADER_SIZE = 3;
+        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
         assertTrue(extractedHeaders.containsKey("Header2"));
         assertTrue(extractedHeaders.containsKey("Header3"));

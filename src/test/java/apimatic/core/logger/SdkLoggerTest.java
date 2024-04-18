@@ -192,8 +192,9 @@ public class SdkLoggerTest {
 
         sdkLogger.logResponse(response);
 
+        final int STATUS_CODE = 200;
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
@@ -216,9 +217,10 @@ public class SdkLoggerTest {
         when(config.getResponseLogOptions().shouldLogBody()).thenReturn(true);
 
         sdkLogger.logResponse(response);
-
+        
+        final int STATUS_CODE = 200;
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
@@ -255,8 +257,9 @@ public class SdkLoggerTest {
         expectedHeaders.put("Authorization", "**Redacted**");
         expectedHeaders.put("Content-Encoding", "gzip");
 
+        final int STATUS_CODE = 200;
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 

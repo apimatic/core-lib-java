@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
+import io.apimatic.core.logger.configurations.ApiLoggingConfiguration;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;

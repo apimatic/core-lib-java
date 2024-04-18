@@ -12,12 +12,14 @@ import io.apimatic.coreinterfaces.logger.ApiLogger;
  */
 public final class AsyncExecutor {
 
+    /**
+     * Private constructor to prevent instantiation
+     */
     private AsyncExecutor() {
     }
 
     /**
      * Make an asynchronous HTTP end point call.
-     *
      * @param <ResponseType>  The type of the object for response.
      * @param <ExceptionType> Server error.
      * @param requestSupplier An object of RequestSupplier to supply an instance of
@@ -26,10 +28,10 @@ public final class AsyncExecutor {
      *                        request.
      * @param responseHandler An object of ResponseHandler to handle the endpoint
      *                        response.
-     * @param apiLogger		  The logger to use.
+     * @param apiLogger       The logger to use.
      * @return An object of type CompletableFuture of T.
      */
-    public static <ResponseType, ExceptionType extends CoreApiException>
+    public static <ResponseType, ExceptionType extends CoreApiException> 
         CompletableFuture<ResponseType> makeHttpCallAsync(
             RequestSupplier requestSupplier, RequestExecutor requestExecutor,
             AsyncResponseHandler<ResponseType, ExceptionType> responseHandler,
