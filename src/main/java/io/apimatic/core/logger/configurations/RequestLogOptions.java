@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 
 /**
