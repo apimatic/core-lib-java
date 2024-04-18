@@ -11,6 +11,10 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
  * Represents options for logging responses.
  */
 public class ResponseLogOptions extends LogBaseOptions implements ReadonlyResponseLogging {
+
+	/**
+	 * Constructs a new ResponseLogOptions instance with default values.
+	 */
 	private ResponseLogOptions(Builder builder) {
 		super();
 		this.setLogBody(builder.logBody);
@@ -19,6 +23,12 @@ public class ResponseLogOptions extends LogBaseOptions implements ReadonlyRespon
 		this.includeHeaders(builder.includeHeaders.toArray(new String[0]));
 	}
 
+	/**
+	 * Builds a new {@link ResponseLogOptions.Builder} object. Creates the
+	 * instance with the current state.
+	 * 
+	 * @return a new {@link ResponseLogOptions.Builder} object.
+	 */
 	public Builder newBuilder() {
 		return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
 				.excludeHeaders(getHeadersToExclude().toArray(new String[0]))

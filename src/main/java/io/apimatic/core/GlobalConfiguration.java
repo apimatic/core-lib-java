@@ -14,7 +14,7 @@ import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
@@ -66,9 +66,9 @@ public final class GlobalConfiguration {
     private Function<String, String> baseUri;
     
     /***
-     * An instance of {@link ReadonlyLogging}
+     * An instance of {@link ReadonlyLoggingConfiguration}
      */
-    private ReadonlyLogging loggingConfiguration;
+    private ReadonlyLoggingConfiguration loggingConfiguration;
 
     /**
      * A private constructor.
@@ -87,7 +87,7 @@ public final class GlobalConfiguration {
             final Map<String, Authentication> authentications, final Callback callback,
             final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
             final HttpHeaders additionalHeaders, final Function<String, String> baseUri,
-            final ReadonlyLogging loggingConfiguration) {
+            final ReadonlyLoggingConfiguration loggingConfiguration) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -171,7 +171,7 @@ public final class GlobalConfiguration {
     /***
      * @return Logging configuration for Logger
      */
-    public ReadonlyLogging getLoggingConfiguration() {
+    public ReadonlyLoggingConfiguration getLoggingConfiguration() {
     	return loggingConfiguration;
     }
 
@@ -222,9 +222,9 @@ public final class GlobalConfiguration {
         private Function<String, String> baseUri;
         
         /***
-         * An instance of {@link ReadonlyLogging}
+         * An instance of {@link ReadonlyLoggingConfiguration}
          */
-        private ReadonlyLogging loggingConfiguration = new ApiLoggingConfiguration.Builder().build();
+        private ReadonlyLoggingConfiguration loggingConfiguration = new ApiLoggingConfiguration.Builder().build();
         
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
@@ -319,7 +319,7 @@ public final class GlobalConfiguration {
          * @param config Logging configuration for Logger
          * @return Builder
          */
-        public Builder loggingConfiguration(ReadonlyLogging config) {
+        public Builder loggingConfiguration(ReadonlyLoggingConfiguration config) {
         	this.loggingConfiguration = config;
         	return this;
         }

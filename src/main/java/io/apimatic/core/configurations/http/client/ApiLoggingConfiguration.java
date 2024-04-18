@@ -9,14 +9,14 @@ import io.apimatic.core.logger.ConsoleLogger;
 import io.apimatic.core.logger.Sl4jLogger;
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogging;
 
 /**
  * To hold logging configuration.
  */
-public final class ApiLoggingConfiguration implements ReadonlyLogging {
+public final class ApiLoggingConfiguration implements ReadonlyLoggingConfiguration {
 	/***
 	 * An instance of Logger
 	 */
@@ -73,6 +73,11 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		return level;
 	}
 
+	/**
+	 * Getter for mask sensitive header.
+	 * 
+	 * @return True if masking of sensitive headers is enabled, otherwise false.
+	 */
 	public boolean getMaskSensitiveHeaders() {
 		return maskSensitiveHeaders;
 	}
@@ -148,9 +153,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 		private ResponseLogOptions.Builder responseLogOptionsBuilder = new ResponseLogOptions.Builder();
 		
 		/***
-		 * Set Logger for logging
+		 * Set Logger for logging.
 		 * 
-		 * @param logger Logger instance
+		 * @param logger The slf4j logger implementation.
 		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
 		public Builder logger(Logger logger) {
@@ -158,6 +163,12 @@ public final class ApiLoggingConfiguration implements ReadonlyLogging {
 			return this;
 		}
 
+		/***
+		 * Set Logger wrapper for logging.
+		 * 
+		 * @param logger The logger wrapper instance
+		 * @return {@link ApiLoggingConfiguration.Builder}.
+		 */
 		private Builder logger(io.apimatic.coreinterfaces.logger.Logger logger) {
 			this.logger = logger;
 			return this;

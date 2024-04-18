@@ -5,16 +5,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 
 /**
  * Represents options for logging requests.
  */
 public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequestLogging {
+
+	/**
+	 * Stores the value for flag to include query parameters.
+	 */
 	private boolean includeQueryInPath;
 
 	/**
-	 * Constructs a new RequestOptions instance with default values.
+	 * Constructs a new RequestLogOptions instance with default values.
 	 */
 	private RequestLogOptions(Builder builder) {
 		super();
@@ -34,6 +39,12 @@ public class RequestLogOptions extends LogBaseOptions implements ReadonlyRequest
 		return includeQueryInPath;
 	}
 
+	/**
+	 * Builds a new {@link RequestLogOptions.Builder} object. Creates the
+	 * instance with the current state.
+	 * 
+	 * @return a new {@link RequestLogOptions.Builder} object.
+	 */
 	public Builder newBuilder() {
 		return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
 				.excludeHeaders(getHeadersToExclude().toArray(new String[0]))

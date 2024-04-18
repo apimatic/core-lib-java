@@ -14,14 +14,14 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.logger.Logger;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogging;
 
 public class SdkLoggerTest {
 	/**
-	 * An instance of {@link ReadonlyLogging}.
+	 * An instance of {@link ReadonlyLoggingConfiguration}.
 	 */
-	private ReadonlyLogging config;
+	private ReadonlyLoggingConfiguration config;
 	
 	/**
 	 * An instance of {@link SdkLogger}.
@@ -35,7 +35,7 @@ public class SdkLoggerTest {
 
 	@Before
 	public void setUp() {
-		config = mock(ReadonlyLogging.class);
+		config = mock(ReadonlyLoggingConfiguration.class);
 		logger = mock(Logger.class);
 		when(config.getLogger()).thenReturn(logger);
 		when(config.getLevel()).thenReturn(Level.INFO);

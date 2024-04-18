@@ -9,7 +9,7 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.Logger;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogging;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
 
 /**
  * Class to log the Http api messages.
@@ -21,16 +21,16 @@ public class SdkLogger implements ApiLogger {
 	private Logger logger;
 
 	/**
-	 * An instance of {@link ReadonlyLogging}.
+	 * An instance of {@link ReadonlyLoggingConfiguration}.
 	 */
-	private ReadonlyLogging config;
+	private ReadonlyLoggingConfiguration config;
 
 	/**
 	 * Default Constructor.
 	 * 
-	 * @param config {@link ReadonlyLogging} as logging properties.
+	 * @param config {@link ReadonlyLoggingConfiguration} as logging properties.
 	 */
-	public SdkLogger(final ReadonlyLogging config) {
+	public SdkLogger(final ReadonlyLoggingConfiguration config) {
 		this.config = config;
 		this.logger = config.getLogger();
 	}
