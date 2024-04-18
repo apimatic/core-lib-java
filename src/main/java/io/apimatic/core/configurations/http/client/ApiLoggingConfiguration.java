@@ -45,8 +45,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
     /**
      * @param level
      */
-    private ApiLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger, final Level level,
-            final boolean maskSensitiveHeaders, final RequestLogOptions requestLogOptions,
+    private ApiLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger,
+            final Level level, final boolean maskSensitiveHeaders,
+            final RequestLogOptions requestLogOptions,
             final ResponseLogOptions responseLogOptions) {
         this.logger = logger;
         this.level = level;
