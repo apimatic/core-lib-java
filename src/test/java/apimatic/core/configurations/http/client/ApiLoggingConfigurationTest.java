@@ -15,6 +15,6 @@ public class ApiLoggingConfigurationTest {
         ApiLoggingConfiguration apiLoggingConfiguration =
                 new ApiLoggingConfiguration.Builder()
                         .level(Level.ERROR).build();
-        assertEquals(apiLoggingConfiguration.getLevel(), Level.ERROR);
+        assertEquals(Level.ERROR, apiLoggingConfiguration.getLevel());
     }
 }
