@@ -1,5 +1,6 @@
 package io.apimatic.core.logger;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.event.Level;
@@ -49,11 +50,15 @@ public class SdkLogger implements ApiLogger {
 				? request.getHeaders().value("content-type")
 				: "";
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
+		requestArguments.put(LoggerConstants.URL, url);
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
 		if (config.getRequestLogOptions().shouldIncludeQueryInPath()) {
-			logger.log(level, "Request {} {} {} queryParameters: {}", request.getHttpMethod(), url, contentType,
-					queryParameter);
+			requestArguments.put(LoggerConstants.QUERY_PARAMETER, queryParameter);
+			logger.log(level, "Request {} {} {} queryParameters: {}", requestArguments);
 		} else {
-			logger.log(level, "Request {} {} {}", request.getHttpMethod(), url, contentType);
+			logger.log(level, "Request {} {} {}", requestArguments);
 		}
 
 		if (config.getRequestLogOptions().shouldLogHeaders()) {
@@ -64,15 +69,16 @@ public class SdkLogger implements ApiLogger {
 			Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
 					config.getMaskSensitiveHeaders());
 
-			logger.log(level, "Request Headers {}", headersToLog);
+			Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
+			requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
+			logger.log(level, "Request Headers {}", requestHeaderArguments);
 		}
 
 		if (config.getRequestLogOptions().shouldLogBody()) {
-			if (request.getBody() != null) {
-				logger.log(level, "Request Body {}", request.getBody());
-			} else if (request.getParameters() != null && !request.getParameters().isEmpty()) {
-				logger.log(level, "Request Body {}", request.getParameters());
-			}
+			Object body = request.getBody() != null ? request.getBody() : request.getParameters();
+			Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
+			requestBodyArguments.put(LoggerConstants.BODY, body);
+			logger.log(level, "Request Body {}", requestBodyArguments);
 		}
 	}
 
@@ -85,11 +91,13 @@ public class SdkLogger implements ApiLogger {
 		Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
 		String contentLength = response.getHeaders().value("content-length");
-		String contentType = response.getHeaders().value("content-type") != null
-				? response.getHeaders().value("content-type")
-				: "";
+		String contentType = response.getHeaders().value("content-type");
 
-		logger.log(level, "Response {} {} content-length: {}", response.getStatusCode(), contentType, contentLength);
+		Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+		responseArguments.put(LoggerConstants.STATUS_CODE, response.getStatusCode());
+		responseArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
+		responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
+		logger.log(level, "Response {} {} content-length: {}", responseArguments);
 
 		if (config.getResponseLogOptions().shouldLogHeaders()) {
 			Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
@@ -99,11 +107,15 @@ public class SdkLogger implements ApiLogger {
 			Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
 					config.getMaskSensitiveHeaders());
 
-			logger.log(level, "Response Headers {}", headersToLog);
+			Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
+			responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
+			logger.log(level, "Response Headers {}", responseHeaderArguments);
 		}
 
 		if (config.getResponseLogOptions().shouldLogBody()) {
-			logger.log(level, "Response Body {}", response.getBody());
+			Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
+			responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
+			logger.log(level, "Response Body {}", responseBodyArguments);
 		}
 	}
 }

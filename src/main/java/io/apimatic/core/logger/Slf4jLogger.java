@@ -1,7 +1,10 @@
 package io.apimatic.core.logger;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
+import org.slf4j.spi.LoggingEventBuilder;
 
 public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	private Logger logger;
@@ -18,26 +21,12 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	 * @param arguments List of arguments
 	 */
 	@Override
-	public void log(Level level, String format, Object... arguments) {
-		switch (level) {
-		case TRACE:
-			logger.trace(format, arguments);
-			break;
-		case DEBUG:
-			logger.debug(format, arguments);
-			break;
-		case INFO:
-			logger.info(format, arguments);
-			break;
-		case WARN:
-			logger.warn(format, arguments);
-			break;
-		case ERROR:
-			logger.error(format, arguments);
-			break;
-		default:
-			break;
+	public void log(Level level, String format, Map<String, Object> argumentsKvp) {
+		LoggingEventBuilder builder = logger.atLevel(level);
+		
+		for (Map.Entry<String, Object> entry : argumentsKvp.entrySet()) {
+			builder.addKeyValue(entry.getKey(), entry.getValue());
 		}
+		builder.log(format, argumentsKvp.values().toArray());
 	}
-
 }

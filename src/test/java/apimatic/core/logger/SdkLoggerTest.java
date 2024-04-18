@@ -6,12 +6,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.event.Level;
 
+import io.apimatic.core.logger.LoggerConstants;
 import io.apimatic.core.logger.SdkLogger;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.Method;
@@ -61,8 +63,13 @@ public class SdkLoggerTest {
 
 		sdkLogger.logRequest(request);
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, Method.GET);
+		requestArguments.put(LoggerConstants.URL, "http://example.com");
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, "");
+		
 		// Verify the log message with query parameters
-		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(Method.GET), eq("http://example.com"), eq(""));
+		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(requestArguments));
 	}
 
 	@Test
@@ -77,9 +84,13 @@ public class SdkLoggerTest {
 
 		sdkLogger.logRequest(request);
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, Method.POST);
+		requestArguments.put(LoggerConstants.URL, "http://example.com");
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+
 		// Verify the log message with query parameters
-		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(Method.POST), eq("http://example.com"),
-				eq("application/json"));
+		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(requestArguments));
 	}
 
 	@Test
@@ -96,10 +107,17 @@ public class SdkLoggerTest {
 
 		sdkLogger.logRequest(request);
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, Method.POST);
+		requestArguments.put(LoggerConstants.URL, "http://example.com");
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+		
+		Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
+		requestBodyArguments.put(LoggerConstants.BODY, "Test request body");
+		
 		// Verify the log message with query parameters
-		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(Method.POST), eq("http://example.com"),
-				eq("application/json"));
-		verify(logger).log(eq(Level.INFO), eq("Request Body {}"), eq("Test request body"));
+		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(requestArguments));
+		verify(logger).log(eq(Level.INFO), eq("Request Body {}"), eq(requestBodyArguments));
 	}
 
 	@Test
@@ -122,10 +140,17 @@ public class SdkLoggerTest {
 		Map<String, String> expectedHeaders = new HashMap<>();
 		expectedHeaders.put("Authorization", "Basic <credentials>");
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, Method.POST);
+		requestArguments.put(LoggerConstants.URL, "http://example.com");
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+		
+		Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
+		requestBodyArguments.put(LoggerConstants.HEADERS, expectedHeaders);
+		
 		// Verify the log message with query parameters
-		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(Method.POST), eq("http://example.com"),
-				eq("application/json"));
-		verify(logger).log(eq(Level.INFO), eq("Request Headers {}"), eq(expectedHeaders));
+		verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(requestArguments));
+		verify(logger).log(eq(Level.INFO), eq("Request Headers {}"), eq(requestBodyArguments));
 	}
 
 	@Test
@@ -142,9 +167,14 @@ public class SdkLoggerTest {
 
 		sdkLogger.logRequest(request);
 
+		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+		requestArguments.put(LoggerConstants.METHOD, Method.GET);
+		requestArguments.put(LoggerConstants.URL, "http://example.com");
+		requestArguments.put(LoggerConstants.CONTENT_TYPE, "");
+		requestArguments.put(LoggerConstants.QUERY_PARAMETER, "param=value");
+		
 		// Verify the log message with query parameters
-		verify(logger).log(eq(Level.INFO), eq("Request {} {} {} queryParameters: {}"), eq(Method.GET),
-				eq("http://example.com"), eq(""), eq("param=value"));
+		verify(logger).log(eq(Level.INFO), eq("Request {} {} {} queryParameters: {}"), eq(requestArguments));
 	}
 
 	@Test
@@ -161,8 +191,13 @@ public class SdkLoggerTest {
 
 		sdkLogger.logResponse(response);
 
-		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(200), eq("application/json"),
-				eq("100"));
+		Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+		responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+		responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+		responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
+		
+		// Verify the log message with query parameters
+		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(responseArguments));
 	}
 	
 	
@@ -181,10 +216,17 @@ public class SdkLoggerTest {
 
 		sdkLogger.logResponse(response);
 
-		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(200), eq("application/json"),
-				eq("100"));
+		Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+		responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+		responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+		responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 		
-		verify(logger).log(eq(Level.INFO), eq("Response Body {}"), eq("Test response body"));
+		Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
+		responseBodyArguments.put(LoggerConstants.BODY, "Test response body");
+		
+		// Verify the log message with query parameters
+		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(responseArguments));
+		verify(logger).log(eq(Level.INFO), eq("Response Body {}"), eq(responseBodyArguments));
 	}
 
 	@Test
@@ -202,15 +244,25 @@ public class SdkLoggerTest {
 
 		Map<String, String> mockHeaders = new HashMap<>();
 		mockHeaders.put("Authorization", "Basic <credentials>");
+		mockHeaders.put("Content-Encoding", "gzip");
 		when(headers.asSimpleMap()).thenReturn(mockHeaders);
 
 		sdkLogger.logResponse(response);
 		
 		Map<String, String> expectedHeaders = new HashMap<>();
 		expectedHeaders.put("Authorization", "**Redacted**");
-
-		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(200), eq("application/json"),
-				eq("100"));
-		verify(logger).log(eq(Level.INFO), eq("Response Headers {}") ,eq(expectedHeaders));
+		expectedHeaders.put("Content-Encoding", "gzip");
+		
+		Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+		responseArguments.put(LoggerConstants.STATUS_CODE, 200);
+		responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+		responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
+		
+		Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
+		responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
+		
+		// Verify the log message with query parameters
+		verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"), eq(responseArguments));
+		verify(logger).log(eq(Level.INFO), eq("Response Headers {}") ,eq(responseHeaderArguments));
 	}
 }
