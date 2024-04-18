@@ -26,8 +26,8 @@ public class LoggerUtilitiesTest {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         headersToInclude, Collections.emptyList());
 
-        final int EXPECTED_HEADER_SIZE = 2;
-        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
+        final int expectedHeaderSize = 2;
+        assertEquals(expectedHeaderSize, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
         assertTrue(extractedHeaders.containsKey("Header2"));
     }
@@ -44,8 +44,8 @@ public class LoggerUtilitiesTest {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         Collections.emptyList(), headersToExclude);
 
-        final int EXPECTED_HEADER_SIZE = 1;
-        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
+        final int expectedHeaderSize = 1;
+        assertEquals(expectedHeaderSize, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
     }
 
@@ -58,9 +58,9 @@ public class LoggerUtilitiesTest {
 
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
         Collections.emptyList(), Collections.emptyList());
-        
-        final int EXPECTED_HEADER_SIZE = 3;
-        assertEquals(EXPECTED_HEADER_SIZE, extractedHeaders.size());
+
+        final int expectedHeaderSize = 3;
+        assertEquals(expectedHeaderSize, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
         assertTrue(extractedHeaders.containsKey("Header2"));
         assertTrue(extractedHeaders.containsKey("Header3"));

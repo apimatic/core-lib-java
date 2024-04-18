@@ -11,7 +11,6 @@ public class ConsoleLogger implements Logger {
 
     /**
      * Logs a message with the specified logging level, format, and arguments.
-     *
      * @param level     the logging level of the message
      * @param format    a format string for the message
      * @param arguments arguments referenced by the format string

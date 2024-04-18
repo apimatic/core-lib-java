@@ -3,7 +3,7 @@ package io.apimatic.core.logger;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
 
-public class LoggerFactory {
+public final class LoggerFactory {
 
     /**
      * Private constructor to prevent instantiation

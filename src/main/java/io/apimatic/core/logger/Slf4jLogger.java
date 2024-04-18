@@ -17,7 +17,7 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
      * Constructs a new Slf4jLogger instance wrapping the provided SLF4J Logger.
      * @param logger The SLF4J logger instance to wrap.
      */
-    public Slf4jLogger(Logger logger) {
+    public Slf4jLogger(final Logger logger) {
         this.logger = logger;
     }
 

@@ -180,9 +180,10 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogResponse() {
+        final int statusCode = 200;
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(statusCode);
         when(headers.value("content-length")).thenReturn("100");
         when(headers.value("content-type")).thenReturn("application/json");
         when(response.getHeaders()).thenReturn(headers);
@@ -192,9 +193,8 @@ public class SdkLoggerTest {
 
         sdkLogger.logResponse(response);
 
-        final int STATUS_CODE = 200;
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
+        responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
@@ -205,9 +205,10 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogResponseWithBody() {
+        final int statusCode = 200;
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(statusCode);
         when(headers.value("content-length")).thenReturn("100");
         when(headers.value("content-type")).thenReturn("application/json");
         when(response.getHeaders()).thenReturn(headers);
@@ -217,10 +218,9 @@ public class SdkLoggerTest {
         when(config.getResponseLogOptions().shouldLogBody()).thenReturn(true);
 
         sdkLogger.logResponse(response);
-        
-        final int STATUS_CODE = 200;
+
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
+        responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
@@ -235,9 +235,11 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogResponseWithHeaders() {
+        final int statusCode = 200;
+        
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
-        when(response.getStatusCode()).thenReturn(200);
+        when(response.getStatusCode()).thenReturn(statusCode);
         when(headers.value("content-length")).thenReturn("100");
         when(headers.value("content-type")).thenReturn("application/json");
         when(response.getHeaders()).thenReturn(headers);
@@ -257,9 +259,8 @@ public class SdkLoggerTest {
         expectedHeaders.put("Authorization", "**Redacted**");
         expectedHeaders.put("Content-Encoding", "gzip");
 
-        final int STATUS_CODE = 200;
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-        responseArguments.put(LoggerConstants.STATUS_CODE, STATUS_CODE);
+        responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
         responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 

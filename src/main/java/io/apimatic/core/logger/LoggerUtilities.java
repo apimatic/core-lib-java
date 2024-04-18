@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoggerUtilities {
+public final class LoggerUtilities {
     /**
      * List of sensitive headers that need to be filtered.
      */
@@ -15,9 +15,9 @@ public class LoggerUtilities {
     /**
      * Private constructor to prevent instantiation
      */
-    private LoggerUtilities() { 
+    private LoggerUtilities() {
     }
-    
+
     /**
      * Extracts headers to log based on inclusion and exclusion criteria.
      *
@@ -60,7 +60,6 @@ public class LoggerUtilities {
             }
             return filteredHeaders;
         }
-
         return headers;
     }
 

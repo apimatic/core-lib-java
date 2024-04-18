@@ -31,7 +31,7 @@ public final class AsyncExecutor {
      * @param apiLogger       The logger to use.
      * @return An object of type CompletableFuture of T.
      */
-    public static <ResponseType, ExceptionType extends CoreApiException> 
+    public static <ResponseType, ExceptionType extends CoreApiException>
         CompletableFuture<ResponseType> makeHttpCallAsync(
             RequestSupplier requestSupplier, RequestExecutor requestExecutor,
             AsyncResponseHandler<ResponseType, ExceptionType> responseHandler,

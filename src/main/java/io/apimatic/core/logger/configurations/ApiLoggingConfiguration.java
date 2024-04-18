@@ -145,12 +145,14 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Options for logging requests.
          */
-        private RequestLogOptions.Builder requestLogOptionsBuilder = new RequestLogOptions.Builder();
+        private RequestLogOptions.Builder requestLogOptionsBuilder =
+                new RequestLogOptions.Builder();
 
         /**
          * Options for logging responses.
          */
-        private ResponseLogOptions.Builder responseLogOptionsBuilder = new ResponseLogOptions.Builder();
+        private ResponseLogOptions.Builder responseLogOptionsBuilder =
+                new ResponseLogOptions.Builder();
 
         /***
          * Set Logger for logging.
