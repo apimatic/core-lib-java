@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 import io.apimatic.core.logger.ConsoleLogger;
-import io.apimatic.core.logger.Sl4jLogger;
+import io.apimatic.core.logger.Slf4jLogger;
 import io.apimatic.core.logger.configurations.RequestLogOptions;
 import io.apimatic.core.logger.configurations.ResponseLogOptions;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
@@ -159,7 +159,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
 		 * @return {@link ApiLoggingConfiguration.Builder}.
 		 */
 		public Builder logger(Logger logger) {
-			this.logger = new Sl4jLogger(logger);
+			this.logger = new Slf4jLogger(logger);
 			return this;
 		}
 

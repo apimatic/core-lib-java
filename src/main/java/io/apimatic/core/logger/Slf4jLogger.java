@@ -3,10 +3,10 @@ package io.apimatic.core.logger;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
-public class Sl4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
+public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	private Logger logger;
 
-	public Sl4jLogger(Logger logger) {
+	public Slf4jLogger(Logger logger) {
 		this.logger = logger;
 	}
 
