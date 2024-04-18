@@ -21,12 +21,12 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
 	 * @param arguments List of arguments
 	 */
 	@Override
-	public void log(Level level, String format, Map<String, Object> argumentsKvp) {
+	public void log(Level level, String format, Map<String, Object> arguments) {
 		LoggingEventBuilder builder = logger.atLevel(level);
 		
-		for (Map.Entry<String, Object> entry : argumentsKvp.entrySet()) {
+		for (Map.Entry<String, Object> entry : arguments.entrySet()) {
 			builder.addKeyValue(entry.getKey(), entry.getValue());
 		}
-		builder.log(format, argumentsKvp.values().toArray());
+		builder.log(format, arguments.values().toArray());
 	}
 }
