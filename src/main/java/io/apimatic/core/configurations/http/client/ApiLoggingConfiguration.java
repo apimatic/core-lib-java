@@ -107,14 +107,15 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
      */
     @Override
     public String toString() {
-        return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel() + " maskSensitiveHeaders="
-                + getMaskSensitiveHeaders() + " requestLogOptions" + getRequestLogOptions() + " responseLogOptions"
-                + getResponseLogOptions() + "]";
+        return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel() +
+        " maskSensitiveHeaders=" + getMaskSensitiveHeaders() +
+        " requestLogOptions" + getRequestLogOptions() +
+        " responseLogOptions" + getResponseLogOptions() + "]";
     }
 
     /**
-     * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the
-     * instance with the current state.
+     * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the instance with the
+     * current state.
      *
      * @return a new {@link ApiLoggingConfiguration.Builder} object.
      */
@@ -145,12 +146,14 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Options for logging requests.
          */
-        private RequestLogOptions.Builder requestLogOptionsBuilder = new RequestLogOptions.Builder();
+        private RequestLogOptions.Builder requestLogOptionsBuilder =
+            new RequestLogOptions.Builder();
 
         /**
          * Options for logging responses.
          */
-        private ResponseLogOptions.Builder responseLogOptionsBuilder = new ResponseLogOptions.Builder();
+        private ResponseLogOptions.Builder responseLogOptionsBuilder =
+            new ResponseLogOptions.Builder();
 
         /***
          * Set Logger for logging.
@@ -240,8 +243,8 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         public ApiLoggingConfiguration build() {
             RequestLogOptions requestLogOptions = requestLogOptionsBuilder.build();
             ResponseLogOptions responseLogOptions = responseLogOptionsBuilder.build();
-            return new ApiLoggingConfiguration(logger, level, maskSensitiveHeaders, requestLogOptions,
-                    responseLogOptions);
+            return new ApiLoggingConfiguration(logger, level, maskSensitiveHeaders,
+            requestLogOptions, responseLogOptions);
         }
     }
 }

@@ -72,7 +72,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      */
     public ResponseType execute() throws IOException, ExceptionType {
         apiLogger.logRequest(request);
-        Response httpResponse = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        Response httpResponse = globalConfig.getHttpClient()
+            .execute(request, endpointConfiguration);
         apiLogger.logResponse(httpResponse);
 
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
