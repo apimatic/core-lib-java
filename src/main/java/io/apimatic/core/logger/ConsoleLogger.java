@@ -16,12 +16,12 @@ public class ConsoleLogger implements Logger {
      * @param format    a format string for the message
      * @param arguments arguments referenced by the format string
      */
-	@Override
-	public void log(Level level, String format, Map<String, Object> arguments) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(level);
-		builder.append(": ");
-		builder.append(MessageFormatter.basicArrayFormat(format, arguments.values().toArray()));
-		System.out.println(builder.toString());
-	}
+    @Override
+    public void log(Level level, String format, Map<String, Object> arguments) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(level);
+        builder.append(": ");
+        builder.append(MessageFormatter.basicArrayFormat(format, arguments.values().toArray()));
+        System.out.println(builder.toString());
+    }
 }

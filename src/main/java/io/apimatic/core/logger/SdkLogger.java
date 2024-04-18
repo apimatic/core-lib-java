@@ -50,37 +50,38 @@ public class SdkLogger implements ApiLogger {
                 ? request.getHeaders().value("content-type")
                 : "";
 
-		Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
-		requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
-		requestArguments.put(LoggerConstants.URL, url);
-		requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
-		if (config.getRequestLogOptions().shouldIncludeQueryInPath()) {
-			requestArguments.put(LoggerConstants.QUERY_PARAMETER, queryParameter);
-			logger.log(level, "Request {} {} {} queryParameters: {}", requestArguments);
-		} else {
-			logger.log(level, "Request {} {} {}", requestArguments);
-		}
+        Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
+        requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
+        requestArguments.put(LoggerConstants.URL, url);
+        requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
+        if (config.getRequestLogOptions().shouldIncludeQueryInPath()) {
+            requestArguments.put(LoggerConstants.QUERY_PARAMETER, queryParameter);
+            logger.log(level, "Request {} {} {} queryParameters: {}", requestArguments);
+        } else {
+            logger.log(level, "Request {} {} {}", requestArguments);
+        }
 
         if (config.getRequestLogOptions().shouldLogHeaders()) {
             Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    request.getHeaders().asSimpleMap(), config.getRequestLogOptions().getHeadersToInclude(),
+                    request.getHeaders().asSimpleMap(),
+                    config.getRequestLogOptions().getHeadersToInclude(),
                     config.getRequestLogOptions().getHeadersToExclude());
 
-            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
-                    config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities
+                    .filterSensitiveHeaders(extractedHeaders, config.getMaskSensitiveHeaders());
 
-			Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
-			requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
-			logger.log(level, "Request Headers {}", requestHeaderArguments);
-		}
+            Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
+            requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
+            logger.log(level, "Request Headers {}", requestHeaderArguments);
+        }
 
-		if (config.getRequestLogOptions().shouldLogBody()) {
-			Object body = request.getBody() != null ? request.getBody() : request.getParameters();
-			Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
-			requestBodyArguments.put(LoggerConstants.BODY, body);
-			logger.log(level, "Request Body {}", requestBodyArguments);
-		}
-	}
+        if (config.getRequestLogOptions().shouldLogBody()) {
+            Object body = request.getBody() != null ? request.getBody() : request.getParameters();
+            Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
+            requestBodyArguments.put(LoggerConstants.BODY, body);
+            logger.log(level, "Request Body {}", requestBodyArguments);
+        }
+    }
 
     /**
      * Log Responses.
@@ -90,32 +91,33 @@ public class SdkLogger implements ApiLogger {
     public void logResponse(Response response) {
         Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
-		String contentLength = response.getHeaders().value("content-length");
-		String contentType = response.getHeaders().value("content-type");
+        String contentLength = response.getHeaders().value("content-length");
+        String contentType = response.getHeaders().value("content-type");
 
-		Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
-		responseArguments.put(LoggerConstants.STATUS_CODE, response.getStatusCode());
-		responseArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
-		responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
-		logger.log(level, "Response {} {} content-length: {}", responseArguments);
+        Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+        responseArguments.put(LoggerConstants.STATUS_CODE, response.getStatusCode());
+        responseArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
+        responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
+        logger.log(level, "Response {} {} content-length: {}", responseArguments);
 
         if (config.getResponseLogOptions().shouldLogHeaders()) {
             Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    response.getHeaders().asSimpleMap(), config.getResponseLogOptions().getHeadersToInclude(),
+                    response.getHeaders().asSimpleMap(),
+                    config.getResponseLogOptions().getHeadersToInclude(),
                     config.getResponseLogOptions().getHeadersToExclude());
 
-            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
-                    config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities
+                    .filterSensitiveHeaders(extractedHeaders, config.getMaskSensitiveHeaders());
 
-			Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
-			responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
-			logger.log(level, "Response Headers {}", responseHeaderArguments);
-		}
+            Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
+            responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
+            logger.log(level, "Response Headers {}", responseHeaderArguments);
+        }
 
-		if (config.getResponseLogOptions().shouldLogBody()) {
-			Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
-			responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
-			logger.log(level, "Response Body {}", responseBodyArguments);
-		}
-	}
+        if (config.getResponseLogOptions().shouldLogBody()) {
+            Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
+            responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
+            logger.log(level, "Response Body {}", responseBodyArguments);
+        }
+    }
 }
