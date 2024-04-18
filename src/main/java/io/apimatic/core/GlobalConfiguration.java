@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import io.apimatic.core.configurations.http.client.ApiLoggingConfiguration;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
@@ -223,7 +224,7 @@ public final class GlobalConfiguration {
         /***
          * An instance of {@link ReadonlyLogging}
          */
-        private ReadonlyLogging loggingConfiguration;
+        private ReadonlyLogging loggingConfiguration = new ApiLoggingConfiguration.Builder().build();
         
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
