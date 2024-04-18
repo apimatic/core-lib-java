@@ -8,12 +8,12 @@ public class NullSdkLogger implements ApiLogger {
 
     @Override
     public void logRequest(Request request) {
-
+        // Nothing to log
     }
 
     @Override
     public void logResponse(Response response) {
-
+        // Nothing to log
     }
 
 }

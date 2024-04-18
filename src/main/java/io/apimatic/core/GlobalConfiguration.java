@@ -225,7 +225,8 @@ public final class GlobalConfiguration {
         /***
          * An instance of {@link ReadonlyLoggingConfiguration}
          */
-        private ReadonlyLoggingConfiguration loggingConfiguration = new ApiLoggingConfiguration.Builder().build();
+        private ReadonlyLoggingConfiguration loggingConfiguration =
+            new ApiLoggingConfiguration.Builder().build();
 
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
