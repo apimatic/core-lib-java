@@ -30,8 +30,8 @@ public final class SdkResponseLoggingOptions
     }
 
     /**
-     * Builds a new {@link SdkResponseLoggingOptions.Builder} object. Creates the instance
-     * with the current state.
+     * Builds a new {@link SdkResponseLoggingOptions.Builder} object. Creates the
+     * instance with the current state.
      * @return a new {@link SdkResponseLoggingOptions.Builder} object.
      */
     public Builder newBuilder() {
@@ -44,7 +44,8 @@ public final class SdkResponseLoggingOptions
     /**
      * Builder class for ResponseLogOptions.
      */
-    public static class Builder extends SdkLoggingOptions.Builder<SdkResponseLoggingOptions, Builder> {
+    public static class Builder
+            extends SdkLoggingOptions.Builder<SdkResponseLoggingOptions, Builder> {
 
         /**
          * Returns the {@link SdkResponseLoggingOptions.Builder}
