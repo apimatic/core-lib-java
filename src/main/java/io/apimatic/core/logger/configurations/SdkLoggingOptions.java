@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
  * @param <T> Name of your LogOptions type
  * @param <B> Name of the Builder for your LogOptions type
  */
-public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>, B extends SdkLoggingOptions.Builder<T, B>>
-        extends SdkLoggingBaseOptions {
+public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
+    B extends SdkLoggingOptions.Builder<T, B>> extends SdkLoggingBaseOptions {
 
     /**
      * Constructs a new LogOptions instance with default values.

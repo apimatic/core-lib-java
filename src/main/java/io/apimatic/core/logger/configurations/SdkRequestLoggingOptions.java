@@ -58,7 +58,7 @@ public final class SdkRequestLoggingOptions
      */
     public static class Builder
             extends SdkLoggingOptions.Builder<SdkRequestLoggingOptions, Builder> {
-        private boolean includeQueryInPath = true;
+        private boolean includeQueryInPath = false;
 
         /**
          * Sets whether to include query parameters in the request path.

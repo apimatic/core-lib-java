@@ -3,12 +3,12 @@ package io.apimatic.core.logger;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
 
-public final class LoggerFactory {
+public final class SdkLoggerFactory {
 
     /**
      * Private constructor to prevent instantiation
      */
-    private LoggerFactory() {
+    private SdkLoggerFactory() {
     }
 
     /**
