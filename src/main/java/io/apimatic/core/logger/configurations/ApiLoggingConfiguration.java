@@ -119,7 +119,8 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
      * @return a new {@link ApiLoggingConfiguration.Builder} object.
      */
     public Builder newBuilder() {
-        Builder builder = new Builder().logger(logger).level(level).maskSensitiveHeaders(maskSensitiveHeaders);
+        Builder builder = new Builder().logger(logger).level(level)
+                .maskSensitiveHeaders(maskSensitiveHeaders);
         builder.requestLogOptionsBuilder = ((RequestLogOptions) requestLogOptions).newBuilder();
         builder.responseLogOptionsBuilder = ((ResponseLogOptions) responseLogOptions).newBuilder();
         return builder;
