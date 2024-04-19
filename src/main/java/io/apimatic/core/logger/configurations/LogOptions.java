@@ -23,7 +23,7 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
         this.setLogHeaders(builder.logHeaders);
         this.excludeHeaders(builder.excludeHeaders.toArray(new String[0]));
         this.includeHeaders(builder.includeHeaders.toArray(new String[0]));
-        this.whiteListHeaders(builder.whiteListHeaders.toArray(new String[0]));
+        this.unmaskHeaders(builder.unmaskHeaders.toArray(new String[0]));
     }
 
     /**
@@ -36,7 +36,7 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
         private boolean logHeaders = false;
         private List<String> excludeHeaders = new ArrayList<>();
         private List<String> includeHeaders = new ArrayList<>();
-        private List<String> whiteListHeaders = new ArrayList<>();
+        private List<String> unmaskHeaders = new ArrayList<>();
 
         /**
          * Sets whether to log the body.
@@ -81,12 +81,12 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
         }
 
         /**
-         * Sets the headers to be white listed form masking in logging.
-         * @param whiteListHeaders The headers to be white listed from masking.
+         * Sets the headers to be unmasked in logging.
+         * @param unmaskHeaders The headers to unmask in logging.
          * @return The builder instance.
          */
-        public B whiteListHeaders(String... whiteListHeaders) {
-            this.whiteListHeaders = Arrays.stream(whiteListHeaders).map(String::toLowerCase)
+        public B unmaskHeaders(String... unmaskHeaders) {
+            this.unmaskHeaders = Arrays.stream(unmaskHeaders).map(String::toLowerCase)
                     .collect(Collectors.toList());
             return self();
         }

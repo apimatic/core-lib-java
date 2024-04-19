@@ -13,7 +13,7 @@ public abstract class LogBaseOptions {
     private boolean logHeaders = false;
     private List<String> headersToInclude = new ArrayList<>();
     private List<String> headersToExclude = new ArrayList<>();
-    private List<String> headersToWhiteList = new ArrayList<>();
+    private List<String> headersToUnmask = new ArrayList<>();
 
     /**
      * Checks if logging of request body is enabled.
@@ -64,12 +64,12 @@ public abstract class LogBaseOptions {
     }
 
     /**
-     * Retrieves the list of headers to white list from sensitive headers. These
+     * Retrieves the list of headers to unmask from sensitive headers. These
      * headers are excluded from masking.
-     * @return An unmodifiable list of headers to white list.
+     * @return An unmodifiable list of headers to unmasked.
      */
-    public List<String> getHeadersToWhiteList() {
-        return Collections.unmodifiableList(headersToWhiteList);
+    public List<String> getHeadersToUnmask() {
+        return Collections.unmodifiableList(headersToUnmask);
     }
 
     /**
@@ -89,10 +89,10 @@ public abstract class LogBaseOptions {
     }
 
     /**
-     * Includes specified headers in logging.
-     * @param whiteListHeaders The headers to include in logging.
+     * Unmask specified headers from logging.
+     * @param unmaskHeaders The headers to unmask in logging.
      */
-    public void whiteListHeaders(String... whiteListHeaders) {
-        headersToWhiteList = new ArrayList<>(Arrays.asList(whiteListHeaders));
+    public void unmaskHeaders(String... unmaskHeaders) {
+        this.headersToUnmask = new ArrayList<>(Arrays.asList(unmaskHeaders));
     }
 }

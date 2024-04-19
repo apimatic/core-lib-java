@@ -322,7 +322,7 @@ public class SdkLoggerTest {
     @Test
     public void testLogResponseWithWhiteListHeaders() {
         final int statusCode = 200;
-        final List<String> whiteListHeaders = Arrays.asList("masked-header");
+        final List<String> unmaskHeaders = Arrays.asList("masked-header");
 
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
@@ -333,7 +333,7 @@ public class SdkLoggerTest {
 
         when(config.getLevel()).thenReturn(Level.INFO);
         when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
-        when(config.getResponseLogOptions().getHeadersToWhiteList()).thenReturn(whiteListHeaders);
+        when(config.getResponseLogOptions().getHeadersToUnmask()).thenReturn(unmaskHeaders);
         when(config.getMaskSensitiveHeaders()).thenReturn(true);
 
         Map<String, String> mockHeaders = new HashMap<>();

@@ -81,7 +81,7 @@ public class SdkLogger implements ApiLogger {
                     requestLogOptions.getHeadersToExclude());
 
             Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
-                    extractedHeaders, requestLogOptions.getHeadersToWhiteList(),
+                    extractedHeaders, requestLogOptions.getHeadersToUnmask(),
                     config.getMaskSensitiveHeaders());
 
             Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
@@ -120,7 +120,7 @@ public class SdkLogger implements ApiLogger {
                     responseLogOptions.getHeadersToExclude());
 
             Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
-                    extractedHeaders, responseLogOptions.getHeadersToWhiteList(),
+                    extractedHeaders, responseLogOptions.getHeadersToUnmask(),
                     config.getMaskSensitiveHeaders());
 
             Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
