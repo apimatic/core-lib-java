@@ -147,13 +147,13 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
         /**
          * Options for logging requests.
          */
-        private SdkRequestLoggingOptions.Builder requestLogOptionsBuilder = 
+        private SdkRequestLoggingOptions.Builder requestLogOptionsBuilder =
                 new SdkRequestLoggingOptions.Builder();
 
         /**
          * Options for logging responses.
          */
-        private SdkResponseLoggingOptions.Builder responseLogOptionsBuilder = 
+        private SdkResponseLoggingOptions.Builder responseLogOptionsBuilder =
                 new SdkResponseLoggingOptions.Builder();
 
         /***

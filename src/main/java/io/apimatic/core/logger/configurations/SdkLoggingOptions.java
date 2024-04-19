@@ -31,7 +31,8 @@ public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
      * @param <T> Name of your LogOptions type
      * @param <B> Name of the Builder for your LogOptions type
      */
-    public abstract static class Builder<T extends SdkLoggingOptions<T, B>, B extends Builder<T, B>> {
+    public abstract static class Builder<T extends SdkLoggingOptions<T, B>,
+            B extends Builder<T, B>> {
         private boolean logBody = false;
         private boolean logHeaders = false;
         private List<String> excludeHeaders = new ArrayList<>();
