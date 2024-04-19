@@ -41,8 +41,8 @@ public final class SdkRequestLoggingOptions
     }
 
     /**
-     * Builds a new {@link SdkRequestLoggingOptions.Builder} object. Creates the instance
-     * with the current state.
+     * Builds a new {@link SdkRequestLoggingOptions.Builder} object. Creates the
+     * instance with the current state.
      * @return a new {@link SdkRequestLoggingOptions.Builder} object.
      */
     public Builder newBuilder() {
@@ -56,7 +56,8 @@ public final class SdkRequestLoggingOptions
     /**
      * Builder class for RequestLogOptions.
      */
-    public static class Builder extends SdkLoggingOptions.Builder<SdkRequestLoggingOptions, Builder> {
+    public static class Builder
+            extends SdkLoggingOptions.Builder<SdkRequestLoggingOptions, Builder> {
         private boolean includeQueryInPath = true;
 
         /**
