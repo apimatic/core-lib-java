@@ -1,24 +1,24 @@
 package io.apimatic.core.logger.configurations;
 
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
 
 /**
  * Represents options for logging responses.
  */
-public final class ResponseLogOptions
-        extends LogOptions<ResponseLogOptions, ResponseLogOptions.Builder>
-        implements ReadonlyResponseLogOptions {
+public final class SdkResponseLoggingOptions
+        extends SdkLoggingOptions<SdkResponseLoggingOptions, SdkResponseLoggingOptions.Builder>
+        implements ResponseLoggingOptions {
 
     /**
      * Constructs a new ResponseLogOptions instance with default values.
-     * @param builder Builder instance of {@link RequestLogOptions.Builder}
+     * @param builder Builder instance of {@link SdkRequestLoggingOptions.Builder}
      */
-    private ResponseLogOptions(final Builder builder) {
+    private SdkResponseLoggingOptions(final Builder builder) {
         super(builder);
     }
 
     /**
-     * Converts {@link ResponseLogOptions} into string format.
+     * Converts {@link SdkResponseLoggingOptions} into string format.
      * @return String representation of this class.
      */
     @Override
@@ -30,9 +30,9 @@ public final class ResponseLogOptions
     }
 
     /**
-     * Builds a new {@link ResponseLogOptions.Builder} object. Creates the instance
+     * Builds a new {@link SdkResponseLoggingOptions.Builder} object. Creates the instance
      * with the current state.
-     * @return a new {@link ResponseLogOptions.Builder} object.
+     * @return a new {@link SdkResponseLoggingOptions.Builder} object.
      */
     public Builder newBuilder() {
         return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
@@ -44,10 +44,10 @@ public final class ResponseLogOptions
     /**
      * Builder class for ResponseLogOptions.
      */
-    public static class Builder extends LogOptions.Builder<ResponseLogOptions, Builder> {
+    public static class Builder extends SdkLoggingOptions.Builder<SdkResponseLoggingOptions, Builder> {
 
         /**
-         * Returns the {@link ResponseLogOptions.Builder}
+         * Returns the {@link SdkResponseLoggingOptions.Builder}
          */
         @Override
         protected Builder self() {
@@ -59,8 +59,8 @@ public final class ResponseLogOptions
          * @return The constructed ResponseLogOptions object.
          */
         @Override
-        public ResponseLogOptions build() {
-            return new ResponseLogOptions(this);
+        public SdkResponseLoggingOptions build() {
+            return new SdkResponseLoggingOptions(this);
         }
     }
 }

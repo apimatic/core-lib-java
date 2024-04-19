@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
  * @param <T> Name of your LogOptions type
  * @param <B> Name of the Builder for your LogOptions type
  */
-public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOptions.Builder<T, B>>
-        extends LogBaseOptions {
+public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>, B extends SdkLoggingOptions.Builder<T, B>>
+        extends SdkLoggingBaseOptions {
 
     /**
      * Constructs a new LogOptions instance with default values.
-     * @param builder Builder instance of {@link LogOptions.Builder}
+     * @param builder Builder instance of {@link SdkLoggingOptions.Builder}
      */
-    protected LogOptions(final Builder<T, B> builder) {
+    protected SdkLoggingOptions(final Builder<T, B> builder) {
         super();
         this.setLogBody(builder.logBody);
         this.setLogHeaders(builder.logHeaders);
@@ -31,7 +31,7 @@ public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOption
      * @param <T> Name of your LogOptions type
      * @param <B> Name of the Builder for your LogOptions type
      */
-    public abstract static class Builder<T extends LogOptions<T, B>, B extends Builder<T, B>> {
+    public abstract static class Builder<T extends SdkLoggingOptions<T, B>, B extends Builder<T, B>> {
         private boolean logBody = false;
         private boolean logHeaders = false;
         private List<String> excludeHeaders = new ArrayList<>();

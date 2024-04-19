@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.apimatic.core.logger.configurations.ApiLoggingConfiguration;
+import io.apimatic.core.logger.configurations.SdkLoggingConfiguration;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
@@ -66,9 +66,9 @@ public final class GlobalConfiguration {
     private Function<String, String> baseUri;
 
     /***
-     * An instance of {@link ReadonlyLoggingConfiguration}
+     * An instance of {@link LoggingConfiguration}
      */
-    private ReadonlyLoggingConfiguration loggingConfiguration;
+    private LoggingConfiguration loggingConfiguration;
 
     /**
      * A private constructor.
@@ -88,7 +88,7 @@ public final class GlobalConfiguration {
             final Map<String, Authentication> authentications, final Callback callback,
             final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
             final HttpHeaders additionalHeaders, final Function<String, String> baseUri,
-            final ReadonlyLoggingConfiguration loggingConfiguration) {
+            final LoggingConfiguration loggingConfiguration) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -172,7 +172,7 @@ public final class GlobalConfiguration {
     /***
      * @return Logging configuration for Logger
      */
-    public ReadonlyLoggingConfiguration getLoggingConfiguration() {
+    public LoggingConfiguration getLoggingConfiguration() {
         return loggingConfiguration;
     }
 
@@ -223,10 +223,10 @@ public final class GlobalConfiguration {
         private Function<String, String> baseUri;
 
         /***
-         * An instance of {@link ReadonlyLoggingConfiguration}
+         * An instance of {@link LoggingConfiguration}
          */
-        private ReadonlyLoggingConfiguration loggingConfiguration =
-            new ApiLoggingConfiguration.Builder().build();
+        private LoggingConfiguration loggingConfiguration =
+            new SdkLoggingConfiguration.Builder().build();
 
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
@@ -321,7 +321,7 @@ public final class GlobalConfiguration {
          * @param config Logging configuration for Logger
          * @return Builder
          */
-        public Builder loggingConfiguration(ReadonlyLoggingConfiguration config) {
+        public Builder loggingConfiguration(LoggingConfiguration config) {
             this.loggingConfiguration = config;
             return this;
         }

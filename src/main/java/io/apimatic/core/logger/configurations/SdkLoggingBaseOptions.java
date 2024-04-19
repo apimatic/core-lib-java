@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Represents base options for logging.
  */
-public abstract class LogBaseOptions {
+public abstract class SdkLoggingBaseOptions {
     private boolean logBody = false;
     private boolean logHeaders = false;
     private List<String> headersToInclude = new ArrayList<>();

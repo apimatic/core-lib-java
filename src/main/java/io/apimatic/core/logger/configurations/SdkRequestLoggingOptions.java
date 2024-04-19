@@ -1,21 +1,21 @@
 package io.apimatic.core.logger.configurations;
 
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
 
 /**
  * Represents options for logging requests.
  */
-public final class RequestLogOptions
-        extends LogOptions<RequestLogOptions, RequestLogOptions.Builder>
-        implements ReadonlyRequestLogOptions {
+public final class SdkRequestLoggingOptions
+        extends SdkLoggingOptions<SdkRequestLoggingOptions, SdkRequestLoggingOptions.Builder>
+        implements RequestLoggingOptions {
 
     private boolean includeQueryInPath = true;
 
     /**
      * Constructs a new RequestLogOptions instance with default values.
-     * @param builder Builder instance of {@link RequestLogOptions.Builder}
+     * @param builder Builder instance of {@link SdkRequestLoggingOptions.Builder}
      */
-    private RequestLogOptions(final Builder builder) {
+    private SdkRequestLoggingOptions(final Builder builder) {
         super(builder);
         this.includeQueryInPath = builder.includeQueryInPath;
     }
@@ -29,7 +29,7 @@ public final class RequestLogOptions
     }
 
     /**
-     * Converts {@link RequestLogOptions} into string format.
+     * Converts {@link SdkRequestLoggingOptions} into string format.
      * @return String representation of this class.
      */
     @Override
@@ -41,9 +41,9 @@ public final class RequestLogOptions
     }
 
     /**
-     * Builds a new {@link RequestLogOptions.Builder} object. Creates the instance
+     * Builds a new {@link SdkRequestLoggingOptions.Builder} object. Creates the instance
      * with the current state.
-     * @return a new {@link RequestLogOptions.Builder} object.
+     * @return a new {@link SdkRequestLoggingOptions.Builder} object.
      */
     public Builder newBuilder() {
         return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
@@ -56,7 +56,7 @@ public final class RequestLogOptions
     /**
      * Builder class for RequestLogOptions.
      */
-    public static class Builder extends LogOptions.Builder<RequestLogOptions, Builder> {
+    public static class Builder extends SdkLoggingOptions.Builder<SdkRequestLoggingOptions, Builder> {
         private boolean includeQueryInPath = true;
 
         /**
@@ -71,7 +71,7 @@ public final class RequestLogOptions
         }
 
         /**
-         * Returns the {@link RequestLogOptions.Builder}
+         * Returns the {@link SdkRequestLoggingOptions.Builder}
          */
         @Override
         protected Builder self() {
@@ -83,8 +83,8 @@ public final class RequestLogOptions
          * @return The constructed RequestOptions object.
          */
         @Override
-        public RequestLogOptions build() {
-            return new RequestLogOptions(this);
+        public SdkRequestLoggingOptions build() {
+            return new SdkRequestLoggingOptions(this);
         }
     }
 }

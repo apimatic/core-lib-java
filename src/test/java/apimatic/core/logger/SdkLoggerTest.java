@@ -22,15 +22,15 @@ import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.Logger;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
 
 public class SdkLoggerTest {
     /**
-     * An instance of {@link ReadonlyLoggingConfiguration}.
+     * An instance of {@link LoggingConfiguration}.
      */
-    private ReadonlyLoggingConfiguration config;
+    private LoggingConfiguration config;
 
     /**
      * An instance of {@link SdkLogger}.
@@ -47,12 +47,12 @@ public class SdkLoggerTest {
      */
     @Before
     public void setUp() {
-        config = mock(ReadonlyLoggingConfiguration.class);
+        config = mock(LoggingConfiguration.class);
         logger = mock(Logger.class);
         when(config.getLogger()).thenReturn(logger);
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getRequestLogOptions()).thenReturn(mock(ReadonlyRequestLogOptions.class));
-        when(config.getResponseLogOptions()).thenReturn(mock(ReadonlyResponseLogOptions.class));
+        when(config.getRequestLogOptions()).thenReturn(mock(RequestLoggingOptions.class));
+        when(config.getResponseLogOptions()).thenReturn(mock(ResponseLoggingOptions.class));
         sdkLogger = new SdkLogger(config);
     }
 

@@ -7,14 +7,14 @@ import org.slf4j.event.Level;
 
 import io.apimatic.core.logger.ConsoleLogger;
 import io.apimatic.core.logger.Slf4jLogger;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
 
 /**
  * To hold logging configuration.
  */
-public final class ApiLoggingConfiguration implements ReadonlyLoggingConfiguration {
+public final class SdkLoggingConfiguration implements LoggingConfiguration {
     /***
      * An instance of Logger
      */
@@ -33,12 +33,12 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
     /**
      * Options for logging requests.
      */
-    private ReadonlyRequestLogOptions requestLogOptions;
+    private RequestLoggingOptions requestLogOptions;
 
     /**
      * Options for logging responses.
      */
-    private ReadonlyResponseLogOptions responseLogOptions;
+    private ResponseLoggingOptions responseLogOptions;
 
     /**
      * Constructs an instance of ApiLoggingConfiguration.
@@ -51,10 +51,10 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
      * @param requestLogOptions    The options for logging API request details.
      * @param responseLogOptions   The options for logging API response details.
      */
-    private ApiLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger,
+    private SdkLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger,
             final Level level, final boolean maskSensitiveHeaders,
-            final ReadonlyRequestLogOptions requestLogOptions,
-            final ReadonlyResponseLogOptions responseLogOptions) {
+            final RequestLoggingOptions requestLogOptions,
+            final ResponseLoggingOptions responseLogOptions) {
         this.logger = logger;
         this.level = level;
         this.maskSensitiveHeaders = maskSensitiveHeaders;
@@ -90,7 +90,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
      * Getter for the RequestLogOptions.
      * @return The RequestLogOptions object.
      */
-    public ReadonlyRequestLogOptions getRequestLogOptions() {
+    public RequestLoggingOptions getRequestLogOptions() {
         return requestLogOptions;
     }
 
@@ -98,7 +98,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
      * Getter for the ResponseLogOptions.
      * @return The ResponseLogOptions object.
      */
-    public ReadonlyResponseLogOptions getResponseLogOptions() {
+    public ResponseLoggingOptions getResponseLogOptions() {
         return responseLogOptions;
     }
 
@@ -114,20 +114,20 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
     }
 
     /**
-     * Builds a new {@link ApiLoggingConfiguration.Builder} object. Creates the
+     * Builds a new {@link SdkLoggingConfiguration.Builder} object. Creates the
      * instance with the current state.
-     * @return a new {@link ApiLoggingConfiguration.Builder} object.
+     * @return a new {@link SdkLoggingConfiguration.Builder} object.
      */
     public Builder newBuilder() {
         Builder builder = new Builder().logger(logger).level(level)
                 .maskSensitiveHeaders(maskSensitiveHeaders);
-        builder.requestLogOptionsBuilder = ((RequestLogOptions) requestLogOptions).newBuilder();
-        builder.responseLogOptionsBuilder = ((ResponseLogOptions) responseLogOptions).newBuilder();
+        builder.requestLogOptionsBuilder = ((SdkRequestLoggingOptions) requestLogOptions).newBuilder();
+        builder.responseLogOptionsBuilder = ((SdkResponseLoggingOptions) responseLogOptions).newBuilder();
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ApiLoggingConfiguration}.
+     * Class to build instances of {@link SdkLoggingConfiguration}.
      */
     public static class Builder {
         /***
@@ -147,19 +147,19 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Options for logging requests.
          */
-        private RequestLogOptions.Builder requestLogOptionsBuilder =
-                new RequestLogOptions.Builder();
+        private SdkRequestLoggingOptions.Builder requestLogOptionsBuilder =
+                new SdkRequestLoggingOptions.Builder();
 
         /**
          * Options for logging responses.
          */
-        private ResponseLogOptions.Builder responseLogOptionsBuilder =
-                new ResponseLogOptions.Builder();
+        private SdkResponseLoggingOptions.Builder responseLogOptionsBuilder =
+                new SdkResponseLoggingOptions.Builder();
 
         /***
          * Set Logger for logging.
          * @param logger The slf4j logger implementation.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
         public Builder logger(Logger logger) {
             this.logger = new Slf4jLogger(logger);
@@ -169,7 +169,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /***
          * Set Logger wrapper for logging.
          * @param logger The logger wrapper instance
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
         private Builder logger(io.apimatic.coreinterfaces.logger.Logger logger) {
             this.logger = logger;
@@ -179,7 +179,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Set level for logging.
          * @param level specify level of all logs.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
         public Builder level(Level level) {
             this.level = level;
@@ -189,7 +189,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Set mask sensitive headers flag.
          * @param maskSensitiveHeaders flag to enable disable masking.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
         public Builder maskSensitiveHeaders(boolean maskSensitiveHeaders) {
             this.maskSensitiveHeaders = maskSensitiveHeaders;
@@ -199,9 +199,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Sets the RequestLogOptions.Builder for the builder.
          * @param action The RequestOptions Builder object.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder requestLogOptions(Consumer<RequestLogOptions.Builder> action) {
+        public Builder requestLogOptions(Consumer<SdkRequestLoggingOptions.Builder> action) {
             if (action != null) {
                 action.accept(this.requestLogOptionsBuilder);
             }
@@ -211,9 +211,9 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
         /**
          * Sets the ResponseLogOptions.Builder for the builder.
          * @param action The ResponseOptions Builder object.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder responseLogOptions(Consumer<ResponseLogOptions.Builder> action) {
+        public Builder responseLogOptions(Consumer<SdkResponseLoggingOptions.Builder> action) {
             if (action != null) {
                 action.accept(this.responseLogOptionsBuilder);
             }
@@ -222,7 +222,7 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
 
         /**
          * Sets the logger instance to ConsoleLogger.
-         * @return {@link ApiLoggingConfiguration.Builder}.
+         * @return {@link SdkLoggingConfiguration.Builder}.
          */
         public Builder useDefaultLogger() {
             this.logger = new ConsoleLogger();
@@ -231,12 +231,12 @@ public final class ApiLoggingConfiguration implements ReadonlyLoggingConfigurati
 
         /**
          * Builds a new LoggingConfiguration object using the set fields.
-         * @return {@link ApiLoggingConfiguration}.
+         * @return {@link SdkLoggingConfiguration}.
          */
-        public ApiLoggingConfiguration build() {
-            RequestLogOptions requestLogOptions = requestLogOptionsBuilder.build();
-            ResponseLogOptions responseLogOptions = responseLogOptionsBuilder.build();
-            return new ApiLoggingConfiguration(logger, level, maskSensitiveHeaders,
+        public SdkLoggingConfiguration build() {
+            SdkRequestLoggingOptions requestLogOptions = requestLogOptionsBuilder.build();
+            SdkResponseLoggingOptions responseLogOptions = responseLogOptionsBuilder.build();
+            return new SdkLoggingConfiguration(logger, level, maskSensitiveHeaders,
                     requestLogOptions, responseLogOptions);
         }
     }

@@ -10,9 +10,9 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.Logger;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
 
 /**
  * Class to log the Http api messages.
@@ -24,26 +24,26 @@ public class SdkLogger implements ApiLogger {
     private Logger logger;
 
     /**
-     * An instance of {@link ReadonlyLoggingConfiguration}.
+     * An instance of {@link LoggingConfiguration}.
      */
-    private ReadonlyLoggingConfiguration config;
+    private LoggingConfiguration config;
 
     /**
-     * An instance of {@link ReadonlyRequestLogOptions}
+     * An instance of {@link RequestLoggingOptions}
      */
-    private ReadonlyRequestLogOptions requestLogOptions;
+    private RequestLoggingOptions requestLogOptions;
 
     /**
-     * An instance of {@link ReadonlyResponseLogOptions}
+     * An instance of {@link ResponseLoggingOptions}
      */
-    private ReadonlyResponseLogOptions responseLogOptions;
+    private ResponseLoggingOptions responseLogOptions;
 
     /**
      * Default Constructor.
      *
-     * @param config {@link ReadonlyLoggingConfiguration} as logging properties.
+     * @param config {@link LoggingConfiguration} as logging properties.
      */
-    public SdkLogger(final ReadonlyLoggingConfiguration config) {
+    public SdkLogger(final LoggingConfiguration config) {
         this.config = config;
         this.logger = config.getLogger();
         this.requestLogOptions = config.getRequestLogOptions();

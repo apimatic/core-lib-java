@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingOptions;
 
 public final class LoggerUtilities {
     /**
@@ -39,7 +39,7 @@ public final class LoggerUtilities {
      * @return A map containing the headers to be logged, considering the provided
      *         options and sensitivity masking.
      */
-    public static Map<String, String> getHeadersToLog(ReadonlyLogOptions loggingOptions,
+    public static Map<String, String> getHeadersToLog(LoggingOptions loggingOptions,
             Map<String, String> headers, boolean maskSensitiveHeaders) {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
                 loggingOptions.getHeadersToInclude(), loggingOptions.getHeadersToExclude());
