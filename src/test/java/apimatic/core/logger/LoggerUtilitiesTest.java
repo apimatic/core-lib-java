@@ -72,7 +72,7 @@ public class LoggerUtilitiesTest {
         final boolean enableMasking = true;
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "Value1");
-        headers.put("X-Powered-By", "Value2");
+        headers.put("Masked-Header", "MaskedValue");
 
         List<String> headersToWhiteList = getLowerCaseList("Accept");
 
@@ -88,8 +88,8 @@ public class LoggerUtilitiesTest {
         assertTrue(extractedHeaders.containsKey("Accept"));
         assertTrue(expectedAcceptHeaderValue.equals(extractedHeaders.get("Accept")));
 
-        assertTrue(extractedHeaders.containsKey("X-Powered-By"));
-        assertTrue(expectedPoweredByHeaderValue.equals(extractedHeaders.get("X-Powered-By")));
+        assertTrue(extractedHeaders.containsKey("Masked-Header"));
+        assertTrue(expectedPoweredByHeaderValue.equals(extractedHeaders.get("Masked-Header")));
     }
 
     /**

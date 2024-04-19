@@ -262,7 +262,7 @@ public class SdkLoggerTest {
 
         Map<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Authorization", "**Redacted**");
-        expectedHeaders.put("Content-Encoding", "**Redacted**");
+        expectedHeaders.put("Content-Encoding", "gzip");
 
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
         responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
@@ -277,7 +277,7 @@ public class SdkLoggerTest {
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
-    
+
     @Test
     public void testLogResponseWithExcludeHeaders() {
         final int statusCode = 200;
@@ -322,7 +322,7 @@ public class SdkLoggerTest {
     @Test
     public void testLogResponseWithWhiteListHeaders() {
         final int statusCode = 200;
-        final List<String> whiteListHeaders = Arrays.asList("content-encoding");
+        final List<String> whiteListHeaders = Arrays.asList("masked-header");
 
         Response response = mock(Response.class);
         HttpHeaders headers = mock(HttpHeaders.class);
@@ -338,14 +338,14 @@ public class SdkLoggerTest {
 
         Map<String, String> mockHeaders = new HashMap<>();
         mockHeaders.put("Authorization", "Basic <credentials>");
-        mockHeaders.put("Content-Encoding", "gzip");
+        mockHeaders.put("Masked-Header", "MaskedValue");
         when(headers.asSimpleMap()).thenReturn(mockHeaders);
 
         sdkLogger.logResponse(response);
 
         Map<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Authorization", "**Redacted**");
-        expectedHeaders.put("Content-Encoding", "gzip");
+        expectedHeaders.put("Masked-Header", "MaskedValue");
 
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
         responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);

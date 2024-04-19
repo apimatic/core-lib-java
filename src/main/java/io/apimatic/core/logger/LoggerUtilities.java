@@ -4,20 +4,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class LoggerUtilities {
     /**
      * List of sensitive headers that need to be filtered.
      */
-    private static final List<String> NON_SENSITIVE_HEADERS = Arrays.asList("Accept",
-            "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Allow-Origin",
-            "Cache-Control", "Connection", "Content-Encoding", "Content-Language", "Content-Length",
-            "Content-Location", "Content-MD5", "Content-Range", "Content-Type", "Date", "ETag",
-            "Expect", "Expires", "From", "Host", "If-Match", "If-Modified-Since", "If-None-Match",
-            "If-Range", "If-Unmodified-Since", "Keep-Alive", "Last-Modified", "Location",
-            "Max-Forwards", "Pragma", "Range", "Referer", "Retry-After", "Server", "Trailer",
-            "Transfer-Encoding", "Upgrade", "User-Agent", "Vary", "Via", "Warning",
-            "X-Forwarded-For", "X-Requested-With", "X-Powered-By");
+    private static final List<String> NON_SENSITIVE_HEADERS = Arrays
+            .asList("Accept", "Accept-Charset", "Accept-Encoding", "Accept-Language",
+                    "Access-Control-Allow-Origin", "Cache-Control", "Connection",
+                    "Content-Encoding", "Content-Language", "Content-Length", "Content-Location",
+                    "Content-MD5", "Content-Range", "Content-Type", "Date", "ETag", "Expect",
+                    "Expires", "From", "Host", "If-Match", "If-Modified-Since", "If-None-Match",
+                    "If-Range", "If-Unmodified-Since", "Keep-Alive", "Last-Modified", "Location",
+                    "Max-Forwards", "Pragma", "Range", "Referer", "Retry-After", "Server",
+                    "Trailer", "Transfer-Encoding", "Upgrade", "User-Agent", "Vary", "Via",
+                    "Warning", "X-Forwarded-For", "X-Requested-With", "X-Powered-By")
+            .stream().map(String::toLowerCase).collect(Collectors.toList());;
 
     /**
      * Private constructor to prevent instantiation

@@ -90,7 +90,7 @@ public abstract class LogBaseOptions {
 
     /**
      * Includes specified headers in logging.
-     * @param includeHeaders The headers to include in logging.
+     * @param whiteListHeaders The headers to include in logging.
      */
     public void whiteListHeaders(String... whiteListHeaders) {
         headersToWhiteList = new ArrayList<>(Arrays.asList(whiteListHeaders));
