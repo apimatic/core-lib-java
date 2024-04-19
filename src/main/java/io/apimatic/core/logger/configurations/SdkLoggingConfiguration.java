@@ -1,7 +1,5 @@
 package io.apimatic.core.logger.configurations;
 
-import java.util.function.Consumer;
-
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
@@ -171,7 +169,7 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
          * @param logger The logger wrapper instance
          * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        private Builder logger(io.apimatic.coreinterfaces.logger.Logger logger) {
+        public Builder logger(io.apimatic.coreinterfaces.logger.Logger logger) {
             this.logger = logger;
             return this;
         }
@@ -198,25 +196,21 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
 
         /**
          * Sets the RequestLogOptions.Builder for the builder.
-         * @param action The RequestOptions Builder object.
+         * @param builder The RequestOptions Builder object.
          * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder requestLogOptions(Consumer<SdkRequestLoggingOptions.Builder> action) {
-            if (action != null) {
-                action.accept(this.requestLogOptionsBuilder);
-            }
+        public Builder requestLogOptions(SdkRequestLoggingOptions.Builder builder) {
+            this.requestLogOptionsBuilder = builder;
             return this;
         }
 
         /**
          * Sets the ResponseLogOptions.Builder for the builder.
-         * @param action The ResponseOptions Builder object.
+         * @param builder The ResponseOptions Builder object.
          * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder responseLogOptions(Consumer<SdkResponseLoggingOptions.Builder> action) {
-            if (action != null) {
-                action.accept(this.responseLogOptionsBuilder);
-            }
+        public Builder responseLogOptions(SdkResponseLoggingOptions.Builder builder) {
+            this.responseLogOptionsBuilder = builder;
             return this;
         }
 
