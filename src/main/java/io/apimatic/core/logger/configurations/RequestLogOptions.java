@@ -1,11 +1,13 @@
 package io.apimatic.core.logger.configurations;
+
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
 
 /**
  * Represents options for logging requests.
  */
-public final class RequestLogOptions extends
-LogOptions<RequestLogOptions, RequestLogOptions.Builder> implements ReadonlyRequestLogOptions {
+public final class RequestLogOptions
+        extends LogOptions<RequestLogOptions, RequestLogOptions.Builder>
+        implements ReadonlyRequestLogOptions {
 
     private boolean includeQueryInPath = true;
 
@@ -24,6 +26,18 @@ LogOptions<RequestLogOptions, RequestLogOptions.Builder> implements ReadonlyRequ
      */
     public boolean shouldIncludeQueryInPath() {
         return includeQueryInPath;
+    }
+
+    /**
+     * Converts {@link RequestLogOptions} into string format.
+     * @return String representation of this class.
+     */
+    @Override
+    public String toString() {
+        return "RequestLogOptions [logBody=" + shouldLogBody() + " logHeaders=" + shouldLogHeaders()
+                + " includeQueryInPath=" + shouldIncludeQueryInPath() + " excludeHeaders=" + getHeadersToExclude()
+                + " includeHeaders" + getHeadersToInclude() + " unmaskHeaders"
+                + getHeadersToUnmask() + "]";
     }
 
     /**

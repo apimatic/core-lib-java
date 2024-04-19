@@ -17,6 +17,17 @@ LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyRe
     }
 
     /**
+     * Converts {@link ResponseLogOptions} into string format.
+     * @return String representation of this class.
+     */
+    @Override
+    public String toString() {
+        return "ResponseLogOptions [logBody=" + shouldLogBody() + " logHeaders=" + shouldLogHeaders()
+                + " excludeHeaders=" + getHeadersToExclude() + " includeHeaders"
+                + getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
+    }
+
+    /**
      * Builds a new {@link ResponseLogOptions.Builder} object. Creates the instance
      * with the current state.
      * @return a new {@link ResponseLogOptions.Builder} object.
