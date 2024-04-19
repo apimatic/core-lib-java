@@ -23,8 +23,10 @@ LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyRe
      *
      * @return a new {@link ResponseLogOptions.Builder} object.
      */
-    public static Builder newBuilder() {
-        return new Builder();
+    public Builder newBuilder() {
+        return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
+                .excludeHeaders(getHeadersToExclude().toArray(new String[0]))
+                .includeHeaders(getHeadersToInclude().toArray(new String[0]));
     }
 
     /**
