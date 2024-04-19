@@ -5,8 +5,9 @@ import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOption
 /**
  * Represents options for logging responses.
  */
-public final class ResponseLogOptions extends
-LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyResponseLogOptions {
+public final class ResponseLogOptions
+        extends LogOptions<ResponseLogOptions, ResponseLogOptions.Builder>
+        implements ReadonlyResponseLogOptions {
 
     /**
      * Constructs a new ResponseLogOptions instance with default values.
@@ -22,9 +23,10 @@ LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyRe
      */
     @Override
     public String toString() {
-        return "ResponseLogOptions [logBody=" + shouldLogBody() + " logHeaders=" + shouldLogHeaders()
-                + " excludeHeaders=" + getHeadersToExclude() + " includeHeaders"
-                + getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
+        return "ResponseLogOptions [logBody=" + shouldLogBody() + " logHeaders="
+                + shouldLogHeaders() + " excludeHeaders=" + getHeadersToExclude()
+                + " includeHeaders" + getHeadersToInclude() + " unmaskHeaders"
+                + getHeadersToUnmask() + "]";
     }
 
     /**

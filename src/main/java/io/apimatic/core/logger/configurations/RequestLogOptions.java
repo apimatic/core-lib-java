@@ -35,9 +35,9 @@ public final class RequestLogOptions
     @Override
     public String toString() {
         return "RequestLogOptions [logBody=" + shouldLogBody() + " logHeaders=" + shouldLogHeaders()
-                + " includeQueryInPath=" + shouldIncludeQueryInPath() + " excludeHeaders=" + getHeadersToExclude()
-                + " includeHeaders" + getHeadersToInclude() + " unmaskHeaders"
-                + getHeadersToUnmask() + "]";
+                + " includeQueryInPath=" + shouldIncludeQueryInPath() + " excludeHeaders="
+                + getHeadersToExclude() + " includeHeaders" + getHeadersToInclude()
+                + " unmaskHeaders" + getHeadersToUnmask() + "]";
     }
 
     /**
