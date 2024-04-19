@@ -29,13 +29,13 @@ LogOptions<RequestLogOptions, RequestLogOptions.Builder> implements ReadonlyRequ
     /**
      * Builds a new {@link RequestLogOptions.Builder} object. Creates the instance
      * with the current state.
-     *
      * @return a new {@link RequestLogOptions.Builder} object.
      */
     public Builder newBuilder() {
         return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
                 .excludeHeaders(getHeadersToExclude().toArray(new String[0]))
                 .includeHeaders(getHeadersToInclude().toArray(new String[0]))
+                .unmaskHeaders(getHeadersToUnmask().toArray(new String[0]))
                 .includeQueryInPath(shouldIncludeQueryInPath());
     }
 

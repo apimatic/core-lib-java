@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLogOptions;
+
 public final class LoggerUtilities {
     /**
      * List of sensitive headers that need to be filtered.
@@ -24,6 +26,28 @@ public final class LoggerUtilities {
      * Private constructor to prevent instantiation
      */
     private LoggerUtilities() {
+    }
+
+    /**
+     * Retrieves the headers to be logged based on the provided logging options,
+     * headers, and sensitivity masking configuration.
+     * @param loggingOptions       The logging options containing configurations for
+     *                             header logging.
+     * @param headers              The headers to be evaluated for logging.
+     * @param maskSensitiveHeaders Determines whether sensitive headers should be
+     *                             masked in the log.
+     * @return A map containing the headers to be logged, considering the provided
+     *         options and sensitivity masking.
+     */
+    public static Map<String, String> getHeadersToLog(ReadonlyLogOptions loggingOptions,
+            Map<String, String> headers, boolean maskSensitiveHeaders) {
+        Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
+                loggingOptions.getHeadersToInclude(), loggingOptions.getHeadersToExclude());
+
+        Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
+                loggingOptions.getHeadersToUnmask(), maskSensitiveHeaders);
+
+        return headersToLog;
     }
 
     /**

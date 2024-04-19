@@ -81,7 +81,7 @@ public class LoggerUtilitiesTest {
 
         final int expectedHeaderSize = 2;
         final String expectedAcceptHeaderValue = "Value1";
-        final String expectedPoweredByHeaderValue = "**Redacted**";
+        final String expectedMaskedHeaderValue = "**Redacted**";
 
         assertEquals(expectedHeaderSize, extractedHeaders.size());
 
@@ -89,7 +89,32 @@ public class LoggerUtilitiesTest {
         assertTrue(expectedAcceptHeaderValue.equals(extractedHeaders.get("Accept")));
 
         assertTrue(extractedHeaders.containsKey("Masked-Header"));
-        assertTrue(expectedPoweredByHeaderValue.equals(extractedHeaders.get("Masked-Header")));
+        assertTrue(expectedMaskedHeaderValue.equals(extractedHeaders.get("Masked-Header")));
+    }
+
+    @Test
+    public void testExtractHeadersToLogWithFilterUnmasked() {
+        final boolean enableMasking = false;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "Value1");
+        headers.put("Masked-Header", "MaskedValue");
+
+        List<String> headersToWhiteList = getLowerCaseList("Accept");
+
+        Map<String, String> extractedHeaders = LoggerUtilities.filterSensitiveHeaders(headers,
+                headersToWhiteList, enableMasking);
+
+        final int expectedHeaderSize = 2;
+        final String expectedAcceptHeaderValue = "Value1";
+        final String expectedMaskedHeaderValue = "MaskedValue";
+
+        assertEquals(expectedHeaderSize, extractedHeaders.size());
+
+        assertTrue(extractedHeaders.containsKey("Accept"));
+        assertTrue(expectedAcceptHeaderValue.equals(extractedHeaders.get("Accept")));
+
+        assertTrue(extractedHeaders.containsKey("Masked-Header"));
+        assertTrue(expectedMaskedHeaderValue.equals(extractedHeaders.get("Masked-Header")));
     }
 
     /**

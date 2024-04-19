@@ -10,7 +10,6 @@ LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyRe
 
     /**
      * Constructs a new ResponseLogOptions instance with default values.
-     *
      * @param builder Builder instance of {@link RequestLogOptions.Builder}
      */
     private ResponseLogOptions(final Builder builder) {
@@ -20,13 +19,13 @@ LogOptions<ResponseLogOptions, ResponseLogOptions.Builder> implements ReadonlyRe
     /**
      * Builds a new {@link ResponseLogOptions.Builder} object. Creates the instance
      * with the current state.
-     *
      * @return a new {@link ResponseLogOptions.Builder} object.
      */
     public Builder newBuilder() {
         return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
                 .excludeHeaders(getHeadersToExclude().toArray(new String[0]))
-                .includeHeaders(getHeadersToInclude().toArray(new String[0]));
+                .includeHeaders(getHeadersToInclude().toArray(new String[0]))
+                .unmaskHeaders(getHeadersToUnmask().toArray(new String[0]));
     }
 
     /**

@@ -76,13 +76,8 @@ public class SdkLogger implements ApiLogger {
         }
 
         if (requestLogOptions.shouldLogHeaders()) {
-            Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    request.getHeaders().asSimpleMap(), requestLogOptions.getHeadersToInclude(),
-                    requestLogOptions.getHeadersToExclude());
-
-            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
-                    extractedHeaders, requestLogOptions.getHeadersToUnmask(),
-                    config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(requestLogOptions,
+                    request.getHeaders().asSimpleMap(), config.getMaskSensitiveHeaders());
 
             Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
             requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
@@ -115,13 +110,8 @@ public class SdkLogger implements ApiLogger {
         logger.log(level, "Response {} {} content-length: {}", responseArguments);
 
         if (responseLogOptions.shouldLogHeaders()) {
-            Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    response.getHeaders().asSimpleMap(), responseLogOptions.getHeadersToInclude(),
-                    responseLogOptions.getHeadersToExclude());
-
-            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
-                    extractedHeaders, responseLogOptions.getHeadersToUnmask(),
-                    config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(responseLogOptions,
+                    response.getHeaders().asSimpleMap(), config.getMaskSensitiveHeaders());
 
             Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
             responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
