@@ -27,9 +27,10 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`ConsoleLogger`](./src/main/java/io/apimatic/core/logger/ConsoleLogger.java)              | Default Logger implementation if logging is enabled. |
 | [`LoggerFactory`](./src/main/java/io/apimatic/core/logger/LoggerFactory.java)              | Returns an instance of ApiLogger based on the provided configuration. |
 | [`LoggerUtilities`](./src/main/java/io/apimatic/core/logger/LoggerUtilities.java)              | Utilitiy methods for Logger. |
-| [`LogBaseOptions`](./src/main/java/io/apimatic/core/logger/configurations/LogBaseOptions.java)              | Represents base options for logging. |
-| [`RequestLogOptions`](./src/main/java/io/apimatic/core/logger/configurations/RequestLogOptions.java)              | Represents options for logging requests. |
-| [`ResponseLogOptions`](./src/main/java/io/apimatic/core/logger/configurations/ResponseLogOptions.java)              | Represents options for logging responses. |
+| [`SdkLoggingConfiguration`](./src/main/java/io/apimatic/core/logger/configurations/SdkLoggingConfiguration.java)                     | To hold logging configuration |
+| [`SdkLoggingBaseOptions`](./src/main/java/io/apimatic/core/logger/configurations/SdkLoggingBaseOptions.java)              | Represents base options for logging. |
+| [`SdkRequestLoggingOptions`](./src/main/java/io/apimatic/core/logger/configurations/SdkRequestLoggingOptions.java)              | Represents options for logging requests. |
+| [`SdkResponseLoggingOptions`](./src/main/java/io/apimatic/core/logger/configurations/SdkResponseLoggingOptions.java)              | Represents options for logging responses. |
 | [`AuthBuilder`](./src/main/java/io/apimatic/core/authentication/AuthBuilder.java)              | A class to build and validate provided combination of auth schemes. |
 | [`AuthCredential`](./src/main/java/io/apimatic/core/authentication/AuthCredential.java)              | A parent class of [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java) and [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java) to hold the common implementation for header and query parameters |
 | [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java)              | A class supports HTTP authentication through HTTP Headers |
@@ -39,7 +40,6 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`Or`](./src/main/java/io/apimatic/core/authentication/multiple/Or.java)                | A class to hold the algorithm for `Or` combination of auth schemes |
 | [`Single`](./src/main/java/io/apimatic/core/authentication/multiple/Single.java)                | A class to hold the logic for single auth scheme, it is used as leaf node for auth combination or it could be used directly to apply one auth only to the http request  |
 | [`CoreHttpClientConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/CoreHttpClientConfiguration.java)                     | To hold HTTP Client Configuration |
-| [`ApiLoggingConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/ApiLoggingConfiguration.java)                     | To hold logging configuration |
 | [`EndpointConfiguration`](./src/main/java/io/apimatic/core/configurations/http/request/EndpointConfiguration.java)                     | The configuration for an endpoint |
 | [`AsyncExecutor`](./src/main/java/io/apimatic/core/request/async/AsyncExecutor.java)                     | Executor service for asynchronous HTTP endpoint call |
 | [`OptionalNullable`](./src/main/java/io/apimatic/core/types/OptionalNullable.java)                     | Class to encapsulate fields which are Optional as well as Nullable |

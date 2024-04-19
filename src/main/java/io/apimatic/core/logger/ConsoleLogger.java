@@ -10,6 +10,15 @@ import io.apimatic.coreinterfaces.logger.Logger;
 public class ConsoleLogger implements Logger {
 
     /**
+     * Return instance of {@link Logger
+     * @return null
+     */
+    @Override
+    public org.slf4j.Logger getLogger() {
+        return null;
+    }
+
+    /**
      * Logs a message with the specified logging level, format, and arguments.
      * @param level     the logging level of the message
      * @param format    a format string for the message

@@ -21,6 +21,14 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
         this.logger = logger;
     }
 
+    /**
+     * Return instance of {@link Logger
+     * @return SLF4J Logger instance.
+     */
+    public Logger getLogger() {
+        return logger;
+    }
+
     /***
      * Log provided message according to logging level.
      * @param level     To provide the Level conversion.
