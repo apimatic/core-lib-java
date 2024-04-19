@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
  * @param <T> Name of your LogOptions type
  * @param <B> Name of the Builder for your LogOptions type
  */
-public abstract class LogOptions<T extends
-LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
+public abstract class LogOptions<T extends LogOptions<T, B>, B extends LogOptions.Builder<T, B>>
+        extends LogBaseOptions {
 
     /**
      * Constructs a new LogOptions instance with default values.
@@ -23,6 +23,7 @@ LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
         this.setLogHeaders(builder.logHeaders);
         this.excludeHeaders(builder.excludeHeaders.toArray(new String[0]));
         this.includeHeaders(builder.includeHeaders.toArray(new String[0]));
+        this.whiteListHeaders(builder.whiteListHeaders.toArray(new String[0]));
     }
 
     /**
@@ -35,6 +36,7 @@ LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
         private boolean logHeaders = false;
         private List<String> excludeHeaders = new ArrayList<>();
         private List<String> includeHeaders = new ArrayList<>();
+        private List<String> whiteListHeaders = new ArrayList<>();
 
         /**
          * Sets whether to log the body.
@@ -74,6 +76,17 @@ LogOptions<T, B>, B extends LogOptions.Builder<T, B>> extends LogBaseOptions {
          */
         public B includeHeaders(String... includeHeaders) {
             this.includeHeaders = Arrays.stream(includeHeaders).map(String::toLowerCase)
+                    .collect(Collectors.toList());
+            return self();
+        }
+
+        /**
+         * Sets the headers to be white listed form masking in logging.
+         * @param whiteListHeaders The headers to be white listed from masking.
+         * @return The builder instance.
+         */
+        public B whiteListHeaders(String... whiteListHeaders) {
+            this.whiteListHeaders = Arrays.stream(whiteListHeaders).map(String::toLowerCase)
                     .collect(Collectors.toList());
             return self();
         }

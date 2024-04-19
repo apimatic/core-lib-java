@@ -9,8 +9,15 @@ public final class LoggerUtilities {
     /**
      * List of sensitive headers that need to be filtered.
      */
-    private static final List<String> SENSITIVE_HEADERS = Arrays.asList("authorization",
-            "www-authenticate", "proxy-authorization", "set-cookie");
+    private static final List<String> NON_SENSITIVE_HEADERS = Arrays.asList("Accept",
+            "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Allow-Origin",
+            "Cache-Control", "Connection", "Content-Encoding", "Content-Language", "Content-Length",
+            "Content-Location", "Content-MD5", "Content-Range", "Content-Type", "Date", "ETag",
+            "Expect", "Expires", "From", "Host", "If-Match", "If-Modified-Since", "If-None-Match",
+            "If-Range", "If-Unmodified-Since", "Keep-Alive", "Last-Modified", "Location",
+            "Max-Forwards", "Pragma", "Range", "Referer", "Retry-After", "Server", "Trailer",
+            "Transfer-Encoding", "Upgrade", "User-Agent", "Vary", "Via", "Warning",
+            "X-Forwarded-For", "X-Requested-With", "X-Powered-By");
 
     /**
      * Private constructor to prevent instantiation
@@ -43,19 +50,20 @@ public final class LoggerUtilities {
      * Filter sensitive headers from the given list of request headers.
      *
      * @param headers              The list of headers to filter.
+     * @param headersToWhiteList   The list of headers to white list from masking.
      * @param maskSensitiveHeaders Whether to mask sensitive headers or not.
      * @return A map containing filtered headers.
      */
     public static Map<String, String> filterSensitiveHeaders(Map<String, String> headers,
-            boolean maskSensitiveHeaders) {
+            List<String> headersToWhiteList, boolean maskSensitiveHeaders) {
         if (maskSensitiveHeaders) {
             Map<String, String> filteredHeaders = new HashMap<>();
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 String key = entry.getKey().toLowerCase();
-                if (SENSITIVE_HEADERS.contains(key)) {
-                    filteredHeaders.put(entry.getKey(), "**Redacted**");
-                } else {
+                if (NON_SENSITIVE_HEADERS.contains(key) || headersToWhiteList.contains(key)) {
                     filteredHeaders.put(entry.getKey(), entry.getValue());
+                } else {
+                    filteredHeaders.put(entry.getKey(), "**Redacted**");
                 }
             }
             return filteredHeaders;

@@ -5,8 +5,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -249,6 +251,89 @@ public class SdkLoggerTest {
 
         when(config.getLevel()).thenReturn(Level.INFO);
         when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
+        when(config.getMaskSensitiveHeaders()).thenReturn(true);
+
+        Map<String, String> mockHeaders = new HashMap<>();
+        mockHeaders.put("Authorization", "Basic <credentials>");
+        mockHeaders.put("Content-Encoding", "gzip");
+        when(headers.asSimpleMap()).thenReturn(mockHeaders);
+
+        sdkLogger.logResponse(response);
+
+        Map<String, String> expectedHeaders = new HashMap<>();
+        expectedHeaders.put("Authorization", "**Redacted**");
+        expectedHeaders.put("Content-Encoding", "**Redacted**");
+
+        Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+        responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
+        responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+        responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
+
+        Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
+        responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
+
+        // Verify the log message with query parameters
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+                eq(responseArguments));
+        verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
+    }
+    
+    @Test
+    public void testLogResponseWithExcludeHeaders() {
+        final int statusCode = 200;
+        final List<String> excludeHeaders = Arrays.asList("content-encoding");
+
+        Response response = mock(Response.class);
+        HttpHeaders headers = mock(HttpHeaders.class);
+        when(response.getStatusCode()).thenReturn(statusCode);
+        when(headers.value("content-length")).thenReturn("100");
+        when(headers.value("content-type")).thenReturn("application/json");
+        when(response.getHeaders()).thenReturn(headers);
+
+        when(config.getLevel()).thenReturn(Level.INFO);
+        when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
+        when(config.getResponseLogOptions().getHeadersToExclude()).thenReturn(excludeHeaders);
+        when(config.getMaskSensitiveHeaders()).thenReturn(true);
+
+        Map<String, String> mockHeaders = new HashMap<>();
+        mockHeaders.put("Authorization", "Basic <credentials>");
+        mockHeaders.put("Content-Encoding", "gzip");
+        when(headers.asSimpleMap()).thenReturn(mockHeaders);
+
+        sdkLogger.logResponse(response);
+
+        Map<String, String> expectedHeaders = new HashMap<>();
+        expectedHeaders.put("Authorization", "**Redacted**");
+
+        Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
+        responseArguments.put(LoggerConstants.STATUS_CODE, statusCode);
+        responseArguments.put(LoggerConstants.CONTENT_TYPE, "application/json");
+        responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
+
+        Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
+        responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
+
+        // Verify the log message with query parameters
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+                eq(responseArguments));
+        verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
+    }
+
+    @Test
+    public void testLogResponseWithWhiteListHeaders() {
+        final int statusCode = 200;
+        final List<String> whiteListHeaders = Arrays.asList("content-encoding");
+
+        Response response = mock(Response.class);
+        HttpHeaders headers = mock(HttpHeaders.class);
+        when(response.getStatusCode()).thenReturn(statusCode);
+        when(headers.value("content-length")).thenReturn("100");
+        when(headers.value("content-type")).thenReturn("application/json");
+        when(response.getHeaders()).thenReturn(headers);
+
+        when(config.getLevel()).thenReturn(Level.INFO);
+        when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
+        when(config.getResponseLogOptions().getHeadersToWhiteList()).thenReturn(whiteListHeaders);
         when(config.getMaskSensitiveHeaders()).thenReturn(true);
 
         Map<String, String> mockHeaders = new HashMap<>();

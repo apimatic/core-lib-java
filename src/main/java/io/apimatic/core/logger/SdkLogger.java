@@ -11,6 +11,8 @@ import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.Logger;
 import io.apimatic.coreinterfaces.logger.configuration.ReadonlyLoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyRequestLogOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ReadonlyResponseLogOptions;
 
 /**
  * Class to log the Http api messages.
@@ -27,6 +29,16 @@ public class SdkLogger implements ApiLogger {
     private ReadonlyLoggingConfiguration config;
 
     /**
+     * An instance of {@link ReadonlyRequestLogOptions}
+     */
+    private ReadonlyRequestLogOptions requestLogOptions;
+
+    /**
+     * An instance of {@link ReadonlyResponseLogOptions}
+     */
+    private ReadonlyResponseLogOptions responseLogOptions;
+
+    /**
      * Default Constructor.
      *
      * @param config {@link ReadonlyLoggingConfiguration} as logging properties.
@@ -34,6 +46,8 @@ public class SdkLogger implements ApiLogger {
     public SdkLogger(final ReadonlyLoggingConfiguration config) {
         this.config = config;
         this.logger = config.getLogger();
+        this.requestLogOptions = config.getRequestLogOptions();
+        this.responseLogOptions = config.getResponseLogOptions();
     }
 
     /**
@@ -54,28 +68,28 @@ public class SdkLogger implements ApiLogger {
         requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
         requestArguments.put(LoggerConstants.URL, url);
         requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
-        if (config.getRequestLogOptions().shouldIncludeQueryInPath()) {
+        if (requestLogOptions.shouldIncludeQueryInPath()) {
             requestArguments.put(LoggerConstants.QUERY_PARAMETER, queryParameter);
             logger.log(level, "Request {} {} {} queryParameters: {}", requestArguments);
         } else {
             logger.log(level, "Request {} {} {}", requestArguments);
         }
 
-        if (config.getRequestLogOptions().shouldLogHeaders()) {
+        if (requestLogOptions.shouldLogHeaders()) {
             Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    request.getHeaders().asSimpleMap(),
-                    config.getRequestLogOptions().getHeadersToInclude(),
-                    config.getRequestLogOptions().getHeadersToExclude());
+                    request.getHeaders().asSimpleMap(), requestLogOptions.getHeadersToInclude(),
+                    requestLogOptions.getHeadersToExclude());
 
-            Map<String, String> headersToLog = LoggerUtilities
-                    .filterSensitiveHeaders(extractedHeaders, config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
+                    extractedHeaders, requestLogOptions.getHeadersToWhiteList(),
+                    config.getMaskSensitiveHeaders());
 
             Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
             requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
             logger.log(level, "Request Headers {}", requestHeaderArguments);
         }
 
-        if (config.getRequestLogOptions().shouldLogBody()) {
+        if (requestLogOptions.shouldLogBody()) {
             Object body = request.getBody() != null ? request.getBody() : request.getParameters();
             Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
             requestBodyArguments.put(LoggerConstants.BODY, body);
@@ -100,21 +114,21 @@ public class SdkLogger implements ApiLogger {
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
         logger.log(level, "Response {} {} content-length: {}", responseArguments);
 
-        if (config.getResponseLogOptions().shouldLogHeaders()) {
+        if (responseLogOptions.shouldLogHeaders()) {
             Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(
-                    response.getHeaders().asSimpleMap(),
-                    config.getResponseLogOptions().getHeadersToInclude(),
-                    config.getResponseLogOptions().getHeadersToExclude());
+                    response.getHeaders().asSimpleMap(), responseLogOptions.getHeadersToInclude(),
+                    responseLogOptions.getHeadersToExclude());
 
-            Map<String, String> headersToLog = LoggerUtilities
-                    .filterSensitiveHeaders(extractedHeaders, config.getMaskSensitiveHeaders());
+            Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(
+                    extractedHeaders, responseLogOptions.getHeadersToWhiteList(),
+                    config.getMaskSensitiveHeaders());
 
             Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
             responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
             logger.log(level, "Response Headers {}", responseHeaderArguments);
         }
 
-        if (config.getResponseLogOptions().shouldLogBody()) {
+        if (responseLogOptions.shouldLogBody()) {
             Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
             responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
             logger.log(level, "Response Body {}", responseBodyArguments);

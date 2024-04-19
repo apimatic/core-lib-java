@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -21,10 +22,10 @@ public class LoggerUtilitiesTest {
         headers.put("Header2", "Value2");
         headers.put("Header3", "Value3");
 
-        List<String> headersToInclude = Arrays.asList("header1", "header2");
+        List<String> headersToInclude = getLowerCaseList("Header1", "Header2");
 
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
-        headersToInclude, Collections.emptyList());
+                headersToInclude, Collections.emptyList());
 
         final int expectedHeaderSize = 2;
         assertEquals(expectedHeaderSize, extractedHeaders.size());
@@ -39,10 +40,10 @@ public class LoggerUtilitiesTest {
         headers.put("Header2", "Value2");
         headers.put("Header3", "Value3");
 
-        List<String> headersToExclude = Arrays.asList("header2", "header3");
+        List<String> headersToExclude = getLowerCaseList("Header2", "Header3");
 
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
-        Collections.emptyList(), headersToExclude);
+                Collections.emptyList(), headersToExclude);
 
         final int expectedHeaderSize = 1;
         assertEquals(expectedHeaderSize, extractedHeaders.size());
@@ -57,12 +58,47 @@ public class LoggerUtilitiesTest {
         headers.put("Header3", "Value3");
 
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
-        Collections.emptyList(), Collections.emptyList());
+                Collections.emptyList(), Collections.emptyList());
 
         final int expectedHeaderSize = 3;
         assertEquals(expectedHeaderSize, extractedHeaders.size());
         assertTrue(extractedHeaders.containsKey("Header1"));
         assertTrue(extractedHeaders.containsKey("Header2"));
         assertTrue(extractedHeaders.containsKey("Header3"));
+    }
+
+    @Test
+    public void testExtractHeadersToLogWithFilter() {
+        final boolean enableMasking = true;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "Value1");
+        headers.put("X-Powered-By", "Value2");
+
+        List<String> headersToWhiteList = getLowerCaseList("Accept");
+
+        Map<String, String> extractedHeaders = LoggerUtilities.filterSensitiveHeaders(headers,
+                headersToWhiteList, enableMasking);
+
+        final int expectedHeaderSize = 2;
+        final String expectedAcceptHeaderValue = "Value1";
+        final String expectedPoweredByHeaderValue = "**Redacted**";
+
+        assertEquals(expectedHeaderSize, extractedHeaders.size());
+
+        assertTrue(extractedHeaders.containsKey("Accept"));
+        assertTrue(expectedAcceptHeaderValue.equals(extractedHeaders.get("Accept")));
+
+        assertTrue(extractedHeaders.containsKey("X-Powered-By"));
+        assertTrue(expectedPoweredByHeaderValue.equals(extractedHeaders.get("X-Powered-By")));
+    }
+
+    /**
+     * Converts an array of strings to a list of strings, with each string converted
+     * to lowercase.
+     * @param strings The strings to convert to lowercase.
+     * @return A list containing the lowercase versions of the input strings.
+     */
+    private List<String> getLowerCaseList(String... strings) {
+        return Arrays.stream(strings).map(String::toLowerCase).collect(Collectors.toList());
     }
 }
