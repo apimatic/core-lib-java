@@ -34,10 +34,10 @@ public final class SdkRequestLoggingConfiguration
      */
     @Override
     public String toString() {
-        return "RequestLoggingConfiguration [logBody=" + shouldLogBody() + " logHeaders=" +
-                shouldLogHeaders() + " includeQueryInPath=" + shouldIncludeQueryInPath() +
-                " excludeHeaders=" + getHeadersToExclude() + " includeHeaders" +
-                getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
+        return "RequestLoggingConfiguration [logBody=" + shouldLogBody() + " logHeaders="
+                + shouldLogHeaders() + " includeQueryInPath=" + shouldIncludeQueryInPath()
+                + " excludeHeaders=" + getHeadersToExclude() + " includeHeaders"
+                + getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
     }
 
     /**

@@ -23,7 +23,6 @@ public final class LoggerUtilities {
                     "Trailer", "Transfer-Encoding", "Upgrade", "User-Agent", "Vary", "Via",
                     "Warning", "X-Forwarded-For", "X-Requested-With", "X-Powered-By")
             .stream().map(String::toLowerCase).collect(Collectors.toList());
-    ;
 
     /**
      * Private constructor to prevent instantiation

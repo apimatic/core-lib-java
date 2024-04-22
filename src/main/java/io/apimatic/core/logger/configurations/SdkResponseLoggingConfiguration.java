@@ -6,7 +6,8 @@ import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingConfigurat
  * Represents configuration for logging responses.
  */
 public final class SdkResponseLoggingConfiguration
-        extends SdkHttpLoggingConfiguration<SdkResponseLoggingConfiguration, SdkResponseLoggingConfiguration.Builder>
+        extends SdkHttpLoggingConfiguration<SdkResponseLoggingConfiguration,
+                                            SdkResponseLoggingConfiguration.Builder>
         implements ResponseLoggingConfiguration {
 
     /**
