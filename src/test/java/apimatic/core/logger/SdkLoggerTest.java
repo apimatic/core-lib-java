@@ -71,7 +71,7 @@ public class SdkLoggerTest {
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
         requestArguments.put(LoggerConstants.METHOD, Method.GET);
         requestArguments.put(LoggerConstants.URL, "http://example.com");
-        requestArguments.put(LoggerConstants.CONTENT_TYPE, "");
+        requestArguments.put(LoggerConstants.CONTENT_TYPE, null);
 
         // Verify the log message with query parameters
         verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"), eq(requestArguments));
@@ -175,7 +175,7 @@ public class SdkLoggerTest {
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
         requestArguments.put(LoggerConstants.METHOD, Method.GET);
         requestArguments.put(LoggerConstants.URL, "http://example.com?param=value");
-        requestArguments.put(LoggerConstants.CONTENT_TYPE, "");
+        requestArguments.put(LoggerConstants.CONTENT_TYPE, null);
 
         // Verify the log message with query parameters
         verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"),
@@ -203,7 +203,7 @@ public class SdkLoggerTest {
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} {}"),
                 eq(responseArguments));
     }
 
@@ -232,7 +232,7 @@ public class SdkLoggerTest {
         responseBodyArguments.put(LoggerConstants.BODY, "Test response body");
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Body {}"), eq(responseBodyArguments));
     }
@@ -272,7 +272,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
@@ -313,7 +313,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
@@ -355,7 +355,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }

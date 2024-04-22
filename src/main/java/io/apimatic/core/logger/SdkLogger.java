@@ -21,26 +21,25 @@ public class SdkLogger implements ApiLogger {
     /**
      * An instance of {@link Logger}.
      */
-    private Logger logger;
+    private final Logger logger;
 
     /**
      * An instance of {@link LoggingConfiguration}.
      */
-    private LoggingConfiguration config;
+    private final LoggingConfiguration config;
 
     /**
      * An instance of {@link RequestLoggingOptions}
      */
-    private RequestLoggingOptions requestLogOptions;
+    private final RequestLoggingOptions requestLogOptions;
 
     /**
      * An instance of {@link ResponseLoggingOptions}
      */
-    private ResponseLoggingOptions responseLogOptions;
+    private final ResponseLoggingOptions responseLogOptions;
 
     /**
      * Default Constructor.
-     *
      * @param config {@link LoggingConfiguration} as logging properties.
      */
     public SdkLogger(final LoggingConfiguration config) {
@@ -52,24 +51,17 @@ public class SdkLogger implements ApiLogger {
 
     /**
      * Log requests.
-     *
      * @param request HttpRequest to be logged.
      */
     public void logRequest(Request request) {
         Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
-        String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
-        String contentType = request.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER) != null
-                ? request.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER)
-                : "";
+        String contentType = request.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER);
+        String url = getRequestUrl(request);
 
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
         requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
-        requestArguments.put(LoggerConstants.URL, request.getUrl());
-
-        if (requestLogOptions.shouldIncludeQueryInPath()) {
-            requestArguments.put(LoggerConstants.URL, request.getQueryUrl());
-        }
+        requestArguments.put(LoggerConstants.URL, url);
         requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
         logger.log(level, "Request {} {} {}", requestArguments);
 
@@ -92,7 +84,6 @@ public class SdkLogger implements ApiLogger {
 
     /**
      * Log Responses.
-     *
      * @param response HttpResponse to be logged.
      */
     public void logResponse(Response response) {
@@ -105,7 +96,7 @@ public class SdkLogger implements ApiLogger {
         responseArguments.put(LoggerConstants.STATUS_CODE, response.getStatusCode());
         responseArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
-        logger.log(level, "Response {} {} contentLength: {}", responseArguments);
+        logger.log(level, "Response {} {} {}", responseArguments);
 
         if (responseLogOptions.shouldLogHeaders()) {
             Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(responseLogOptions,
@@ -121,5 +112,18 @@ public class SdkLogger implements ApiLogger {
             responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
             logger.log(level, "Response Body {}", responseBodyArguments);
         }
+    }
+
+    /**
+     * Retrieves the URL from the provided request
+     * @param request The request object containing the URL and query parameters.
+     * @return The URL to be logged
+     */
+    private String getRequestUrl(Request request) {
+        if (requestLogOptions.shouldIncludeQueryInPath()) {
+            return request.getQueryUrl();
+        }
+
+        return request.getUrl();
     }
 }
