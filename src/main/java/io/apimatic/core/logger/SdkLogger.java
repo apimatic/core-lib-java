@@ -59,8 +59,8 @@ public class SdkLogger implements ApiLogger {
         Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
         String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
-        String contentType = request.getHeaders().value(LoggerConstants.CONTENT_TYPE) != null
-                ? request.getHeaders().value(LoggerConstants.CONTENT_TYPE)
+        String contentType = request.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER) != null
+                ? request.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER)
                 : "";
 
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
@@ -98,14 +98,14 @@ public class SdkLogger implements ApiLogger {
     public void logResponse(Response response) {
         Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
-        String contentLength = response.getHeaders().value(LoggerConstants.CONTENT_LENGTH);
-        String contentType = response.getHeaders().value(LoggerConstants.CONTENT_TYPE);
+        String contentLength = response.getHeaders().value(LoggerConstants.CONTENT_LENGTH_HEADER);
+        String contentType = response.getHeaders().value(LoggerConstants.CONTENT_TYPE_HEADER);
 
         Map<String, Object> responseArguments = new LinkedHashMap<String, Object>();
         responseArguments.put(LoggerConstants.STATUS_CODE, response.getStatusCode());
         responseArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
-        logger.log(level, "Response {} {} content-length: {}", responseArguments);
+        logger.log(level, "Response {} {} contentLength: {}", responseArguments);
 
         if (responseLogOptions.shouldLogHeaders()) {
             Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(responseLogOptions,

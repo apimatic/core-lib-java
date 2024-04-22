@@ -16,11 +16,6 @@ public final class LoggerConstants {
     public static final String URL = "url";
 
     /**
-     * Key representing the content type of the HTTP request or response.
-     */
-    public static final String CONTENT_TYPE = "content-type";
-
-    /**
      * Key representing the query parameters of the HTTP request.
      */
     public static final String QUERY_PARAMETER = "queryParameter";
@@ -36,14 +31,29 @@ public final class LoggerConstants {
     public static final String BODY = "body";
 
     /**
-     * Key representing the content length of the HTTP request or response.
-     */
-    public static final String CONTENT_LENGTH = "content-length";
-
-    /**
      * Key representing the status code of the HTTP response.
      */
-    public static final String STATUS_CODE = "statuscode";
+    public static final String STATUS_CODE = "statusCode";
+
+    /**
+     * Key representing the content length of the HTTP response.
+     */
+    public static final String CONTENT_LENGTH = "contentLength";
+
+    /**
+     * Key representing the content type of the HTTP response.
+     */
+    public static final String CONTENT_TYPE = "contentType";
+
+    /**
+     * Key representing the content length header.
+     */
+    public static final String CONTENT_LENGTH_HEADER = "content-length";
+
+    /**
+     * Key representing the content type header.
+     */
+    public static final String CONTENT_TYPE_HEADER = "content-type";
 
     private LoggerConstants() {}
 }

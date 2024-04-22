@@ -203,7 +203,7 @@ public class SdkLoggerTest {
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, "100");
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
                 eq(responseArguments));
     }
 
@@ -232,7 +232,7 @@ public class SdkLoggerTest {
         responseBodyArguments.put(LoggerConstants.BODY, "Test response body");
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Body {}"), eq(responseBodyArguments));
     }
@@ -272,7 +272,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
@@ -313,7 +313,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
@@ -355,7 +355,7 @@ public class SdkLoggerTest {
         responseHeaderArguments.put(LoggerConstants.HEADERS, expectedHeaders);
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Response {} {} content-length: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Response {} {} contentLength: {}"),
                 eq(responseArguments));
         verify(logger).log(eq(Level.INFO), eq("Response Headers {}"), eq(responseHeaderArguments));
     }
