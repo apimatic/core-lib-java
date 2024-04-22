@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.apimatic.coreinterfaces.logger.configuration.LoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.HttpLoggingConfiguration;
 
 public final class LoggerUtilities {
     /**
@@ -22,7 +22,8 @@ public final class LoggerUtilities {
                     "Max-Forwards", "Pragma", "Range", "Referer", "Retry-After", "Server",
                     "Trailer", "Transfer-Encoding", "Upgrade", "User-Agent", "Vary", "Via",
                     "Warning", "X-Forwarded-For", "X-Requested-With", "X-Powered-By")
-            .stream().map(String::toLowerCase).collect(Collectors.toList());;
+            .stream().map(String::toLowerCase).collect(Collectors.toList());
+    ;
 
     /**
      * Private constructor to prevent instantiation
@@ -31,37 +32,37 @@ public final class LoggerUtilities {
     }
 
     /**
-     * Retrieves the headers to be logged based on the provided logging options,
+     * Retrieves the headers to be logged based on the provided logging configuration,
      * headers, and sensitivity masking configuration.
-     * @param loggingOptions       The logging options containing configurations for
+     * @param loggingConfiguration The logging configuration containing configurations for
      *                             header logging.
      * @param headers              The headers to be evaluated for logging.
      * @param maskSensitiveHeaders Determines whether sensitive headers should be
      *                             masked in the log.
      * @return A map containing the headers to be logged, considering the provided
-     *         options and sensitivity masking.
+     * configuration and sensitivity masking.
      */
-    public static Map<String, String> getHeadersToLog(LoggingOptions loggingOptions,
-            Map<String, String> headers, boolean maskSensitiveHeaders) {
+    public static Map<String, String> getHeadersToLog(HttpLoggingConfiguration loggingConfiguration,
+                                                      Map<String, String> headers,
+                                                      boolean maskSensitiveHeaders) {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
-                loggingOptions.getHeadersToInclude(), loggingOptions.getHeadersToExclude());
+                loggingConfiguration.getHeadersToInclude(),
+                loggingConfiguration.getHeadersToExclude());
 
-        Map<String, String> headersToLog = LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
-                loggingOptions.getHeadersToUnmask(), maskSensitiveHeaders);
-
-        return headersToLog;
+        return LoggerUtilities.filterSensitiveHeaders(extractedHeaders,
+                loggingConfiguration.getHeadersToUnmask(), maskSensitiveHeaders);
     }
 
     /**
      * Extracts headers to log based on inclusion and exclusion criteria.
-     *
      * @param headers          The map of headers.
      * @param headersToInclude The set of headers to include.
      * @param headersToExclude The set of headers to exclude.
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractHeadersToLog(Map<String, String> headers,
-            List<String> headersToInclude, List<String> headersToExclude) {
+                                                          List<String> headersToInclude,
+                                                          List<String> headersToExclude) {
         if (!headersToInclude.isEmpty()) {
             return extractIncludedHeaders(headers, headersToInclude);
         }
@@ -75,14 +76,14 @@ public final class LoggerUtilities {
 
     /**
      * Filter sensitive headers from the given list of request headers.
-     *
      * @param headers              The list of headers to filter.
      * @param headersToUnmask      The list of headers to unmask.
      * @param maskSensitiveHeaders Whether to mask sensitive headers or not.
      * @return A map containing filtered headers.
      */
     public static Map<String, String> filterSensitiveHeaders(Map<String, String> headers,
-            List<String> headersToUnmask, boolean maskSensitiveHeaders) {
+                                                             List<String> headersToUnmask,
+                                                             boolean maskSensitiveHeaders) {
         if (maskSensitiveHeaders) {
             Map<String, String> filteredHeaders = new HashMap<>();
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -100,13 +101,12 @@ public final class LoggerUtilities {
 
     /**
      * Extracts headers to log based on inclusion criteria.
-     *
      * @param headers          The map of headers.
      * @param headersToInclude The set of headers to include.
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractIncludedHeaders(Map<String, String> headers,
-            List<String> headersToInclude) {
+                                                             List<String> headersToInclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (headersToInclude.contains(entry.getKey().toLowerCase())) {
@@ -118,13 +118,12 @@ public final class LoggerUtilities {
 
     /**
      * Extracts headers to log based on exclusion criteria.
-     *
      * @param headers          The map of headers.
      * @param headersToExclude The set of headers to exclude.
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractExcludedHeaders(Map<String, String> headers,
-            List<String> headersToExclude) {
+                                                             List<String> headersToExclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (!headersToExclude.contains(entry.getKey().toLowerCase())) {

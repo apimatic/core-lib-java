@@ -1,21 +1,21 @@
 package io.apimatic.core.logger.configurations;
 
-import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingConfiguration;
 
 /**
  * Represents options for logging requests.
  */
-public final class SdkRequestLoggingOptions
-        extends SdkLoggingOptions<SdkRequestLoggingOptions, SdkRequestLoggingOptions.Builder>
-        implements RequestLoggingOptions {
+public final class SdkRequestLoggingConfiguration
+        extends SdkHttpLoggingConfiguration<SdkRequestLoggingConfiguration,
+            SdkRequestLoggingConfiguration.Builder> implements RequestLoggingConfiguration {
 
     private boolean includeQueryInPath = true;
 
     /**
-     * Constructs a new RequestLogOptions instance with default values.
-     * @param builder Builder instance of {@link SdkRequestLoggingOptions.Builder}
+     * Constructs a new RequestLoggingConfiguration instance with default values.
+     * @param builder Builder instance of {@link SdkRequestLoggingConfiguration.Builder}
      */
-    private SdkRequestLoggingOptions(final Builder builder) {
+    private SdkRequestLoggingConfiguration(final Builder builder) {
         super(builder);
         this.includeQueryInPath = builder.includeQueryInPath;
     }
@@ -29,24 +29,24 @@ public final class SdkRequestLoggingOptions
     }
 
     /**
-     * Converts {@link SdkRequestLoggingOptions} into string format.
+     * Converts {@link SdkRequestLoggingConfiguration} into string format.
      * @return String representation of this class.
      */
     @Override
     public String toString() {
-        return "RequestLogOptions [logBody=" + shouldLogBody() + " logHeaders=" + shouldLogHeaders()
-                + " includeQueryInPath=" + shouldIncludeQueryInPath() + " excludeHeaders="
-                + getHeadersToExclude() + " includeHeaders" + getHeadersToInclude()
-                + " unmaskHeaders" + getHeadersToUnmask() + "]";
+        return "RequestLoggingConfiguration [logBody=" + shouldLogBody() + " logHeaders=" +
+                shouldLogHeaders() + " includeQueryInPath=" + shouldIncludeQueryInPath() +
+                " excludeHeaders=" + getHeadersToExclude() + " includeHeaders" +
+                getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
     }
 
     /**
-     * Builds a new {@link SdkRequestLoggingOptions.Builder} object. Creates the
+     * Builds a new {@link SdkRequestLoggingConfiguration.Builder} object. Creates the
      * instance with the current state.
-     * @return a new {@link SdkRequestLoggingOptions.Builder} object.
+     * @return a new {@link SdkRequestLoggingConfiguration.Builder} object.
      */
     public Builder newBuilder() {
-        return new Builder().logBody(shouldLogBody()).logHeaders(shouldLogHeaders())
+        return new Builder().body(shouldLogBody()).headers(shouldLogHeaders())
                 .excludeHeaders(getHeadersToExclude().toArray(new String[0]))
                 .includeHeaders(getHeadersToInclude().toArray(new String[0]))
                 .unmaskHeaders(getHeadersToUnmask().toArray(new String[0]))
@@ -54,10 +54,10 @@ public final class SdkRequestLoggingOptions
     }
 
     /**
-     * Builder class for RequestLogOptions.
+     * Builder class for {@link SdkHttpLoggingConfiguration}.
      */
     public static class Builder
-            extends SdkLoggingOptions.Builder<SdkRequestLoggingOptions, Builder> {
+            extends SdkHttpLoggingConfiguration.Builder<SdkRequestLoggingConfiguration, Builder> {
         private boolean includeQueryInPath = false;
 
         /**
@@ -72,7 +72,7 @@ public final class SdkRequestLoggingOptions
         }
 
         /**
-         * Returns the {@link SdkRequestLoggingOptions.Builder}
+         * Returns the {@link SdkRequestLoggingConfiguration.Builder}
          */
         @Override
         protected Builder self() {
@@ -80,12 +80,12 @@ public final class SdkRequestLoggingOptions
         }
 
         /**
-         * Constructs a RequestLogOptions object with the set values.
-         * @return The constructed RequestOptions object.
+         * Constructs a RequestLoggingConfiguration object with the set values.
+         * @return The constructed RequestLoggingConfiguration object.
          */
         @Override
-        public SdkRequestLoggingOptions build() {
-            return new SdkRequestLoggingOptions(this);
+        public SdkRequestLoggingConfiguration build() {
+            return new SdkRequestLoggingConfiguration(this);
         }
     }
 }

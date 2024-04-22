@@ -5,14 +5,13 @@ import java.util.Map;
 
 import org.slf4j.event.Level;
 
-import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.ApiLogger;
 import io.apimatic.coreinterfaces.logger.Logger;
 import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingConfiguration;
 
 /**
  * Class to log the Http api messages.
@@ -29,14 +28,14 @@ public class SdkLogger implements ApiLogger {
     private final LoggingConfiguration config;
 
     /**
-     * An instance of {@link RequestLoggingOptions}
+     * An instance of {@link RequestLoggingConfiguration}
      */
-    private final RequestLoggingOptions requestLogOptions;
+    private final RequestLoggingConfiguration requestLoggingConfiguration;
 
     /**
-     * An instance of {@link ResponseLoggingOptions}
+     * An instance of {@link ResponseLoggingConfiguration}
      */
-    private final ResponseLoggingOptions responseLogOptions;
+    private final ResponseLoggingConfiguration responseLoggingConfiguration;
 
     /**
      * Default Constructor.
@@ -45,8 +44,8 @@ public class SdkLogger implements ApiLogger {
     public SdkLogger(final LoggingConfiguration config) {
         this.config = config;
         this.logger = config.getLogger();
-        this.requestLogOptions = config.getRequestLogOptions();
-        this.responseLogOptions = config.getResponseLogOptions();
+        this.requestLoggingConfiguration = config.getRequestConfig();
+        this.responseLoggingConfiguration = config.getResponseConfig();
     }
 
     /**
@@ -65,16 +64,18 @@ public class SdkLogger implements ApiLogger {
         requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
         logger.log(level, "Request {} {} {}", requestArguments);
 
-        if (requestLogOptions.shouldLogHeaders()) {
-            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(requestLogOptions,
-                    request.getHeaders().asSimpleMap(), config.getMaskSensitiveHeaders());
+        if (requestLoggingConfiguration.shouldLogHeaders()) {
+            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(
+                    requestLoggingConfiguration,
+                    request.getHeaders().asSimpleMap(),
+                    config.getMaskSensitiveHeaders());
 
             Map<String, Object> requestHeaderArguments = new LinkedHashMap<String, Object>();
             requestHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
             logger.log(level, "Request Headers {}", requestHeaderArguments);
         }
 
-        if (requestLogOptions.shouldLogBody()) {
+        if (requestLoggingConfiguration.shouldLogBody()) {
             Object body = request.getBody() != null ? request.getBody() : request.getParameters();
             Map<String, Object> requestBodyArguments = new LinkedHashMap<String, Object>();
             requestBodyArguments.put(LoggerConstants.BODY, body);
@@ -98,16 +99,18 @@ public class SdkLogger implements ApiLogger {
         responseArguments.put(LoggerConstants.CONTENT_LENGTH, contentLength);
         logger.log(level, "Response {} {} {}", responseArguments);
 
-        if (responseLogOptions.shouldLogHeaders()) {
-            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(responseLogOptions,
-                    response.getHeaders().asSimpleMap(), config.getMaskSensitiveHeaders());
+        if (responseLoggingConfiguration.shouldLogHeaders()) {
+            Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(
+                    responseLoggingConfiguration,
+                    response.getHeaders().asSimpleMap(),
+                    config.getMaskSensitiveHeaders());
 
             Map<String, Object> responseHeaderArguments = new LinkedHashMap<String, Object>();
             responseHeaderArguments.put(LoggerConstants.HEADERS, headersToLog);
             logger.log(level, "Response Headers {}", responseHeaderArguments);
         }
 
-        if (responseLogOptions.shouldLogBody()) {
+        if (responseLoggingConfiguration.shouldLogBody()) {
             Map<String, Object> responseBodyArguments = new LinkedHashMap<String, Object>();
             responseBodyArguments.put(LoggerConstants.BODY, response.getBody());
             logger.log(level, "Response Body {}", responseBodyArguments);
@@ -120,7 +123,7 @@ public class SdkLogger implements ApiLogger {
      * @return The URL to be logged
      */
     private String getRequestUrl(Request request) {
-        if (requestLogOptions.shouldIncludeQueryInPath()) {
+        if (requestLoggingConfiguration.shouldIncludeQueryInPath()) {
             return request.getQueryUrl();
         }
 

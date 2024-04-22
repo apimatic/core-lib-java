@@ -1,13 +1,13 @@
 package io.apimatic.core.logger.configurations;
 
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 import io.apimatic.core.logger.ConsoleLogger;
 import io.apimatic.core.logger.Slf4jLogger;
 import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingConfiguration;
 
 /**
  * To hold logging configuration.
@@ -16,48 +16,49 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
     /***
      * An instance of Logger
      */
-    private io.apimatic.coreinterfaces.logger.Logger logger;
+    private final io.apimatic.coreinterfaces.logger.Logger logger;
 
     /**
      * An instance of {@link Level}.
      */
-    private Level level;
+    private final Level level;
 
     /**
-     * Options for masking sensitive headers
+     * Configuration for masking sensitive headers
      */
-    private boolean maskSensitiveHeaders;
+    private final boolean maskSensitiveHeaders;
 
     /**
-     * Options for logging requests.
+     * Configuration for logging requests.
      */
-    private RequestLoggingOptions requestLogOptions;
+    private final RequestLoggingConfiguration requestLoggingConfiguration;
 
     /**
-     * Options for logging responses.
+     * Configuration for logging responses.
      */
-    private ResponseLoggingOptions responseLogOptions;
+    private final ResponseLoggingConfiguration responseLoggingConfiguration;
 
     /**
      * Constructs an instance of ApiLoggingConfiguration.
-     * @param logger               The logger implementation to use for logging API
-     *                             requests and responses.
-     * @param level                The logging level at which API requests and
-     *                             responses will be logged.
-     * @param maskSensitiveHeaders A boolean indicating whether sensitive headers
-     *                             should be masked in the logs.
-     * @param requestLogOptions    The options for logging API request details.
-     * @param responseLogOptions   The options for logging API response details.
+     * @param logger                       The logger implementation to use for logging API
+     *                                     requests and responses.
+     * @param level                        The logging level at which API requests and
+     *                                     responses will be logged.
+     * @param maskSensitiveHeaders         A boolean indicating whether sensitive headers
+     *                                     should be masked in the logs.
+     * @param requestLoggingConfiguration  The configuration for logging API request details.
+     * @param responseLoggingConfiguration The configuration for logging API response details.
      */
     private SdkLoggingConfiguration(final io.apimatic.coreinterfaces.logger.Logger logger,
-            final Level level, final boolean maskSensitiveHeaders,
-            final RequestLoggingOptions requestLogOptions,
-            final ResponseLoggingOptions responseLogOptions) {
+                                    final Level level, final boolean maskSensitiveHeaders,
+                                    final RequestLoggingConfiguration requestLoggingConfiguration,
+                                    final ResponseLoggingConfiguration
+                                            responseLoggingConfiguration) {
         this.logger = logger;
         this.level = level;
         this.maskSensitiveHeaders = maskSensitiveHeaders;
-        this.requestLogOptions = requestLogOptions;
-        this.responseLogOptions = responseLogOptions;
+        this.requestLoggingConfiguration = requestLoggingConfiguration;
+        this.responseLoggingConfiguration = responseLoggingConfiguration;
     }
 
     /**
@@ -85,19 +86,19 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
     }
 
     /**
-     * Getter for the RequestLogOptions.
-     * @return The RequestLogOptions object.
+     * Getter for the RequestLoggingConfiguration.
+     * @return The RequestLoggingConfiguration object.
      */
-    public RequestLoggingOptions getRequestLogOptions() {
-        return requestLogOptions;
+    public RequestLoggingConfiguration getRequestConfig() {
+        return requestLoggingConfiguration;
     }
 
     /**
-     * Getter for the ResponseLogOptions.
-     * @return The ResponseLogOptions object.
+     * Getter for the ResponseLoggingConfiguration.
+     * @return The ResponseLoggingConfiguration object.
      */
-    public ResponseLoggingOptions getResponseLogOptions() {
-        return responseLogOptions;
+    public ResponseLoggingConfiguration getResponseConfig() {
+        return responseLoggingConfiguration;
     }
 
     /**
@@ -106,9 +107,10 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
      */
     @Override
     public String toString() {
-        return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel()
-                + " maskSensitiveHeaders=" + getMaskSensitiveHeaders() + " requestLogOptions"
-                + getRequestLogOptions() + " responseLogOptions" + getResponseLogOptions() + "]";
+        return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel() +
+                " maskSensitiveHeaders=" + getMaskSensitiveHeaders() +
+                " requestLoggingConfiguration" + getRequestConfig() +
+                " responseLoggingConfiguration" + getResponseConfig() + "]";
     }
 
     /**
@@ -119,10 +121,10 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
     public Builder newBuilder() {
         Builder builder = new Builder().logger(logger).level(level)
                 .maskSensitiveHeaders(maskSensitiveHeaders);
-        builder.requestLogOptionsBuilder = ((SdkRequestLoggingOptions) requestLogOptions)
-                .newBuilder();
-        builder.responseLogOptionsBuilder = ((SdkResponseLoggingOptions) responseLogOptions)
-                .newBuilder();
+        builder.requestLoggingConfigurationBuilder =
+                ((SdkRequestLoggingConfiguration) requestLoggingConfiguration).newBuilder();
+        builder.responseLoggingConfigurationBuilder =
+                ((SdkResponseLoggingConfiguration) responseLoggingConfiguration).newBuilder();
         return builder;
     }
 
@@ -140,21 +142,21 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
         private Level level;
 
         /**
-         * Options for masking sensitive headers
+         * Configuration for masking sensitive headers
          */
         private boolean maskSensitiveHeaders = true;
 
         /**
-         * Options for logging requests.
+         * Configuration for logging requests.
          */
-        private SdkRequestLoggingOptions.Builder requestLogOptionsBuilder =
-                new SdkRequestLoggingOptions.Builder();
+        private SdkRequestLoggingConfiguration.Builder requestLoggingConfigurationBuilder =
+                new SdkRequestLoggingConfiguration.Builder();
 
         /**
-         * Options for logging responses.
+         * Configuration for logging responses.
          */
-        private SdkResponseLoggingOptions.Builder responseLogOptionsBuilder =
-                new SdkResponseLoggingOptions.Builder();
+        private SdkResponseLoggingConfiguration.Builder responseLoggingConfigurationBuilder =
+                new SdkResponseLoggingConfiguration.Builder();
 
         /***
          * Set Logger for logging.
@@ -197,22 +199,22 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
         }
 
         /**
-         * Sets the RequestLogOptions.Builder for the builder.
-         * @param builder The RequestOptions Builder object.
+         * Sets the RequestLoggingConfiguration.Builder for the builder.
+         * @param builder The RequestLoggingConfiguration Builder object.
          * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder requestLogOptions(SdkRequestLoggingOptions.Builder builder) {
-            this.requestLogOptionsBuilder = builder;
+        public Builder requestConfig(SdkRequestLoggingConfiguration.Builder builder) {
+            this.requestLoggingConfigurationBuilder = builder;
             return this;
         }
 
         /**
-         * Sets the ResponseLogOptions.Builder for the builder.
-         * @param builder The ResponseOptions Builder object.
+         * Sets the ResponseLoggingConfiguration.Builder for the builder.
+         * @param builder The ResponseLoggingConfiguration Builder object.
          * @return {@link SdkLoggingConfiguration.Builder}.
          */
-        public Builder responseLogOptions(SdkResponseLoggingOptions.Builder builder) {
-            this.responseLogOptionsBuilder = builder;
+        public Builder responseConfig(SdkResponseLoggingConfiguration.Builder builder) {
+            this.responseLoggingConfigurationBuilder = builder;
             return this;
         }
 
@@ -230,10 +232,12 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
          * @return {@link SdkLoggingConfiguration}.
          */
         public SdkLoggingConfiguration build() {
-            SdkRequestLoggingOptions requestLogOptions = requestLogOptionsBuilder.build();
-            SdkResponseLoggingOptions responseLogOptions = responseLogOptionsBuilder.build();
+            SdkRequestLoggingConfiguration requestLoggingConfiguration =
+                    requestLoggingConfigurationBuilder.build();
+            SdkResponseLoggingConfiguration responseLoggingConfiguration =
+                    responseLoggingConfigurationBuilder.build();
             return new SdkLoggingConfiguration(logger, level, maskSensitiveHeaders,
-                    requestLogOptions, responseLogOptions);
+                    requestLoggingConfiguration, responseLoggingConfiguration);
         }
     }
 }

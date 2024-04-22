@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents base options for logging.
+ * Represents base configuration for http logging.
  */
-public abstract class SdkLoggingBaseOptions {
+public abstract class SdkBaseHttpLoggingConfiguration {
     private boolean logBody = false;
     private boolean logHeaders = false;
     private List<String> headersToInclude = new ArrayList<>();

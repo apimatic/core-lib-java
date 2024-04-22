@@ -6,18 +6,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Represents options for logging requests and responses.
- * @param <T> Name of your LogOptions type
- * @param <B> Name of the Builder for your LogOptions type
+ * Represents configuration for logging requests and responses.
+ * @param <T> Name of your LoggingConfiguration type
+ * @param <B> Name of the Builder for your LoggingConfiguration type
  */
-public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
-    B extends SdkLoggingOptions.Builder<T, B>> extends SdkLoggingBaseOptions {
+public abstract class SdkHttpLoggingConfiguration<T extends SdkHttpLoggingConfiguration<T, B>,
+    B extends SdkHttpLoggingConfiguration.Builder<T, B>> extends SdkBaseHttpLoggingConfiguration {
 
     /**
-     * Constructs a new LogOptions instance with default values.
-     * @param builder Builder instance of {@link SdkLoggingOptions.Builder}
+     * Constructs a new {@link SdkHttpLoggingConfiguration} instance with default values.
+     * @param builder Builder instance of {@link SdkHttpLoggingConfiguration.Builder}
      */
-    protected SdkLoggingOptions(final Builder<T, B> builder) {
+    protected SdkHttpLoggingConfiguration(final Builder<T, B> builder) {
         super();
         this.setLogBody(builder.logBody);
         this.setLogHeaders(builder.logHeaders);
@@ -27,11 +27,11 @@ public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
     }
 
     /**
-     * Builder class for LogOptions.
-     * @param <T> Name of your LogOptions type
-     * @param <B> Name of the Builder for your LogOptions type
+     * Builder class for {@link SdkHttpLoggingConfiguration}.
+     * @param <T> Name of your LoggingConfiguration type
+     * @param <B> Name of the Builder for your LoggingConfiguration type
      */
-    public abstract static class Builder<T extends SdkLoggingOptions<T, B>,
+    public abstract static class Builder<T extends SdkHttpLoggingConfiguration<T, B>,
             B extends Builder<T, B>> {
         private boolean logBody = false;
         private boolean logHeaders = false;
@@ -44,7 +44,7 @@ public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
          * @param logBody True to log the body, otherwise false.
          * @return The builder instance.
          */
-        public B logBody(boolean logBody) {
+        public B body(boolean logBody) {
             this.logBody = logBody;
             return self();
         }
@@ -54,7 +54,7 @@ public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
          * @param logHeaders True to log the headers, otherwise false.
          * @return The builder instance.
          */
-        public B logHeaders(boolean logHeaders) {
+        public B headers(boolean logHeaders) {
             this.logHeaders = logHeaders;
             return self();
         }
@@ -95,8 +95,8 @@ public abstract class SdkLoggingOptions<T extends SdkLoggingOptions<T, B>,
         protected abstract B self();
 
         /**
-         * Constructs a LogOptions object with the set values.
-         * @return The constructed LogOptions object.
+         * Constructs a {@link SdkHttpLoggingConfiguration} object with the set values.
+         * @return The constructed {@link SdkHttpLoggingConfiguration} object.
          */
         public abstract T build();
     }

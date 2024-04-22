@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingConfiguration;
+import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.event.Level;
@@ -23,8 +25,6 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.logger.Logger;
 import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
-import io.apimatic.coreinterfaces.logger.configuration.RequestLoggingOptions;
-import io.apimatic.coreinterfaces.logger.configuration.ResponseLoggingOptions;
 
 public class SdkLoggerTest {
     /**
@@ -51,8 +51,8 @@ public class SdkLoggerTest {
         logger = mock(Logger.class);
         when(config.getLogger()).thenReturn(logger);
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getRequestLogOptions()).thenReturn(mock(RequestLoggingOptions.class));
-        when(config.getResponseLogOptions()).thenReturn(mock(ResponseLoggingOptions.class));
+        when(config.getRequestConfig()).thenReturn(mock(RequestLoggingConfiguration.class));
+        when(config.getResponseConfig()).thenReturn(mock(ResponseLoggingConfiguration.class));
         sdkLogger = new SdkLogger(config);
     }
 
@@ -100,7 +100,7 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogRequestWithBody() {
-        when(config.getRequestLogOptions().shouldLogBody()).thenReturn(true);
+        when(config.getRequestConfig().shouldLogBody()).thenReturn(true);
         Request request = mock(Request.class);
         when(request.getUrl()).thenReturn("http://example.com");
         when(request.getQueryUrl()).thenReturn("http://example.com");
@@ -127,7 +127,7 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogRequestWithHeader() {
-        when(config.getRequestLogOptions().shouldLogHeaders()).thenReturn(true);
+        when(config.getRequestConfig().shouldLogHeaders()).thenReturn(true);
         Request request = mock(Request.class);
         when(request.getUrl()).thenReturn("http://example.com");
         when(request.getQueryUrl()).thenReturn("http://example.com");
@@ -160,7 +160,7 @@ public class SdkLoggerTest {
 
     @Test
     public void testLogRequestWithQueryParameters() {
-        when(config.getRequestLogOptions().shouldIncludeQueryInPath()).thenReturn(true);
+        when(config.getRequestConfig().shouldIncludeQueryInPath()).thenReturn(true);
 
         Request request = mock(Request.class);
         when(request.getUrl()).thenReturn("http://example.com");
@@ -219,7 +219,7 @@ public class SdkLoggerTest {
         when(response.getBody()).thenReturn("Test response body");
 
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getResponseLogOptions().shouldLogBody()).thenReturn(true);
+        when(config.getResponseConfig().shouldLogBody()).thenReturn(true);
 
         sdkLogger.logResponse(response);
 
@@ -249,7 +249,7 @@ public class SdkLoggerTest {
         when(response.getHeaders()).thenReturn(headers);
 
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
+        when(config.getResponseConfig().shouldLogHeaders()).thenReturn(true);
         when(config.getMaskSensitiveHeaders()).thenReturn(true);
 
         Map<String, String> mockHeaders = new HashMap<>();
@@ -290,8 +290,8 @@ public class SdkLoggerTest {
         when(response.getHeaders()).thenReturn(headers);
 
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
-        when(config.getResponseLogOptions().getHeadersToExclude()).thenReturn(excludeHeaders);
+        when(config.getResponseConfig().shouldLogHeaders()).thenReturn(true);
+        when(config.getResponseConfig().getHeadersToExclude()).thenReturn(excludeHeaders);
         when(config.getMaskSensitiveHeaders()).thenReturn(true);
 
         Map<String, String> mockHeaders = new HashMap<>();
@@ -331,8 +331,8 @@ public class SdkLoggerTest {
         when(response.getHeaders()).thenReturn(headers);
 
         when(config.getLevel()).thenReturn(Level.INFO);
-        when(config.getResponseLogOptions().shouldLogHeaders()).thenReturn(true);
-        when(config.getResponseLogOptions().getHeadersToUnmask()).thenReturn(unmaskHeaders);
+        when(config.getResponseConfig().shouldLogHeaders()).thenReturn(true);
+        when(config.getResponseConfig().getHeadersToUnmask()).thenReturn(unmaskHeaders);
         when(config.getMaskSensitiveHeaders()).thenReturn(true);
 
         Map<String, String> mockHeaders = new HashMap<>();
