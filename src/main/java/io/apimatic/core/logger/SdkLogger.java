@@ -58,7 +58,6 @@ public class SdkLogger implements ApiLogger {
     public void logRequest(Request request) {
         Level level = config.getLevel() != null ? config.getLevel() : Level.INFO;
 
-        String url = request.getUrl();
         String queryParameter = CoreHelper.getQueryParametersFromUrl(request.getQueryUrl());
         String contentType = request.getHeaders().value(LoggerConstants.CONTENT_TYPE) != null
                 ? request.getHeaders().value(LoggerConstants.CONTENT_TYPE)
@@ -66,14 +65,13 @@ public class SdkLogger implements ApiLogger {
 
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
         requestArguments.put(LoggerConstants.METHOD, request.getHttpMethod());
-        requestArguments.put(LoggerConstants.URL, url);
-        requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
+        requestArguments.put(LoggerConstants.URL, request.getUrl());
+
         if (requestLogOptions.shouldIncludeQueryInPath()) {
-            requestArguments.put(LoggerConstants.QUERY_PARAMETER, queryParameter);
-            logger.log(level, "Request {} {} {} queryParameters: {}", requestArguments);
-        } else {
-            logger.log(level, "Request {} {} {}", requestArguments);
+            requestArguments.put(LoggerConstants.URL, request.getQueryUrl());
         }
+        requestArguments.put(LoggerConstants.CONTENT_TYPE, contentType);
+        logger.log(level, "Request {} {} {}", requestArguments);
 
         if (requestLogOptions.shouldLogHeaders()) {
             Map<String, String> headersToLog = LoggerUtilities.getHeadersToLog(requestLogOptions,

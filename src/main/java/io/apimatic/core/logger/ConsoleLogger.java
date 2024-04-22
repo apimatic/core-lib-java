@@ -10,7 +10,7 @@ import io.apimatic.coreinterfaces.logger.Logger;
 public class ConsoleLogger implements Logger {
 
     /**
-     * Return instance of {@link Logger
+     * Return instance of {@link org.slf4j.Logger}
      * @return null
      */
     @Override

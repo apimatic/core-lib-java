@@ -22,7 +22,7 @@ public class Slf4jLogger implements io.apimatic.coreinterfaces.logger.Logger {
     }
 
     /**
-     * Return instance of {@link Logger
+     * Return instance of {@link Logger}
      * @return SLF4J Logger instance.
      */
     public Logger getLogger() {

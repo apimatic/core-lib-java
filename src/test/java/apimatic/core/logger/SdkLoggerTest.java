@@ -174,12 +174,11 @@ public class SdkLoggerTest {
 
         Map<String, Object> requestArguments = new LinkedHashMap<String, Object>();
         requestArguments.put(LoggerConstants.METHOD, Method.GET);
-        requestArguments.put(LoggerConstants.URL, "http://example.com");
+        requestArguments.put(LoggerConstants.URL, "http://example.com?param=value");
         requestArguments.put(LoggerConstants.CONTENT_TYPE, "");
-        requestArguments.put(LoggerConstants.QUERY_PARAMETER, "param=value");
 
         // Verify the log message with query parameters
-        verify(logger).log(eq(Level.INFO), eq("Request {} {} {} queryParameters: {}"),
+        verify(logger).log(eq(Level.INFO), eq("Request {} {} {}"),
                 eq(requestArguments));
     }
 
