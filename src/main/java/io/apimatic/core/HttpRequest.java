@@ -3,6 +3,7 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -79,16 +80,24 @@ public final class HttpRequest {
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
-        queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
+        HttpHeaders requestHeaders = addHeaders(headerParams);
+        // Creating a basic request to provide it to auth instances
+        Request request = buildBasicRequest(httpMethod, requestHeaders);
 
+        applyAuthentication(request, authentication);
+        // include auth query parameters in request query params to have them in the query url
+        if (request.getQueryParameters() != null) {
+            queryParams.putAll(request.getQueryParameters());
+        }
+
+        queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
         processTemplateParams(templateParams);
         Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
                 generateFormFields(formParams, formParameters, arraySerializationFormat);
         coreHttpRequest =
-                buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
+                buildRequest(httpMethod, bodyValue, requestHeaders, queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authentication);
     }
 
     /**
@@ -111,14 +120,26 @@ public final class HttpRequest {
                 queryParams, formFields);
     }
 
-    private void applyAuthentication(Authentication authentication) {
+    /**
+     * Builds a request with minimal query parameters.
+     * @param httpMethod The request HTTP verb.
+     * @param headerParams The request header parameters.
+     * @return the {@link Request} instance.
+     */
+    private Request buildBasicRequest(Method httpMethod, HttpHeaders headerParams)
+            throws IOException {
+        return compatibilityFactory.createHttpRequest(httpMethod, null, headerParams,
+                new HashMap<String, Object>(), Collections.emptyList());
+    }
+
+    private void applyAuthentication(Request request, Authentication authentication) {
         if (authentication != null) {
             authentication.validate();
             if (!authentication.isValid()) {
                 throw new AuthValidationException(authentication.getErrorMessage());
             }
 
-            authentication.apply(coreHttpRequest);
+            authentication.apply(request);
         }
     }
 

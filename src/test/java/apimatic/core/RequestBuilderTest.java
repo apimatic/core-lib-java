@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.nullable;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.anyList;
@@ -868,6 +869,10 @@ public class RequestBuilderTest extends MockCoreConfig {
         when(getCompatibilityFactory().createHttpRequest(any(Method.class),
                 any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
                         .thenReturn(getCoreHttpRequest());
+
+        when(getCompatibilityFactory().createHttpRequest(any(Method.class),
+                nullable(StringBuilder.class), nullable(HttpHeaders.class), anyMap(), anyList()))
+            .thenReturn(getCoreHttpRequest());
     }
 
     private Employee getEmployeeModel() throws IOException {

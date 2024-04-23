@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -519,6 +520,9 @@ public class EndToEndTest extends MockCoreConfig {
         when(getCompatibilityFactory().createHttpRequest(any(Method.class),
                 any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
                         .thenReturn(coreHttpRequest);
+        when(getCompatibilityFactory().createHttpRequest(any(Method.class),
+                nullable(StringBuilder.class), nullable(HttpHeaders.class), anyMap(), anyList()))
+            .thenReturn(coreHttpRequest);
         when(getCompatibilityFactory().createHttpContext(coreHttpRequest, response))
                 .thenReturn(context);
         when(context.getResponse()).thenReturn(response);
