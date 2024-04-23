@@ -869,7 +869,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         when(getCompatibilityFactory().createHttpRequest(any(Method.class),
                 any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
                         .thenReturn(getCoreHttpRequest());
-        
+
         when(getCompatibilityFactory().createHttpRequest(any(Method.class),
                 nullable(StringBuilder.class), nullable(HttpHeaders.class), anyMap(), anyList()))
             .thenReturn(getCoreHttpRequest());
