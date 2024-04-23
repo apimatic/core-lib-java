@@ -80,19 +80,20 @@ public final class LoggerUtilities {
      */
     public static Map<String, String> filterSensitiveHeaders(Map<String, String> headers,
            List<String> headersToUnmask, boolean maskSensitiveHeaders) {
-        if (maskSensitiveHeaders) {
-            Map<String, String> filteredHeaders = new HashMap<>();
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                String key = entry.getKey().toLowerCase();
-                if (NON_SENSITIVE_HEADERS.contains(key) || headersToUnmask.contains(key)) {
-                    filteredHeaders.put(entry.getKey(), entry.getValue());
-                } else {
-                    filteredHeaders.put(entry.getKey(), "**Redacted**");
-                }
-            }
-            return filteredHeaders;
+        if (!maskSensitiveHeaders) {
+            return headers;
         }
-        return headers;
+
+        Map<String, String> filteredHeaders = new HashMap<>();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            String key = entry.getKey().toLowerCase();
+            if (NON_SENSITIVE_HEADERS.contains(key) || headersToUnmask.contains(key)) {
+                filteredHeaders.put(entry.getKey(), entry.getValue());
+            } else {
+                filteredHeaders.put(entry.getKey(), "**Redacted**");
+            }
+        }
+        return filteredHeaders;
     }
 
     /**
