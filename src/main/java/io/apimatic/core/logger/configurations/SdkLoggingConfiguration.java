@@ -109,8 +109,8 @@ public final class SdkLoggingConfiguration implements LoggingConfiguration {
     public String toString() {
         return "LoggingConfiguration [logger=" + getLogger() + " level=" + getLevel()
                 + " maskSensitiveHeaders=" + getMaskSensitiveHeaders()
-                + " requestLoggingConfiguration" + getRequestConfig()
-                + " responseLoggingConfiguration" + getResponseConfig() + "]";
+                + " requestLoggingConfiguration=" + getRequestConfig()
+                + " responseLoggingConfiguration=" + getResponseConfig() + "]";
     }
 
     /**

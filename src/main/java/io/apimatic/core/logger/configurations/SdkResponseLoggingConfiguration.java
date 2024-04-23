@@ -26,7 +26,7 @@ public final class SdkResponseLoggingConfiguration
     public String toString() {
         return "ResponseLoggingConfiguration [logBody=" + shouldLogBody() + " logHeaders="
                 + shouldLogHeaders() + " excludeHeaders=" + getHeadersToExclude()
-                + " includeHeaders" + getHeadersToInclude() + " unmaskHeaders"
+                + " includeHeaders=" + getHeadersToInclude() + " unmaskHeaders="
                 + getHeadersToUnmask() + "]";
     }
 

@@ -36,8 +36,8 @@ public final class SdkRequestLoggingConfiguration
     public String toString() {
         return "RequestLoggingConfiguration [logBody=" + shouldLogBody() + " logHeaders="
                 + shouldLogHeaders() + " includeQueryInPath=" + shouldIncludeQueryInPath()
-                + " excludeHeaders=" + getHeadersToExclude() + " includeHeaders"
-                + getHeadersToInclude() + " unmaskHeaders" + getHeadersToUnmask() + "]";
+                + " excludeHeaders=" + getHeadersToExclude() + " includeHeaders="
+                + getHeadersToInclude() + " unmaskHeaders=" + getHeadersToUnmask() + "]";
     }
 
     /**
