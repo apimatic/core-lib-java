@@ -122,10 +122,12 @@ public final class HttpRequest {
 
     /**
      * Builds a request with minimal query parameters.
-     * 
+     * @param httpMethod The request HTTP verb.
+     * @param headerParams The request header parameters.
      * @return the {@link Request} instance.
      */
-    private Request buildBasicRequest(Method httpMethod, HttpHeaders headerParams) throws IOException {
+    private Request buildBasicRequest(Method httpMethod, HttpHeaders headerParams)
+            throws IOException {
         return compatibilityFactory.createHttpRequest(httpMethod, null, headerParams,
                 new HashMap<String, Object>(), Collections.emptyList());
     }
