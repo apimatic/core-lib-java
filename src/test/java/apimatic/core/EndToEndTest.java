@@ -6,16 +6,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
 import apimatic.core.exceptions.GlobalTestException;
 import apimatic.core.mocks.MockCoreConfig;
 import io.apimatic.core.ApiCall;
@@ -500,7 +503,8 @@ public class EndToEndTest extends MockCoreConfig {
                 .compatibilityFactory(getCompatibilityFactory()).httpClient(httpClient)
                 .baseUri(server -> getBaseUri(server)).callback(callback).userAgent(userAgent)
                 .userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
-                .globalHeader("version", "0.1").globalHeader("version", "1.2").build();
+                .globalHeader("version", "0.1").globalHeader("version", "1.2")
+                .build();
         return globalConfig;
     }
 

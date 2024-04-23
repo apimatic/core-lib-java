@@ -1392,6 +1392,64 @@ public class CoreHelperTest {
         assertEquals(actual, expected);
     }
 
+    @Test
+    public void testRemoveQueryParametersFromUrl() {
+        // Test cases with query parameters
+        assertEquals("https://example.com/path",
+        CoreHelper.removeQueryParametersFromUrl(
+            "https://example.com/path?param1=value1&param2=value2"));
+        assertEquals("https://example.com/page",
+        CoreHelper.removeQueryParametersFromUrl(
+            "https://example.com/page?query=value"));
+        assertEquals("https://example.com",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com?param=value"));
+
+        // Test cases without query parameters
+        assertEquals("https://example.com",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com"));
+        assertEquals("https://example.com/page",
+        CoreHelper.removeQueryParametersFromUrl("https://example.com/page"));
+    }
+
+    @Test
+    public void testGetQueryParametersFromUrlWithQueryString() {
+        // Arrange
+        String queryUrl = "http://example.com/test?param1=value1&param2=value2";
+        String expectedQueryString = "param1=value1&param2=value2";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testGetQueryParametersFromUrlWithoutQueryString() {
+        // Arrange
+        String queryUrl = "http://example.com/test";
+        String expectedQueryString = "";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testGetQueryParametersFromUrlWithEmptyUrl() {
+        // Arrange
+        String queryUrl = "";
+        String expectedQueryString = "";
+
+        // Act
+        String result = CoreHelper.getQueryParametersFromUrl(queryUrl);
+
+        // Assert
+        assertEquals(expectedQueryString, result);
+    }
+
     private Map<String, ComplexType> getComplexType() throws IOException {
         Map<String, ComplexType> complexType = CoreHelper
                 .deserialize("{\"key1\": {\"numberListType\":[555,666,777],\"numberMapType\":"

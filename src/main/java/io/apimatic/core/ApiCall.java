@@ -3,12 +3,15 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
+import io.apimatic.core.logger.SdkLoggerFactory;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
+import io.apimatic.coreinterfaces.logger.ApiLogger;
 
 /**
  * An API call, or API request, is a message sent to a server asking an API to provide a service or
@@ -39,6 +42,12 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     private final CoreEndpointConfiguration endpointConfiguration;
 
     /**
+     * An instance of {@link ApiLogger} for logging.
+     */
+    private final ApiLogger apiLogger;
+
+
+    /**
      * ApiCall constructor.
      * @param globalConfig the required configuration to built the ApiCall.
      * @param coreHttpRequest Http request for the api call.
@@ -52,6 +61,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.request = coreHttpRequest;
         this.responseHandler = responseHandler;
         this.endpointConfiguration = coreEndpointConfiguration;
+        this.apiLogger = SdkLoggerFactory.getLogger(globalConfig.getLoggingConfiguration());
     }
 
     /**
@@ -61,8 +71,11 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType execute() throws IOException, ExceptionType {
-        Response httpResponse =
-                globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        apiLogger.logRequest(request);
+        Response httpResponse = globalConfig.getHttpClient()
+            .execute(request, endpointConfiguration);
+        apiLogger.logResponse(httpResponse);
+
         return responseHandler.handle(request, httpResponse, globalConfig, endpointConfiguration);
     }
 
@@ -75,7 +88,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 request -> globalConfig.getHttpClient().executeAsync(request,
                         endpointConfiguration),
                 (httpRequest, httpResponse) -> responseHandler.handle(httpRequest, httpResponse,
-                        globalConfig, endpointConfiguration));
+                        globalConfig, endpointConfiguration), apiLogger);
     }
 
     /**

@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import io.apimatic.core.logger.configurations.SdkLoggingConfiguration;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.authentication.Authentication;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.HttpClient;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
+import io.apimatic.coreinterfaces.logger.configuration.LoggingConfiguration;
 
 /**
  * A class which hold the global configuration properties to make a successful Api Call
@@ -62,6 +65,11 @@ public final class GlobalConfiguration {
      */
     private Function<String, String> baseUri;
 
+    /***
+     * An instance of {@link LoggingConfiguration}
+     */
+    private LoggingConfiguration loggingConfiguration;
+
     /**
      * A private constructor.
      * @param compatibilityFactory
@@ -73,12 +81,14 @@ public final class GlobalConfiguration {
      * @param globalHeaders
      * @param additionalHeaders
      * @param baseUri
+     * @param loggingConfiguration
      */
     private GlobalConfiguration(final CompatibilityFactory compatibilityFactory,
             final String userAgent, final Map<String, String> userAgentConfig,
             final Map<String, Authentication> authentications, final Callback callback,
             final HttpClient httpClient, final Map<String, List<String>> globalHeaders,
-            final HttpHeaders additionalHeaders, final Function<String, String> baseUri) {
+            final HttpHeaders additionalHeaders, final Function<String, String> baseUri,
+            final LoggingConfiguration loggingConfiguration) {
         this.compatibilityFactory = compatibilityFactory;
         this.userAgent = userAgent;
         this.userAgentConfig = userAgentConfig;
@@ -88,6 +98,7 @@ public final class GlobalConfiguration {
         this.globalHeaders = globalHeaders != null ? globalHeaders : new HashMap<>();
         this.additionalHeaders = additionalHeaders;
         this.baseUri = baseUri;
+        this.loggingConfiguration = loggingConfiguration;
 
         if (this.userAgent != null) {
             this.userAgent = CoreHelper.updateUserAgent(userAgent, userAgentConfig);
@@ -158,6 +169,13 @@ public final class GlobalConfiguration {
         return baseUri;
     }
 
+    /***
+     * @return Logging configuration for Logger
+     */
+    public LoggingConfiguration getLoggingConfiguration() {
+        return loggingConfiguration;
+    }
+
     public static class Builder {
         /**
          * An instance of {@link CompatibilityFactory}.
@@ -203,6 +221,12 @@ public final class GlobalConfiguration {
          * A function to retrieve baseUri.
          */
         private Function<String, String> baseUri;
+
+        /***
+         * An instance of {@link LoggingConfiguration}
+         */
+        private LoggingConfiguration loggingConfiguration =
+            new SdkLoggingConfiguration.Builder().build();
 
         /**
          * @param compatibilityFactory value for CompatibilityFactor.
@@ -294,13 +318,22 @@ public final class GlobalConfiguration {
         }
 
         /**
+         * @param config Logging configuration for Logger
+         * @return Builder
+         */
+        public Builder loggingConfiguration(LoggingConfiguration config) {
+            this.loggingConfiguration = config;
+            return this;
+        }
+
+        /**
          * Builds a new {@link GlobalConfiguration} object using the set fields.
          * @return {@link GlobalConfiguration}.
          */
         public GlobalConfiguration build() {
             return new GlobalConfiguration(compatibilityFactory, userAgent, userAgentConfig,
                     authentications, callback, httpClient, globalHeaders, additionalheaders,
-                    baseUri);
+                    baseUri, loggingConfiguration);
         }
     }
 

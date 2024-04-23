@@ -45,7 +45,7 @@ public final class HttpRequest {
     /**
      * A StringBuilder.
      */
-    private final StringBuilder urlBuilder;
+    private final StringBuilder queryUrlBuilder;
 
     /**
      * An instance of {@link CompatibilityFactory}.
@@ -79,7 +79,7 @@ public final class HttpRequest {
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
-        urlBuilder = getStringBuilder(server, path);
+        queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
 
         processTemplateParams(templateParams);
         Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
@@ -103,11 +103,11 @@ public final class HttpRequest {
             Map<String, Object> queryParams, List<SimpleEntry<String, Object>> formFields,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
-            return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+            return compatibilityFactory.createHttpRequest(httpMethod, queryUrlBuilder, headerParams,
                     queryParams, body);
         }
 
-        return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+        return compatibilityFactory.createHttpRequest(httpMethod, queryUrlBuilder, headerParams,
                 queryParams, formFields);
     }
 
@@ -150,13 +150,22 @@ public final class HttpRequest {
         return CoreHelper.prepareFormFields(formParameters, arraySerializationFormat);
     }
 
-    private StringBuilder getStringBuilder(String server, String path) {
-        return new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+    private StringBuilder getStringBuilder(String server, String path,
+            Map<String, Object> queryParams,
+            ArraySerializationFormat arraySerializationFormat) {
+
+        StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+
+        // set query parameters
+        CoreHelper.appendUrlWithQueryParameters(urlBuilder, queryParams,
+                arraySerializationFormat);
+
+        return new StringBuilder(CoreHelper.cleanUrl(urlBuilder));
     }
 
     private void processTemplateParams(Map<String, SimpleEntry<Object, Boolean>> templateParams) {
         if (!templateParams.isEmpty()) {
-            CoreHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+            CoreHelper.appendUrlWithTemplateParameters(queryUrlBuilder, templateParams);
         }
     }
 
