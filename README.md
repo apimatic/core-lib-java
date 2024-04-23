@@ -1,4 +1,5 @@
 # APIMatic Core Library for JAVA
+
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
 [![Lint Code][lint-badge]][lint-url]
@@ -6,13 +7,19 @@
 [![Licence][license-badge]][license-url]
 
 ## Introduction
+
 This project contains core logic and the utilities for the APIMatic's Java SDK
+
 ## Prerequisites
+
 * The JRE flavor requires `JDK 1.8`.
+
 ## Install the maven package
+
 Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 
 ## Classes
+
 | Name                                                                                                                             | Description                                                                                                                                                                                                                                           |
 |----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`ApiCall`](./src/main/java/io/apimatic/core/ApiCall.java)                                                                       | An API call, or API request, is a message sent to a server asking an API to provide a service or information                                                                                                                                          |
@@ -25,12 +32,12 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`NullSdkLogger`](./src/main/java/io/apimatic/core/logger/NullSdkLogger.java)                                                    | Null SdkLogger implementation where logger is not configured.                                                                                                                                                                                         |
 | [`Slf4jLogger`](./src/main/java/io/apimatic/core/logger/Slf4jLogger.java)                                                        | Logger implementation supporting Slf4j Facade.                                                                                                                                                                                                        |
 | [`ConsoleLogger`](./src/main/java/io/apimatic/core/logger/ConsoleLogger.java)                                                    | Default Logger implementation if logging is enabled.                                                                                                                                                                                                  |
-| [`LoggerFactory`](./src/main/java/io/apimatic/core/logger/LoggerFactory.java)                                                    | Returns an instance of ApiLogger based on the provided configuration.                                                                                                                                                                                 |
+| [`SdkLoggerFactory`](./src/main/java/io/apimatic/core/logger/SdkLoggerFactory.java)                                              | Returns an instance of ApiLogger based on the provided configuration.                                                                                                                                                                                 |
 | [`LoggerUtilities`](./src/main/java/io/apimatic/core/logger/LoggerUtilities.java)                                                | Utilitiy methods for Logger.                                                                                                                                                                                                                          |
 | [`SdkLoggingConfiguration`](./src/main/java/io/apimatic/core/logger/configurations/SdkLoggingConfiguration.java)                 | To hold logging configuration                                                                                                                                                                                                                         |
 | [`SdkBaseHttpLoggingConfiguration`](./src/main/java/io/apimatic/core/logger/configurations/SdkBaseHttpLoggingConfiguration.java) | Represents base configuration for http logging.                                                                                                                                                                                                       |
 | [`SdkRequestLoggingConfiuration`](./src/main/java/io/apimatic/core/logger/configurations/SdkRequestLoggingConfiguration.java)    | Represents configuration for logging requests.                                                                                                                                                                                                        |
-| [`SdkResponseLoggingConfiguration`](./src/main/java/io/apimatic/core/logger/configurations/SdkResponseLoggingConfiguration.java)  | Represents configuration for logging responses.                                                                                                                                                                                                       |
+| [`SdkResponseLoggingConfiguration`](./src/main/java/io/apimatic/core/logger/configurations/SdkResponseLoggingConfiguration.java) | Represents configuration for logging responses.                                                                                                                                                                                                       |
 | [`AuthBuilder`](./src/main/java/io/apimatic/core/authentication/AuthBuilder.java)                                                | A class to build and validate provided combination of auth schemes.                                                                                                                                                                                   |
 | [`AuthCredential`](./src/main/java/io/apimatic/core/authentication/AuthCredential.java)                                          | A parent class of [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java) and [`QueryAuth`](./src/main/java/io/apimatic/core/authentication/QueryAuth.java) to hold the common implementation for header and query parameters |
 | [`HeaderAuth`](./src/main/java/io/apimatic/core/authentication/HeaderAuth.java)                                                  | A class supports HTTP authentication through HTTP Headers                                                                                                                                                                                             |
@@ -59,25 +66,37 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`TestHelper`](./src/main/java/io/apimatic/core/utilities/TestHelper.java)                                                       | Contains utility methods for comparing objects, arrays and files                                                                                                                                                                                      |
 
 ## Interfaces
-| Name                                                                    | Description                                                        |
-|-------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [`AsyncResponseHandler`](./src/main/java/io/apimatic/core/request/async/AsyncResponseHandler.java)                     | A Handler that handles the response asynchronously |
-| [`RequestExecutor`](./src/main/java/io/apimatic/core/request/async/RequestExecutor.java)                     | A Request executor that executes request and returns the response asynchronously  |
-| [`RequestSupplier`](./src/main/java/io/apimatic/core/request/async/RequestSupplier.java)                     | A Request Supplier that supplies the request |
-| [`TypeCombinator`](./src/main/java/io/apimatic/core/annotations/TypeCombinator.java)                     | This is a container of annotations for oneOf/anyOf cases |
+
+| Name                                                                                               | Description                                                                      |
+|----------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [`AsyncResponseHandler`](./src/main/java/io/apimatic/core/request/async/AsyncResponseHandler.java) | A Handler that handles the response asynchronously                               |
+| [`RequestExecutor`](./src/main/java/io/apimatic/core/request/async/RequestExecutor.java)           | A Request executor that executes request and returns the response asynchronously |
+| [`RequestSupplier`](./src/main/java/io/apimatic/core/request/async/RequestSupplier.java)           | A Request Supplier that supplies the request                                     |
+| [`TypeCombinator`](./src/main/java/io/apimatic/core/annotations/TypeCombinator.java)               | This is a container of annotations for oneOf/anyOf cases                         |
 
 ## Links
+
 * [Core-interfaces-java](https://github.com/apimatic/core-interfaces-java)
 * [OkHttpClient](https://github.com/apimatic/okhttp-client-lib)
 
 [license-badge]: https://img.shields.io/badge/licence-MIT-blue
+
 [license-url]: LICENSE
+
 [maven-badge]: https://img.shields.io/maven-central/v/io.apimatic/core?color=green
+
 [maven-url]: https://central.sonatype.com/artifact/io.apimatic/core
+
 [test-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml/badge.svg
+
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
+
 [code-climate-url]: https://codeclimate.com/github/apimatic/core-lib-java
+
 [maintainability-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/maintainability
+
 [test-coverage-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/test_coverage
+
 [lint-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml/badge.svg
+
 [lint-url]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml

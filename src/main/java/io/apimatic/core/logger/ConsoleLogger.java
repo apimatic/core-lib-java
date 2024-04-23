@@ -26,7 +26,7 @@ public class ConsoleLogger implements Logger {
      */
     @Override
     public void log(Level level, String format, Map<String, Object> arguments) {
-        System.out.println(String.format("%s: %s", level,
-                MessageFormatter.basicArrayFormat(format, arguments.values().toArray())));
+        System.out.printf("%s: %s%n", level,
+                MessageFormatter.basicArrayFormat(format, arguments.values().toArray()));
     }
 }

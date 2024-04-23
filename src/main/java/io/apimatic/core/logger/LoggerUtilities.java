@@ -42,8 +42,7 @@ public final class LoggerUtilities {
      * configuration and sensitivity masking.
      */
     public static Map<String, String> getHeadersToLog(HttpLoggingConfiguration loggingConfiguration,
-                                                      Map<String, String> headers,
-                                                      boolean maskSensitiveHeaders) {
+            Map<String, String> headers, boolean maskSensitiveHeaders) {
         Map<String, String> extractedHeaders = LoggerUtilities.extractHeadersToLog(headers,
                 loggingConfiguration.getHeadersToInclude(),
                 loggingConfiguration.getHeadersToExclude());
@@ -60,8 +59,7 @@ public final class LoggerUtilities {
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractHeadersToLog(Map<String, String> headers,
-                                                          List<String> headersToInclude,
-                                                          List<String> headersToExclude) {
+           List<String> headersToInclude, List<String> headersToExclude) {
         if (!headersToInclude.isEmpty()) {
             return extractIncludedHeaders(headers, headersToInclude);
         }
@@ -81,8 +79,7 @@ public final class LoggerUtilities {
      * @return A map containing filtered headers.
      */
     public static Map<String, String> filterSensitiveHeaders(Map<String, String> headers,
-                                                             List<String> headersToUnmask,
-                                                             boolean maskSensitiveHeaders) {
+           List<String> headersToUnmask, boolean maskSensitiveHeaders) {
         if (maskSensitiveHeaders) {
             Map<String, String> filteredHeaders = new HashMap<>();
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -105,7 +102,7 @@ public final class LoggerUtilities {
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractIncludedHeaders(Map<String, String> headers,
-                                                             List<String> headersToInclude) {
+           List<String> headersToInclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (headersToInclude.contains(entry.getKey().toLowerCase())) {
@@ -122,7 +119,7 @@ public final class LoggerUtilities {
      * @return The extracted headers to log.
      */
     public static Map<String, String> extractExcludedHeaders(Map<String, String> headers,
-                                                             List<String> headersToExclude) {
+           List<String> headersToExclude) {
         Map<String, String> extractedHeaders = new HashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             if (!headersToExclude.contains(entry.getKey().toLowerCase())) {
