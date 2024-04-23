@@ -86,10 +86,10 @@ public final class HttpRequest {
 
         applyAuthentication(request, authentication);
         // include auth query parameters in request query params to have them in the query url
-        if(request.getQueryParameters() != null) {
+        if (request.getQueryParameters() != null) {
             queryParams.putAll(request.getQueryParameters());
         }
-        
+
         queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
         processTemplateParams(templateParams);
         Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
