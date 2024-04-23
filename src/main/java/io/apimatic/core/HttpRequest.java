@@ -81,9 +81,11 @@ public final class HttpRequest {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
         HttpHeaders requestHeaders = addHeaders(headerParams);
+        // Creating a basic request to provide it to auth instances
         Request request = buildBasicRequest(httpMethod, requestHeaders);
 
         applyAuthentication(request, authentication);
+        // include auth query parameters in request query params to have them in the query url
         if(request.getQueryParameters() != null) {
             queryParams.putAll(request.getQueryParameters());
         }
@@ -117,7 +119,12 @@ public final class HttpRequest {
         return compatibilityFactory.createHttpRequest(httpMethod, queryUrlBuilder, headerParams,
                 queryParams, formFields);
     }
-    
+
+    /**
+     * Builds a request with minimal query parameters.
+     * 
+     * @return the {@link Request} instance.
+     */
     private Request buildBasicRequest(Method httpMethod, HttpHeaders headerParams) throws IOException {
         return compatibilityFactory.createHttpRequest(httpMethod, null, headerParams,
                 new HashMap<String, Object>(), Collections.emptyList());
