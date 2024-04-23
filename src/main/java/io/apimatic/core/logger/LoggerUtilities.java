@@ -87,8 +87,8 @@ public final class LoggerUtilities {
         Map<String, String> filteredHeaders = new HashMap<>();
         headers.forEach((key, value) -> {
             String headerKey = key.toLowerCase();
-            boolean isNonSensitive = NON_SENSITIVE_HEADERS.contains(headerKey) ||
-                    headersToUnmask.contains(headerKey);
+            boolean isNonSensitive = NON_SENSITIVE_HEADERS.contains(headerKey)
+                    || headersToUnmask.contains(headerKey);
 
             filteredHeaders.put(key, isNonSensitive ? value : "**Redacted**");
         });
