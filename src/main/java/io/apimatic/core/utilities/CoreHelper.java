@@ -1071,6 +1071,12 @@ public class CoreHelper {
      */
     public static String getBase64EncodedCredentials(String basicAuthUserName,
             String basicAuthPassword) {
+        if (basicAuthUserName == null || basicAuthUserName == "") {
+            return null;
+        }
+        if (basicAuthPassword == null || basicAuthPassword == "") {
+            return null;
+        }
         String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
         return "Basic " + Base64.getEncoder().encodeToString(authCredentials.getBytes());
     }
