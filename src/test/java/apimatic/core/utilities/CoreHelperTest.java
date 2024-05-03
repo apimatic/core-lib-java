@@ -138,6 +138,24 @@ public class CoreHelperTest {
     }
 
     @Test
+    public void testBase64EncodingWithNullValue() {
+        String username = null;
+        String password = "password";
+
+        String actualEncodedString = CoreHelper.getBase64EncodedCredentials(username, password);
+        assertEquals(null, actualEncodedString);
+    }
+
+    @Test
+    public void testBase64EncodingWithEmptyValue() {
+        String username = "";
+        String password = "password";
+
+        String actualEncodedString = CoreHelper.getBase64EncodedCredentials(username, password);
+        assertEquals(null, actualEncodedString);
+    }
+
+    @Test
     public void testUrlEncoding() {
         String urlString = "https://localhost:8080%query=0";
         boolean spaceAsPecentage = false;
