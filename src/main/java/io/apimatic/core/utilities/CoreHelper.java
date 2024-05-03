@@ -1071,10 +1071,10 @@ public class CoreHelper {
      */
     public static String getBase64EncodedCredentials(String basicAuthUserName,
             String basicAuthPassword) {
-        if (basicAuthUserName == null || basicAuthUserName == "") {
+        if (basicAuthUserName == null || basicAuthUserName.equals("")) {
             return null;
         }
-        if (basicAuthPassword == null || basicAuthPassword == "") {
+        if (basicAuthPassword == null || basicAuthPassword.equals("")) {
             return null;
         }
         String authCredentials = basicAuthUserName + ":" + basicAuthPassword;
