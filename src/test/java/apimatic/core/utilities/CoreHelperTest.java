@@ -138,20 +138,22 @@ public class CoreHelperTest {
     }
 
     @Test
-    public void testBase64EncodingWithNullValue() {
-        String username = null;
-        String password = "password";
-
-        String actualEncodedString = CoreHelper.getBase64EncodedCredentials(username, password);
+    public void testBase64EncodingWithNullValues() {
+        String actualEncodedString = CoreHelper.getBase64EncodedCredentials(null, "password");
+        assertEquals(null, actualEncodedString);
+        actualEncodedString = CoreHelper.getBase64EncodedCredentials("username", null);
+        assertEquals(null, actualEncodedString);
+        actualEncodedString = CoreHelper.getBase64EncodedCredentials(null, null);
         assertEquals(null, actualEncodedString);
     }
 
     @Test
-    public void testBase64EncodingWithEmptyValue() {
-        String username = "";
-        String password = "password";
-
-        String actualEncodedString = CoreHelper.getBase64EncodedCredentials(username, password);
+    public void testBase64EncodingWithEmptyValues() {
+        String actualEncodedString = CoreHelper.getBase64EncodedCredentials("", "password");
+        assertEquals(null, actualEncodedString);
+        actualEncodedString = CoreHelper.getBase64EncodedCredentials("username", "");
+        assertEquals(null, actualEncodedString);
+        actualEncodedString = CoreHelper.getBase64EncodedCredentials("", "");
         assertEquals(null, actualEncodedString);
     }
 
