@@ -85,6 +85,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param responseClassType the type of response class.
      * @param contextInitializer the context initializer in response models.
      * @param isNullify404Enabled on 404 error return null or not?.
+     * @param isNullableResponseType in case of nullable response type.
      */
     private ResponseHandler(final Map<String, ErrorCase<ExceptionType>> localErrorCases,
             final Map<String, ErrorCase<ExceptionType>> globalErrorCases,
@@ -371,7 +372,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param isNullableResponseType in case of nullable response type.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> nullableResponseType(boolean isNullableResponseType) {
+        public Builder<ResponseType, ExceptionType> nullableResponseType(
+                boolean isNullableResponseType) {
             this.isNullableResponseType = isNullableResponseType;
             return this;
         }

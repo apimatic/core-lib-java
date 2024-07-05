@@ -325,7 +325,8 @@ public class ResponseHandlerTest extends MockCoreConfig {
     @Test
     public void testNullableResponseType() throws IOException, CoreApiException {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
-                new ResponseHandler.Builder<String, CoreApiException>().nullableResponseType(true).build();
+                new ResponseHandler.Builder<String, CoreApiException>()
+                        .nullableResponseType(true).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(SUCCESS_CODE);
         when(coreHttpResponse.getBody()).thenReturn(null);
@@ -335,7 +336,7 @@ public class ResponseHandlerTest extends MockCoreConfig {
         // verify
         assertNull(coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
                 getMockGlobalConfig(), endpointSetting));
-        
+
         when(coreHttpResponse.getBody()).thenReturn("");
 
         // verify
@@ -357,12 +358,13 @@ public class ResponseHandlerTest extends MockCoreConfig {
                         .globalErrorCase(getGlobalErrorCases()).build();
         // stub
         when(coreHttpResponse.getStatusCode()).thenReturn(SUCCESS_CODE);
-        when(coreHttpResponse.getBody()).thenReturn("50");
+        String body = "50";
+        when(coreHttpResponse.getBody()).thenReturn(body);
 
         // verify
-        assertEquals(Integer.valueOf(50), coreResponseHandler.handle(getCoreHttpRequest(),
+        assertEquals(Integer.valueOf(body), coreResponseHandler.handle(getCoreHttpRequest(),
                 coreHttpResponse, getMockGlobalConfig(), endpointSetting));
-        
+
         when(coreHttpResponse.getBody()).thenReturn("");
 
         assertThrows(NumberFormatException.class, () -> {
