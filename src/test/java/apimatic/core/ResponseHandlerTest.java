@@ -323,6 +323,62 @@ public class ResponseHandlerTest extends MockCoreConfig {
     }
 
     @Test
+    public void testNullableResponseType() throws IOException, CoreApiException {
+        ResponseHandler<String, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<String, CoreApiException>().nullableResponseType(true).build();
+        // stub
+        when(coreHttpResponse.getStatusCode()).thenReturn(SUCCESS_CODE);
+        when(coreHttpResponse.getBody()).thenReturn(null);
+        when(getCompatibilityFactory().createHttpContext(getCoreHttpRequest(), coreHttpResponse))
+                .thenReturn(context);
+
+        // verify
+        assertNull(coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
+                getMockGlobalConfig(), endpointSetting));
+        
+        when(coreHttpResponse.getBody()).thenReturn("");
+
+        // verify
+        assertNull(coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
+                getMockGlobalConfig(), endpointSetting));
+
+        when(coreHttpResponse.getBody()).thenReturn("    ");
+
+        // verify
+        assertNull(coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
+                getMockGlobalConfig(), endpointSetting));
+    }
+
+    @Test
+    public void testNullableResponseTypeFalse() throws IOException, CoreApiException {
+        ResponseHandler<Integer, CoreApiException> coreResponseHandler =
+                new ResponseHandler.Builder<Integer, CoreApiException>().nullableResponseType(false)
+                        .deserializer(response -> Integer.parseInt(response))
+                        .globalErrorCase(getGlobalErrorCases()).build();
+        // stub
+        when(coreHttpResponse.getStatusCode()).thenReturn(SUCCESS_CODE);
+        when(coreHttpResponse.getBody()).thenReturn("50");
+
+        // verify
+        assertEquals(Integer.valueOf(50), coreResponseHandler.handle(getCoreHttpRequest(),
+                coreHttpResponse, getMockGlobalConfig(), endpointSetting));
+        
+        when(coreHttpResponse.getBody()).thenReturn("");
+
+        assertThrows(NumberFormatException.class, () -> {
+            coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
+                    getMockGlobalConfig(), endpointSetting);
+        });
+
+        when(coreHttpResponse.getBody()).thenReturn("       ");
+
+        assertThrows(NumberFormatException.class, () -> {
+            coreResponseHandler.handle(getCoreHttpRequest(), coreHttpResponse,
+                    getMockGlobalConfig(), endpointSetting);
+        });
+    }
+
+    @Test
     public void testLocalException() throws IOException, CoreApiException {
         ResponseHandler<String, CoreApiException> coreResponseHandler =
                 new ResponseHandler.Builder<String, CoreApiException>()

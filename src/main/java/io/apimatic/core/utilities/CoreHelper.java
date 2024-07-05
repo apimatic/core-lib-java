@@ -758,7 +758,7 @@ public class CoreHelper {
             }
             return true;
         }
-        return false;
+        return true;
     }
 
     /**

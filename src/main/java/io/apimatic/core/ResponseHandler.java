@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.request.Request;
@@ -67,9 +68,14 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     private final ContextInitializer<ResponseType> contextInitializer;
 
     /**
-     * is 404 nullify Enabled?.
+     * Flag to determine to return null on 404 status code?.
      */
     private final boolean isNullify404Enabled;
+
+    /**
+     * Flag to determine if the provided response type a nullable type.
+     */
+    private final boolean isNullableResponseType;
 
     /**
      * @param localErrorCases the map of local errors.
@@ -86,7 +92,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
             final Deserializer<?> intermediateDeserializer,
             final ResponseClassType responseClassType,
             final ContextInitializer<ResponseType> contextInitializer,
-            final boolean isNullify404Enabled) {
+            final boolean isNullify404Enabled,
+            final boolean isNullableResponseType) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
         this.deserializer = deserializer;
@@ -94,6 +101,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         this.responseClassType = responseClassType;
         this.contextInitializer = contextInitializer;
         this.isNullify404Enabled = isNullify404Enabled;
+        this.isNullableResponseType = isNullableResponseType;
     }
 
     /**
@@ -157,6 +165,10 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
     private <T> T applyDeserializer(Deserializer<T> deserializer, Response httpResponse)
             throws IOException {
+        if (this.isNullableResponseType && CoreHelper.isNullOrWhiteSpace(httpResponse.getBody())) {
+            return null;
+        }
+
         T result = null;
         if (deserializer != null) {
             // extract result from the http response
@@ -266,6 +278,11 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         private boolean isNullify404Enabled = true;
 
         /**
+         * A boolean variable to determine if the provided response type is a nullable type.
+         */
+        private boolean isNullableResponseType = true;
+
+        /**
          * Setter for the localErrorCase.
          * @param statusCode the response status code from the server.
          * @param errorCase to generate the SDK Exception.
@@ -350,13 +367,23 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         /**
+         * Setter for the isNullableResponseType.
+         * @param isNullableResponseType in case of nullable response type.
+         * @return {@link ResponseHandler.Builder}.
+         */
+        public Builder<ResponseType, ExceptionType> nullableResponseType(boolean isNullableResponseType) {
+            this.isNullableResponseType = isNullableResponseType;
+            return this;
+        }
+
+        /**
          * build the ResponseHandler.
          * @return the instance of {@link ResponseHandler}.
          */
         public ResponseHandler<ResponseType, ExceptionType> build() {
             return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
                     globalErrorCases, deserializer, intermediateDeserializer, responseClassType,
-                    contextInitializer, isNullify404Enabled);
+                    contextInitializer, isNullify404Enabled, isNullableResponseType);
         }
     }
 }
