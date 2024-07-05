@@ -281,7 +281,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         /**
          * A boolean variable to determine if the provided response type is a nullable type.
          */
-        private boolean isNullableResponseType = true;
+        private boolean isNullableResponseType = false;
 
         /**
          * Setter for the localErrorCase.
