@@ -112,7 +112,7 @@ public class CoreHelperTest {
     @Test
     public void testIsNotWhiteSpace() {
         String whiteSpaceString = "";
-        assertFalse(CoreHelper.isNullOrWhiteSpace(whiteSpaceString));
+        assertTrue(CoreHelper.isNullOrWhiteSpace(whiteSpaceString));
     }
 
     @Test
