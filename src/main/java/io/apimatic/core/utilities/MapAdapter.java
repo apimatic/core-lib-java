@@ -41,8 +41,7 @@ public class MapAdapter extends XmlAdapter<MapAdapter.EntryList, Map<String, Str
             return null;
         }
 
-        DocumentBuilder docBuilder;
-        docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.newDocument();
         EntryList adaptedMap = new EntryList();
         for (Entry<String, String> entry : map.entrySet()) {

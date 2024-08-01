@@ -30,9 +30,11 @@ public class MapAdapterTest {
         // Assert
         assertEquals(2, result.getEntries().size());
         assertTrue(result.getEntries().stream()
-                .anyMatch(e -> e.getAttribute("key").equals("key1") && e.getTextContent().equals("value1")));
+                .anyMatch(e -> e.getAttribute("key").equals("key1")
+                        && e.getTextContent().equals("value1")));
         assertTrue(result.getEntries().stream()
-                .anyMatch(e -> e.getAttribute("key").equals("key2") && e.getTextContent().equals("value2")));
+                .anyMatch(e -> e.getAttribute("key").equals("key2")
+                        && e.getTextContent().equals("value2")));
     }
 
     @Test
@@ -100,7 +102,7 @@ public class MapAdapterTest {
         assertEquals(1, result.getEntries().size());
         assertEquals("", result.getEntries().get(0).getTextContent());
     }
-    
+
     @Test
     public void marshalShouldHandleNullMap() throws Exception {
         // Arrange
@@ -124,7 +126,7 @@ public class MapAdapterTest {
         // Assert
         assertNull(result);
     }
-    
+
     @Test
     public void unmarshalShouldHandleEntriesWithEmptyTextContent() throws Exception {
         // Arrange
@@ -144,5 +146,4 @@ public class MapAdapterTest {
         assertEquals(1, result.size());
         assertEquals("", result.get("key1"));
     }
-
 }
