@@ -22,10 +22,14 @@ public class MapAdapter extends XmlAdapter<MapAdapter.EntryList, Map<String, Str
     /**
      * Holds the element entries of the map.
      */
-    public final static class EntryList {
+    public static class EntryList {
         @XmlAnyElement
         private List<Element> entries = new ArrayList<Element>();
 
+        /**
+         * Getter for the element entries.
+         * @return entries The list of elements.
+         */
         public List<Element> getEntries() {
             return entries;
         }
