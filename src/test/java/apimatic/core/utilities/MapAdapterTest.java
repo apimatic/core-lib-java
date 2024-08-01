@@ -28,10 +28,10 @@ public class MapAdapterTest {
         MapAdapter.EntryList result = mapAdapter.marshal(inputMap);
 
         // Assert
-        assertEquals(2, result.entries.size());
-        assertTrue(result.entries.stream()
+        assertEquals(2, result.getEntries().size());
+        assertTrue(result.getEntries().stream()
                 .anyMatch(e -> e.getAttribute("key").equals("key1") && e.getTextContent().equals("value1")));
-        assertTrue(result.entries.stream()
+        assertTrue(result.getEntries().stream()
                 .anyMatch(e -> e.getAttribute("key").equals("key2") && e.getTextContent().equals("value2")));
     }
 
@@ -45,7 +45,7 @@ public class MapAdapterTest {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.entries.isEmpty());
+        assertTrue(result.getEntries().isEmpty());
     }
 
     @Test
@@ -62,8 +62,8 @@ public class MapAdapterTest {
         entry2.setTextContent("value2");
 
         MapAdapter.EntryList entryList = new MapAdapter.EntryList();
-        entryList.entries.add(entry1);
-        entryList.entries.add(entry2);
+        entryList.getEntries().add(entry1);
+        entryList.getEntries().add(entry2);
 
         // Act
         Map<String, String> result = mapAdapter.unmarshal(entryList);
@@ -97,8 +97,8 @@ public class MapAdapterTest {
         MapAdapter.EntryList result = mapAdapter.marshal(inputMap);
 
         // Assert
-        assertEquals(1, result.entries.size());
-        assertEquals("", result.entries.get(0).getTextContent());
+        assertEquals(1, result.getEntries().size());
+        assertEquals("", result.getEntries().get(0).getTextContent());
     }
     
     @Test
@@ -135,7 +135,7 @@ public class MapAdapterTest {
         entry1.setTextContent("");
 
         MapAdapter.EntryList entryList = new MapAdapter.EntryList();
-        entryList.entries.add(entry1);
+        entryList.getEntries().add(entry1);
 
         // Act
         Map<String, String> result = mapAdapter.unmarshal(entryList);
