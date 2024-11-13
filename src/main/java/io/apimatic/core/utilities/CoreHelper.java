@@ -35,6 +35,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.core.JsonParser;
@@ -147,6 +149,10 @@ public class CoreHelper {
      * @return The JsonSerializer instance of the required type.
      */
     private static JsonSerializer<?> getSerializer(JsonSerialize serializerAnnotation) {
+        if (serializerAnnotation == null) {
+            return null;
+        }
+
         try {
             return serializerAnnotation.using().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
@@ -162,6 +168,10 @@ public class CoreHelper {
      * @return The JsonSerializer instance of the required type.
      */
     private static JsonSerializer<?> getCollectionSerializer(JsonSerialize serializerAnnotation) {
+        if (serializerAnnotation == null) {
+            return null;
+        }
+        
         try {
             return serializerAnnotation.contentUsing().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
@@ -1214,7 +1224,8 @@ public class CoreHelper {
 
                     // Is a public/protected getter or internalGetter?
                     if (method.getParameterTypes().length != 0
-                            || Modifier.isPrivate(method.getModifiers())
+                            || (Modifier.isPrivate(method.getModifiers())
+                                    && !method.getName().equals("getAdditionalProperties"))
                             || (!method.getName().startsWith("get")
                                     && !method.getName().startsWith("internalGet"))) {
                         continue;
@@ -1222,32 +1233,40 @@ public class CoreHelper {
 
                     // Get JsonGetter annotation
                     Annotation getterAnnotation = method.getAnnotation(JsonGetter.class);
-                    if (getterAnnotation == null) {
+                    Annotation anyGetterAnnotation = method.getAnnotation(JsonAnyGetter.class);
+                    
+                    if (getterAnnotation == null && anyGetterAnnotation == null) {
                         continue;
                     }
-
-                    // Load key name from getter attribute name
-                    String attribName = ((JsonGetter) getterAnnotation).value();
-                    if ((objName != null) && (!objName.isEmpty())) {
-                        attribName = String.format("%s[%s]", objName, attribName);
-                    }
-
                     try {
                         // Load value by invoking getter method
                         method.setAccessible(true);
                         Object value = method.invoke(obj);
                         JsonSerialize serializerAnnotation = method
                                 .getAnnotation(JsonSerialize.class);
-                        // Load key value pair into objectList
-                        if (serializerAnnotation != null) {
-                            loadKeyValuePairForEncoding(attribName, value, objectList, processed,
-                                    serializerAnnotation, arraySerializationFormat);
+                        if (getterAnnotation != null) {
+                            // Load key name from getter attribute name
+                            String attribName = ((JsonGetter) getterAnnotation).value();
+                            if ((objName != null) && (!objName.isEmpty())) {
+                                attribName = String.format("%s[%s]", objName, attribName);
+                            }
+                            
+                            // Load key value pair into objectList
+                            if (serializerAnnotation != null) {
+                                loadKeyValuePairForEncoding(attribName, value, objectList, processed,
+                                        serializerAnnotation, arraySerializationFormat);
+                            } else {
+                                loadKeyValuePairForEncoding(attribName, value, objectList, processed,
+                                        arraySerializationFormat);
+                            }
                         } else {
-                            loadKeyValuePairForEncoding(attribName, value, objectList, processed,
-                                    arraySerializationFormat);
+                            JsonSerializer<?> serializer = getCollectionSerializer(serializerAnnotation);
+                            String serializedValue = serialize(value, serializer);
+                            value = serializedValue != null ? deserializeAsObject(serializedValue.toString()) : value;
+                            objectToList(objName, (Map<?, ?>) value, objectList, processed, arraySerializationFormat);
                         }
                     } catch (IllegalAccessException | IllegalArgumentException
-                            | InvocationTargetException e) {
+                            | InvocationTargetException | JsonProcessingException e) {
                         // This block only calls getter methods.
                         // These getters don't throw any exception except invocationTargetException.
                         // The getters are public so there is no chance of an IllegalAccessException
