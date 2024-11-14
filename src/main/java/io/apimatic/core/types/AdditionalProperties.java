@@ -1,6 +1,5 @@
 package io.apimatic.core.types;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -11,79 +10,86 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 /**
- * A generic class for additional properties in a model.
+ * A generic class for managing additional properties in a model.
+ *
+ * @param <T> the type of the additional properties.
  */
 public class AdditionalProperties<T> {
 
     /**
      * Map to store additional properties.
      */
-    private Map<String, T> additionalProperties = new LinkedHashMap<String, T>();
+    private final Map<String, T> additionalProperties = new LinkedHashMap<>();
 
     /**
-     * List to store model properties.
+     * Set to store model properties.
      */
-    private Set<String> modelProperties = new HashSet<String>();
+    private final Set<String> modelProperties = new HashSet<>();
 
     /**
      * Default constructor.
      */
     public AdditionalProperties() {
+        // Default constructor
     }
 
     /**
      * Parameterized constructor.
-     * @param classInstance The instance of the class having additional properties.
+     * 
+     * @param classInstance The instance of the class with additional properties.
      */
     public AdditionalProperties(Class<?> classInstance) {
         Method[] methods = classInstance.getMethods();
         for (Method method : methods) {
-            Annotation annotation = method.getAnnotation(JsonGetter.class);
-            if (annotation != null) {
-                modelProperties.add(((JsonGetter) annotation).value());
+            JsonGetter jsonGetter = method.getAnnotation(JsonGetter.class);
+            if (jsonGetter != null) {
+                modelProperties.add(jsonGetter.value());
             }
         }
     }
 
     /**
-     * The getter for provided additional properties.
-     * @return Returns the map of {@code T} typed additional properties.
+     * Gets the additional properties.
+     * 
+     * @return the map of additional properties.
      */
     public Map<String, T> getAdditionalProperties() {
         return additionalProperties;
     }
 
     /**
-     * The setter for an additional property.
-     * @param key   The additional property key.
-     * @param value The {@code T} type additional property value.
-     * @throws IllegalArgumentException if there is a conflict between key and any
-     *                                  model property.
+     * Sets an additional property.
+     * 
+     * @param key   The key for the additional property.
+     * @param value The value of the additional property.
+     * @throws IllegalArgumentException if there is a conflict between the key and
+     *                                  any model property.
      */
     public void setAdditionalProperty(String key, T value) {
-        if (key == null || key.trim().isEmpty())
-            return;
+        if (key == null || key.trim().isEmpty()) {
+            throw new IllegalArgumentException("Key cannot be null or empty.");
+        }
 
         if (modelProperties.contains(key)) {
-            // key is reserved for properties
-            throw new IllegalArgumentException("Key '" + key + "' is conflicting with model property");
+            throw new IllegalArgumentException(
+                    "Key '" + key + "' conflicts with a model property.");
         }
         additionalProperties.put(key, value);
     }
 
     /**
-     * The setter for an additional property.
-     * @param key           The additional property key.
-     * @param value         The {@code T} type additional property value.
-     * @param skipNullValue The flag to skip null values in the additional
-     *                      properties map.
-     * @throws IllegalArgumentException if there is a conflict between key and any
-     *                                  model property.
+     * Sets an additional property with an option to skip null values.
+     * 
+     * @param key           The key for the additional property.
+     * @param value         The value of the additional property.
+     * @param skipNullValue If true, null values will be skipped.
+     * @throws IllegalArgumentException if there is a conflict between the key and
+     *                                  any model property.
      */
     public void setAdditionalProperty(String key, T value, boolean skipNullValue) {
-        if (skipNullValue && value == null)
+        if (skipNullValue && value == null) {
             return;
-
+        }
         setAdditionalProperty(key, value);
     }
 
@@ -92,16 +98,16 @@ public class AdditionalProperties<T> {
         if (additionalProperties.isEmpty()) {
             return "";
         }
-
-        return ", " + additionalProperties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(", "));
+        return additionalProperties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(", ", ", ", ""));
     }
 
     /**
-     * The getter for provided additional properties.
-     * @param key The additional property key to search.
-     * @return the {@code T} type additional property value associated with the
-     *         provided key.
+     * Gets an additional property by key.
+     * 
+     * @param key The key of the additional property to retrieve.
+     * @return the value of the additional property associated with the given key,
+     *         or null if not found.
      */
     public T getAdditionalProperty(String key) {
         return additionalProperties.get(key);

@@ -1,6 +1,5 @@
 package apimatic.core.models;
 
-import java.io.IOException;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -15,8 +14,8 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWithTypeCombinatorAdditionalProperties {
     private String company;
-    protected AdditionalProperties<SendScalarParamBody> additionalProperties = new AdditionalProperties<SendScalarParamBody>(
-            this.getClass());
+    protected AdditionalProperties<SendScalarParamBody> additionalProperties =
+            new AdditionalProperties<SendScalarParamBody>(this.getClass());
 
     /**
      * Default constructor.
@@ -26,9 +25,7 @@ public class ModelWithTypeCombinatorAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
     public ModelWithTypeCombinatorAdditionalProperties(String company) {
         this.company = company;
@@ -68,13 +65,11 @@ public class ModelWithTypeCombinatorAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToSimpleType(value, x -> {
-            try {
-                return CoreHelper.deserialize(CoreHelper.serialize(x), SendScalarParamBody.class);
-            } catch (IOException e) {
-                return null;
-            }
-        }), true);
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToSimpleType(value,
+                        x -> CoreHelper.tryDeserialize(
+                                CoreHelper.trySerialize(x), SendScalarParamBody.class)),
+                true);
     }
 
     /**
@@ -87,30 +82,31 @@ public class ModelWithTypeCombinatorAdditionalProperties {
     }
 
     /**
-     * Converts this ChildNumberType into string format.
+     * Converts this ModelWithTypeCombinatorAdditionalProperties into string format.
      * @return String representation of this class
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithTypeCombinatorAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithTypeCombinatorAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithTypeCombinatorAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWithTypeCombinatorAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithTypeCombinatorAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<SendScalarParamBody> additionalProperties = new AdditionalProperties<SendScalarParamBody>();
+        private AdditionalProperties<SendScalarParamBody> additionalProperties =
+                new AdditionalProperties<SendScalarParamBody>();
 
         /**
          * Initialization constructor.
@@ -120,10 +116,9 @@ public class ModelWithTypeCombinatorAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -149,11 +144,12 @@ public class ModelWithTypeCombinatorAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithTypeCombinatorAdditionalProperties} object using the set fields.
+         * @return {@link ModelWithTypeCombinatorAdditionalProperties}
          */
         public ModelWithTypeCombinatorAdditionalProperties build() {
-            ModelWithTypeCombinatorAdditionalProperties obj = new ModelWithTypeCombinatorAdditionalProperties(company);
+            ModelWithTypeCombinatorAdditionalProperties obj =
+                    new ModelWithTypeCombinatorAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

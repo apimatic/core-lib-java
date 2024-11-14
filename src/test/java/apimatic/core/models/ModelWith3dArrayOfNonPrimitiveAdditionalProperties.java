@@ -1,6 +1,5 @@
 package apimatic.core.models;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +15,8 @@ import io.apimatic.core.utilities.CoreHelper;
 public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
     private String company;
-    protected AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties = new AdditionalProperties<List<List<List<Vehicle>>>>(
-            this.getClass());
+    protected AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
+            new AdditionalProperties<List<List<List<Vehicle>>>>(this.getClass());
 
     /**
      * Default constructor.
@@ -27,11 +26,10 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
+     *
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWith3dArrayOfNonPrimitiveAdditionalProperties(String company) {
+    public ModelWith3dArrayOfNonPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -69,13 +67,12 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToNDimensionalArray(value, (x) -> {
-            try {
-                return CoreHelper.deserialize(CoreHelper.serialize(x), Vehicle.class);
-            } catch (IOException e) {
-                return null;
-            }
-        }, 3), true);
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToNDimensionalArray(value, 
+                        x -> CoreHelper.tryDeserialize(
+                                CoreHelper.trySerialize(x), Vehicle.class),
+                        3),
+                true);
     }
 
     /**
@@ -88,30 +85,31 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
     }
 
     /**
-     * Converts this ChildNumberType into string format.
+     * Converts this ModelWith3dArrayOfNonPrimitiveAdditionalProperties into string format.
      * @return String representation of this class
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWith3dArrayOfNonPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWith3dArrayOfNonPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties = new AdditionalProperties<List<List<List<Vehicle>>>>();
+        private AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
+                new AdditionalProperties<List<List<List<Vehicle>>>>();
 
         /**
          * Initialization constructor.
@@ -121,10 +119,9 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -150,12 +147,13 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties} object 
+         * using the set fields.
+         * @return {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties}
          */
         public ModelWith3dArrayOfNonPrimitiveAdditionalProperties build() {
-            ModelWith3dArrayOfNonPrimitiveAdditionalProperties obj = new ModelWith3dArrayOfNonPrimitiveAdditionalProperties(
-                    company);
+            ModelWith3dArrayOfNonPrimitiveAdditionalProperties obj =
+                    new ModelWith3dArrayOfNonPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

@@ -171,7 +171,7 @@ public class CoreHelper {
         if (serializerAnnotation == null) {
             return null;
         }
-        
+
         try {
             return serializerAnnotation.contentUsing().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
@@ -211,6 +211,25 @@ public class CoreHelper {
         }
 
         return mapper.writeValueAsString(obj);
+    }
+
+    /**
+     * Json Serialization of a given object.
+     *
+     * @param obj The object to serialize into Json.
+     * @return The serialized Json String representation of the given object or null
+     *         if unable to serialize.
+     */
+    public static String trySerialize(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        try {
+            return serialize(obj);
+        } catch (JsonProcessingException jpe) {
+            return null;
+        }
     }
 
     /**
@@ -397,6 +416,25 @@ public class CoreHelper {
         }
 
         return mapper.readValue(json, clazz);
+    }
+
+    /**
+     * Json deserialization of the given Json string.
+     *
+     * @param <T>   The type of the object to deserialize into.
+     * @param json  The Json string to deserialize.
+     * @param clazz The type of the object to deserialize into.
+     * @return The deserialized object else null if unable to deserialize.
+     */
+    public static <T extends Object> T tryDeserialize(String json, Class<T> clazz) {
+        if (isNullOrWhiteSpace(json)) {
+            return null;
+        }
+        try {
+            return deserialize(json, clazz);
+        } catch (IOException io) {
+            return null;
+        }
     }
 
     /**
@@ -1234,7 +1272,7 @@ public class CoreHelper {
                     // Get JsonGetter annotation
                     Annotation getterAnnotation = method.getAnnotation(JsonGetter.class);
                     Annotation anyGetterAnnotation = method.getAnnotation(JsonAnyGetter.class);
-                    
+
                     if (getterAnnotation == null && anyGetterAnnotation == null) {
                         continue;
                     }
@@ -1250,20 +1288,22 @@ public class CoreHelper {
                             if ((objName != null) && (!objName.isEmpty())) {
                                 attribName = String.format("%s[%s]", objName, attribName);
                             }
-                            
+
                             // Load key value pair into objectList
                             if (serializerAnnotation != null) {
-                                loadKeyValuePairForEncoding(attribName, value, objectList, processed,
-                                        serializerAnnotation, arraySerializationFormat);
+                                loadKeyValuePairForEncoding(attribName, value, objectList,
+                                        processed, serializerAnnotation, arraySerializationFormat);
                             } else {
-                                loadKeyValuePairForEncoding(attribName, value, objectList, processed,
-                                        arraySerializationFormat);
+                                loadKeyValuePairForEncoding(attribName, value, objectList,
+                                        processed, arraySerializationFormat);
                             }
                         } else {
                             JsonSerializer<?> serializer = getCollectionSerializer(serializerAnnotation);
                             String serializedValue = serialize(value, serializer);
-                            value = serializedValue != null ? deserializeAsObject(serializedValue.toString()) : value;
-                            objectToList(objName, (Map<?, ?>) value, objectList, processed, arraySerializationFormat);
+                            value = serializedValue != null ?
+                                    deserializeAsObject(serializedValue.toString()) : value;
+                            objectToList(objName, (Map<?, ?>) value, objectList, processed,
+                                    arraySerializationFormat);
                         }
                     } catch (IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | JsonProcessingException e) {

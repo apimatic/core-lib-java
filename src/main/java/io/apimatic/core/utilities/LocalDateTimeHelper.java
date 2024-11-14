@@ -361,19 +361,6 @@ public class LocalDateTimeHelper extends DateHelper {
             jgen.writeString(toRfc1123DateTime(value));
         }
     }
-    
-    /**
-     * A class to handle serialization of Rfc1123 format strings to DateTime objects.
-     */
-    public static class Rfc1123DateTimeArraySerializer extends JsonSerializer<List<LocalDateTime>> {
-        @SuppressWarnings("unused")
-        @Override
-        public void serialize(List<LocalDateTime> values, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException, JsonProcessingException {
-            List<String> convertedValues = toRfc1123DateTime(values);
-            jgen.writeString(convertedValues.toString());
-        }
-    }
 
     /**
      * A class to handle deserialization of DateTime objects to Rfc8601(Rfc3339) format strings.

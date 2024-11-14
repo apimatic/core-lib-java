@@ -12,7 +12,8 @@ import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWithPrimitiveAdditionalProperties {
     private String company;
-    protected AdditionalProperties<String> additionalProperties = new AdditionalProperties<String>(this.getClass());
+    protected AdditionalProperties<String> additionalProperties =
+            new AdditionalProperties<String>(this.getClass());
 
     /**
      * Default constructor.
@@ -22,11 +23,9 @@ public class ModelWithPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWithPrimitiveAdditionalProperties(String company) {
+    public ModelWithPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -64,7 +63,9 @@ public class ModelWithPrimitiveAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToSimpleType(value, x -> (String) x),
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToSimpleType(value,
+                        x -> (String) x),
                 true);
     }
 
@@ -78,7 +79,7 @@ public class ModelWithPrimitiveAdditionalProperties {
     }
 
     /**
-     * Converts this ChildNumberType into string format.
+     * Converts this ModelWithPrimitiveAdditionalProperties into string format.
      * @return String representation of this class
      */
     @Override
@@ -87,9 +88,9 @@ public class ModelWithPrimitiveAdditionalProperties {
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithPrimitiveAdditionalProperties.Builder} object
      */
     public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
@@ -97,11 +98,12 @@ public class ModelWithPrimitiveAdditionalProperties {
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<String> additionalProperties = new AdditionalProperties<String>();
+        private AdditionalProperties<String> additionalProperties =
+                new AdditionalProperties<String>();
 
         /**
          * Initialization constructor.
@@ -111,10 +113,9 @@ public class ModelWithPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -140,11 +141,13 @@ public class ModelWithPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithPrimitiveAdditionalProperties} object
+         * using the set fields.
+         * @return {@link ModelWithPrimitiveAdditionalProperties}
          */
         public ModelWithPrimitiveAdditionalProperties build() {
-            ModelWithPrimitiveAdditionalProperties obj = new ModelWithPrimitiveAdditionalProperties(company);
+            ModelWithPrimitiveAdditionalProperties obj =
+                    new ModelWithPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

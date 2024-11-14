@@ -125,6 +125,31 @@ public class CoreHelperTest {
     }
 
     @Test
+    public void testTrySerializeValidObject() {
+        Vehicle model = new Vehicle.Builder("4").build();
+        String expectedJson = "{\"NumberOfTyres\":\"4\"}";
+        assertEquals(expectedJson, CoreHelper.trySerialize(model));
+    }
+
+    @Test
+    public void testTrySerializeInvalidObject() {
+        assertNull(CoreHelper.trySerialize(new Object()));
+    }
+
+    @Test
+    public void testTryDeserializeValidJson() {
+        String json = "{\"NumberOfTyres\":\"4\"}";
+        Vehicle expectedModel = new Vehicle.Builder("4").build();
+        Vehicle actualModel = CoreHelper.tryDeserialize(json, Vehicle.class);
+        assertEquals(expectedModel.toString(), actualModel.toString());
+    }
+
+    @Test
+    public void testTryDeserializeInvalidJson() {
+        assertNull(CoreHelper.tryDeserialize("}{", Vehicle.class));
+    }
+
+    @Test
     public void testIsWhiteSpace() {
         String whiteSpaceString = " ";
         assertTrue(CoreHelper.isNullOrWhiteSpace(whiteSpaceString));

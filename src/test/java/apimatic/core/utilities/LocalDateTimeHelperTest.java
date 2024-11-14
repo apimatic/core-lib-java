@@ -335,7 +335,7 @@ public class LocalDateTimeHelperTest {
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
-        List<Long> expected = Arrays.asList(DateTimeConstants.UNIXTIMESTAMP1, DateTimeConstants.UNITIMESTAMP2);
+        List<Long> expected = Arrays.asList(DateTimeConstants.UNIXTIMESTAMP1, DateTimeConstants.UNIXTIMESTAMP2);
 
         assertEquals(LocalDateTimeHelper.toUnixTimestampLong(dateTimeArray), expected);
     }
@@ -361,7 +361,7 @@ public class LocalDateTimeHelperTest {
         // stub
         Map<String, Long> expected = new HashMap<>();
         expected.put("dateTime1", DateTimeConstants.UNIXTIMESTAMP1);
-        expected.put("dateTime2", DateTimeConstants.UNITIMESTAMP2);
+        expected.put("dateTime2", DateTimeConstants.UNIXTIMESTAMP2);
 
         assertEquals(LocalDateTimeHelper.toUnixTimestampLong(dateTimeMap), expected);
 
@@ -384,7 +384,7 @@ public class LocalDateTimeHelperTest {
         // stub
         Map<String, Long> mapOfLong = new HashMap<>();
         mapOfLong.put("dateTime1", DateTimeConstants.UNIXTIMESTAMP1);
-        mapOfLong.put("dateTime2", DateTimeConstants.UNITIMESTAMP2);
+        mapOfLong.put("dateTime2", DateTimeConstants.UNIXTIMESTAMP2);
 
         List<Map<String, Long>> expected = Arrays.asList(mapOfLong);
 

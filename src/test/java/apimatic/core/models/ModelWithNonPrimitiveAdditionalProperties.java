@@ -1,6 +1,5 @@
 package apimatic.core.models;
 
-import java.io.IOException;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,7 +13,8 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWithNonPrimitiveAdditionalProperties {
     private String company;
-    protected AdditionalProperties<Vehicle> additionalProperties = new AdditionalProperties<Vehicle>(this.getClass());
+    protected AdditionalProperties<Vehicle> additionalProperties =
+            new AdditionalProperties<Vehicle>(this.getClass());
 
     /**
      * Default constructor.
@@ -24,11 +24,9 @@ public class ModelWithNonPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWithNonPrimitiveAdditionalProperties(String company) {
+    public ModelWithNonPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -66,13 +64,11 @@ public class ModelWithNonPrimitiveAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToSimpleType(value, x -> {
-            try {
-                return CoreHelper.deserialize(CoreHelper.serialize(x), Vehicle.class);
-            } catch (IOException e) {
-                return null;
-            }
-        }), true);
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToSimpleType(value,
+                        x -> CoreHelper.tryDeserialize(
+                                CoreHelper.trySerialize(x), Vehicle.class)),
+                true);
     }
 
     /**
@@ -90,13 +86,13 @@ public class ModelWithNonPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithNonPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithNonPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithNonPrimitiveAdditionalProperties.Builder} object
      */
     public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
@@ -104,11 +100,12 @@ public class ModelWithNonPrimitiveAdditionalProperties {
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithNonPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<Vehicle> additionalProperties = new AdditionalProperties<Vehicle>();
+        private AdditionalProperties<Vehicle> additionalProperties =
+                new AdditionalProperties<Vehicle>();
 
         /**
          * Initialization constructor.
@@ -118,10 +115,9 @@ public class ModelWithNonPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -147,8 +143,9 @@ public class ModelWithNonPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithNonPrimitiveAdditionalProperties} object
+         * using the set fields.
+         * @return {@link ModelWithNonPrimitiveAdditionalProperties}
          */
         public ModelWithNonPrimitiveAdditionalProperties build() {
             ModelWithNonPrimitiveAdditionalProperties obj = new ModelWithNonPrimitiveAdditionalProperties(company);

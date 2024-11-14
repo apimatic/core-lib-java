@@ -7,16 +7,25 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This is a Helper class for the coversion of type for all structures supported
- * in the SDK.
+ * A helper class for converting types of various structures supported in the
+ * SDK.
  */
 public class ConversionHelper {
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private ConversionHelper() {
+        // Prevent instantiation
+    }
+
     /**
      * Converts a single object to the specified type.
-     * 
-     * @param value              The object to convert.
-     * @param conversionFunction The function to apply for conversion.
-     * @return The converted object of type {@code S}, or null if conversion fails.
+     *
+     * @param <S>                the type to convert to.
+     * @param value              the object to convert.
+     * @param conversionFunction the function to apply for conversion.
+     * @return the converted object of type {@code S}, or null if conversion fails.
      */
     public static <S> S convertToSimpleType(Object value, Function<Object, S> conversionFunction) {
         try {
@@ -28,26 +37,26 @@ public class ConversionHelper {
 
     /**
      * Converts a map of objects to a map of the specified type.
-     * 
-     * @param value              The map of objects to convert.
-     * @param conversionFunction The function to apply for conversion of each value.
-     * @return A map with values converted to type {@code S}, skipping unconvertible
-     *         values.
+     *
+     * @param <S>                the type of values in the resulting map.
+     * @param value              the map of objects to convert.
+     * @param conversionFunction the function to apply for conversion of each value.
+     * @return a map with values converted to type {@code S}, or null if conversion
+     *         fails.
      */
     @SuppressWarnings("unchecked")
     public static <S> Map<String, S> convertToMap(Object value, Function<Object, S> conversionFunction) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
 
         try {
             Map<String, Object> valueMap = (Map<String, Object>) value;
-            Map<String, S> filteredMap = valueMap.entrySet().stream().map(entry -> {
-                S convertedValue = convertToSimpleType(entry.getValue(), conversionFunction);
-                return new AbstractMap.SimpleEntry<>(entry.getKey(), convertedValue);
-            }).filter(entry -> entry.getValue() != null) // Filter out null values
+            return valueMap.entrySet().stream()
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                            convertToSimpleType(entry.getValue(), conversionFunction)))
+                    .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-            return filteredMap;
         } catch (Exception e) {
             return null;
         }
@@ -55,11 +64,12 @@ public class ConversionHelper {
 
     /**
      * Converts a list of objects to a list of the specified type.
-     * 
-     * @param value              The list of objects to convert.
-     * @param conversionFunction The function to apply for conversion of each item.
-     * @return A list with elements converted to type {@code S}, skipping
-     *         unconvertible items.
+     *
+     * @param <S>                the type of elements in the resulting list.
+     * @param value              the list of objects to convert.
+     * @param conversionFunction the function to apply for conversion of each item.
+     * @return a list with elements converted to type {@code S}, or null if
+     *         conversion fails.
      */
     @SuppressWarnings("unchecked")
     public static <S> List<S> convertToArray(Object value, Function<Object, S> conversionFunction) {
@@ -74,12 +84,14 @@ public class ConversionHelper {
 
     /**
      * Converts a list of maps to a list of maps with values of the specified type.
-     * 
-     * @param value              The list of maps to convert.
-     * @param conversionFunction The function to apply for conversion of each map's
+     *
+     * @param <S>                the type of values in the maps of the resulting
+     *                           list.
+     * @param value              the list of maps to convert.
+     * @param conversionFunction the function to apply for conversion of each map's
      *                           values.
-     * @return A list of maps with converted values of type {@code S}, skipping
-     *         unconvertible items.
+     * @return a list of maps with converted values of type {@code S}, or null if
+     *         conversion fails.
      */
     @SuppressWarnings("unchecked")
     public static <S> List<Map<String, S>> convertToArrayOfMap(Object value, Function<Object, S> conversionFunction) {
@@ -94,19 +106,22 @@ public class ConversionHelper {
 
     /**
      * Converts a map of lists to a map with lists of the specified type.
-     * 
-     * @param value              The map of lists to convert.
-     * @param conversionFunction The function to apply for conversion of each list's
+     *
+     * @param <S>                the type of elements in the lists of the resulting
+     *                           map.
+     * @param value              the map of lists to convert.
+     * @param conversionFunction the function to apply for conversion of each list's
      *                           elements.
-     * @return A map with lists converted to type {@code S}, skipping unconvertible
-     *         items.
+     * @return a map with lists converted to type {@code S}, or null if conversion
+     *         fails.
      */
     @SuppressWarnings("unchecked")
     public static <S> Map<String, List<S>> convertToMapOfArray(Object value, Function<Object, S> conversionFunction) {
         try {
             Map<String, Object> valueMap = (Map<String, Object>) value;
             return valueMap.entrySet().stream()
-                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), convertToArray(entry.getValue(), conversionFunction)))
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                            convertToArray(entry.getValue(), conversionFunction)))
                     .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (Exception e) {
@@ -117,13 +132,15 @@ public class ConversionHelper {
     /**
      * Converts an n-dimensional array to a nested list with elements of the
      * specified type.
-     * 
-     * @param value              The n-dimensional array to convert.
-     * @param conversionFunction The function to apply for conversion of each
+     *
+     * @param <T>                the type of the nested structure.
+     * @param <S>                the type of elements in the nested structure.
+     * @param value              the n-dimensional array to convert.
+     * @param conversionFunction the function to apply for conversion of each
      *                           element.
-     * @param dimensionCount     The depth of the nested structure.
-     * @return A nested list with elements converted to type {@code T}, skipping
-     *         unconvertible items.
+     * @param dimensionCount     the depth of the nested structure.
+     * @return a nested list with elements converted to type {@code S}, or null if
+     *         conversion fails.
      */
     @SuppressWarnings("unchecked")
     public static <T, S> T convertToNDimensionalArray(Object value, Function<Object, S> conversionFunction,
@@ -137,13 +154,14 @@ public class ConversionHelper {
 
     /**
      * Applies the conversion function to the n-dimensional arrays recursively.
-     * 
-     * @param value              The n-dimensional array to convert.
-     * @param conversionFunction The function to apply for conversion of each
+     *
+     * @param <S>                the type of elements in the nested structure.
+     * @param value              the n-dimensional array to convert.
+     * @param conversionFunction the function to apply for conversion of each
      *                           element.
-     * @param dimensionCount     The depth of the nested structure.
-     * @return A nested list with elements converted to type {@code S}, skipping
-     *         unconvertible items.
+     * @param dimensionCount     the depth of the nested structure.
+     * @return a nested list with elements converted to type {@code S}, or null if
+     *         conversion fails.
      */
     @SuppressWarnings("unchecked")
     private static <S> List<?> convertToNDimensionalArrayInternal(Object value, Function<Object, S> conversionFunction,
@@ -158,7 +176,7 @@ public class ConversionHelper {
                         .filter(item -> item != null && !((List<?>) item).isEmpty()).collect(Collectors.toList());
             }
         } catch (Exception e) {
-            // Ignoring in order to handle the exception silently.
+            // Ignoring exception to handle silently.
         }
         return null;
     }

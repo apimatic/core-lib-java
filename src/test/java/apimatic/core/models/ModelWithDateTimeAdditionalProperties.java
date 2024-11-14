@@ -15,8 +15,8 @@ import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class ModelWithDateTimeAdditionalProperties {
     private String company;
-    protected AdditionalProperties<LocalDateTime> additionalProperties = new AdditionalProperties<LocalDateTime>(
-            this.getClass());
+    protected AdditionalProperties<LocalDateTime> additionalProperties =
+            new AdditionalProperties<LocalDateTime>(this.getClass());
 
     /**
      * Default constructor.
@@ -26,11 +26,9 @@ public class ModelWithDateTimeAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWithDateTimeAdditionalProperties(String company) {
+    public ModelWithDateTimeAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -69,8 +67,10 @@ public class ModelWithDateTimeAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToSimpleType(value,
-                x -> LocalDateTimeHelper.fromRfc1123DateTime(String.valueOf(x))), true);
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToSimpleType(value, 
+                        x -> LocalDateTimeHelper.fromRfc1123DateTime(String.valueOf(x))),
+                true);
     }
 
     /**
@@ -88,25 +88,26 @@ public class ModelWithDateTimeAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithDateTimeAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithDateTimeAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithDateTimeAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWithDateTimeAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithDateTimeAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<LocalDateTime> additionalProperties = new AdditionalProperties<LocalDateTime>();
+        private AdditionalProperties<LocalDateTime> additionalProperties =
+                new AdditionalProperties<LocalDateTime>();
 
         /**
          * Initialization constructor.
@@ -116,10 +117,9 @@ public class ModelWithDateTimeAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -145,11 +145,12 @@ public class ModelWithDateTimeAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithDateTimeAdditionalProperties} object using the set fields.
+         * @return {@link ModelWithDateTimeAdditionalProperties}
          */
         public ModelWithDateTimeAdditionalProperties build() {
-            ModelWithDateTimeAdditionalProperties obj = new ModelWithDateTimeAdditionalProperties(company);
+            ModelWithDateTimeAdditionalProperties obj =
+                    new ModelWithDateTimeAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

@@ -12,9 +12,10 @@ import io.apimatic.core.types.AdditionalProperties;
 import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
+
     private String company;
-    protected AdditionalProperties<List<List<List<String>>>> additionalProperties = new AdditionalProperties<List<List<List<String>>>>(
-            this.getClass());
+    protected AdditionalProperties<List<List<List<String>>>> additionalProperties =
+            new AdditionalProperties<List<List<List<String>>>>(this.getClass());
 
     /**
      * Default constructor.
@@ -24,11 +25,10 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
+     *
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWith3dArrayOfPrimitiveAdditionalProperties(String company) {
+    public ModelWith3dArrayOfPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -67,7 +67,9 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
         additionalProperties.setAdditionalProperty(name,
-                ConversionHelper.convertToNDimensionalArray(value, (x) -> ((String) x), 3), true);
+                ConversionHelper.convertToNDimensionalArray(value,
+                        x -> ((String) x), 3),
+                true);
     }
 
     /**
@@ -85,25 +87,26 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWith3dArrayOfPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWith3dArrayOfPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWith3dArrayOfPrimitiveAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWith3dArrayOfPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWith3dArrayOfPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<List<List<List<String>>>> additionalProperties = new AdditionalProperties<List<List<List<String>>>>();
+        private AdditionalProperties<List<List<List<String>>>> additionalProperties =
+                new AdditionalProperties<List<List<List<String>>>>();
 
         /**
          * Initialization constructor.
@@ -113,10 +116,9 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -142,12 +144,13 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
+         * Builds a new {@link ModelWith3dArrayOfPrimitiveAdditionalProperties} object
+         * using the set fields.
          * @return {@link ChildNumberType}
          */
         public ModelWith3dArrayOfPrimitiveAdditionalProperties build() {
-            ModelWith3dArrayOfPrimitiveAdditionalProperties obj = new ModelWith3dArrayOfPrimitiveAdditionalProperties(
-                    company);
+            ModelWith3dArrayOfPrimitiveAdditionalProperties obj = 
+                    new ModelWith3dArrayOfPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

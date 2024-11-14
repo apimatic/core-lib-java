@@ -13,8 +13,8 @@ import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
     private String company;
-    protected AdditionalProperties<Map<String, List<String>>> additionalProperties = new AdditionalProperties<Map<String, List<String>>>(
-            this.getClass());
+    protected AdditionalProperties<Map<String, List<String>>> additionalProperties =
+            new AdditionalProperties<Map<String, List<String>>>(this.getClass());
 
     /**
      * Default constructor.
@@ -24,11 +24,9 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWithMapOfArrayOfPrimitiveAdditionalProperties(String company) {
+    public ModelWithMapOfArrayOfPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -66,7 +64,9 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToMapOfArray(value, (x) -> (String) x),
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToMapOfArray(value,
+                        x -> (String) x),
                 true);
     }
 
@@ -85,25 +85,26 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithMapOfArrayOfPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithMapOfArrayOfPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithMapOfArrayOfPrimitiveAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWithMapOfArrayOfPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithMapOfArrayOfPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<Map<String, List<String>>> additionalProperties = new AdditionalProperties<Map<String, List<String>>>();
+        private AdditionalProperties<Map<String, List<String>>> additionalProperties =
+                new AdditionalProperties<Map<String, List<String>>>();
 
         /**
          * Initialization constructor.
@@ -113,7 +114,6 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
         public Builder(String company) {
@@ -142,12 +142,13 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithMapOfArrayOfPrimitiveAdditionalProperties} object
+         * using the set fields.
+         * @return {@link ModelWithMapOfArrayOfPrimitiveAdditionalProperties}
          */
         public ModelWithMapOfArrayOfPrimitiveAdditionalProperties build() {
-            ModelWithMapOfArrayOfPrimitiveAdditionalProperties obj = new ModelWithMapOfArrayOfPrimitiveAdditionalProperties(
-                    company);
+            ModelWithMapOfArrayOfPrimitiveAdditionalProperties obj =
+                    new ModelWithMapOfArrayOfPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

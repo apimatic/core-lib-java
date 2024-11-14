@@ -1,6 +1,5 @@
 package apimatic.core.models;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +14,8 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
     private String company;
-    protected AdditionalProperties<Map<String, List<Vehicle>>> additionalProperties = new AdditionalProperties<Map<String, List<Vehicle>>>(
-            this.getClass());
+    protected AdditionalProperties<Map<String, List<Vehicle>>> additionalProperties =
+            new AdditionalProperties<Map<String, List<Vehicle>>>(this.getClass());
 
     /**
      * Default constructor.
@@ -26,11 +25,9 @@ public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
 
     /**
      * Initialization constructor.
-     * @param name    String value for name.
      * @param company String value for company.
-     * @param type    String value for type.
      */
-    public ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties(String company) {
+    public ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -68,13 +65,11 @@ public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
      */
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
-        additionalProperties.setAdditionalProperty(name, ConversionHelper.convertToMapOfArray(value, (x) -> {
-            try {
-                return CoreHelper.deserialize(CoreHelper.serialize(x), Vehicle.class);
-            } catch (IOException e) {
-                return null;
-            }
-        }), true);
+        additionalProperties.setAdditionalProperty(name,
+                ConversionHelper.convertToMapOfArray(value,
+                        x -> CoreHelper.tryDeserialize(
+                                CoreHelper.trySerialize(x), Vehicle.class)),
+                true);
     }
 
     /**
@@ -92,25 +87,26 @@ public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
     }
 
     /**
-     * Builds a new {@link ChildNumberType.Builder} object. Creates the instance
-     * with the state of the current model.
-     * @return a new {@link ChildNumberType.Builder} object
+     * Builds a new {@link ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.Builder} object.
+     * Creates the instance with the state of the current model.
+     * @return a new {@link ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.Builder} object
      */
-    public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
+    public Builder toModelWithMapOfArrayOfNonPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
         return builder;
     }
 
     /**
-     * Class to build instances of {@link ChildNumberType}.
+     * Class to build instances of {@link ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties}.
      */
     public static class Builder {
         private String company;
-        private AdditionalProperties<Map<String, List<Vehicle>>> additionalProperties = new AdditionalProperties<Map<String, List<Vehicle>>>();
+        private AdditionalProperties<Map<String, List<Vehicle>>> additionalProperties =
+                new AdditionalProperties<Map<String, List<Vehicle>>>();
 
         /**
          * Initialization constructor.
@@ -120,10 +116,9 @@ public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
 
         /**
          * Initialization constructor.
-         * @param name    String value for name.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 
@@ -149,12 +144,13 @@ public class ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ChildNumberType} object using the set fields.
-         * @return {@link ChildNumberType}
+         * Builds a new {@link ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties} object
+         * using the set fields.
+         * @return {@link ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties}
          */
         public ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties build() {
-            ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties obj = new ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties(
-                    company);
+            ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties obj =
+                    new ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }
