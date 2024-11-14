@@ -150,7 +150,7 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties} object 
+         * Builds a new {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties} object
          * using the set fields.
          * @return {@link ModelWith3dArrayOfNonPrimitiveAdditionalProperties}
          */
