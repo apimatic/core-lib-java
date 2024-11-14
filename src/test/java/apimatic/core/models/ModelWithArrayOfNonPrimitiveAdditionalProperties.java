@@ -99,6 +99,7 @@ public class ModelWithArrayOfNonPrimitiveAdditionalProperties {
      */
     public Builder toModelWithArrayOfNonPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

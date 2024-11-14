@@ -1302,7 +1302,7 @@ public class CoreHelper {
                                     serializerAnnotation);
                             String serializedValue = serialize(value, serializer);
                             value = serializedValue != null
-                                    ? deserializeAsObject(serializedValue.toString()) : value;
+                                    ? deserializeAsObject(serializedValue) : value;
                             objectToList(objName, (Map<?, ?>) value, objectList, processed,
                                     arraySerializationFormat);
                         }

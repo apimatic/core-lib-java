@@ -13,7 +13,7 @@ import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
 
-    private final static int ARRAY_DIMENSION = 3;
+    private static final int ARRAY_DIMENSION = 3;
     private String company;
     private AdditionalProperties<List<List<List<String>>>> additionalProperties =
             new AdditionalProperties<List<List<List<String>>>>(this.getClass());
@@ -100,6 +100,7 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
      */
     public Builder toModelWith3dArrayOfPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

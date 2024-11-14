@@ -101,6 +101,7 @@ public class ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties {
      */
     public Builder toModelWithArrayOfMapOfNonPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

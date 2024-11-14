@@ -14,7 +14,7 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
-    private final static int ARRAY_DIMENSION = 3;
+    private static final int ARRAY_DIMENSION = 3;
     private String company;
     private AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
             new AdditionalProperties<List<List<List<Vehicle>>>>(this.getClass());
@@ -102,6 +102,7 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
      */
     public Builder toModelWith3dArrayOfNonPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

@@ -96,6 +96,7 @@ public class ModelWithPrimitiveAdditionalProperties {
      */
     public Builder toModelWithPrimitiveAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

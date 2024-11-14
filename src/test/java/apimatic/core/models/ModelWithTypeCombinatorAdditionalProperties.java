@@ -99,6 +99,7 @@ public class ModelWithTypeCombinatorAdditionalProperties {
      */
     public Builder toModelWithTypeCombinatorAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 

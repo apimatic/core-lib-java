@@ -100,6 +100,7 @@ public class ModelWithDateTimeAdditionalProperties {
      */
     public Builder toModelWithDateTimeAdditionalPropertiesBuilder() {
         Builder builder = new Builder(company);
+        builder.additionalProperties = additionalProperties;
         return builder;
     }
 
