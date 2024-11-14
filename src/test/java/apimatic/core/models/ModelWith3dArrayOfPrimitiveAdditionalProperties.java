@@ -13,8 +13,9 @@ import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
 
+    private final static int ArrayDimension = 3;
     private String company;
-    protected AdditionalProperties<List<List<List<String>>>> additionalProperties =
+    private AdditionalProperties<List<List<List<String>>>> additionalProperties =
             new AdditionalProperties<List<List<List<String>>>>(this.getClass());
 
     /**
@@ -68,7 +69,8 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
     private void setAdditionalProperties(String name, Object value) {
         additionalProperties.setAdditionalProperty(name,
                 ConversionHelper.convertToNDimensionalArray(value,
-                        x -> ((String) x), 3),
+                        x -> ((String) x),
+                        ArrayDimension),
                 true);
     }
 
@@ -87,7 +89,8 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWith3dArrayOfPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWith3dArrayOfPrimitiveAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**

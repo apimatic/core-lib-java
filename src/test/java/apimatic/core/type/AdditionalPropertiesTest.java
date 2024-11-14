@@ -297,18 +297,18 @@ public class AdditionalPropertiesTest {
 
     @Test
     public void testTypeCombinatorAdditionalProperties() throws IOException {
-        final Double Item1 = 100.11;
-        final Double Item2 = 133.00;
+        final Double item1 = 100.11;
+        final Double item2 = 133.00;
         // Case A
         ModelWithTypeCombinatorAdditionalProperties model =
                 new ModelWithTypeCombinatorAdditionalProperties.Builder("APIMatic")
                 .additionalProperty("name", SendScalarParamBody.fromPrecision(
-                        Arrays.asList(Item1, Item2)))
+                        Arrays.asList(item1, item2)))
                 .build();
 
         ModelWithTypeCombinatorAdditionalProperties actualModel = CoreHelper.deserialize(
                 CoreHelper.serialize(model), ModelWithTypeCombinatorAdditionalProperties.class);
-        List<Double> expectedListValue = Arrays.asList(Item1, Item2);
+        List<Double> expectedListValue = Arrays.asList(item1, item2);
         actualModel.getAdditionalProperty("name").match(new SendScalarParamBody.Cases<Void>() {
 
             @Override

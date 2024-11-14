@@ -15,7 +15,7 @@ import io.apimatic.core.utilities.CoreHelper;
 public class ModelWithArrayOfNonPrimitiveAdditionalProperties {
 
     private String company;
-    protected AdditionalProperties<List<Vehicle>> additionalProperties =
+    private AdditionalProperties<List<Vehicle>> additionalProperties =
             new AdditionalProperties<List<Vehicle>>(this.getClass());
 
     /**
@@ -88,7 +88,8 @@ public class ModelWithArrayOfNonPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithArrayOfNonPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithArrayOfNonPrimitiveAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**

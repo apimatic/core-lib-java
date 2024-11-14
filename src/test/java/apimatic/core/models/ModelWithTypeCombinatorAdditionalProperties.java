@@ -13,8 +13,9 @@ import io.apimatic.core.utilities.ConversionHelper;
 import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWithTypeCombinatorAdditionalProperties {
+
     private String company;
-    protected AdditionalProperties<SendScalarParamBody> additionalProperties =
+    private AdditionalProperties<SendScalarParamBody> additionalProperties =
             new AdditionalProperties<SendScalarParamBody>(this.getClass());
 
     /**
@@ -87,7 +88,8 @@ public class ModelWithTypeCombinatorAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithTypeCombinatorAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithTypeCombinatorAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**

@@ -721,11 +721,12 @@ public class CoreHelperTest {
                 ArraySerializationFormat.INDEXED);
         assertEquals(actual, expected);
     }
-    
+
     @SuppressWarnings("serial")
     @Test
     public void testPrepareFormFieldsPrimitiveAdditionalPropertiesModel() {
-        ModelWithPrimitiveAdditionalProperties simple = new ModelWithPrimitiveAdditionalProperties.Builder("APIMatic")
+        ModelWithPrimitiveAdditionalProperties simple =
+                new ModelWithPrimitiveAdditionalProperties.Builder("APIMatic")
                 .additionalProperty("name", "value").build();
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("body", simple);
@@ -740,8 +741,9 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // Array of primitive types
-        ModelWithArrayOfPrimitiveAdditionalProperties array = new ModelWithArrayOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Arrays.asList("value1", "value2")).build();
+        ModelWithArrayOfPrimitiveAdditionalProperties array =
+                new ModelWithArrayOfPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", Arrays.asList("value1", "value2")).build();
         formParameters = new HashMap<>();
         formParameters.put("body", array);
 
@@ -760,8 +762,9 @@ public class CoreHelperTest {
                 put("key2", "value2");
             }
         };
-        ModelWithMapOfPrimitiveAdditionalProperties map = new ModelWithMapOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", primitiveAdditionalProperties).build();
+        ModelWithMapOfPrimitiveAdditionalProperties map =
+                new ModelWithMapOfPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", primitiveAdditionalProperties).build();
         formParameters = new HashMap<>();
         formParameters.put("body", map);
 
@@ -774,8 +777,9 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // Array of Map of primitive types
-        ModelWithArrayOfMapOfPrimitiveAdditionalProperties arrayOfMap = new ModelWithArrayOfMapOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Arrays.asList(primitiveAdditionalProperties)).build();
+        ModelWithArrayOfMapOfPrimitiveAdditionalProperties arrayOfMap =
+                new ModelWithArrayOfMapOfPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", Arrays.asList(primitiveAdditionalProperties)).build();
         formParameters = new HashMap<>();
         formParameters.put("body", arrayOfMap);
 
@@ -794,8 +798,9 @@ public class CoreHelperTest {
                 put("key2", Arrays.asList("value1", "value2"));
             }
         };
-        ModelWithMapOfArrayOfPrimitiveAdditionalProperties mapOfArray = new ModelWithMapOfArrayOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", arrayAdditionalProperties).build();
+        ModelWithMapOfArrayOfPrimitiveAdditionalProperties mapOfArray =
+                new ModelWithMapOfArrayOfPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", arrayAdditionalProperties).build();
         formParameters = new HashMap<>();
         formParameters.put("body", mapOfArray);
 
@@ -810,9 +815,11 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // 3D Array of primitive types
-        ModelWith3dArrayOfPrimitiveAdditionalProperties array3D = new ModelWith3dArrayOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Arrays.asList(Arrays.asList(Arrays.asList("value1", "value2"))))
-                        .build();
+        ModelWith3dArrayOfPrimitiveAdditionalProperties array3D =
+                new ModelWith3dArrayOfPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", Arrays.asList(Arrays.asList(
+                        Arrays.asList("value1", "value2"))))
+                .build();
         formParameters = new HashMap<>();
         formParameters.put("body", array3D);
 
@@ -824,18 +831,20 @@ public class CoreHelperTest {
         actual.sort(Comparator.comparing(SimpleEntry::getKey));
         assertEquals(expected, actual);
 
-        ModelWithDateTimeAdditionalProperties dateTimeModel = new ModelWithDateTimeAdditionalProperties.Builder(
-                "APIMatic")
-                        .additionalProperty("name",
-                                LocalDateTime.of(DateTimeConstants.YEAR2000, DateTimeConstants.JULY,
-                                        DateTimeConstants.DAY13, DateTimeConstants.HOUR6, DateTimeConstants.MINUTES10))
-                        .build();
+        ModelWithDateTimeAdditionalProperties dateTimeModel =
+                new ModelWithDateTimeAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name",
+                        LocalDateTime.of(DateTimeConstants.YEAR2000, DateTimeConstants.JULY,
+                                DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                                DateTimeConstants.MINUTES10))
+                .build();
         formParameters = new HashMap<>();
         formParameters.put("body", dateTimeModel);
 
         expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[company]", "APIMatic"));
-        expected.add(new SimpleEntry<String, Object>("body[name]", "Thu, 13 Jul 2000 06:10:00 GMT"));
+        expected.add(new SimpleEntry<String, Object>("body[name]",
+                "Thu, 13 Jul 2000 06:10:00 GMT"));
         actual = CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
         actual.sort(Comparator.comparing(SimpleEntry::getKey));
         assertEquals(expected, actual);
@@ -844,8 +853,9 @@ public class CoreHelperTest {
     @SuppressWarnings("serial")
     @Test
     public void testPrepareFormFieldsNonPrimitiveAdditionalPropertiesModel() {
-        ModelWithNonPrimitiveAdditionalProperties simpleModel = new ModelWithNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", new Vehicle.Builder("4").build()).build();
+        ModelWithNonPrimitiveAdditionalProperties simpleModel =
+                new ModelWithNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", new Vehicle.Builder("4").build()).build();
         Map<String, Object> formParameters = new HashMap<>();
         formParameters.put("body", simpleModel);
 
@@ -859,11 +869,11 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // Array of non primitive types
-        ModelWithArrayOfNonPrimitiveAdditionalProperties array = new ModelWithArrayOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic")
-                        .additionalProperty("name",
-                                Arrays.asList(new Vehicle.Builder("4").build(), new Vehicle.Builder("5").build()))
-                        .build();
+        ModelWithArrayOfNonPrimitiveAdditionalProperties array =
+                new ModelWithArrayOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name",Arrays.asList(
+                        new Vehicle.Builder("4").build(), new Vehicle.Builder("5").build()))
+                .build();
         formParameters = new HashMap<>();
         formParameters.put("body", array);
 
@@ -882,8 +892,9 @@ public class CoreHelperTest {
                 put("key2", new Vehicle.Builder("5").build());
             }
         };
-        ModelWithMapOfNonPrimitiveAdditionalProperties map = new ModelWithMapOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", nonPrimitiveAdditionalProperties).build();
+        ModelWithMapOfNonPrimitiveAdditionalProperties map =
+                new ModelWithMapOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", nonPrimitiveAdditionalProperties).build();
         formParameters = new HashMap<>();
         formParameters.put("body", map);
 
@@ -896,8 +907,10 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // Array of Map of non primitive types
-        ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties arrayOfMap = new ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Arrays.asList(nonPrimitiveAdditionalProperties)).build();
+        ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties arrayOfMap =
+                new ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", Arrays.asList(nonPrimitiveAdditionalProperties))
+                .build();
         formParameters = new HashMap<>();
         formParameters.put("body", arrayOfMap);
 
@@ -910,14 +923,16 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // Map of Array of non primitive types
-        Map<String, List<Vehicle>> arrayNonPrimitiveAdditionalProperties = new HashMap<String, List<Vehicle>>() {
+        Map<String, List<Vehicle>> arrayNonPrimitiveAdditionalProperties =
+                new HashMap<String, List<Vehicle>>() {
             {
                 put("key1", Arrays.asList(new Vehicle.Builder("4").build()));
                 put("key2", Arrays.asList(new Vehicle.Builder("5").build()));
             }
         };
-        ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties mapOfArray = new ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", arrayNonPrimitiveAdditionalProperties).build();
+        ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties mapOfArray =
+                new ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", arrayNonPrimitiveAdditionalProperties).build();
         formParameters = new HashMap<>();
         formParameters.put("body", mapOfArray);
 
@@ -930,12 +945,11 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // 3D Array of non primitive types
-        ModelWith3dArrayOfNonPrimitiveAdditionalProperties array3D = new ModelWith3dArrayOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty(
-                        "name",
-                        Arrays.asList(Arrays.asList(
-                                Arrays.asList(new Vehicle.Builder("4").build(), new Vehicle.Builder("5").build()))))
-                        .build();
+        ModelWith3dArrayOfNonPrimitiveAdditionalProperties array3D =
+                new ModelWith3dArrayOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", Arrays.asList(Arrays.asList(Arrays.asList(
+                        new Vehicle.Builder("4").build(), new Vehicle.Builder("5").build()))))
+                .build();
         formParameters = new HashMap<>();
         formParameters.put("body", array3D);
 
@@ -948,23 +962,29 @@ public class CoreHelperTest {
         assertEquals(expected, actual);
 
         // oneOf/anyOf cases
-        ModelWithTypeCombinatorAdditionalProperties typeCombinatorAModel = new ModelWithTypeCombinatorAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", SendScalarParamBody.fromPrecision(Arrays.asList(100.11, 133.00)))
-                        .build();
+        final Double item1 = 100.11;
+        final Double item2 = 133.0;
+        ModelWithTypeCombinatorAdditionalProperties typeCombinatorAModel =
+                new ModelWithTypeCombinatorAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", SendScalarParamBody.fromPrecision(
+                        Arrays.asList(item1, item2)))
+                .build();
 
         formParameters = new HashMap<>();
         formParameters.put("body", typeCombinatorAModel);
 
         expected = new ArrayList<SimpleEntry<String, Object>>();
         expected.add(new SimpleEntry<String, Object>("body[company]", "APIMatic"));
-        expected.add(new SimpleEntry<String, Object>("body[name][0]", 100.11));
-        expected.add(new SimpleEntry<String, Object>("body[name][1]", 133.0));
+        expected.add(new SimpleEntry<String, Object>("body[name][0]", item1));
+        expected.add(new SimpleEntry<String, Object>("body[name][1]", item2));
         actual = CoreHelper.prepareFormFields(formParameters, ArraySerializationFormat.INDEXED);
         actual.sort(Comparator.comparing(SimpleEntry::getKey));
         assertEquals(expected, actual);
 
-        ModelWithTypeCombinatorAdditionalProperties typeCombinatorBModel = new ModelWithTypeCombinatorAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", SendScalarParamBody.fromMString("value")).build();
+        ModelWithTypeCombinatorAdditionalProperties typeCombinatorBModel =
+                new ModelWithTypeCombinatorAdditionalProperties.Builder("APIMatic")
+                .additionalProperty("name", SendScalarParamBody.fromMString("value"))
+                .build();
 
         formParameters = new HashMap<>();
         formParameters.put("body", typeCombinatorBModel);

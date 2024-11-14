@@ -11,8 +11,9 @@ import io.apimatic.core.types.AdditionalProperties;
 import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWithMapOfPrimitiveAdditionalProperties {
+
     private String company;
-    protected AdditionalProperties<Map<String, String>> additionalProperties =
+    private AdditionalProperties<Map<String, String>> additionalProperties =
             new AdditionalProperties<Map<String, String>>(this.getClass());
 
     /**
@@ -84,7 +85,8 @@ public class ModelWithMapOfPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithMapOfPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithMapOfPrimitiveAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**

@@ -31,7 +31,7 @@ public class ConversionHelperTest {
     private static final int DIMENSION_TWO = 2;
 
     // Helper function for conversion
-    private static final Function<Object, Integer> ToInteger = value -> {
+    private static final Function<Object, Integer> To_Integer = value -> {
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
@@ -40,12 +40,12 @@ public class ConversionHelperTest {
 
     @Test
     public void testConvertToSimpleTypeSuccess() {
-        assertEquals(TEST_INTEGER_FIVE, ConversionHelper.convertToSimpleType(5, ToInteger));
+        assertEquals(TEST_INTEGER_FIVE, ConversionHelper.convertToSimpleType(TEST_INTEGER_FIVE, To_Integer));
     }
 
     @Test
     public void testConvertToSimpleTypeNullConversionFunction() {
-        assertNull(ConversionHelper.convertToSimpleType("test", ToInteger));
+        assertNull(ConversionHelper.convertToSimpleType("test", To_Integer));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ConversionHelperTest {
         Map<String, Object> input = new HashMap<>();
         input.put(KEY_ONE, EXPECTED_INTEGER_ONE);
         input.put(KEY_TWO, EXPECTED_INTEGER_TWO);
-        Map<String, Integer> result = ConversionHelper.convertToMap(input, ToInteger);
+        Map<String, Integer> result = ConversionHelper.convertToMap(input, To_Integer);
         assertEquals(EXPECTED_SIZE_TWO, result.size());
         assertEquals(EXPECTED_INTEGER_ONE, result.get(KEY_ONE));
         assertEquals(EXPECTED_INTEGER_TWO, result.get(KEY_TWO));
@@ -64,7 +64,7 @@ public class ConversionHelperTest {
         Map<String, Object> input = new HashMap<>();
         input.put(KEY_ONE, EXPECTED_INTEGER_ONE);
         input.put(KEY_TWO, NON_INTEGER_VALUE);
-        Map<String, Integer> result = ConversionHelper.convertToMap(input, ToInteger);
+        Map<String, Integer> result = ConversionHelper.convertToMap(input, To_Integer);
         assertEquals(EXPECTED_SIZE_ONE, result.size());
         assertEquals(EXPECTED_INTEGER_ONE, result.get(KEY_ONE));
         assertNull(result.get(KEY_TWO));
@@ -72,14 +72,14 @@ public class ConversionHelperTest {
 
     @Test
     public void testConvertToMapNullInput() {
-        assertNull(ConversionHelper.convertToMap(null, ToInteger));
+        assertNull(ConversionHelper.convertToMap(null, To_Integer));
     }
 
     @Test
     public void testConvertToArraySuccess() {
         List<Object> input = Arrays.asList(EXPECTED_INTEGER_ONE,
                 EXPECTED_INTEGER_TWO, EXPECTED_INTEGER_THREE);
-        List<Integer> result = ConversionHelper.convertToArray(input, ToInteger);
+        List<Integer> result = ConversionHelper.convertToArray(input, To_Integer);
         assertEquals(Arrays.asList(EXPECTED_INTEGER_ONE,
                 EXPECTED_INTEGER_TWO, EXPECTED_INTEGER_THREE), result);
     }
@@ -88,13 +88,13 @@ public class ConversionHelperTest {
     public void testConvertToArraySkipsUnconvertibleItems() {
         List<Object> input = Arrays.asList(EXPECTED_INTEGER_ONE,
                 NON_INTEGER_VALUE, EXPECTED_INTEGER_THREE);
-        List<Integer> result = ConversionHelper.convertToArray(input, ToInteger);
+        List<Integer> result = ConversionHelper.convertToArray(input, To_Integer);
         assertEquals(Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_THREE), result);
     }
 
     @Test
     public void testConvertToArrayNullInput() {
-        assertNull(ConversionHelper.convertToArray(null, ToInteger));
+        assertNull(ConversionHelper.convertToArray(null, To_Integer));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ConversionHelperTest {
         Map<String, Object> map1 = new HashMap<>();
         map1.put(KEY_ONE, EXPECTED_INTEGER_ONE);
         input.add(map1);
-        List<Map<String, Integer>> result = ConversionHelper.convertToArrayOfMap(input, ToInteger);
+        List<Map<String, Integer>> result = ConversionHelper.convertToArrayOfMap(input, To_Integer);
         assertEquals(EXPECTED_SIZE_ONE, result.size());
         assertEquals(EXPECTED_INTEGER_ONE, result.get(0).get(KEY_ONE));
     }
@@ -117,21 +117,21 @@ public class ConversionHelperTest {
         map2.put(KEY_TWO, NON_INTEGER_VALUE);
         input.add(map1);
         input.add(map2);
-        List<Map<String, Integer>> result = ConversionHelper.convertToArrayOfMap(input, ToInteger);
+        List<Map<String, Integer>> result = ConversionHelper.convertToArrayOfMap(input, To_Integer);
         assertEquals(EXPECTED_SIZE_ONE, result.size());
         assertEquals(EXPECTED_INTEGER_ONE, result.get(0).get(KEY_ONE));
     }
 
     @Test
     public void testConvertToArrayOfMapNullInput() {
-        assertNull(ConversionHelper.convertToArrayOfMap(null, ToInteger));
+        assertNull(ConversionHelper.convertToArrayOfMap(null, To_Integer));
     }
 
     @Test
     public void testConvertToMapOfArraySuccess() {
         Map<String, Object> input = new HashMap<>();
         input.put(KEY_ONE, Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_TWO));
-        Map<String, List<Integer>> result = ConversionHelper.convertToMapOfArray(input, ToInteger);
+        Map<String, List<Integer>> result = ConversionHelper.convertToMapOfArray(input, To_Integer);
         assertEquals(EXPECTED_SIZE_ONE, result.size());
         assertEquals(Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_TWO),
                 result.get(KEY_ONE));
@@ -143,7 +143,7 @@ public class ConversionHelperTest {
         input.put(KEY_ONE, Arrays.asList(EXPECTED_INTEGER_ONE,
                 NON_INTEGER_VALUE, EXPECTED_INTEGER_THREE));
         input.put(KEY_TWO, Arrays.asList(NON_INTEGER_VALUE));
-        Map<String, List<Integer>> result = ConversionHelper.convertToMapOfArray(input, ToInteger);
+        Map<String, List<Integer>> result = ConversionHelper.convertToMapOfArray(input, To_Integer);
         assertEquals(EXPECTED_SIZE_ONE, result.size());
         assertEquals(Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_THREE),
                 result.get(KEY_ONE));
@@ -151,7 +151,7 @@ public class ConversionHelperTest {
 
     @Test
     public void testConvertToMapOfArrayNullInput() {
-        assertNull(ConversionHelper.convertToMapOfArray(null, ToInteger));
+        assertNull(ConversionHelper.convertToMapOfArray(null, To_Integer));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class ConversionHelperTest {
         List<Object> input = Arrays.asList(EXPECTED_INTEGER_ONE,
                 EXPECTED_INTEGER_TWO, EXPECTED_INTEGER_THREE);
         List<Integer> result = ConversionHelper.convertToNDimensionalArray(input,
-                ToInteger, DIMENSION_ONE);
+                To_Integer, DIMENSION_ONE);
         assertEquals(Arrays.asList(EXPECTED_INTEGER_ONE,
                 EXPECTED_INTEGER_TWO, EXPECTED_INTEGER_THREE), result);
     }
@@ -170,7 +170,7 @@ public class ConversionHelperTest {
                 Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_TWO),
                 Arrays.asList(EXPECTED_INTEGER_THREE, EXPECTED_INTEGER_FOUR));
         List<List<Integer>> result = ConversionHelper.convertToNDimensionalArray(input,
-                ToInteger, DIMENSION_TWO);
+                To_Integer, DIMENSION_TWO);
         assertEquals(Arrays.asList(Arrays.asList(EXPECTED_INTEGER_ONE, EXPECTED_INTEGER_TWO),
                 Arrays.asList(EXPECTED_INTEGER_THREE, EXPECTED_INTEGER_FOUR)), result);
     }
@@ -180,13 +180,13 @@ public class ConversionHelperTest {
         List<Object> input = Arrays.asList(Arrays.asList(EXPECTED_INTEGER_ONE, NON_INTEGER_VALUE),
                 Arrays.asList(EXPECTED_INTEGER_THREE, EXPECTED_INTEGER_FOUR));
         List<List<Integer>> result = ConversionHelper.convertToNDimensionalArray(input,
-                ToInteger, DIMENSION_TWO);
+                To_Integer, DIMENSION_TWO);
         assertEquals(Arrays.asList(Arrays.asList(EXPECTED_INTEGER_ONE),
                 Arrays.asList(EXPECTED_INTEGER_THREE, EXPECTED_INTEGER_FOUR)), result);
     }
 
     @Test
     public void testConvertToNDimensionalArrayNullInput() {
-        assertNull(ConversionHelper.convertToNDimensionalArray(null, ToInteger, DIMENSION_TWO));
+        assertNull(ConversionHelper.convertToNDimensionalArray(null, To_Integer, DIMENSION_TWO));
     }
 }

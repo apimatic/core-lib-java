@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * A helper class for converting types of various structures supported in the
  * SDK.
  */
-public class ConversionHelper {
+public final class ConversionHelper {
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -45,7 +45,8 @@ public class ConversionHelper {
      *         fails.
      */
     @SuppressWarnings("unchecked")
-    public static <S> Map<String, S> convertToMap(Object value, Function<Object, S> conversionFunction) {
+    public static <S> Map<String, S> convertToMap(Object value,
+            Function<Object, S> conversionFunction) {
         if (value == null) {
             return null;
         }
@@ -72,7 +73,8 @@ public class ConversionHelper {
      *         conversion fails.
      */
     @SuppressWarnings("unchecked")
-    public static <S> List<S> convertToArray(Object value, Function<Object, S> conversionFunction) {
+    public static <S> List<S> convertToArray(Object value,
+            Function<Object, S> conversionFunction) {
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToSimpleType(item, conversionFunction))
@@ -94,7 +96,8 @@ public class ConversionHelper {
      *         conversion fails.
      */
     @SuppressWarnings("unchecked")
-    public static <S> List<Map<String, S>> convertToArrayOfMap(Object value, Function<Object, S> conversionFunction) {
+    public static <S> List<Map<String, S>> convertToArrayOfMap(Object value,
+            Function<Object, S> conversionFunction) {
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToMap(item, conversionFunction))
@@ -116,7 +119,8 @@ public class ConversionHelper {
      *         fails.
      */
     @SuppressWarnings("unchecked")
-    public static <S> Map<String, List<S>> convertToMapOfArray(Object value, Function<Object, S> conversionFunction) {
+    public static <S> Map<String, List<S>> convertToMapOfArray(Object value,
+            Function<Object, S> conversionFunction) {
         try {
             Map<String, Object> valueMap = (Map<String, Object>) value;
             return valueMap.entrySet().stream()
@@ -143,10 +147,12 @@ public class ConversionHelper {
      *         conversion fails.
      */
     @SuppressWarnings("unchecked")
-    public static <T, S> T convertToNDimensionalArray(Object value, Function<Object, S> conversionFunction,
+    public static <T, S> T convertToNDimensionalArray(Object value,
+            Function<Object, S> conversionFunction,
             int dimensionCount) {
         try {
-            return (T) convertToNDimensionalArrayInternal(value, conversionFunction, dimensionCount);
+            return (T) convertToNDimensionalArrayInternal(value,
+                    conversionFunction, dimensionCount);
         } catch (Exception e) {
             return null;
         }
@@ -164,7 +170,8 @@ public class ConversionHelper {
      *         conversion fails.
      */
     @SuppressWarnings("unchecked")
-    private static <S> List<?> convertToNDimensionalArrayInternal(Object value, Function<Object, S> conversionFunction,
+    private static <S> List<?> convertToNDimensionalArrayInternal(Object value,
+            Function<Object, S> conversionFunction,
             int dimensionCount) {
         try {
             if (dimensionCount == 1) {
@@ -172,8 +179,10 @@ public class ConversionHelper {
             } else if (dimensionCount > 1) {
                 List<Object> valueList = (List<Object>) value;
                 return valueList.stream()
-                        .map(item -> convertToNDimensionalArray(item, conversionFunction, dimensionCount - 1))
-                        .filter(item -> item != null && !((List<?>) item).isEmpty()).collect(Collectors.toList());
+                        .map(item -> convertToNDimensionalArray(item,
+                                conversionFunction, dimensionCount - 1))
+                        .filter(item -> item != null && !((List<?>) item).isEmpty())
+                        .collect(Collectors.toList());
             }
         } catch (Exception e) {
             // Ignoring exception to handle silently.

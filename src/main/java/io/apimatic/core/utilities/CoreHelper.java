@@ -1298,10 +1298,11 @@ public class CoreHelper {
                                         processed, arraySerializationFormat);
                             }
                         } else {
-                            JsonSerializer<?> serializer = getCollectionSerializer(serializerAnnotation);
+                            JsonSerializer<?> serializer = getCollectionSerializer(
+                                    serializerAnnotation);
                             String serializedValue = serialize(value, serializer);
-                            value = serializedValue != null ?
-                                    deserializeAsObject(serializedValue.toString()) : value;
+                            value = serializedValue != null
+                                    ? deserializeAsObject(serializedValue.toString()) : value;
                             objectToList(objName, (Map<?, ?>) value, objectList, processed,
                                     arraySerializationFormat);
                         }

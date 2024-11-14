@@ -19,7 +19,7 @@ public class AdditionalProperties<T> {
     /**
      * Map to store additional properties.
      */
-    private final Map<String, T> additionalProperties = new LinkedHashMap<>();
+    private final Map<String, T> properties = new LinkedHashMap<>();
 
     /**
      * Set to store model properties.
@@ -35,10 +35,9 @@ public class AdditionalProperties<T> {
 
     /**
      * Parameterized constructor.
-     * 
      * @param classInstance The instance of the class with additional properties.
      */
-    public AdditionalProperties(Class<?> classInstance) {
+    public AdditionalProperties(final Class<?> classInstance) {
         Method[] methods = classInstance.getMethods();
         for (Method method : methods) {
             JsonGetter jsonGetter = method.getAnnotation(JsonGetter.class);
@@ -50,16 +49,14 @@ public class AdditionalProperties<T> {
 
     /**
      * Gets the additional properties.
-     * 
      * @return the map of additional properties.
      */
     public Map<String, T> getAdditionalProperties() {
-        return additionalProperties;
+        return properties;
     }
 
     /**
      * Sets an additional property.
-     * 
      * @param key   The key for the additional property.
      * @param value The value of the additional property.
      * @throws IllegalArgumentException if there is a conflict between the key and
@@ -74,12 +71,11 @@ public class AdditionalProperties<T> {
             throw new IllegalArgumentException(
                     "Key '" + key + "' conflicts with a model property.");
         }
-        additionalProperties.put(key, value);
+        properties.put(key, value);
     }
 
     /**
      * Sets an additional property with an option to skip null values.
-     * 
      * @param key           The key for the additional property.
      * @param value         The value of the additional property.
      * @param skipNullValue If true, null values will be skipped.
@@ -95,21 +91,20 @@ public class AdditionalProperties<T> {
 
     @Override
     public String toString() {
-        if (additionalProperties.isEmpty()) {
+        if (properties.isEmpty()) {
             return "";
         }
-        return additionalProperties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
+        return properties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining(", ", ", ", ""));
     }
 
     /**
      * Gets an additional property by key.
-     * 
      * @param key The key of the additional property to retrieve.
      * @return the value of the additional property associated with the given key,
      *         or null if not found.
      */
     public T getAdditionalProperty(String key) {
-        return additionalProperties.get(key);
+        return properties.get(key);
     }
 }

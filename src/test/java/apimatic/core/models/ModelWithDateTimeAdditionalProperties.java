@@ -14,8 +14,9 @@ import io.apimatic.core.utilities.ConversionHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class ModelWithDateTimeAdditionalProperties {
+
     private String company;
-    protected AdditionalProperties<LocalDateTime> additionalProperties =
+    private AdditionalProperties<LocalDateTime> additionalProperties =
             new AdditionalProperties<LocalDateTime>(this.getClass());
 
     /**
@@ -68,7 +69,7 @@ public class ModelWithDateTimeAdditionalProperties {
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
         additionalProperties.setAdditionalProperty(name,
-                ConversionHelper.convertToSimpleType(value, 
+                ConversionHelper.convertToSimpleType(value,
                         x -> LocalDateTimeHelper.fromRfc1123DateTime(String.valueOf(x))),
                 true);
     }
@@ -88,7 +89,8 @@ public class ModelWithDateTimeAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWithDateTimeAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWithDateTimeAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**

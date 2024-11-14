@@ -14,8 +14,9 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
+    private final static int ArrayDimension = 3;
     private String company;
-    protected AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
+    private AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
             new AdditionalProperties<List<List<List<Vehicle>>>>(this.getClass());
 
     /**
@@ -68,10 +69,10 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
     @JsonAnySetter
     private void setAdditionalProperties(String name, Object value) {
         additionalProperties.setAdditionalProperty(name,
-                ConversionHelper.convertToNDimensionalArray(value, 
+                ConversionHelper.convertToNDimensionalArray(value,
                         x -> CoreHelper.tryDeserialize(
                                 CoreHelper.trySerialize(x), Vehicle.class),
-                        3),
+                        ArrayDimension),
                 true);
     }
 
@@ -90,7 +91,8 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
      */
     @Override
     public String toString() {
-        return "ModelWith3dArrayOfNonPrimitiveAdditionalProperties [" + "company=" + company + additionalProperties + "]";
+        return "ModelWith3dArrayOfNonPrimitiveAdditionalProperties ["
+                + "company=" + company + additionalProperties + "]";
     }
 
     /**
