@@ -119,7 +119,7 @@ public class ModelWithMapOfArrayOfPrimitiveAdditionalProperties {
          * Initialization constructor.
          * @param company String value for company.
          */
-        public Builder(String company) {
+        public Builder(final String company) {
             this.company = company;
         }
 

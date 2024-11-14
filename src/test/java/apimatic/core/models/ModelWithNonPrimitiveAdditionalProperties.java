@@ -151,7 +151,8 @@ public class ModelWithNonPrimitiveAdditionalProperties {
          * @return {@link ModelWithNonPrimitiveAdditionalProperties}
          */
         public ModelWithNonPrimitiveAdditionalProperties build() {
-            ModelWithNonPrimitiveAdditionalProperties obj = new ModelWithNonPrimitiveAdditionalProperties(company);
+            ModelWithNonPrimitiveAdditionalProperties obj =
+                    new ModelWithNonPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;
         }

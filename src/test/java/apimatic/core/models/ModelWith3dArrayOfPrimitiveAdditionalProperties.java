@@ -153,7 +153,7 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
          * @return {@link ChildNumberType}
          */
         public ModelWith3dArrayOfPrimitiveAdditionalProperties build() {
-            ModelWith3dArrayOfPrimitiveAdditionalProperties obj = 
+            ModelWith3dArrayOfPrimitiveAdditionalProperties obj =
                     new ModelWith3dArrayOfPrimitiveAdditionalProperties(company);
             obj.additionalProperties = this.additionalProperties;
             return obj;

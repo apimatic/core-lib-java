@@ -75,6 +75,10 @@ public final class ConversionHelper {
     @SuppressWarnings("unchecked")
     public static <S> List<S> convertToArray(Object value,
             Function<Object, S> conversionFunction) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToSimpleType(item, conversionFunction))
@@ -98,6 +102,10 @@ public final class ConversionHelper {
     @SuppressWarnings("unchecked")
     public static <S> List<Map<String, S>> convertToArrayOfMap(Object value,
             Function<Object, S> conversionFunction) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToMap(item, conversionFunction))
@@ -121,6 +129,10 @@ public final class ConversionHelper {
     @SuppressWarnings("unchecked")
     public static <S> Map<String, List<S>> convertToMapOfArray(Object value,
             Function<Object, S> conversionFunction) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             Map<String, Object> valueMap = (Map<String, Object>) value;
             return valueMap.entrySet().stream()
@@ -150,6 +162,10 @@ public final class ConversionHelper {
     public static <T, S> T convertToNDimensionalArray(Object value,
             Function<Object, S> conversionFunction,
             int dimensionCount) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             return (T) convertToNDimensionalArrayInternal(value,
                     conversionFunction, dimensionCount);
@@ -173,6 +189,10 @@ public final class ConversionHelper {
     private static <S> List<?> convertToNDimensionalArrayInternal(Object value,
             Function<Object, S> conversionFunction,
             int dimensionCount) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             if (dimensionCount == 1) {
                 return convertToArray(value, conversionFunction);

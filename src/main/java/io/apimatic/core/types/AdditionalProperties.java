@@ -71,6 +71,7 @@ public class AdditionalProperties<T> {
             throw new IllegalArgumentException(
                     "Key '" + key + "' conflicts with a model property.");
         }
+
         properties.put(key, value);
     }
 
@@ -86,6 +87,7 @@ public class AdditionalProperties<T> {
         if (skipNullValue && value == null) {
             return;
         }
+
         setAdditionalProperty(key, value);
     }
 
@@ -94,6 +96,7 @@ public class AdditionalProperties<T> {
         if (properties.isEmpty()) {
             return "";
         }
+
         return properties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining(", ", ", ", ""));
     }

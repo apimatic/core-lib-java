@@ -849,7 +849,7 @@ public class CoreHelperTest {
         actual.sort(Comparator.comparing(SimpleEntry::getKey));
         assertEquals(expected, actual);
     }
-    
+
     @SuppressWarnings("serial")
     @Test
     public void testPrepareFormFieldsNonPrimitiveAdditionalPropertiesModel() {
@@ -871,7 +871,7 @@ public class CoreHelperTest {
         // Array of non primitive types
         ModelWithArrayOfNonPrimitiveAdditionalProperties array =
                 new ModelWithArrayOfNonPrimitiveAdditionalProperties.Builder("APIMatic")
-                .additionalProperty("name",Arrays.asList(
+                .additionalProperty("name", Arrays.asList(
                         new Vehicle.Builder("4").build(), new Vehicle.Builder("5").build()))
                 .build();
         formParameters = new HashMap<>();

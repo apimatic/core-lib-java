@@ -28,7 +28,7 @@ public class ModelWithTypeCombinatorAdditionalProperties {
      * Initialization constructor.
      * @param company String value for company.
      */
-    public ModelWithTypeCombinatorAdditionalProperties(String company) {
+    public ModelWithTypeCombinatorAdditionalProperties(final String company) {
         this.company = company;
     }
 
@@ -147,7 +147,8 @@ public class ModelWithTypeCombinatorAdditionalProperties {
         }
 
         /**
-         * Builds a new {@link ModelWithTypeCombinatorAdditionalProperties} object using the set fields.
+         * Builds a new {@link ModelWithTypeCombinatorAdditionalProperties} object
+         * using the set fields.
          * @return {@link ModelWithTypeCombinatorAdditionalProperties}
          */
         public ModelWithTypeCombinatorAdditionalProperties build() {
