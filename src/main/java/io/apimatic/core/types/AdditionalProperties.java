@@ -61,7 +61,7 @@ public class AdditionalProperties<T> {
      *                                  model property.
      */
     public void setAdditionalProperty(String key, T value) {
-        if (key == null || key.isBlank())
+        if (key == null || key.trim().isEmpty())
             return;
 
         if (modelProperties.contains(key)) {
