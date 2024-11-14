@@ -13,7 +13,7 @@ import io.apimatic.core.utilities.ConversionHelper;
 
 public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
 
-    private final static int Array_Dimension = 3;
+    private final static int ARRAY_DIMENSION = 3;
     private String company;
     private AdditionalProperties<List<List<List<String>>>> additionalProperties =
             new AdditionalProperties<List<List<List<String>>>>(this.getClass());
@@ -70,7 +70,7 @@ public class ModelWith3dArrayOfPrimitiveAdditionalProperties {
         additionalProperties.setAdditionalProperty(name,
                 ConversionHelper.convertToNDimensionalArray(value,
                         x -> ((String) x),
-                        Array_Dimension),
+                        ARRAY_DIMENSION),
                 true);
     }
 

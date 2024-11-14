@@ -14,7 +14,7 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
 
-    private final static int Array_Dimension = 3;
+    private final static int ARRAY_DIMENSION = 3;
     private String company;
     private AdditionalProperties<List<List<List<Vehicle>>>> additionalProperties =
             new AdditionalProperties<List<List<List<Vehicle>>>>(this.getClass());
@@ -72,7 +72,7 @@ public class ModelWith3dArrayOfNonPrimitiveAdditionalProperties {
                 ConversionHelper.convertToNDimensionalArray(value,
                         x -> CoreHelper.tryDeserialize(
                                 CoreHelper.trySerialize(x), Vehicle.class),
-                        Array_Dimension),
+                        ARRAY_DIMENSION),
                 true);
     }
 
