@@ -47,7 +47,7 @@ public class AdditionalProperties<T> {
 
     /**
      * The getter for provided additional properties.
-     * @return Returns the map of <T> typed additional properties.
+     * @return Returns the map of {@code T} typed additional properties.
      */
     public Map<String, T> getAdditionalProperties() {
         return additionalProperties;
@@ -56,7 +56,7 @@ public class AdditionalProperties<T> {
     /**
      * The setter for an additional property.
      * @param key   The additional property key.
-     * @param value The <T> type additional property value.
+     * @param value The {@code T} type additional property value.
      * @throws IllegalArgumentException if there is a conflict between key and any
      *                                  model property.
      */
@@ -73,9 +73,10 @@ public class AdditionalProperties<T> {
 
     /**
      * The setter for an additional property.
-     * @param key   The additional property key.
-     * @param value The <T> type additional property value.
-     * @param skipNullValue The flag to skip null values in the additional properties map.
+     * @param key           The additional property key.
+     * @param value         The {@code T} type additional property value.
+     * @param skipNullValue The flag to skip null values in the additional
+     *                      properties map.
      * @throws IllegalArgumentException if there is a conflict between key and any
      *                                  model property.
      */
@@ -99,8 +100,8 @@ public class AdditionalProperties<T> {
     /**
      * The getter for provided additional properties.
      * @param key The additional property key to search.
-     * @return the <T> type additional property value associated with the provided
-     *         key.
+     * @return the {@code T} type additional property value associated with the
+     *         provided key.
      */
     public T getAdditionalProperty(String key) {
         return additionalProperties.get(key);

@@ -106,7 +106,7 @@ public class ConversionHelper {
         try {
             Map<String, Object> valueMap = (Map<String, Object>) value;
             return valueMap.entrySet().stream()
-                    .map(entry -> Map.entry(entry.getKey(), convertToArray(entry.getValue(), conversionFunction)))
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), convertToArray(entry.getValue(), conversionFunction)))
                     .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (Exception e) {
