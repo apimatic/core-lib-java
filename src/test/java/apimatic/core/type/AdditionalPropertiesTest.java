@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,22 +96,45 @@ public class AdditionalPropertiesTest {
                 actualNonPrimitiveModel.getAdditionalProperty("name").get(1).toString());
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testMapAdditionalProperties() throws IOException {
+        Map<String, String> primitiveAdditionalProperties = new HashMap<String, String>() {
+            {
+                put("key1", "value1");
+                put("key2", "value2");
+            }
+        };
         ModelWithMapOfPrimitiveAdditionalProperties model = new ModelWithMapOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Map.of("key1", "value1", "key2", "value2")).build();
+                "APIMatic").additionalProperty("name", primitiveAdditionalProperties).build();
 
-        Map<String, String> expectedValue = Map.of("key1", "value1", "key2", "value2");
+        Map<String, String> expectedValue = new HashMap<String, String>() {
+            {
+                put("key1", "value1");
+                put("key2", "value2");
+            }
+        };
 
         ModelWithMapOfPrimitiveAdditionalProperties actualModel = CoreHelper.deserialize(CoreHelper.serialize(model),
                 ModelWithMapOfPrimitiveAdditionalProperties.class);
         assertEquals(expectedValue, actualModel.getAdditionalProperty("name"));
 
         // Non-Primitive Case
+        Map<String, Vehicle> nonPrimitiveAdditionalProperties = new HashMap<String, Vehicle>() {
+            {
+                put("key1", new Vehicle.Builder("4").build());
+                put("key2", new Vehicle.Builder("5").build());
+            }
+        };
         ModelWithMapOfNonPrimitiveAdditionalProperties nonPrimitiveModel = new ModelWithMapOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Map.of("key1", new Vehicle.Builder("4").build())).build();
+                "APIMatic").additionalProperty("name", nonPrimitiveAdditionalProperties).build();
 
-        Map<String, Vehicle> expectedNonPrimitiveModel = Map.of("key1", new Vehicle.Builder("4").build());
+        Map<String, Vehicle> expectedNonPrimitiveModel = new HashMap<String, Vehicle>() {
+            {
+                put("key1", new Vehicle.Builder("4").build());
+                put("key2", new Vehicle.Builder("5").build());
+            }
+        };
 
         ModelWithMapOfNonPrimitiveAdditionalProperties actualNonPrimitiveModel = CoreHelper.deserialize(
                 CoreHelper.serialize(nonPrimitiveModel), ModelWithMapOfNonPrimitiveAdditionalProperties.class);
@@ -118,30 +142,45 @@ public class AdditionalPropertiesTest {
                 actualNonPrimitiveModel.getAdditionalProperty("name").get("key1").toString());
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testMapOfArrayAdditionalProperties() throws IOException {
+        Map<String, List<String>> primitiveAdditionalProperties = new HashMap<String, List<String>>() {
+            {
+                put("key1", Arrays.asList("value1", "value2"));
+                put("key2", Arrays.asList("value1", "value2"));
+            }
+        };
         ModelWithMapOfArrayOfPrimitiveAdditionalProperties model = new ModelWithMapOfArrayOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name",
-                        Map.of("key1", Arrays.asList("value1", "value2"), "key2", Arrays.asList("value1", "value2")))
-                        .build();
+                "APIMatic").additionalProperty("name", primitiveAdditionalProperties).build();
 
-        Map<String, List<String>> expectedValue = Map.of("key1", Arrays.asList("value1", "value2"), "key2",
-                Arrays.asList("value1", "value2"));
+        Map<String, List<String>> expectedValue = new HashMap<String, List<String>>() {
+            {
+                put("key1", Arrays.asList("value1", "value2"));
+                put("key2", Arrays.asList("value1", "value2"));
+            }
+        };
 
         ModelWithMapOfArrayOfPrimitiveAdditionalProperties actualModel = CoreHelper
                 .deserialize(CoreHelper.serialize(model), ModelWithMapOfArrayOfPrimitiveAdditionalProperties.class);
         assertEquals(expectedValue, actualModel.getAdditionalProperty("name"));
 
         // Non-Primitive Case
+        Map<String, List<Vehicle>> nonPrimitiveAdditionalProperties = new HashMap<String, List<Vehicle>>() {
+            {
+                put("key1", Arrays.asList(new Vehicle.Builder("4").build()));
+                put("key2", Arrays.asList(new Vehicle.Builder("5").build()));
+            }
+        };
         ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties nonPrimitiveModel = new ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic")
-                        .additionalProperty("name", Map.of("key1", Arrays.asList(new Vehicle.Builder("4").build()),
-                                "key2", Arrays.asList(new Vehicle.Builder("5").build())))
-                        .build();
+                "APIMatic").additionalProperty("name", nonPrimitiveAdditionalProperties).build();
 
-        Map<String, List<Vehicle>> expectedNonPrimitiveModel = Map.of("key1",
-                Arrays.asList(new Vehicle.Builder("4").build()), "key2",
-                Arrays.asList(new Vehicle.Builder("5").build()));
+        Map<String, List<Vehicle>> expectedNonPrimitiveModel = new HashMap<String, List<Vehicle>>() {
+            {
+                put("key1", Arrays.asList(new Vehicle.Builder("4").build()));
+                put("key2", Arrays.asList(new Vehicle.Builder("5").build()));
+            }
+        };
 
         ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties actualNonPrimitiveModel = CoreHelper.deserialize(
                 CoreHelper.serialize(nonPrimitiveModel), ModelWithMapOfArrayOfNonPrimitiveAdditionalProperties.class);
@@ -151,27 +190,35 @@ public class AdditionalPropertiesTest {
                 actualNonPrimitiveModel.getAdditionalProperty("name").get("key2").get(0).toString());
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testArrayOfMapAdditionalProperties() throws IOException {
+        Map<String, String> primitiveAdditionalProperties = new HashMap<String, String>() {
+            {
+                put("key1", "value1");
+                put("key2", "value2");
+            }
+        };
         ModelWithArrayOfMapOfPrimitiveAdditionalProperties model = new ModelWithArrayOfMapOfPrimitiveAdditionalProperties.Builder(
-                "APIMatic").additionalProperty("name", Arrays.asList(Map.of("key1", "value1", "key2", "value2")))
-                        .build();
+                "APIMatic").additionalProperty("name", Arrays.asList(primitiveAdditionalProperties)).build();
 
-        List<Map<String, String>> expectedValue = Arrays.asList(Map.of("key1", "value1", "key2", "value2"));
+        List<Map<String, String>> expectedValue = Arrays.asList(primitiveAdditionalProperties);
 
         ModelWithArrayOfMapOfPrimitiveAdditionalProperties actualModel = CoreHelper
                 .deserialize(CoreHelper.serialize(model), ModelWithArrayOfMapOfPrimitiveAdditionalProperties.class);
         assertEquals(expectedValue, actualModel.getAdditionalProperty("name"));
 
         // Non-Primitive Case
+        Map<String, Vehicle> nonPrimitiveAdditionalProperties = new HashMap<String, Vehicle>() {
+            {
+                put("key1", new Vehicle.Builder("4").build());
+                put("key2", new Vehicle.Builder("5").build());
+            }
+        };
         ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties nonPrimitiveModel = new ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties.Builder(
-                "APIMatic")
-                        .additionalProperty("name", Arrays.asList(Map.of("key1", new Vehicle.Builder("4").build(),
-                                "key2", new Vehicle.Builder("5").build())))
-                        .build();
+                "APIMatic").additionalProperty("name", Arrays.asList(nonPrimitiveAdditionalProperties)).build();
 
-        List<Map<String, Vehicle>> expectedNonPrimitiveModel = Arrays
-                .asList(Map.of("key1", new Vehicle.Builder("4").build(), "key2", new Vehicle.Builder("5").build()));
+        List<Map<String, Vehicle>> expectedNonPrimitiveModel = Arrays.asList(nonPrimitiveAdditionalProperties);
 
         ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties actualNonPrimitiveModel = CoreHelper.deserialize(
                 CoreHelper.serialize(nonPrimitiveModel), ModelWithArrayOfMapOfNonPrimitiveAdditionalProperties.class);
