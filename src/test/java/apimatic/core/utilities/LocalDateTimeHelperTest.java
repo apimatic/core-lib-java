@@ -15,27 +15,18 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import apimatic.core.constants.DateTimeConstants;
 import apimatic.core.mocks.TestDateTimeHelper;
 import io.apimatic.core.utilities.LocalDateTimeHelper;
 
 public class LocalDateTimeHelperTest {
 
-
-    private static final long UNIXTIMESTAMP3 = 868756200L;
-    private static final long UNITIMESTAMP2 = 1595639400L;
-    private static final long UNIXTIMESTAMP1 = 963450600L;
-    private static final int DAY25 = 25;
-    private static final int YEAR2020 = 2020;
-    private static final int YEAR2000 = 2000;
-    private static final int HOUR6 = 6;
-    private static final int DAY13 = 13;
-    private static final int JULY = 7;
-    private static final int MINUTES10 = 10;
-    private static final int YEAR1997 = 1997;
-
     @Test
     public void testLocalDateTimeToRfc1123() {
-        LocalDateTime dateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime dateTime = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
 
         // stub
         String expected = "Sun, 13 Jul 1997 06:10:00 GMT";
@@ -51,13 +42,17 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeListToRfc1123() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
-        List<String> expected =
-                Arrays.asList("Thu, 13 Jul 2000 06:10:00 GMT", "Sat, 25 Jul 2020 06:10:00 GMT");
+        List<String> expected = Arrays.asList("Thu, 13 Jul 2000 06:10:00 GMT",
+                "Sat, 25 Jul 2020 06:10:00 GMT");
 
         assertEquals(LocalDateTimeHelper.toRfc1123DateTime(dateTimeArray), expected);
     }
@@ -68,11 +63,14 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toRfc1123DateTime(dateTimeArray));
     }
 
-
     @Test
     public void testLocalDateTimeMapToRfc1123() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -88,8 +86,12 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeListOfMapToRfc1123() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -121,10 +123,11 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toRfc1123DateTime(dateTimeMap));
     }
 
-
     @Test
     public void testLocalDateTimeToRfc8601() {
-        LocalDateTime dateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime dateTime = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
 
         // stub
         String expected = "1997-07-13T06:10Z";
@@ -140,12 +143,15 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeListToRfc8601() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
         // stub
         List<String> expected = Arrays.asList("2000-07-13T06:10Z", "2020-07-25T06:10Z");
-
 
         assertEquals(LocalDateTimeHelper.toRfc8601DateTime(dateTimeArray), expected);
     }
@@ -156,11 +162,14 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toRfc8601DateTime(dateTimeArray));
     }
 
-
     @Test
     public void testLocalDateTimeMapToRfc8601() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -176,8 +185,12 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeListOfMapToRfc8601() {
-        LocalDateTime dateTime1 = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
-        LocalDateTime dateTime2 = LocalDateTime.of(YEAR2020, JULY, DAY25, HOUR6, MINUTES10);
+        LocalDateTime dateTime1 = LocalDateTime.of(DateTimeConstants.YEAR2000,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
+        LocalDateTime dateTime2 = LocalDateTime.of(DateTimeConstants.YEAR2020,
+                DateTimeConstants.JULY, DateTimeConstants.DAY25, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -209,12 +222,12 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toRfc8601DateTime(dateTimeMap));
     }
 
-
     @Test
     public void testLocalDateTimeToUnixTimeStamp() {
-        LocalDateTime dateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR1997,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         // stub
         String expected = "868756200";
         assertEquals(LocalDateTimeHelper.toUnixTimestamp(dateTime), expected);
@@ -229,17 +242,18 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeListToUnixTimeStamp() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
         List<String> expected = Arrays.asList("963450600", "1595639400");
-
 
         assertEquals(LocalDateTimeHelper.toUnixTimestamp(dateTimeArray), expected);
     }
@@ -250,15 +264,16 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toUnixTimestamp(dateTimeArray));
     }
 
-
     @Test
     public void testLocalDateTimeMapToUnixTimeStamp() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -274,12 +289,14 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testListOfMapToUnixTimeStamp() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -313,11 +330,12 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testUnixDateTimeLong() {
-        LocalDateTime dateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR1997,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
 
-        Long expectedValue = UNIXTIMESTAMP3;
+        Long expectedValue = DateTimeConstants.UNIXTIMESTAMP3;
         Long actualValue = LocalDateTimeHelper.toUnixTimestampLong(dateTime);
 
         assertEquals(actualValue, expectedValue);
@@ -334,17 +352,19 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testListToUnixTimeLong() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         List<LocalDateTime> dateTimeArray = Arrays.asList(dateTime1, dateTime2);
 
         // stub
-        List<Long> expected = Arrays.asList(UNIXTIMESTAMP1, UNITIMESTAMP2);
-
+        List<Long> expected = Arrays.asList(DateTimeConstants.UNIXTIMESTAMP1,
+                DateTimeConstants.UNIXTIMESTAMP2);
 
         assertEquals(LocalDateTimeHelper.toUnixTimestampLong(dateTimeArray), expected);
     }
@@ -357,20 +377,22 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testLocalDateTimeMapToUnixTimeLong() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
 
         // stub
         Map<String, Long> expected = new HashMap<>();
-        expected.put("dateTime1", UNIXTIMESTAMP1);
-        expected.put("dateTime2", UNITIMESTAMP2);
+        expected.put("dateTime1", DateTimeConstants.UNIXTIMESTAMP1);
+        expected.put("dateTime2", DateTimeConstants.UNIXTIMESTAMP2);
 
         assertEquals(LocalDateTimeHelper.toUnixTimestampLong(dateTimeMap), expected);
 
@@ -378,12 +400,14 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testListOfMapToUnixTimeLong() {
-        LocalDateTime dateTime1 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        LocalDateTime dateTime2 =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2020, JULY, DAY25,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime1 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime dateTime2 = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2020,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY25, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         Map<String, LocalDateTime> dateTimeMap = new HashMap<>();
         dateTimeMap.put("dateTime1", dateTime1);
         dateTimeMap.put("dateTime2", dateTime2);
@@ -392,8 +416,8 @@ public class LocalDateTimeHelperTest {
 
         // stub
         Map<String, Long> mapOfLong = new HashMap<>();
-        mapOfLong.put("dateTime1", UNIXTIMESTAMP1);
-        mapOfLong.put("dateTime2", UNITIMESTAMP2);
+        mapOfLong.put("dateTime1", DateTimeConstants.UNIXTIMESTAMP1);
+        mapOfLong.put("dateTime2", DateTimeConstants.UNIXTIMESTAMP2);
 
         List<Map<String, Long>> expected = Arrays.asList(mapOfLong);
 
@@ -415,13 +439,13 @@ public class LocalDateTimeHelperTest {
         assertNull(LocalDateTimeHelper.toUnixTimestampLong(dateTimeMap));
     }
 
-
     @Test
     public void testFromUnixTimeStampLong() {
-        LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
-        Long date = UNIXTIMESTAMP1;
+        LocalDateTime expected = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
+        Long date = DateTimeConstants.UNIXTIMESTAMP1;
 
         LocalDateTime actualValue = LocalDateTimeHelper.fromUnixTimestamp(date);
         assertEquals(actualValue, expected);
@@ -429,9 +453,10 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testFromUnixTimeStampString() {
-        LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR2000, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime expected = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR2000,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         String date = "963450600";
 
         LocalDateTime actualValue = LocalDateTimeHelper.fromUnixTimestamp(date);
@@ -441,7 +466,9 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testFromRfc1123String() {
         String date = "Sun, 13 Jul 1997 06:10:00 GMT";
-        LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime expected = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13,
+                DateTimeConstants.HOUR6, DateTimeConstants.MINUTES10);
         LocalDateTime actualValue = LocalDateTimeHelper.fromRfc1123DateTime(date);
         assertEquals(actualValue, expected);
     }
@@ -449,7 +476,9 @@ public class LocalDateTimeHelperTest {
     @Test
     public void testFromRfc8601String() {
         String date = "1997-07-13T06:10Z";
-        LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime expected = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         LocalDateTime actualValue = LocalDateTimeHelper.fromRfc8601DateTime(date);
         assertEquals(actualValue, expected);
     }
@@ -457,7 +486,9 @@ public class LocalDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testRfc1123Serializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime localDateTime = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new LocalDateTimeHelper.Rfc1123DateTimeSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -483,7 +514,9 @@ public class LocalDateTimeHelperTest {
         mapper.registerModule(module);
 
         String datetime = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
-        LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime expected = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         LocalDateTime actual = mapper.readValue(datetime, LocalDateTime.class);
         assertEquals(actual, expected);
     }
@@ -491,7 +524,9 @@ public class LocalDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testRfc8601Serializer() throws JsonProcessingException {
-        LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime localDateTime = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new LocalDateTimeHelper.Rfc8601DateTimeSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -517,7 +552,9 @@ public class LocalDateTimeHelperTest {
         mapper.registerModule(module);
 
         String dateTime = "\"1997-07-13T06:10Z\"";
-        LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
+        LocalDateTime expected = LocalDateTime.of(DateTimeConstants.YEAR1997,
+                DateTimeConstants.JULY, DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                DateTimeConstants.MINUTES10);
         LocalDateTime actual = mapper.readValue(dateTime, LocalDateTime.class);
         assertEquals(actual, expected);
     }
@@ -525,9 +562,10 @@ public class LocalDateTimeHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testUnixTimeStampSerializer() throws JsonProcessingException {
-        LocalDateTime localDateTime =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime localDateTime = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR1997,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         @SuppressWarnings("rawtypes")
         JsonSerializer serializer = new LocalDateTimeHelper.UnixTimestampSerializer();
         ObjectMapper mapper = new ObjectMapper();
@@ -551,9 +589,10 @@ public class LocalDateTimeHelperTest {
         mapper.registerModule(module);
 
         String dateTime = "868756200";
-        LocalDateTime expected =
-                TestDateTimeHelper.getLocalDateTimeFromGMT(ZonedDateTime.of(YEAR1997, JULY, DAY13,
-                        1, MINUTES10, 0, 0, ZoneId.of("GMT")));
+        LocalDateTime expected = TestDateTimeHelper
+                .getLocalDateTimeFromGMT(ZonedDateTime.of(DateTimeConstants.YEAR1997,
+                        DateTimeConstants.JULY, DateTimeConstants.DAY13, 1,
+                        DateTimeConstants.MINUTES10, 0, 0, ZoneId.of("GMT")));
         LocalDateTime actual = mapper.readValue(dateTime, LocalDateTime.class);
         assertEquals(actual, expected);
     }
