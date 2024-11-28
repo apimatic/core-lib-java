@@ -82,7 +82,7 @@ public final class ConversionHelper {
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToSimpleType(item, conversionFunction))
-                    .filter(item -> item != null).collect(Collectors.toList());
+                    .filter(Objects::nonNull).collect(Collectors.toList());
         } catch (Exception e) {
             return null;
         }
