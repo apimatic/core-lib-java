@@ -3,6 +3,7 @@ package io.apimatic.core.utilities;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,7 @@ public final class ConversionHelper {
         try {
             List<Object> valueList = (List<Object>) value;
             return valueList.stream().map(item -> convertToSimpleType(item, conversionFunction))
-                    .filter(item -> item != null).collect(Collectors.toList());
+                    .filter(Objects::nonNull).collect(Collectors.toList());
         } catch (Exception e) {
             return null;
         }
