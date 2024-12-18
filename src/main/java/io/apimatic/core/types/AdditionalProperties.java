@@ -93,12 +93,7 @@ public class AdditionalProperties<T> {
 
     @Override
     public String toString() {
-        if (properties.isEmpty()) {
-            return "";
-        }
-
-        return properties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(", ", ", ", ""));
+        return properties.toString();
     }
 
     /**
