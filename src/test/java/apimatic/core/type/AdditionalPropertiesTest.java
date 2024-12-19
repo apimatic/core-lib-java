@@ -346,4 +346,29 @@ public class AdditionalPropertiesTest {
             }
         });
     }
+
+    @Test
+    public void testModelWithAdditionalPropertiesToString() throws IOException {
+        ModelWithPrimitiveAdditionalProperties simpleModel =
+                new ModelWithPrimitiveAdditionalProperties.Builder(
+                        "APIMatic").additionalProperty("name", "value").build();
+
+        final String actualSimpleModelToString =
+                "ModelWithPrimitiveAdditionalProperties [company=APIMatic{name=value}]";
+
+        assertEquals(simpleModel.toString(), actualSimpleModelToString);
+
+        ModelWithDateTimeAdditionalProperties dateTimeModel =
+                new ModelWithDateTimeAdditionalProperties.Builder("APIMatic")
+                        .additionalProperty("name",
+                                LocalDateTime.of(DateTimeConstants.YEAR2000, DateTimeConstants.JULY,
+                                        DateTimeConstants.DAY13, DateTimeConstants.HOUR6,
+                                        DateTimeConstants.MINUTES10))
+                        .build();
+
+        final String actualDateTimeModelToString =
+                "ModelWithDateTimeAdditionalProperties [company=APIMatic{name=2000-07-13T06:10}]";
+
+        assertEquals(dateTimeModel.toString(), actualDateTimeModelToString);
+    }
 }
