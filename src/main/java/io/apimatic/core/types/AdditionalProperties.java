@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
@@ -93,12 +92,7 @@ public class AdditionalProperties<T> {
 
     @Override
     public String toString() {
-        if (properties.isEmpty()) {
-            return "";
-        }
-
-        return properties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(", ", ", ", ""));
+        return properties.toString();
     }
 
     /**
