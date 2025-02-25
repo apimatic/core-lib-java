@@ -338,14 +338,19 @@ public class CoreHelper {
             return null;
         }
 
-        Annotation stringCaseAnnotation = obj.getClass()
-                .getAnnotation(TypeCombinatorStringCase.class);
-
-        if (stringCaseAnnotation != null) {
+        if (isTypeCombinatorStringCase(obj)) {
             return obj.toString();
         }
 
         return serialize(obj);
+    }
+
+    public static boolean isTypeCombinatorStringCase(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        
+        return obj.getClass().getAnnotation(TypeCombinatorStringCase.class) != null;
     }
 
     /**

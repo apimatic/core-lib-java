@@ -125,6 +125,18 @@ public class CoreHelperTest {
     }
 
     @Test
+    public void testSerializeBooleanObject() throws JsonProcessingException {
+        Boolean obj = true;
+        assertEquals(String.valueOf(obj) , CoreHelper.serialize(obj));
+    }
+
+    @Test
+    public void testSerializeNumberObject() throws JsonProcessingException {
+        float obj = 123.2f;
+        assertEquals(String.valueOf(obj) , CoreHelper.serialize(obj));
+    }
+    
+    @Test
     public void testTrySerializeValidObject() {
         Vehicle model = new Vehicle.Builder("4").build();
         String expectedJson = "{\"NumberOfTyres\":\"4\"}";
