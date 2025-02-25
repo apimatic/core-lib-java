@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -127,15 +128,16 @@ public class CoreHelperTest {
     @Test
     public void testSerializeBooleanObject() throws JsonProcessingException {
         Boolean obj = true;
-        assertEquals(String.valueOf(obj) , CoreHelper.serialize(obj));
+        assertEquals(String.valueOf(obj), CoreHelper.serialize(obj));
     }
 
     @Test
     public void testSerializeNumberObject() throws JsonProcessingException {
-        float obj = 123.2f;
-        assertEquals(String.valueOf(obj) , CoreHelper.serialize(obj));
+        Random random = new Random();
+        float obj = random.nextFloat();
+        assertEquals(String.valueOf(obj), CoreHelper.serialize(obj));
     }
-    
+
     @Test
     public void testTrySerializeValidObject() {
         Vehicle model = new Vehicle.Builder("4").build();

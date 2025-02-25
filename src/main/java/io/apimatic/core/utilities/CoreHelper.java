@@ -345,25 +345,37 @@ public class CoreHelper {
         return serialize(obj);
     }
 
+    /**
+     * Check either the object has TypeCombinatorStringCase annotation.
+     *
+     * @param obj  The object to check annotation.
+     * @return The boolean result.
+     */
     public static boolean isTypeCombinatorStringCase(Object obj) {
         if (obj == null) {
             return false;
         }
-        
+
         return obj.getClass().getAnnotation(TypeCombinatorStringCase.class) != null;
     }
 
+    /**
+     * Check either the object has TypeCombinatorDateTimeCase annotation.
+     *
+     * @param obj  The object to check annotation.
+     * @return The boolean result.
+     */
     public static boolean isTypeCombinatorDateTimeCase(Object obj) {
         if (obj == null) {
             return false;
         }
-        
+
         List<String> dateTimeList = Arrays.asList("LocalDateTime", "ZonedDateTime");
         String classType = getTypeCombinatorCaseType(obj.getClass());
-        
+
         return dateTimeList.contains(classType);
     }
-    
+
     /**
      * Json deserialization of the given Json string using a specified
      * JsonDerializer.

@@ -430,10 +430,8 @@ public final class HttpRequest {
             if (obj == null) {
                 return null;
             }
-            
-            if (CoreHelper.isTypeCombinatorStringCase(obj)
-            		|| CoreHelper.isTypeCombinatorDateTimeCase(obj)
-            		|| obj instanceof String) {
+
+            if (CoreHelper.isTypeCombinatorStringCase(obj) || CoreHelper.isTypeCombinatorDateTimeCase(obj) || obj instanceof String) {
                 return obj.toString();
             }
 
