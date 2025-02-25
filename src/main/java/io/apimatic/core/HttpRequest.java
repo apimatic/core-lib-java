@@ -431,7 +431,9 @@ public final class HttpRequest {
                 return null;
             }
             
-            if (CoreHelper.isTypeCombinatorStringCase(obj) || obj instanceof String) {
+            if (CoreHelper.isTypeCombinatorStringCase(obj)
+            		|| CoreHelper.isTypeCombinatorDateTimeCase(obj)
+            		|| obj instanceof String) {
                 return obj.toString();
             }
 
