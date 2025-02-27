@@ -316,6 +316,16 @@ public class RequestBuilderTest extends MockCoreConfig {
         assertEquals(actualContentType, expectedContentType);
     }
 
+    /**
+     * An instance of {@link LocalDateTime}.
+     */
+    private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2021, 1, 20, 12, 12, 41);
+    /**
+     * An instance of {@link ZonedDateTime}.
+     */
+    private static final ZonedDateTime ZONED_DATE_TIME =
+            ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("GMT"));
+
     @Test
     public void testComplexHeaderParameter() throws IOException {
         // when
@@ -323,11 +333,11 @@ public class RequestBuilderTest extends MockCoreConfig {
         Car car = CoreHelper.tryDeserialize(jsonObject, Car.class);
 
         SendScalarParamBody bodyStringType = SendScalarParamBody.fromMString("some string");
-        SendScalarParamBody bodyPrecisionArrayType = SendScalarParamBody.fromPrecision(
+        SendScalarParamBody precisionArray = SendScalarParamBody.fromPrecision(
                 Arrays.asList(100.11, 133.0));
         Rfc1123Date rfc1123Date = new Rfc1123Date.Builder()
-                .dateTime(LocalDateTime.of(2021, 1, 20, 12, 12, 41))
-                .zonedDateTime(ZonedDateTime.of(LocalDateTime.of(2021, 1, 20, 12, 12, 41), ZoneId.of("GMT")))
+                .dateTime(LOCAL_DATE_TIME)
+                .zonedDateTime(ZONED_DATE_TIME)
                 .build();
 
         Request coreHttpRequest =
@@ -335,9 +345,9 @@ public class RequestBuilderTest extends MockCoreConfig {
                         .formParam(param -> param.key("formKey").value("value"))
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .headerParam(param -> param.key("car-complex-header").value(car))
-                        .headerParam(param -> param.key("any-of-string-header").value(bodyStringType))
-                        .headerParam(param -> param.key("any-of-precision-array-header").value(bodyPrecisionArrayType))
-                        .headerParam(param -> param.key("local-date-time-header").value(rfc1123Date))
+                        .headerParam(param -> param.key("any-of-string").value(bodyStringType))
+                        .headerParam(param -> param.key("precision-array").value(precisionArray))
+                        .headerParam(param -> param.key("date-time-header").value(rfc1123Date))
                         .build(getMockGlobalConfig());
 
         when(coreHttpRequest.getHeaders()).thenReturn(getHttpHeaders());

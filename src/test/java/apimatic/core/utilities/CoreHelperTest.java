@@ -1438,7 +1438,7 @@ public class CoreHelperTest {
 
     @Test
     public void testTypeCombinatorSerializationDateTime() {
-    	SendParamsFormDateTime body = SendParamsFormDateTime.fromDateTime(LocalDateTime.now());
+        SendParamsFormDateTime body = SendParamsFormDateTime.fromDateTime(LocalDateTime.now());
         assertTrue(CoreHelper.isTypeCombinatorDateTimeCase(body));
     }
 
