@@ -1425,6 +1425,30 @@ public class CoreHelperTest {
     }
 
     @Test
+    public void testIsTypeCombinatorStringCase() {
+        SendScalarParamBody body = SendScalarParamBody.fromMString("some string");
+        assertTrue(CoreHelper.isTypeCombinatorStringCase(body));
+    }
+
+    @Test
+    public void testIsTypeCombinatorStringCaseNull() {
+        SendScalarParamBody body = null;
+        assertFalse(CoreHelper.isTypeCombinatorStringCase(body));
+    }
+
+    @Test
+    public void testTypeCombinatorSerializationDateTime() {
+    	SendParamsFormDateTime body = SendParamsFormDateTime.fromDateTime(LocalDateTime.now());
+        assertTrue(CoreHelper.isTypeCombinatorDateTimeCase(body));
+    }
+
+    @Test
+    public void testTypeCombinatorSerializationDateTimeNull() {
+    	SendParamsFormDateTime body = null;
+        assertFalse(CoreHelper.isTypeCombinatorDateTimeCase(body));
+    }
+
+    @Test
     public void testTypeCombinatorSerializationStringNull() throws JsonProcessingException {
         SendScalarParamBody body = null;
         String actual = CoreHelper.serializeTypeCombinator(body);

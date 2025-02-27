@@ -414,7 +414,7 @@ public final class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = processHttpHeaderParameterValue(httpHeaderParameter.getValue());
+            String value = getSerializedHeaderValue(httpHeaderParameter.getValue());
 
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
@@ -426,7 +426,7 @@ public final class HttpRequest {
             return this;
         }
 
-        private static String processHttpHeaderParameterValue(Object obj) {
+        private static String getSerializedHeaderValue(Object obj) {
             if (obj == null) {
                 return null;
             }

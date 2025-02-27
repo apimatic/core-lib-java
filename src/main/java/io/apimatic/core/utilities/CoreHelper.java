@@ -370,7 +370,9 @@ public class CoreHelper {
             return false;
         }
 
-        List<String> dateTimeList = Arrays.asList("LocalDateTime", "ZonedDateTime");
+        Set<String> dateTimeList = Collections.unmodifiableSet(
+                new HashSet<>(Set.of("LocalDateTime", "ZonedDateTime"))
+            );
         String classType = getTypeCombinatorCaseType(obj.getClass());
 
         return dateTimeList.contains(classType);
