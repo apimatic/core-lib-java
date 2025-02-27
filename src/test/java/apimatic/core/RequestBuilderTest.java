@@ -325,6 +325,8 @@ public class RequestBuilderTest extends MockCoreConfig {
      */
     private static final ZonedDateTime ZONED_DATE_TIME =
             ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("GMT"));
+    private static final double PRECISION_NUMBER1 = 100.11;
+    private static final double PRECISION_NUMBER2 = 133.0;
 
     @Test
     public void testComplexHeaderParameter() throws IOException {
@@ -334,7 +336,7 @@ public class RequestBuilderTest extends MockCoreConfig {
 
         SendScalarParamBody bodyStringType = SendScalarParamBody.fromMString("some string");
         SendScalarParamBody precisionArray = SendScalarParamBody.fromPrecision(
-                Arrays.asList(100.11, 133.0));
+                Arrays.asList(PRECISION_NUMBER1, PRECISION_NUMBER2));
         Rfc1123Date rfc1123Date = new Rfc1123Date.Builder()
                 .dateTime(LOCAL_DATE_TIME)
                 .zonedDateTime(ZONED_DATE_TIME)
