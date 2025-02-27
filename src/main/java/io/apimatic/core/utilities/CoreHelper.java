@@ -371,7 +371,7 @@ public class CoreHelper {
         }
 
         Set<String> dateTimeList = Collections.unmodifiableSet(
-                new HashSet<>(Set.of("LocalDateTime", "ZonedDateTime"))
+                new HashSet<>(Arrays.asList("LocalDateTime", "ZonedDateTime"))
             );
         String classType = getTypeCombinatorCaseType(obj.getClass());
 
