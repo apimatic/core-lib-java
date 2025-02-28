@@ -125,7 +125,7 @@ public abstract class SendParamsFormDateTime {
      * This is a implementation class for DateTimeCase.
      */
     @JsonDeserialize(using = JsonDeserializer.None.class)
-    @TypeCombinatorCase
+    @TypeCombinatorCase(type = "LocalDateTime")
     private static class DateTimeCase extends SendParamsFormDateTime {
 
         @JsonValue

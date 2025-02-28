@@ -338,14 +338,43 @@ public class CoreHelper {
             return null;
         }
 
-        Annotation stringCaseAnnotation = obj.getClass()
-                .getAnnotation(TypeCombinatorStringCase.class);
-
-        if (stringCaseAnnotation != null) {
+        if (isTypeCombinatorStringCase(obj)) {
             return obj.toString();
         }
 
         return serialize(obj);
+    }
+
+    /**
+     * Check either the object has TypeCombinatorStringCase annotation.
+     *
+     * @param obj  The object to check annotation.
+     * @return The boolean result.
+     */
+    public static boolean isTypeCombinatorStringCase(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        return obj.getClass().getAnnotation(TypeCombinatorStringCase.class) != null;
+    }
+
+    /**
+     * Check either the object has TypeCombinatorDateTimeCase annotation.
+     *
+     * @param obj  The object to check annotation.
+     * @return The boolean result.
+     */
+    public static boolean isTypeCombinatorDateTimeCase(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        HashSet<String> dateTimeList = new HashSet<>(
+                Arrays.asList("LocalDateTime", "ZonedDateTime"));
+        String classType = getTypeCombinatorCaseType(obj.getClass());
+
+        return dateTimeList.contains(classType);
     }
 
     /**

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -122,6 +123,19 @@ public class CoreHelperTest {
     public void testSerializeNullObject() throws JsonProcessingException {
         Object obj = null;
         assertNull(CoreHelper.serialize(obj));
+    }
+
+    @Test
+    public void testSerializeBooleanObject() throws JsonProcessingException {
+        Boolean obj = true;
+        assertEquals(String.valueOf(obj), CoreHelper.serialize(obj));
+    }
+
+    @Test
+    public void testSerializeNumberObject() throws JsonProcessingException {
+        Random random = new Random();
+        float obj = random.nextFloat();
+        assertEquals(String.valueOf(obj), CoreHelper.serialize(obj));
     }
 
     @Test
@@ -1408,6 +1422,30 @@ public class CoreHelperTest {
         String expected = "some string";
         String actual = CoreHelper.serializeTypeCombinator(body);
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testIsTypeCombinatorStringCase() {
+        SendScalarParamBody body = SendScalarParamBody.fromMString("some string");
+        assertTrue(CoreHelper.isTypeCombinatorStringCase(body));
+    }
+
+    @Test
+    public void testIsTypeCombinatorStringCaseNull() {
+        SendScalarParamBody body = null;
+        assertFalse(CoreHelper.isTypeCombinatorStringCase(body));
+    }
+
+    @Test
+    public void testTypeCombinatorSerializationDateTime() {
+        SendParamsFormDateTime body = SendParamsFormDateTime.fromDateTime(LocalDateTime.now());
+        assertTrue(CoreHelper.isTypeCombinatorDateTimeCase(body));
+    }
+
+    @Test
+    public void testTypeCombinatorSerializationDateTimeNull() {
+        SendParamsFormDateTime body = null;
+        assertFalse(CoreHelper.isTypeCombinatorDateTimeCase(body));
     }
 
     @Test

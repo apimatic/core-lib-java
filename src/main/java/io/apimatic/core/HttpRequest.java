@@ -414,9 +414,7 @@ public final class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value =
-                    httpHeaderParameter.getValue() == null ? null
-                            : httpHeaderParameter.getValue().toString();
+            String value = getSerializedHeaderValue(httpHeaderParameter.getValue());
 
             if (headerParams.containsKey(key)) {
                 headerParams.get(key).add(value);
@@ -426,6 +424,20 @@ public final class HttpRequest {
                 headerParams.put(key, headerValues);
             }
             return this;
+        }
+
+        private static String getSerializedHeaderValue(Object obj) {
+            if (obj == null) {
+                return null;
+            }
+
+            if (CoreHelper.isTypeCombinatorStringCase(obj)
+                    || CoreHelper.isTypeCombinatorDateTimeCase(obj)
+                    || obj instanceof String) {
+                return obj.toString();
+            }
+
+            return CoreHelper.trySerialize(obj);
         }
 
         /**
