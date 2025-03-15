@@ -1,14 +1,13 @@
 package io.apimatic.core;
 
-import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonPointer;
-import javax.json.JsonReader;
 import javax.json.JsonStructure;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -140,14 +139,7 @@ public final class ErrorCase<ExceptionType extends CoreApiException> {
 
     private String replaceBodyFromTemplate(String responseBody, String reason) {
         StringBuilder formatter = new StringBuilder(reason);
-        JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
-        JsonStructure jsonStructure = null;
-        try {
-            jsonStructure = jsonReader.read();
-        } catch (Exception e) {
-            // No need to do anything here
-        }
-        jsonReader.close();
+        JsonStructure jsonStructure = CoreHelper.createJsonStructure(responseBody);
         Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(reason);
         while (matcher.find()) {
             String key = matcher.group(1);

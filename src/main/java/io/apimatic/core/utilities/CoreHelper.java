@@ -28,6 +28,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.json.Json;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -1563,5 +1567,20 @@ public class CoreHelper {
     public static String getQueryParametersFromUrl(String queryUrl) {
         int queryStringIndex = queryUrl.indexOf('?');
         return queryStringIndex != -1 ? queryUrl.substring(queryStringIndex + 1) : "";
+    }
+    
+    public static JsonStructure createJsonStructure(String json) {
+        JsonReader jsonReader = Json.createReader(new StringReader(json));
+        JsonStructure jsonStructure = null;
+        
+        try {
+            jsonStructure = jsonReader.read();
+        } catch (Exception e) {
+            // No need to do anything here
+        }
+        
+        jsonReader.close();
+        
+        return jsonStructure;
     }
 }
