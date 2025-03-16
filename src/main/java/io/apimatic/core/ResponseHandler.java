@@ -10,6 +10,7 @@ import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.types.pagination.CursorPaginated;
 import io.apimatic.core.types.pagination.LinkPaginated;
+import io.apimatic.core.types.pagination.OffsetPaginated;
 import io.apimatic.core.types.pagination.PaginationDeserializer;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
@@ -344,9 +345,9 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         @SuppressWarnings("unchecked")
         public <InnerType> Builder<ResponseType, ExceptionType> linkPaginatedDeserializer(
                 Deserializer<InnerType> deserializer, LinkPaginated.Configuration config) {
-            this.paginationDeserializer = (res, c) -> new LinkPaginated<InnerType, ExceptionType>(
-                    deserializer.apply(res.getBody()), config, c.getGlobalConfiguration(), res,
-                    (Builder<LinkPaginated<InnerType, ExceptionType>, ExceptionType>) this);
+            this.paginationDeserializer = (res, c) -> new LinkPaginated<InnerType>(
+                    deserializer.apply(res.getBody()), config, c, res,
+                    (Builder<LinkPaginated<InnerType>, CoreApiException>) this);
             return this;
         }
 
@@ -360,9 +361,25 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         @SuppressWarnings("unchecked")
         public <InnerType> Builder<ResponseType, ExceptionType> cursorPaginatedDeserializer(
                 Deserializer<InnerType> deserializer, CursorPaginated.Configuration config) {
-            this.paginationDeserializer = (res, c) -> new CursorPaginated<InnerType, ExceptionType>(
+            this.paginationDeserializer = (res, c) -> new CursorPaginated<InnerType>(
                     deserializer.apply(res.getBody()), config, c, res,
-                    (Builder<CursorPaginated<InnerType, ExceptionType>, ExceptionType>) this);
+                    (Builder<CursorPaginated<InnerType>, CoreApiException>) this);
+            return this;
+        }
+
+        /**
+         * Setter for the deserializer to be used in offset based pagination wrapper.
+         * 
+         * @param deserializer to deserialize the server response.
+         * @param <InnerType>  the type wrapped by offset pagination.
+         * @return {@link ResponseHandler.Builder}.
+         */
+        @SuppressWarnings("unchecked")
+        public <InnerType> Builder<ResponseType, ExceptionType> offsetPaginatedDeserializer(
+                Deserializer<InnerType> deserializer, OffsetPaginated.Configuration config) {
+            this.paginationDeserializer = (res, c) -> new OffsetPaginated<InnerType>(
+                    deserializer.apply(res.getBody()), config, c, res,
+                    (Builder<OffsetPaginated<InnerType>, CoreApiException>) this);
             return this;
         }
 

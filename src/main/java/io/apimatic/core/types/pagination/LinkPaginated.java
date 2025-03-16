@@ -2,19 +2,16 @@ package io.apimatic.core.types.pagination;
 
 import java.io.IOException;
 
-import javax.json.Json;
-import javax.json.JsonPointer;
-import javax.json.JsonStructure;
-
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.GlobalConfiguration;
+import io.apimatic.core.HttpRequest;
 import io.apimatic.core.ResponseHandler.Builder;
+import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.utilities.CoreHelper;
-import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.response.Response;
 
-public class LinkPaginated<T, ExceptionType extends CoreApiException> {
+public class LinkPaginated<T> {
 
     /**
      * Private store for encapsulated object's value.
@@ -24,19 +21,21 @@ public class LinkPaginated<T, ExceptionType extends CoreApiException> {
     private Configuration configuration;
 
     private GlobalConfiguration globalConfig;
+    
+    private Response response;
 
-    private Builder<LinkPaginated<T, ExceptionType>, ExceptionType> responseBuilder;
+    private Builder<LinkPaginated<T>, CoreApiException> responseBuilder;
 
-    private JsonStructure jsonStructure;
+    private HttpRequest.Builder requestBuilder;
 
-    public LinkPaginated(final T value, final Configuration configuration,
-            final GlobalConfiguration globalConfig, final Response response,
-            final Builder<LinkPaginated<T, ExceptionType>, ExceptionType> responseBuilder) {
+    public LinkPaginated(final T value, final Configuration configuration, final EndpointConfiguration endPointConfig,
+            final Response response, final Builder<LinkPaginated<T>, CoreApiException> builder) {
         this.value = value;
         this.configuration = configuration;
-        this.globalConfig = globalConfig;
-        this.responseBuilder = responseBuilder;
-        this.jsonStructure = CoreHelper.createJsonStructure(response.getBody());
+        this.globalConfig = endPointConfig.getGlobalConfiguration();
+        this.response = response;
+        this.responseBuilder = builder;
+        this.requestBuilder = endPointConfig.getRequestBuilder();
     }
 
     /**
@@ -53,34 +52,37 @@ public class LinkPaginated<T, ExceptionType extends CoreApiException> {
         return value;
     }
 
-    public LinkPaginated<T, ExceptionType> first() throws ExceptionType, IOException {
+    public LinkPaginated<T> first() {
         return executeForPointer(configuration.firstPointer);
     }
 
-    public LinkPaginated<T, ExceptionType> last() throws ExceptionType, IOException {
+    public LinkPaginated<T> last() {
         return executeForPointer(configuration.lastPointer);
     }
 
-    public LinkPaginated<T, ExceptionType> previous() throws ExceptionType, IOException {
+    public LinkPaginated<T> previous() {
         return executeForPointer(configuration.prevPointer);
     }
 
-    public LinkPaginated<T, ExceptionType> next() throws ExceptionType, IOException {
+    public LinkPaginated<T> next() {
         return executeForPointer(configuration.nextPointer);
     }
-    
-    private LinkPaginated<T, ExceptionType> executeForPointer(String pointer) throws ExceptionType, IOException {
+
+    private LinkPaginated<T> executeForPointer(String pointer) {
+        String linkValue = CoreHelper.getValueFromJson(pointer, response.getBody());
         
-        JsonPointer jsonPointer = Json.createPointer(pointer);
-        
-        if (jsonStructure != null && jsonPointer.containsValue(jsonStructure)) {
-            String pathValue = jsonPointer.getValue(jsonStructure).toString();
-            
-            return new ApiCall.Builder<LinkPaginated<T, ExceptionType>, ExceptionType>().globalConfig(globalConfig)
-                    .requestBuilder(requestBuilder -> requestBuilder.path(pathValue).httpMethod(Method.GET))
-                    .responseHandler(res -> res = responseBuilder).build().execute();
+        if (linkValue == null) {
+            return null;
         }
-        
+
+        try {
+            return new ApiCall.Builder<LinkPaginated<T>, CoreApiException>().globalConfig(globalConfig)
+                    .requestBuilder(requestBuilder.queryParam(CoreHelper.getQueryParameters(linkValue)))
+                    .responseHandler(responseBuilder).build().execute();
+        } catch (IOException | CoreApiException e) {
+            // Ignore exceptions
+        }
+
         return null;
     }
 

@@ -11,6 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.net.URLEncoder;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,8 +33,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
+import javax.json.JsonPointer;
 import javax.json.JsonReader;
+import javax.json.JsonString;
 import javax.json.JsonStructure;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -1569,6 +1576,15 @@ public class CoreHelper {
         return queryStringIndex != -1 ? queryUrl.substring(queryStringIndex + 1) : "";
     }
     
+    public static Map<String, Object> getQueryParameters(String queryUrl) {
+        return Arrays.stream(getQueryParametersFromUrl(queryUrl).split("&"))
+            .map(param -> param.split("="))
+            .collect(Collectors.toMap(
+                    pair -> pair[0],
+                    pair -> pair[1]
+            ));
+    }
+    
     public static JsonStructure createJsonStructure(String json) {
         JsonReader jsonReader = Json.createReader(new StringReader(json));
         JsonStructure jsonStructure = null;
@@ -1582,5 +1598,30 @@ public class CoreHelper {
         jsonReader.close();
         
         return jsonStructure;
+    }
+    
+    public static String getValueFromJson(String pointer, String json) {
+        if (pointer == null) {
+            return null;
+        }
+
+        JsonStructure jsonStructure = CoreHelper.createJsonStructure(json);
+        JsonPointer jsonPointer = Json.createPointer(pointer);
+
+        if (jsonStructure == null || !jsonPointer.containsValue(jsonStructure)) {
+            return null;
+        }
+
+        JsonValue value = jsonPointer.getValue(jsonStructure);
+
+        if (value == JsonValue.NULL) { // Explicitly check for JsonValue.NULL
+            return null;
+        }
+        
+        if (value instanceof JsonString) { // Extract raw string value
+            return ((JsonString) value).getString();
+        }
+
+        return value.toString(); // Only convert toString() if it's not null
     }
 }

@@ -138,6 +138,15 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         }
 
         /**
+         * @param requestBuilder request builder instance.
+         * @return {@link ApiCall.Builder}.
+         */
+        public Builder<ResponseType, ExceptionType> requestBuilder(HttpRequest.Builder requestBuilder) {
+            this.requestBuilder = requestBuilder;
+            return this;
+        }
+
+        /**
          * @param action responseHandler {@link Consumer}.
          * @return {@link ApiCall.Builder}.
          */
@@ -145,6 +154,16 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 Consumer<ResponseHandler.Builder<ResponseType, ExceptionType>> action) {
             responseHandlerBuilder = new ResponseHandler.Builder<ResponseType, ExceptionType>();
             action.accept(responseHandlerBuilder);
+            return this;
+        }
+
+        /**
+         * @param responseHandlerBuilder response handler builder instance.
+         * @return {@link ApiCall.Builder}.
+         */
+        public Builder<ResponseType, ExceptionType> responseHandler(
+                ResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder) {
+            this.responseHandlerBuilder = responseHandlerBuilder;
             return this;
         }
 
