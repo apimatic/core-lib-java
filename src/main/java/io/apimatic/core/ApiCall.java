@@ -158,16 +158,6 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         }
 
         /**
-         * @param responseHandlerBuilder response handler builder instance.
-         * @return {@link ApiCall.Builder}.
-         */
-        public Builder<ResponseType, ExceptionType> responseHandler(
-                ResponseHandler.Builder<ResponseType, ExceptionType> responseHandlerBuilder) {
-            this.responseHandlerBuilder = responseHandlerBuilder;
-            return this;
-        }
-
-        /**
          * @param action endpointConfiguration {@link Consumer}.
          * @return {@link ApiCall.Builder}.
          */
@@ -175,6 +165,19 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 Consumer<EndpointConfiguration.Builder> action) {
             endpointConfigurationBuilder = new EndpointConfiguration.Builder();
             action.accept(endpointConfigurationBuilder);
+            return this;
+        }
+
+        /**
+         * @param endpointConfiguration end point configuration instance.
+         * @return {@link ApiCall.Builder}.
+         */
+        public Builder<ResponseType, ExceptionType> endpointConfiguration(
+                EndpointConfiguration endpointConfiguration) {
+            endpointConfigurationBuilder = new EndpointConfiguration.Builder()
+                    .arraySerializationFormat(endpointConfiguration.getArraySerializationFormat())
+                    .hasBinaryResponse(endpointConfiguration.hasBinaryResponse())
+                    .retryOption(endpointConfiguration.getRetryOption());
             return this;
         }
 

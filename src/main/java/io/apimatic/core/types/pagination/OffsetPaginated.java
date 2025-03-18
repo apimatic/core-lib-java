@@ -1,67 +1,57 @@
 package io.apimatic.core.types.pagination;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.apimatic.core.ApiCall;
+import io.apimatic.core.ErrorCase;
 import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.HttpRequest;
-import io.apimatic.core.ResponseHandler.Builder;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
+import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
-public class OffsetPaginated<T> {
-
-    /**
-     * Private store for encapsulated object's value.
-     */
-    private T value;
+public class OffsetPaginated<T> extends PaginatedData<T> {
+    private Deserializer<T> deserializer;
 
     private Configuration configuration;
 
-    private GlobalConfiguration globalConfig;
-
-    private Response response;
-
-    private Builder<OffsetPaginated<T>, CoreApiException> responseBuilder;
-
-    private HttpRequest.Builder requestBuilder;
-
-    public OffsetPaginated(final T value, final Configuration configuration, final EndpointConfiguration endPointConfig,
-            final Response response, final Builder<OffsetPaginated<T>, CoreApiException> responseBuilder) {
-        this.value = value;
+    private OffsetPaginated(final Deserializer<T> deserializer, final Configuration configuration,
+            final EndpointConfiguration endPointConfig, final Response response) throws IOException {
+        super(deserializer.apply(response.getBody()), response, endPointConfig, configuration.resultPointer);
+        this.deserializer = deserializer;
         this.configuration = configuration;
-        this.globalConfig = endPointConfig.getGlobalConfiguration();
-        this.response = response;
-        this.responseBuilder = responseBuilder;
-        this.requestBuilder = endPointConfig.getRequestBuilder();
     }
 
-    /**
-     * Converts this CursorPaginated into string format.
-     * 
-     * @return String representation of this class.
-     */
+    public static <T> OffsetPaginated<T> Create(Deserializer<T> deserializer, Configuration configuration,
+            EndpointConfiguration endPointConfig, Response response) throws IOException {
+        return new OffsetPaginated<T>(deserializer, configuration, endPointConfig, response);
+    }
+
     @Override
-    public String toString() {
-        return "" + value;
-    }
-
-    public T value() {
-        return value;
-    }
-
-    public OffsetPaginated<T> next() {
+    protected PaginatedData<T> fetchData() {
+        EndpointConfiguration endpointConfig = getLastEndpointConfiguration();
         try {
-            return new ApiCall.Builder<OffsetPaginated<T>, CoreApiException>().globalConfig(globalConfig)
-                    .requestBuilder(configuration.getNextPageRequest(requestBuilder, globalConfig, response.getBody()))
-                    .responseHandler(responseBuilder).build().execute();
-        } catch (IOException | CoreApiException e) {
+            return new ApiCall.Builder<PaginatedData<T>, CoreApiException>().endpointConfiguration(endpointConfig)
+                    .globalConfig(endpointConfig.getGlobalConfiguration())
+                    .requestBuilder(
+                            configuration
+                                    .getNextPageRequest(
+                                            endpointConfig.getRequestBuilder(), endpointConfig.getGlobalConfiguration(),
+                                            getLastResponse().getBody()))
+                    .responseHandler(res -> res
+                            .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
+                                    ErrorCase.setReason(null,
+                                            (reason, context) -> new CoreApiException(reason, context))))
+                            .offsetPaginatedDeserializer(deserializer, configuration))
+                    .build().execute();
+        } catch (Exception e) {
             // Ignore exceptions
         }
 
@@ -73,10 +63,19 @@ public class OffsetPaginated<T> {
         private String offsetParamName;
         private String resultPointer;
 
-        public Configuration(String pageParamName, String offsetParamName, String resultPointer) {
+        public Configuration pageParamName(String pageParamName) {
             this.pageParamName = pageParamName;
+            return this;
+        }
+
+        public Configuration offsetParamName(String offsetParamName) {
             this.offsetParamName = offsetParamName;
+            return this;
+        }
+
+        public Configuration resultPointer(String resultPointer) {
             this.resultPointer = resultPointer;
+            return this;
         }
 
         private HttpRequest.Builder getNextPageRequest(HttpRequest.Builder builder, GlobalConfiguration config,
