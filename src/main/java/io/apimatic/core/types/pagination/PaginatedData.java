@@ -32,7 +32,7 @@ public abstract class PaginatedData<T> implements Iterator<T> {
         this.resultPointer = resultPointer;
     }
 
-    public static <InnerType> List<InnerType> ExtractData(Iterator<?> iterator, Class<InnerType> clazz) throws IOException {
+    public static <InnerType> List<InnerType> extract(Iterator<?> iterator, Class<InnerType> clazz) throws IOException {
         List<InnerType> items = new ArrayList<InnerType>();
 
         if (!(iterator instanceof PaginatedData<?>)) {
