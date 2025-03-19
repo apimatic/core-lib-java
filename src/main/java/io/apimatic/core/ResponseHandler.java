@@ -2,6 +2,7 @@ package io.apimatic.core;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -343,7 +344,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @return {@link ResponseHandler.Builder}.
          */
         public <InnerType> Builder<ResponseType, ExceptionType> linkPaginatedDeserializer(
-                Deserializer<InnerType> deserializer, LinkPaginated.Configuration config) {
+                Deserializer<List<InnerType>> deserializer, LinkPaginated.Configuration config) {
             this.paginationDeserializer = (res, ec) -> LinkPaginated.Create(deserializer, config, ec, res);
             return this;
         }
@@ -356,7 +357,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @return {@link ResponseHandler.Builder}.
          */
         public <InnerType> Builder<ResponseType, ExceptionType> cursorPaginatedDeserializer(
-                Deserializer<InnerType> deserializer, CursorPaginated.Configuration config) {
+                Deserializer<List<InnerType>> deserializer, CursorPaginated.Configuration config) {
             this.paginationDeserializer = (res, ec) -> CursorPaginated.Create(deserializer, config, ec, res);
             return this;
         }
@@ -369,7 +370,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @return {@link ResponseHandler.Builder}.
          */
         public <InnerType> Builder<ResponseType, ExceptionType> offsetPaginatedDeserializer(
-                Deserializer<InnerType> deserializer, OffsetPaginated.Configuration config) {
+                Deserializer<List<InnerType>> deserializer, OffsetPaginated.Configuration config) {
             this.paginationDeserializer = (res, ec) -> OffsetPaginated.Create(deserializer, config, ec, res);
             return this;
         }

@@ -2,6 +2,7 @@ package io.apimatic.core.types.pagination;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
@@ -12,18 +13,18 @@ import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
 public class LinkPaginated<T> extends PaginatedData<T> {
-    private Deserializer<T> deserializer;
+    private Deserializer<List<T>> deserializer;
 
     private Configuration configuration;
 
-    private LinkPaginated(final Deserializer<T> deserializer, final Configuration configuration,
+    private LinkPaginated(final Deserializer<List<T>> deserializer, final Configuration configuration,
             final EndpointConfiguration endPointConfig, final Response response) throws IOException {
-        super(deserializer.apply(response.getBody()), response, endPointConfig, configuration.resultPointer);
+        super(deserializer.apply(response.getBody()), response, endPointConfig);
         this.deserializer = deserializer;
         this.configuration = configuration;
     }
 
-    public static <T> LinkPaginated<T> Create(Deserializer<T> deserializer, Configuration configuration,
+    public static <T> LinkPaginated<T> Create(Deserializer<List<T>> deserializer, Configuration configuration,
             EndpointConfiguration endPointConfig, Response response) throws IOException {
         return new LinkPaginated<T>(deserializer, configuration, endPointConfig, response);
     }
@@ -31,11 +32,12 @@ public class LinkPaginated<T> extends PaginatedData<T> {
     @Override
     protected PaginatedData<T> fetchData() {
         String linkValue = CoreHelper.getValueFromJson(configuration.nextPointer, getLastResponse().getBody());
-        EndpointConfiguration endpointConfig = getLastEndpointConfiguration();
 
         if (linkValue == null) {
             return null;
         }
+
+        EndpointConfiguration endpointConfig = getLastEndpointConfiguration();
 
         try {
             return new ApiCall.Builder<PaginatedData<T>, CoreApiException>()
@@ -59,15 +61,9 @@ public class LinkPaginated<T> extends PaginatedData<T> {
 
     public static class Configuration {
         private String nextPointer;
-        private String resultPointer;
 
         public Configuration nextPointer(String nextPointer) {
             this.nextPointer = nextPointer;
-            return this;
-        }
-
-        public Configuration resultPointer(String resultPointer) {
-            this.resultPointer = resultPointer;
             return this;
         }
     }
