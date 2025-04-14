@@ -4,15 +4,15 @@ import java.util.Iterator;
 
 public class PaginatedIterable<T> implements Iterable<T> {
 
-    private PaginatedData<T> iterator;
+    private PaginatedData<T> paginatedData;
     
     public PaginatedIterable(PaginatedData<T> iterator) {
-        this.iterator = iterator;
+        this.paginatedData = iterator;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return iterator.reset();
+        return paginatedData.reset();
     }
 
 }

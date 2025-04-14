@@ -42,12 +42,12 @@ public class PaginatedData<T> implements Iterator<T> {
         return new PaginatedIterable<T>(new PaginatedData<T>(deserializer, response, endPointConfig, dataManagers));
     }
 
-    public EndpointConfiguration getLastEndpointConfiguration() {
+    public EndpointConfiguration getLastEndpointConfig() {
         return lastEndpointConfig;
     }
 
-    public Response getLastResponse() {
-        return lastResponse;
+    public String getLastResponse() {
+        return lastResponse.getBody();
     }
 
     public int getLastDataSize() {
@@ -57,11 +57,6 @@ public class PaginatedData<T> implements Iterator<T> {
     public Iterator<T> reset() {
         currentIndex = 0;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "PaginatedData [currentIndex=" + currentIndex + ", data=" + data + "]";
     }
 
     @Override
@@ -95,14 +90,14 @@ public class PaginatedData<T> implements Iterator<T> {
         this.lastEndpointConfig = newData.lastEndpointConfig;
     }
 
-    protected PaginatedIterable<T> fetchData() {
+    private PaginatedIterable<T> fetchData() {
         for (PaginationDataManager manager : paginationDataManagers) {
             
             if (!manager.isValid(this)) {
                 continue;
             }
 
-            EndpointConfiguration endpointConfig = getLastEndpointConfiguration();
+            EndpointConfiguration endpointConfig = getLastEndpointConfig();
 
             try {
                 return new ApiCall.Builder<PaginatedIterable<T>, CoreApiException>()

@@ -8,9 +8,8 @@ public class OffsetPagination implements PaginationDataManager {
     private String input;
     private Builder nextReqBuilder;
 
-    public OffsetPagination input(String input) {
+    public OffsetPagination(String input) {
         this.input = input;
-        return this;
     }
 
     @Override
@@ -20,9 +19,9 @@ public class OffsetPagination implements PaginationDataManager {
         }
 
         try {
-            Builder lastRequest = paginatedData.getLastEndpointConfiguration().getRequestBuilder();
+            Builder lastRequest = paginatedData.getLastEndpointConfig().getRequestBuilder();
             Map<String, Object> reqQuery = lastRequest
-                    .build(paginatedData.getLastEndpointConfiguration().getGlobalConfiguration()).getQueryParameters();
+                    .build(paginatedData.getLastEndpointConfig().getGlobalConfiguration()).getQueryParameters();
 
             if (input != null && reqQuery.containsKey(input)) {
                 Integer nextOffsetValue = Integer.parseInt("" + reqQuery.get(input)) + paginatedData.getLastDataSize();

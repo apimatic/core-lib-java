@@ -7,14 +7,13 @@ public class LinkPagination implements PaginationDataManager {
     private String next;
     private String linkValue;
 
-    public LinkPagination next(String next) {
+    public LinkPagination(String next) {
         this.next = next;
-        return this;
     }
 
     @Override
     public boolean isValid(PaginatedData<?> paginatedData) {
-        String responseBody = paginatedData.getLastResponse().getBody();
+        String responseBody = paginatedData.getLastResponse();
         linkValue = CoreHelper.getValueFromJson(next, responseBody);
 
         if (linkValue == null) {
@@ -26,7 +25,7 @@ public class LinkPagination implements PaginationDataManager {
 
     @Override
     public Builder getNextRequestBuilder(PaginatedData<?> paginatedData) {
-        Builder lastRequestBuilder = paginatedData.getLastEndpointConfiguration().getRequestBuilder();
+        Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
         return lastRequestBuilder.queryParam(CoreHelper.getQueryParameters(linkValue));
     }
 }

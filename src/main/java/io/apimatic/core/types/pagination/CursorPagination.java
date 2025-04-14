@@ -8,19 +8,14 @@ public class CursorPagination implements PaginationDataManager {
     private String input;
     private String cursorValue;
 
-    public CursorPagination output(String output) {
+    public CursorPagination(String output, String input) {
         this.output = output;
-        return this;
-    }
-
-    public CursorPagination input(String input) {
         this.input = input;
-        return this;
     }
 
     @Override
     public boolean isValid(PaginatedData<?> paginatedData) {
-        String responseBody = paginatedData.getLastResponse().getBody();
+        String responseBody = paginatedData.getLastResponse();
         cursorValue = CoreHelper.getValueFromJson(output, responseBody);
 
         if (cursorValue == null) {
@@ -32,7 +27,7 @@ public class CursorPagination implements PaginationDataManager {
 
     @Override
     public Builder getNextRequestBuilder(PaginatedData<?> paginatedData) {
-        Builder lastRequestBuilder = paginatedData.getLastEndpointConfiguration().getRequestBuilder();
+        Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
         return lastRequestBuilder.queryParam(q -> q.key(input).value(cursorValue));
     }
 }

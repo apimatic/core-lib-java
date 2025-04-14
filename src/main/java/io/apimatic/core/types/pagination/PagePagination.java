@@ -8,9 +8,8 @@ public class PagePagination  implements PaginationDataManager {
     private String input;
     private Builder nextReqBuilder;
 
-    public PagePagination input(String input) {
+    public PagePagination(String input) {
         this.input = input;
-        return this;
     }
 
     @Override
@@ -20,8 +19,8 @@ public class PagePagination  implements PaginationDataManager {
         }
 
         try {
-            Builder lastRequest = paginatedData.getLastEndpointConfiguration().getRequestBuilder();
-            Map<String, Object> reqQuery = lastRequest.build(paginatedData.getLastEndpointConfiguration().getGlobalConfiguration())
+            Builder lastRequest = paginatedData.getLastEndpointConfig().getRequestBuilder();
+            Map<String, Object> reqQuery = lastRequest.build(paginatedData.getLastEndpointConfig().getGlobalConfiguration())
                     .getQueryParameters();
 
             if (input != null && reqQuery.containsKey(input)) {
