@@ -1,39 +1,62 @@
 package io.apimatic.core.types.pagination;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import io.apimatic.core.ApiCall;
+import io.apimatic.core.ErrorCase;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
+import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.response.Response;
+import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
-public abstract class PaginatedData<T> implements Iterator<T> {
+public class PaginatedData<T> implements Iterator<T> {
 
     private int currentIndex = 0;
 
     private List<T> data = new ArrayList<T>();
-
+    private int lastDataSize;
     private Response lastResponse;
-
     private EndpointConfiguration lastEndpointConfig;
+    Deserializer<List<T>> deserializer;
 
-    public PaginatedData(final List<T> values, final Response response, final EndpointConfiguration config) {
-        data.addAll(values);
+    private PaginationDataManager[] paginationDataManagers;
+
+    private PaginatedData(final Deserializer<List<T>> deserializer, final Response response,
+            final EndpointConfiguration config, final PaginationDataManager... dataManagers) throws IOException {
+        data.addAll(deserializer.apply(response.getBody()));
+        lastDataSize = data.size();
         lastResponse = response;
         lastEndpointConfig = config;
+        this.deserializer = deserializer;
+        paginationDataManagers = dataManagers;
     }
 
-    protected EndpointConfiguration getLastEndpointConfiguration() {
+    public static <T> PaginatedIterable<T> Create(Deserializer<List<T>> deserializer,
+            EndpointConfiguration endPointConfig, Response response, final PaginationDataManager... dataManagers)
+            throws IOException {
+        return new PaginatedIterable<T>(new PaginatedData<T>(deserializer, response, endPointConfig, dataManagers));
+    }
+
+    public EndpointConfiguration getLastEndpointConfiguration() {
         return lastEndpointConfig;
     }
 
-    protected Response getLastResponse() {
+    public Response getLastResponse() {
         return lastResponse;
     }
 
-    protected int getDataSize() {
-        return data.size();
+    public int getLastDataSize() {
+        return lastDataSize;
+    }
+
+    public Iterator<T> reset() {
+        currentIndex = 0;
+        return this;
     }
 
     @Override
@@ -47,12 +70,12 @@ public abstract class PaginatedData<T> implements Iterator<T> {
             return true;
         }
 
-        PaginatedData<T> newData = fetchData();
+        PaginatedIterable<T> newData = fetchData();
         if (newData != null) {
-            updateData(newData);
+            updateData((PaginatedData<T>) newData.iterator());
             return currentIndex < data.size();
         }
-        
+
         return false;
     }
 
@@ -65,11 +88,38 @@ public abstract class PaginatedData<T> implements Iterator<T> {
         throw new NoSuchElementException("No more data available.");
     }
 
-    protected void updateData(PaginatedData<T> newData) {
+    private void updateData(PaginatedData<T> newData) {
         this.data.addAll(newData.data);
+        this.lastDataSize = newData.lastDataSize;
         this.lastResponse = newData.lastResponse;
         this.lastEndpointConfig = newData.lastEndpointConfig;
     }
 
-    protected abstract PaginatedData<T> fetchData();
+    protected PaginatedIterable<T> fetchData() {
+        for (PaginationDataManager manager : paginationDataManagers) {
+            
+            if (!manager.isValid(this)) {
+                continue;
+            }
+
+            EndpointConfiguration endpointConfig = getLastEndpointConfiguration();
+
+            try {
+                return new ApiCall.Builder<PaginatedIterable<T>, CoreApiException>()
+                        .endpointConfiguration(endpointConfig)
+                        .globalConfig(endpointConfig.getGlobalConfiguration())
+                        .requestBuilder(manager.getNextRequestBuilder(this))
+                        .responseHandler(res -> res
+                                .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
+                                        ErrorCase.setReason(null,
+                                                (reason, context) -> new CoreApiException(reason, context))))
+                                .paginatedDeserializer(deserializer, paginationDataManagers))
+                        .build().execute();
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+        return null;
+    }
 }

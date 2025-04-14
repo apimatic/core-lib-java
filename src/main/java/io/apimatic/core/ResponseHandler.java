@@ -9,10 +9,9 @@ import java.util.regex.Pattern;
 
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
-import io.apimatic.core.types.pagination.CursorPaginated;
-import io.apimatic.core.types.pagination.LinkPaginated;
-import io.apimatic.core.types.pagination.OffsetPaginated;
+import io.apimatic.core.types.pagination.PaginatedData;
 import io.apimatic.core.types.pagination.PaginationDeserializer;
+import io.apimatic.core.types.pagination.PaginationDataManager;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
@@ -337,41 +336,15 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         /**
-         * Setter for the deserializer to be used in link based pagination wrapper.
+         * Setter for the deserializer to be used in pagination wrapper.
          * 
          * @param deserializer to deserialize the server response.
-         * @param <InnerType>  the type wrapped by linked pagination.
+         * @param <InnerType>  the type wrapped by PaginatedIterable.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <InnerType> Builder<ResponseType, ExceptionType> linkPaginatedDeserializer(
-                Deserializer<List<InnerType>> deserializer, LinkPaginated.Configuration config) {
-            this.paginationDeserializer = (res, ec) -> LinkPaginated.Create(deserializer, config, ec, res);
-            return this;
-        }
-
-        /**
-         * Setter for the deserializer to be used in cursor based pagination wrapper.
-         * 
-         * @param deserializer to deserialize the server response.
-         * @param <InnerType>  the type wrapped by cursor pagination.
-         * @return {@link ResponseHandler.Builder}.
-         */
-        public <InnerType> Builder<ResponseType, ExceptionType> cursorPaginatedDeserializer(
-                Deserializer<List<InnerType>> deserializer, CursorPaginated.Configuration config) {
-            this.paginationDeserializer = (res, ec) -> CursorPaginated.Create(deserializer, config, ec, res);
-            return this;
-        }
-
-        /**
-         * Setter for the deserializer to be used in offset based pagination wrapper.
-         * 
-         * @param deserializer to deserialize the server response.
-         * @param <InnerType>  the type wrapped by offset pagination.
-         * @return {@link ResponseHandler.Builder}.
-         */
-        public <InnerType> Builder<ResponseType, ExceptionType> offsetPaginatedDeserializer(
-                Deserializer<List<InnerType>> deserializer, OffsetPaginated.Configuration config) {
-            this.paginationDeserializer = (res, ec) -> OffsetPaginated.Create(deserializer, config, ec, res);
+        public <InnerType> Builder<ResponseType, ExceptionType> paginatedDeserializer(
+                Deserializer<List<InnerType>> deserializer, final PaginationDataManager... dataManagers) {
+            this.paginationDeserializer = (res, ec) -> PaginatedData.Create(deserializer, ec, res, dataManagers);
             return this;
         }
 

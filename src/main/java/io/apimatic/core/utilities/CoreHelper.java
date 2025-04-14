@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -1147,6 +1148,20 @@ public class CoreHelper {
     }
 
     /**
+     * Tries URL decoding using UTF-8.
+     *
+     * @param value The value to decode.
+     * @return Decoded value.
+     */
+    public static String tryUrlDecode(String value) {
+        try {
+            return URLDecoder.decode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+           return null;
+        }
+    }
+
+    /**
      * Responsible to encode into base64 the username and password
      *
      * @param basicAuthUserName The auth username
@@ -1576,8 +1591,8 @@ public class CoreHelper {
         return Arrays.stream(getQueryParametersFromUrl(queryUrl).split("&"))
             .map(param -> param.split("="))
             .collect(Collectors.toMap(
-                    pair -> pair[0],
-                    pair -> pair[1]
+                    pair -> tryUrlDecode(pair[0]),
+                    pair -> tryUrlDecode(pair[1])
             ));
     }
     
@@ -1603,8 +1618,13 @@ public class CoreHelper {
 
         JsonStructure jsonStructure = CoreHelper.createJsonStructure(json);
         JsonPointer jsonPointer = Json.createPointer(pointer);
-
-        if (jsonStructure == null || !jsonPointer.containsValue(jsonStructure)) {
+        boolean containsValue = false;
+        try {
+            containsValue = jsonPointer.containsValue(jsonStructure);
+        } catch (Exception e) {
+        }
+        
+        if (jsonStructure == null || !containsValue) {
             return null;
         }
 
