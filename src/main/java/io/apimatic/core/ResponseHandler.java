@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +64,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * A functional interface to wrap in pagination types
      * {@link PaginationDeserializer}.
      */
-    private final PaginationDeserializer<?> paginationDeserializer;
+    private final PaginationDeserializer paginationDeserializer;
 
     /**
      * An instance of {@link ResponseClassType}.
@@ -97,7 +98,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      */
     private ResponseHandler(final Map<String, ErrorCase<ExceptionType>> localErrorCases,
             final Map<String, ErrorCase<ExceptionType>> globalErrorCases, final Deserializer<ResponseType> deserializer,
-            final Deserializer<?> intermediateDeserializer, final PaginationDeserializer<?> paginationDeserializer,
+            final Deserializer<?> intermediateDeserializer, final PaginationDeserializer paginationDeserializer,
             final ResponseClassType responseClassType, final ContextInitializer<ResponseType> contextInitializer,
             final boolean isNullify404Enabled, final boolean isNullableResponseType) {
         this.localErrorCases = localErrorCases;
@@ -259,7 +260,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * A functional interface to wrap in pagination types
          * {@link PaginationDeserializer}.
          */
-        private PaginationDeserializer<?> paginationDeserializer;
+        private PaginationDeserializer paginationDeserializer;
 
         /**
          * An instance of {@link ResponseClassType}.
@@ -338,13 +339,17 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         /**
          * Setter for the deserializer to be used in pagination wrapper.
          * 
-         * @param deserializer to deserialize the server response.
-         * @param <InnerType>  the type wrapped by PaginatedIterable.
+         * @param converter   to deserialize the server response.
+         * @param <Page>      the type of the outer page.
+         * @param <InnerType> the type wrapped by PaginatedIterable.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <InnerType> Builder<ResponseType, ExceptionType> paginatedDeserializer(
-                Deserializer<List<InnerType>> deserializer, final PaginationDataManager... dataManagers) {
-            this.paginationDeserializer = (res, ec) -> PaginatedData.Create(deserializer, ec, res, dataManagers);
+        public <InnerType, Page> Builder<ResponseType, ExceptionType> paginatedDeserializer(Class<Page> pageClass,
+                Function<Page, List<InnerType>> converter, Function<PaginatedData<InnerType, Page>, ?> returnTypeGetter,
+                PaginationDataManager... dataManagers) {
+            this.paginationDeserializer = (res, ec) ->
+                    new PaginatedData<InnerType, Page>(pageClass, converter, res, ec, dataManagers)
+                            .convert(returnTypeGetter);
             return this;
         }
 

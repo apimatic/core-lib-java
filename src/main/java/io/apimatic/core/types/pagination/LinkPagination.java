@@ -12,7 +12,7 @@ public class LinkPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?> paginatedData) {
+    public boolean isValid(PaginatedData<?, ?> paginatedData) {
         String responseBody = paginatedData.getLastResponse();
         linkValue = CoreHelper.getValueFromJson(next, responseBody);
 
@@ -24,7 +24,7 @@ public class LinkPagination implements PaginationDataManager {
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?> paginatedData) {
+    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
         Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
         return lastRequestBuilder.queryParam(CoreHelper.getQueryParameters(linkValue));
     }

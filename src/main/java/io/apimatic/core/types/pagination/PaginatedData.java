@@ -6,40 +6,62 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.response.Response;
-import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
-public class PaginatedData<T> implements Iterator<T> {
+public class PaginatedData<T, P> implements Iterator<T> {
 
     private int currentIndex = 0;
 
     private List<T> data = new ArrayList<T>();
+    private List<P> pages = new ArrayList<P>();
     private int lastDataSize;
     private Response lastResponse;
     private EndpointConfiguration lastEndpointConfig;
-    Deserializer<List<T>> deserializer;
+    
+    private Class<P> pageClass;
+    private Function<P, List<T>> converter;
+    private PaginationDataManager[] dataManagers;
 
-    private PaginationDataManager[] paginationDataManagers;
+    public PaginatedData(PaginatedData<T, P> paginatedData) {
+        this.pageClass = paginatedData.pageClass;
+        this.converter = paginatedData.converter;
+        this.dataManagers = paginatedData.dataManagers;
 
-    private PaginatedData(final Deserializer<List<T>> deserializer, final Response response,
-            final EndpointConfiguration config, final PaginationDataManager... dataManagers) throws IOException {
-        data.addAll(deserializer.apply(response.getBody()));
-        lastDataSize = data.size();
-        lastResponse = response;
-        lastEndpointConfig = config;
-        this.deserializer = deserializer;
-        paginationDataManagers = dataManagers;
+        this.lastDataSize = paginatedData.lastDataSize;
+        this.lastResponse = paginatedData.lastResponse;
+        this.lastEndpointConfig = paginatedData.lastEndpointConfig;
+        
+        this.data.addAll(paginatedData.data);
+        this.pages.addAll(paginatedData.pages);
     }
 
-    public static <T> PaginatedIterable<T> Create(Deserializer<List<T>> deserializer,
-            EndpointConfiguration endPointConfig, Response response, final PaginationDataManager... dataManagers)
-            throws IOException {
-        return new PaginatedIterable<T>(new PaginatedData<T>(deserializer, response, endPointConfig, dataManagers));
+    public PaginatedData(Class<P> pageClass, Function<P, List<T>> converter, Response response,
+            EndpointConfiguration config, PaginationDataManager... dataManagers) throws IOException {
+        this.pageClass = pageClass;
+        this.converter = converter;
+        this.dataManagers = dataManagers;
+
+        updateUsing(response, config);
+    }
+
+    private void updateUsing(Response response, EndpointConfiguration endpointConfig) throws IOException {
+        String responseBody = response.getBody();
+        P page = CoreHelper.deserialize(responseBody, pageClass);
+        List<T> newData = converter.apply(page);
+        
+        this.lastDataSize = newData.size();
+        this.lastResponse = response;
+        this.lastEndpointConfig = endpointConfig;
+        
+        this.data.addAll(newData);
+        this.pages.add(page);
     }
 
     public EndpointConfiguration getLastEndpointConfig() {
@@ -54,9 +76,10 @@ public class PaginatedData<T> implements Iterator<T> {
         return lastDataSize;
     }
 
-    public Iterator<T> reset() {
-        currentIndex = 0;
-        return this;
+    public PaginatedData<T, P> reset() {
+        if (currentIndex == 0)
+            return this;
+        return new PaginatedData<T, P>(this);
     }
 
     @Override
@@ -65,13 +88,9 @@ public class PaginatedData<T> implements Iterator<T> {
             return true;
         }
 
-        PaginatedIterable<T> newData = fetchData();
-        if (newData != null) {
-            updateData((PaginatedData<T>) newData.iterator());
-            return currentIndex < data.size();
-        }
+        fetchMoreData();
 
-        return false;
+        return currentIndex < data.size();
     }
 
     @Override
@@ -83,16 +102,54 @@ public class PaginatedData<T> implements Iterator<T> {
         throw new NoSuchElementException("No more data available.");
     }
 
-    private void updateData(PaginatedData<T> newData) {
-        this.data.addAll(newData.data);
-        this.lastDataSize = newData.lastDataSize;
-        this.lastResponse = newData.lastResponse;
-        this.lastEndpointConfig = newData.lastEndpointConfig;
+    public Iterator<T> iterator() {
+        return reset();
     }
 
-    private PaginatedIterable<T> fetchData() {
-        for (PaginationDataManager manager : paginationDataManagers) {
-            
+    public Iterable<P> pages() {
+        PaginatedData<T, P> data = reset();
+        return new Iterable<P>() {
+            @Override
+            public Iterator<P> iterator() {
+                return new Iterator<P>() {
+                    private int currentIndex = 0;
+                    
+                    @Override
+                    public boolean hasNext() {
+                        if (currentIndex < data.pages.size()) {
+                            return true;
+                        }
+                        
+                        while (data.hasNext()) {
+                            if (currentIndex < data.pages.size()) {
+                                return true;
+                            }
+                            data.next();
+                        }
+
+                        return false;
+                    }
+
+                    @Override
+                    public P next() {
+                        if (data.hasNext()) {
+                            return data.pages.get(currentIndex++);
+                        }
+
+                        throw new NoSuchElementException("No more data available.");
+                    }
+                };
+            }
+        };
+    }
+
+    public Object convert(Function<PaginatedData<T, P>, ?> returnTypeGetter) {
+        return returnTypeGetter.apply(this);
+    }
+
+    private void fetchMoreData() {
+        for (PaginationDataManager manager : dataManagers) {
+
             if (!manager.isValid(this)) {
                 continue;
             }
@@ -100,21 +157,23 @@ public class PaginatedData<T> implements Iterator<T> {
             EndpointConfiguration endpointConfig = getLastEndpointConfig();
 
             try {
-                return new ApiCall.Builder<PaginatedIterable<T>, CoreApiException>()
-                        .endpointConfiguration(endpointConfig)
-                        .globalConfig(endpointConfig.getGlobalConfiguration())
-                        .requestBuilder(manager.getNextRequestBuilder(this))
+                PaginatedData<T, P> result = new ApiCall.Builder<PaginatedData<T, P>, CoreApiException>()
+                        .endpointConfiguration(endpointConfig).globalConfig(
+                                endpointConfig.getGlobalConfiguration())
+                        .requestBuilder(
+                                manager.getNextRequestBuilder(this))
                         .responseHandler(res -> res
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
                                         ErrorCase.setReason(null,
                                                 (reason, context) -> new CoreApiException(reason, context))))
-                                .paginatedDeserializer(deserializer, paginationDataManagers))
+                                .paginatedDeserializer(pageClass, converter, r -> r, dataManagers))
                         .build().execute();
+
+                updateUsing(result.lastResponse, result.lastEndpointConfig);
+                return;
             } catch (Exception e) {
                 continue;
             }
         }
-
-        return null;
     }
 }

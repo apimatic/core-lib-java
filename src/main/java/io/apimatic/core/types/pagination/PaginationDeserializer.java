@@ -11,7 +11,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
  * @param <T> The type of the response to deserialize into.
  */
 @FunctionalInterface
-public interface PaginationDeserializer<T> {
+public interface PaginationDeserializer {
     /**
      * Apply the deserialization function and returns the ResponseType response.
      * 
@@ -20,5 +20,5 @@ public interface PaginationDeserializer<T> {
      * @return The deserialized data.
      * @throws IOException Exception to be thrown while applying the function.
      */
-    T apply(Response response, EndpointConfiguration config) throws IOException;
+    Object apply(Response response, EndpointConfiguration config) throws IOException;
 }

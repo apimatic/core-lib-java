@@ -14,7 +14,7 @@ public class CursorPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?> paginatedData) {
+    public boolean isValid(PaginatedData<?, ?> paginatedData) {
         String responseBody = paginatedData.getLastResponse();
         cursorValue = CoreHelper.getValueFromJson(output, responseBody);
 
@@ -26,7 +26,7 @@ public class CursorPagination implements PaginationDataManager {
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?> paginatedData) {
+    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
         Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
         return lastRequestBuilder.queryParam(q -> q.key(input).value(cursorValue));
     }

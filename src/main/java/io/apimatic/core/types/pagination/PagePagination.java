@@ -13,7 +13,7 @@ public class PagePagination  implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?> paginatedData) {
+    public boolean isValid(PaginatedData<?, ?> paginatedData) {
         if (input == null) {
             return false;
         }
@@ -36,7 +36,7 @@ public class PagePagination  implements PaginationDataManager {
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?> paginatedData) {
+    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
         return nextReqBuilder;
     }
 }
