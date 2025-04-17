@@ -166,6 +166,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
                                         ErrorCase.setReason(null,
                                                 (reason, context) -> new CoreApiException(reason, context))))
+                                .nullify404(false)
                                 .paginatedDeserializer(pageClass, converter, r -> r, dataManagers))
                         .build().execute();
 
