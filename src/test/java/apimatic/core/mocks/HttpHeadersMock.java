@@ -1,5 +1,11 @@
 package apimatic.core.mocks;
 
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -19,6 +25,11 @@ public class HttpHeadersMock {
      */
     @Mock
     private HttpHeaders httpHeaders;
+
+    @Before
+    public void setup() throws IOException {
+        when(httpHeaders.asSimpleMap()).thenReturn(new HashMap<String, String>());
+    }
 
     /**
      * @return {@link HttpHeaders}.

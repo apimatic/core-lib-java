@@ -1,7 +1,5 @@
 package io.apimatic.core.types.pagination;
 
-import java.util.Map;
-
 import io.apimatic.core.HttpRequest.Builder;
 
 public class OffsetPagination implements PaginationDataManager {
@@ -14,29 +12,24 @@ public class OffsetPagination implements PaginationDataManager {
 
     @Override
     public boolean isValid(PaginatedData<?, ?> paginatedData) {
+        nextReqBuilder = paginatedData.getLastRequestBuilder();
+
         if (input == null) {
             return false;
         }
 
-        try {
-            Builder lastRequest = paginatedData.getLastEndpointConfig().getRequestBuilder();
-            Map<String, Object> reqQuery = lastRequest
-                    .build(paginatedData.getLastEndpointConfig().getGlobalConfiguration()).getQueryParameters();
+        final boolean[] isUpdated = { false };
+        nextReqBuilder.updateByReference(input, old -> {
+            int newValue = Integer.parseInt("" + old) + paginatedData.getLastDataSize();
+            isUpdated[0] = true;
+            return newValue;
+        });
 
-            if (input != null && reqQuery.containsKey(input)) {
-                Integer nextOffsetValue = Integer.parseInt("" + reqQuery.get(input)) + paginatedData.getLastDataSize();
-                nextReqBuilder = lastRequest.queryParam(q -> q.key(input).value(nextOffsetValue));
-                return true;
-            }
-
-        } catch (Exception e) {
-        }
-
-        return false;
+        return isUpdated[0];
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
+    public Builder getNextRequestBuilder() {
         return nextReqBuilder;
     }
 }

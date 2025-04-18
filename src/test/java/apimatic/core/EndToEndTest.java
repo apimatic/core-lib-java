@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,8 +30,11 @@ import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.types.pagination.CursorPagination;
 import io.apimatic.core.types.pagination.LinkPagination;
+import io.apimatic.core.types.pagination.OffsetPagination;
 import io.apimatic.core.types.pagination.PaginatedData;
+import io.apimatic.core.types.pagination.PaginationDataManager;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.Context;
@@ -162,9 +166,26 @@ public class EndToEndTest extends MockCoreConfig {
     }
     
     @Test
-    public void testPaginationData() throws IOException, CoreApiException {
-        PaginatedData<String, RecordPage> paginatedData = getPaginatedApiCall().execute();
-        
+    public void testLinkPaginationData() throws IOException, CoreApiException {
+        verifyData(getPaginatedApiCall(new LinkPagination("$response.body#/next_link")).execute());
+    }
+    
+    @Test
+    public void testCursorPaginationData() throws IOException, CoreApiException {
+        verifyData(getPaginatedApiCall(new CursorPagination("$response.body#/page_info", "$request.path#/cursor")).execute());
+    }
+    
+    @Test
+    public void testOffsetPaginationData() throws IOException, CoreApiException {
+        verifyData(getPaginatedApiCall(new OffsetPagination("$request.headers#/offset")).execute());
+    }
+    
+    @Test
+    public void testPagePaginationData() throws IOException, CoreApiException {
+        verifyData(getPaginatedApiCall(new OffsetPagination("$request.query#/page")).execute());
+    }
+
+    private void verifyData(PaginatedData<String, RecordPage> paginatedData) {
         int index = 0;
         List<String> expectedData = Arrays.asList("apple", "mango", "orange", "potato", "carrot", "tomato");
         while (paginatedData.hasNext()) {
@@ -192,7 +213,6 @@ public class EndToEndTest extends MockCoreConfig {
             pageNum++;
         }
     }
-
 
     /**
      * Test the local error template.
@@ -454,15 +474,19 @@ public class EndToEndTest extends MockCoreConfig {
                 .build();
     }
 
-    private ApiCall<PaginatedData<String, RecordPage>, CoreApiException> getPaginatedApiCall() throws IOException {
+    private ApiCall<PaginatedData<String, RecordPage>, CoreApiException> getPaginatedApiCall(PaginationDataManager... pagination) throws IOException {
         when(response.getBody()).thenReturn("{\"data\":[\"apple\",\"mango\",\"orange\"],\"page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
+        when(response.getHeaders()).thenReturn(getHttpHeaders());
         Callback callback = new Callback() {
             private int callNumber = 1; 
             @Override
             public void onBeforeRequest(Request request) {
                 if (callNumber > 1) {
                     when(response.getBody()).thenReturn("{\"data\":[\"potato\",\"carrot\",\"tomato\"],\"page_info\":\"vegitables\"}");
+                }
+                if (callNumber > 2) {
+                    throw new NoSuchElementException("No more data available.");
                 }
                 callNumber++;
             }
@@ -473,13 +497,15 @@ public class EndToEndTest extends MockCoreConfig {
         };
         return new ApiCall.Builder<PaginatedData<String, RecordPage>, CoreApiException>().globalConfig(getGlobalConfig(callback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
-                        .path("/path")
-                        .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
+                        .path("/path/{cursor}")
+                        .templateParam(param -> param.key("cursor").value("cursor").isRequired(false))
+                        .headerParam(param -> param.key("offset").value(1).isRequired(false))
+                        .queryParam(param -> param.key("page").value(1).isRequired(false))
                         .formParam(param -> param.key("limit").value("limit").isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
-                        .paginatedDeserializer(RecordPage.class, t -> t.data, r -> r, new LinkPagination("/next_link"))
+                        .paginatedDeserializer(RecordPage.class, t -> t.data, r -> r, pagination)
                         .nullify404(false)
                         .globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(

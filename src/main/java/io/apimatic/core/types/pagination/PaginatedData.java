@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
+import io.apimatic.core.HttpRequest;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.utilities.CoreHelper;
@@ -24,7 +25,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
     private int lastDataSize;
     private Response lastResponse;
     private EndpointConfiguration lastEndpointConfig;
-    
+
     private Class<P> pageClass;
     private Function<P, List<T>> converter;
     private PaginationDataManager[] dataManagers;
@@ -37,7 +38,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
         this.lastDataSize = paginatedData.lastDataSize;
         this.lastResponse = paginatedData.lastResponse;
         this.lastEndpointConfig = paginatedData.lastEndpointConfig;
-        
+
         this.data.addAll(paginatedData.data);
         this.pages.addAll(paginatedData.pages);
     }
@@ -55,21 +56,25 @@ public class PaginatedData<T, P> implements Iterator<T> {
         String responseBody = response.getBody();
         P page = CoreHelper.deserialize(responseBody, pageClass);
         List<T> newData = converter.apply(page);
-        
+
         this.lastDataSize = newData.size();
         this.lastResponse = response;
         this.lastEndpointConfig = endpointConfig;
-        
+
         this.data.addAll(newData);
         this.pages.add(page);
     }
 
-    public EndpointConfiguration getLastEndpointConfig() {
-        return lastEndpointConfig;
+    public HttpRequest.Builder getLastRequestBuilder() {
+        return lastEndpointConfig.getRequestBuilder();
     }
 
-    public String getLastResponse() {
+    public String getLastResponseBody() {
         return lastResponse.getBody();
+    }
+
+    public String getLastResponseHeaders() {
+        return CoreHelper.trySerialize(lastResponse.getHeaders().asSimpleMap());
     }
 
     public int getLastDataSize() {
@@ -113,13 +118,13 @@ public class PaginatedData<T, P> implements Iterator<T> {
             public Iterator<P> iterator() {
                 return new Iterator<P>() {
                     private int currentIndex = 0;
-                    
+
                     @Override
                     public boolean hasNext() {
                         if (currentIndex < data.pages.size()) {
                             return true;
                         }
-                        
+
                         while (data.hasNext()) {
                             if (currentIndex < data.pages.size()) {
                                 return true;
@@ -154,20 +159,17 @@ public class PaginatedData<T, P> implements Iterator<T> {
                 continue;
             }
 
-            EndpointConfiguration endpointConfig = getLastEndpointConfig();
-
             try {
                 PaginatedData<T, P> result = new ApiCall.Builder<PaginatedData<T, P>, CoreApiException>()
-                        .endpointConfiguration(endpointConfig).globalConfig(
-                                endpointConfig.getGlobalConfiguration())
+                        .endpointConfiguration(lastEndpointConfig).globalConfig(
+                                lastEndpointConfig.getGlobalConfiguration())
                         .requestBuilder(
-                                manager.getNextRequestBuilder(this))
+                                manager.getNextRequestBuilder())
                         .responseHandler(res -> res
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
                                         ErrorCase.setReason(null,
                                                 (reason, context) -> new CoreApiException(reason, context))))
-                                .nullify404(false)
-                                .paginatedDeserializer(pageClass, converter, r -> r, dataManagers))
+                                .nullify404(false).paginatedDeserializer(pageClass, converter, r -> r, dataManagers))
                         .build().execute();
 
                 updateUsing(result.lastResponse, result.lastEndpointConfig);

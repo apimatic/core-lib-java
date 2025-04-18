@@ -6,7 +6,7 @@ import io.apimatic.core.utilities.CoreHelper;
 public class CursorPagination implements PaginationDataManager {
     private String output;
     private String input;
-    private String cursorValue;
+    private Builder nextReqBuilder;
 
     public CursorPagination(String output, String input) {
         this.output = output;
@@ -15,19 +15,26 @@ public class CursorPagination implements PaginationDataManager {
 
     @Override
     public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        String responseBody = paginatedData.getLastResponse();
-        cursorValue = CoreHelper.getValueFromJson(output, responseBody);
+        nextReqBuilder = paginatedData.getLastRequestBuilder();
+
+        String cursorValue = CoreHelper.resolveResponsePointer(output, paginatedData.getLastResponseBody(),
+                paginatedData.getLastResponseHeaders());
 
         if (cursorValue == null) {
             return false;
         }
 
-        return true;
+        final boolean[] isUpdated = { false };
+        nextReqBuilder.updateByReference(input, old -> {
+            isUpdated[0] = true;
+            return cursorValue;
+        });
+
+        return isUpdated[0];
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
-        Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
-        return lastRequestBuilder.queryParam(q -> q.key(input).value(cursorValue));
+    public Builder getNextRequestBuilder() {
+        return nextReqBuilder;
     }
 }

@@ -26,16 +26,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
+import javax.json.JsonNumber;
 import javax.json.JsonPointer;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.json.JsonWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -1157,7 +1160,7 @@ public class CoreHelper {
         try {
             return URLDecoder.decode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-           return null;
+           return value;
         }
     }
 
@@ -1611,7 +1614,26 @@ public class CoreHelper {
         return jsonStructure;
     }
     
-    public static String getValueFromJson(String pointer, String json) {
+    public static String resolveResponsePointer(String pointer, String jsonBody, String jsonHeaders) {
+        if (pointer == null) {
+            return null;
+        }
+
+        String[] pointerParts = pointer.split("#");
+        String prefix = pointerParts[0];
+        String point = pointerParts.length > 1 ? pointerParts[1] : "";
+        
+        switch (prefix) {
+        case "$response.body":
+            return CoreHelper.getValueFromJson(point, jsonBody);
+        case "$response.headers":
+            return CoreHelper.getValueFromJson(point, jsonHeaders);
+        }
+        
+        return null;
+    }
+    
+    private static String getValueFromJson(String pointer, String json) {
         if (pointer == null || json == null) {
             return null;
         }
@@ -1639,5 +1661,69 @@ public class CoreHelper {
         }
 
         return value.toString(); // Only convert toString() if it's not null
+    }
+
+    public static <T> T updateValueByPointer(T value, String pointer, Function<Object, Object> updater) {
+        if (value == null || pointer == "" || updater == null) return value;
+
+        try {
+            // Step 1: Convert input object to JSON string
+            String json = serialize(value);
+
+            // Step 2: Parse JSON into JsonStructure
+            JsonStructure structure = createJsonStructure(json);
+            if (structure == null) return value;
+
+            JsonPointer jsonPointer = Json.createPointer(pointer);
+
+            if (!jsonPointer.containsValue(structure)) {
+                return value; // don't change if pointer doesn't exist
+            }
+
+            JsonValue oldJsonValue = jsonPointer.getValue(structure);
+            Object oldValue = toObject(oldJsonValue);
+            Object newValueRaw = updater.apply(oldValue);
+            if (newValueRaw == null) return value;
+
+            JsonValue newJsonValue = toJsonValue(newValueRaw);
+            if (newJsonValue == null) return value;
+
+            JsonStructure updated = jsonPointer.replace(structure, newJsonValue);
+
+            // Step 3: Convert updated structure back to JSON string
+            StringWriter writer = new StringWriter();
+            try (JsonWriter jsonWriter = Json.createWriter(writer)) {
+                jsonWriter.write(updated);
+            }
+
+            String updatedJson = writer.toString();
+
+            // Step 4: Deserialize back to original type
+            return deserialize(updatedJson, new TypeReference<T>() {});
+
+        } catch (Exception e) {
+            return value; // fallback on error
+        }
+    }
+
+    private static Object toObject(JsonValue value) {
+        switch (value.getValueType()) {
+            case STRING: return ((JsonString) value).getString();
+            case NUMBER: return ((JsonNumber) value).numberValue();
+            case TRUE: return true;
+            case FALSE: return false;
+            case NULL: return null;
+            default: return value.toString(); // fallback for objects/arrays
+        }
+    }
+
+    private static JsonValue toJsonValue(Object obj) {
+        if (obj == null) return null;
+        if (obj instanceof String) return Json.createValue((String) obj);
+        if (obj instanceof Integer) return Json.createValue((Integer) obj);
+        if (obj instanceof Long) return Json.createValue((Long) obj);
+        if (obj instanceof Double) return Json.createValue((Double) obj);
+        if (obj instanceof Boolean) return ((Boolean) obj) ? JsonValue.TRUE : JsonValue.FALSE;
+        return null; // unsupported types (could be extended)
     }
 }

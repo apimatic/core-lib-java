@@ -5,7 +5,7 @@ import io.apimatic.core.utilities.CoreHelper;
 
 public class LinkPagination implements PaginationDataManager {
     private String next;
-    private String linkValue;
+    private Builder nextReqBuilder;
 
     public LinkPagination(String next) {
         this.next = next;
@@ -13,19 +13,22 @@ public class LinkPagination implements PaginationDataManager {
 
     @Override
     public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        String responseBody = paginatedData.getLastResponse();
-        linkValue = CoreHelper.getValueFromJson(next, responseBody);
+        nextReqBuilder = paginatedData.getLastRequestBuilder();
+
+        String linkValue = CoreHelper.resolveResponsePointer(next, paginatedData.getLastResponseBody(),
+                paginatedData.getLastResponseHeaders());
 
         if (linkValue == null) {
             return false;
         }
 
+        nextReqBuilder.queryParam(CoreHelper.getQueryParameters(linkValue));
+
         return true;
     }
 
     @Override
-    public Builder getNextRequestBuilder(PaginatedData<?, ?> paginatedData) {
-        Builder lastRequestBuilder = paginatedData.getLastEndpointConfig().getRequestBuilder();
-        return lastRequestBuilder.queryParam(CoreHelper.getQueryParameters(linkValue));
+    public Builder getNextRequestBuilder() {
+        return nextReqBuilder;
     }
 }
