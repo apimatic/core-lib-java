@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -33,6 +34,7 @@ import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.types.pagination.CursorPagination;
 import io.apimatic.core.types.pagination.LinkPagination;
 import io.apimatic.core.types.pagination.OffsetPagination;
+import io.apimatic.core.types.pagination.PagePagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 import io.apimatic.core.types.pagination.PaginationDataManager;
 import io.apimatic.core.utilities.CoreHelper;
@@ -182,17 +184,52 @@ public class EndToEndTest extends MockCoreConfig {
     
     @Test
     public void testPagePaginationData() throws IOException, CoreApiException {
-        verifyData(getPaginatedApiCall(new OffsetPagination("$request.query#/page")).execute());
+        verifyData(getPaginatedApiCall(new PagePagination("$request.query#/page")).execute());
+        verifyOnlyPages(getPaginatedApiCall(new PagePagination("$request.query#/page")).execute());
+    }
+
+    private void verifyOnlyPages(PaginatedData<String, RecordPage> paginatedData) {
+        RecordPage expectedPage1 = new RecordPage();
+        expectedPage1.data = Arrays.asList("apple", "mango", "orange");
+        expectedPage1.pageInfo = "fruits";
+        expectedPage1.nextLink = "https://localhost:3000/path?page=2";
+        
+        RecordPage expectedPage2 = new RecordPage();
+        expectedPage2.data = Arrays.asList("potato", "carrot", "tomato");
+        expectedPage2.pageInfo = "vegitables";
+        expectedPage2.nextLink = null;
+        
+        int pageNum = 0;
+        List<RecordPage> expectedPages = Arrays.asList(expectedPage1, expectedPage2);
+        for (RecordPage p : paginatedData.pages()) {
+            assertEquals(expectedPages.get(pageNum).data, p.data);
+            assertEquals(expectedPages.get(pageNum).pageInfo, p.pageInfo);
+            assertEquals(expectedPages.get(pageNum).nextLink, p.nextLink);
+            pageNum++;
+        }
+        Iterator<RecordPage> iterator = paginatedData.pages().iterator();
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            while (iterator.hasNext()) {
+                iterator.next();
+            }
+            iterator.next();
+        });
+        assertEquals("No more data available.", exception.getMessage());
     }
 
     private void verifyData(PaginatedData<String, RecordPage> paginatedData) {
         int index = 0;
         List<String> expectedData = Arrays.asList("apple", "mango", "orange", "potato", "carrot", "tomato");
-        while (paginatedData.hasNext()) {
-            String d = paginatedData.next();
+        Iterator<String> iterator = paginatedData.iterator();
+        while (iterator.hasNext()) {
+            String d = iterator.next();
             assertEquals(expectedData.get(index), d);
             index++;
         }
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            iterator.next();
+        });
+        assertEquals("No more data available.", exception.getMessage());
 
         RecordPage expectedPage1 = new RecordPage();
         expectedPage1.data = Arrays.asList("apple", "mango", "orange");
