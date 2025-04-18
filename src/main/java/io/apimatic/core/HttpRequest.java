@@ -328,7 +328,6 @@ public final class HttpRequest {
          */
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
-        @SuppressWarnings("unchecked")
         public Builder updateByReference(String pointer, Function<Object, Object> setter) {
             if (pointer == null) {
                 return this;
@@ -340,48 +339,56 @@ public final class HttpRequest {
             
             switch (prefix) {
             case "$request.path":
-                Map<String, Object> simplifiedPath = new HashMap<>();
-                for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry : templateParams.entrySet()) {
-                    simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
-                }
-                
-                simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
-                
-                for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
-                    // Preserve the original boolean if it exists, otherwise set default (e.g., false)
-                    Boolean originalFlag = templateParams.containsKey(entry.getKey())
-                        ? templateParams.get(entry.getKey()).getValue()
-                        : false;
-                    templateParams.put(entry.getKey(), new SimpleEntry<>(entry.getValue(), originalFlag));
-                }
+                updateTemplateParams(setter, point);
                 return this;
             case "$request.query":
                 queryParams = CoreHelper.updateValueByPointer(queryParams, point, setter);
                 return this;
             case "$request.headers":
-                Map<String, Object> simplifiedHeaders = new HashMap<>();
-                for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
-                    if (entry.getValue().size() == 1) {
-                        simplifiedHeaders.put(entry.getKey(), entry.getValue().get(0));
-                    } else {
-                        simplifiedHeaders.put(entry.getKey(), entry.getValue());
-                    }
-                }
-
-                simplifiedHeaders = CoreHelper.updateValueByPointer(simplifiedHeaders, point, setter);
-
-                for (Map.Entry<String, Object> entry : simplifiedHeaders.entrySet()) {
-                    if (entry.getValue() instanceof List<?>) {
-                        headerParams.put(entry.getKey(), (List<Object>)entry.getValue());
-                    } else {
-                        headerParams.put(entry.getKey(), Arrays.asList(entry.getValue()));
-                    }
-                }
-                
+                updateHeaderParams(setter, point);
                 return this;
             }
             
             return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        private void updateHeaderParams(Function<Object, Object> setter, String point) {
+            Map<String, Object> simplifiedHeaders = new HashMap<>();
+            for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                if (entry.getValue().size() == 1) {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue().get(0));
+                } else {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            simplifiedHeaders = CoreHelper.updateValueByPointer(simplifiedHeaders, point, setter);
+
+            for (Map.Entry<String, Object> entry : simplifiedHeaders.entrySet()) {
+                if (entry.getValue() instanceof List<?>) {
+                    headerParams.put(entry.getKey(), (List<Object>)entry.getValue());
+                } else {
+                    headerParams.put(entry.getKey(), Arrays.asList(entry.getValue()));
+                }
+            }
+        }
+
+        private void updateTemplateParams(Function<Object, Object> setter, String point) {
+            Map<String, Object> simplifiedPath = new HashMap<>();
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry : templateParams.entrySet()) {
+                simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
+            }
+            
+            simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
+            
+            for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
+                // Preserve the original boolean if it exists, otherwise set default (e.g., false)
+                Boolean originalFlag = templateParams.containsKey(entry.getKey())
+                    ? templateParams.get(entry.getKey()).getValue()
+                    : false;
+                templateParams.put(entry.getKey(), new SimpleEntry<>(entry.getValue(), originalFlag));
+            }
         }
         
         /**
