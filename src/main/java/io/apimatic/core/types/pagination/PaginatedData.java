@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
 import io.apimatic.core.HttpRequest;
@@ -26,12 +28,12 @@ public class PaginatedData<T, P> implements Iterator<T> {
     private Response lastResponse;
     private EndpointConfiguration lastEndpointConfig;
 
-    private Class<P> pageClass;
+    private TypeReference<P> pageType;
     private Function<P, List<T>> converter;
     private PaginationDataManager[] dataManagers;
 
     public PaginatedData(PaginatedData<T, P> paginatedData) {
-        this.pageClass = paginatedData.pageClass;
+        this.pageType = paginatedData.pageType;
         this.converter = paginatedData.converter;
         this.dataManagers = paginatedData.dataManagers;
 
@@ -43,9 +45,9 @@ public class PaginatedData<T, P> implements Iterator<T> {
         this.pages.addAll(paginatedData.pages);
     }
 
-    public PaginatedData(Class<P> pageClass, Function<P, List<T>> converter, Response response,
+    public PaginatedData(TypeReference<P> pageType, Function<P, List<T>> converter, Response response,
             EndpointConfiguration config, PaginationDataManager... dataManagers) throws IOException {
-        this.pageClass = pageClass;
+        this.pageType = pageType;
         this.converter = converter;
         this.dataManagers = dataManagers;
 
@@ -54,7 +56,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
 
     private void updateUsing(Response response, EndpointConfiguration endpointConfig) throws IOException {
         String responseBody = response.getBody();
-        P page = CoreHelper.deserialize(responseBody, pageClass);
+        P page = CoreHelper.deserialize(responseBody, pageType);
         List<T> newData = converter.apply(page);
 
         this.lastDataSize = newData.size();
@@ -169,7 +171,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
                                         ErrorCase.setReason(null,
                                                 (reason, context) -> new CoreApiException(reason, context))))
-                                .nullify404(false).paginatedDeserializer(pageClass, converter, r -> r, dataManagers))
+                                .nullify404(false).paginatedDeserializer(pageType, converter, r -> r, dataManagers))
                         .build().execute();
 
                 updateUsing(result.lastResponse, result.lastEndpointConfig);

@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import apimatic.core.exceptions.GlobalTestException;
 import apimatic.core.mocks.MockCoreConfig;
 import apimatic.core.type.pagination.RecordPage;
@@ -542,7 +544,7 @@ public class EndToEndTest extends MockCoreConfig {
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
-                        .paginatedDeserializer(RecordPage.class, t -> t.data, r -> r, pagination)
+                        .paginatedDeserializer(new TypeReference<RecordPage>() {}, t -> t.data, r -> r, pagination)
                         .nullify404(false)
                         .globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(

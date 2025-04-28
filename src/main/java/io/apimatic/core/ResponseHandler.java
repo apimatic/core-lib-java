@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.core.types.pagination.PaginatedData;
@@ -344,11 +346,11 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param <InnerType> the type wrapped by PaginatedIterable.
          * @return {@link ResponseHandler.Builder}.
          */
-        public <InnerType, Page> Builder<ResponseType, ExceptionType> paginatedDeserializer(Class<Page> pageClass,
+        public <InnerType, Page> Builder<ResponseType, ExceptionType> paginatedDeserializer(TypeReference<Page> pageType,
                 Function<Page, List<InnerType>> converter, Function<PaginatedData<InnerType, Page>, ?> returnTypeGetter,
                 PaginationDataManager... dataManagers) {
             this.paginationDeserializer = (res, ec) ->
-                    new PaginatedData<InnerType, Page>(pageClass, converter, res, ec, dataManagers)
+                    new PaginatedData<InnerType, Page>(pageType, converter, res, ec, dataManagers)
                             .convert(returnTypeGetter);
             return this;
         }
