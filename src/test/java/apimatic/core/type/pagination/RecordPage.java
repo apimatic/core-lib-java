@@ -38,7 +38,7 @@ public class RecordPage {
 
     /**
      * Sets the data items on the current page.
-     * 
+     *
      * @param data the data list.
      */
     public void setData(List<String> data) {

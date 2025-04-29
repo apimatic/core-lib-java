@@ -176,7 +176,8 @@ public class EndToEndTest extends MockCoreConfig {
 
     @Test
     public void testCursorPaginationData() throws IOException, CoreApiException {
-        verifyData(getPaginatedApiCall(new CursorPagination("$response.body#/page_info", "$request.path#/cursor")).execute());
+        verifyData(getPaginatedApiCall(new CursorPagination("$response.body#/page_info",
+                "$request.path#/cursor")).execute());
     }
 
     @Test
@@ -523,8 +524,8 @@ public class EndToEndTest extends MockCoreConfig {
         when(response.getBody()).thenReturn("{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\",\"next_link\":\"https://localhost:3000/path?page=2\"}");
         when(response.getHeaders()).thenReturn(getHttpHeaders());
-        Callback callback = new Callback() {
-            private int callNumber = 1; 
+        Callback pageCallback = new Callback() {
+            private int callNumber = 1;
             @Override
             public void onBeforeRequest(Request request) {
                 if (callNumber > 1) {
@@ -543,7 +544,7 @@ public class EndToEndTest extends MockCoreConfig {
             }
         };
         return new ApiCall.Builder<PaginatedData<String, RecordPage>, CoreApiException>()
-                .globalConfig(getGlobalConfig(callback))
+                .globalConfig(getGlobalConfig(pageCallback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/path/{cursor}")
                         .templateParam(param -> param.key("cursor").value("cursor")

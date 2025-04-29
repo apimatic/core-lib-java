@@ -374,7 +374,7 @@ public final class HttpRequest {
 
             for (Map.Entry<String, Object> entry : simplifiedHeaders.entrySet()) {
                 if (entry.getValue() instanceof List<?>) {
-                    headerParams.put(entry.getKey(), (List<Object>)entry.getValue());
+                    headerParams.put(entry.getKey(), (List<Object>) entry.getValue());
                 } else {
                     headerParams.put(entry.getKey(), Arrays.asList(entry.getValue()));
                 }
@@ -383,13 +383,13 @@ public final class HttpRequest {
 
         private void updateTemplateParams(Function<Object, Object> setter, String point) {
             Map<String, Object> simplifiedPath = new HashMap<>();
-            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry :
-                templateParams.entrySet()) {
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry
+                    : templateParams.entrySet()) {
                 simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
             }
-            
+
             simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
-            
+
             for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
                 // Preserve the original boolean if it exists, otherwise set default (e.g., false)
                 Boolean originalFlag = templateParams.containsKey(entry.getKey())
@@ -399,7 +399,7 @@ public final class HttpRequest {
                         new SimpleEntry<>(entry.getValue(), originalFlag));
             }
         }
-        
+
         /**
          * Base uri server address.
          * @param server the base uri address.
@@ -566,7 +566,7 @@ public final class HttpRequest {
             this.arraySerializationFormat = arraySerializationFormat;
             return this;
         }
-        
+
         private Map<String, List<String>> getHeaderParams() {
             Map<String, List<String>> converted = new HashMap<>();
 
@@ -609,8 +609,9 @@ public final class HttpRequest {
             Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
-                            queryParams, templateParams, getHeaderParams(), formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat);
+                            queryParams, templateParams, getHeaderParams(), formParams,
+                            formParamaters, body, bodySerializer, bodyParameters,
+                            arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

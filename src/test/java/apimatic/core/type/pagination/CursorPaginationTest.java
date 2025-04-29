@@ -23,6 +23,9 @@ import io.apimatic.core.types.pagination.PaginatedData;
  */
 public class CursorPaginationTest {
 
+    /**
+     * Silent rule for Mockito initialization.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
@@ -79,10 +82,11 @@ public class CursorPaginationTest {
     @Test
     public void testWithValidCursorAndDifferentTypeReturnsTrueB() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int current = 456;
 
         when(paginatedData.getLastRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(
-                        q -> q.key("cursor").value(456)));
+                        q -> q.key("cursor").value(current)));
         when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": 123}");
 
         CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
@@ -104,7 +108,8 @@ public class CursorPaginationTest {
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor", "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
+                "$request.query#/cursor");
 
         assertFalse(cursor.isValid(paginatedData));
         assertNotNull(cursor.getNextRequestBuilder());

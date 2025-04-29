@@ -21,7 +21,7 @@ public class PagePagination implements PaginationDataManager {
             return false;
         }
 
-        final boolean[] isUpdated = { false };
+        final boolean[] isUpdated = {false};
         nextReqBuilder.updateByReference(input, old -> {
             int newValue = Integer.parseInt("" + old) + 1;
             isUpdated[0] = true;

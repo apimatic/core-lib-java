@@ -1589,7 +1589,7 @@ public class CoreHelper {
         int queryStringIndex = queryUrl.indexOf('?');
         return queryStringIndex != -1 ? queryUrl.substring(queryStringIndex + 1) : "";
     }
-    
+
     /**
      * Extracts query parameters from a given URL into a map.
      *
@@ -1631,7 +1631,8 @@ public class CoreHelper {
      * @param jsonHeaders The response headers.
      * @return The resolved value as a string, or null if not found.
      */
-    public static String resolveResponsePointer(String pointer, String jsonBody, String jsonHeaders) {
+    public static String resolveResponsePointer(String pointer, String jsonBody,
+            String jsonHeaders) {
         if (pointer == null) {
             return null;
         }
@@ -1697,7 +1698,8 @@ public class CoreHelper {
      * @param updater  The function to apply to the value at the pointer.
      * @return The updated object, or the original if any error occurs.
      */
-    public static <T> T updateValueByPointer(T value, String pointer, Function<Object, Object> updater) {
+    public static <T> T updateValueByPointer(T value, String pointer,
+            Function<Object, Object> updater) {
         if (value == null || "".equals(pointer) || updater == null) {
             return value;
         }

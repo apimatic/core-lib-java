@@ -50,9 +50,10 @@ public class LinkPaginationTest {
     @Test
     public void testValidLinkWithAdditionalParamsReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int pageSize = 456;
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder()
-                .queryParam(q -> q.key("size").value(23))
+                .queryParam(q -> q.key("size").value(pageSize))
                 .queryParam(q -> q.key("page").value(1))
                 .headerParam(h -> h.key("page").value(2)));
 
@@ -70,7 +71,7 @@ public class LinkPaginationTest {
         });
 
         link.getNextRequestBuilder().updateByReference("$request.query#/size", v -> {
-            assertEquals(23, v);
+            assertEquals(pageSize, v);
             return v;
         });
 

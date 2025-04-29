@@ -41,7 +41,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("offset").value(INITIAL_OFFSET)));
+            .thenReturn(new HttpRequest.Builder().headerParam(
+                    h -> h.key("offset").value(INITIAL_OFFSET)));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.headers#/offset");
@@ -60,7 +61,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("offset").value(INITIAL_OFFSET)));
+            .thenReturn(new HttpRequest.Builder().templateParam(
+                    t -> t.key("offset").value(INITIAL_OFFSET)));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.path#/offset");
@@ -79,7 +81,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(INITIAL_OFFSET)));
+            .thenReturn(new HttpRequest.Builder().queryParam(
+                    q -> q.key("offset").value(INITIAL_OFFSET)));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
@@ -122,7 +125,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5")));
+            .thenReturn(new HttpRequest.Builder().queryParam(
+                    q -> q.key("offset").value("5")));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
@@ -141,7 +145,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5a")));
+            .thenReturn(new HttpRequest.Builder().queryParam(
+                    q -> q.key("offset").value("5a")));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
@@ -178,7 +183,8 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(NUMERIC_OFFSET)));
+            .thenReturn(new HttpRequest.Builder().queryParam(
+                    q -> q.key("offset").value(NUMERIC_OFFSET)));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination(null);

@@ -19,7 +19,9 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.types.pagination.PagePagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 
-/** Unit tests for PagePagination. */
+/**
+ * Unit tests for PagePagination.
+ */
 public class PagePaginationTest {
 
     /**
@@ -35,7 +37,8 @@ public class PagePaginationTest {
         final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("page").value(initialPage)));
+                .thenReturn(new HttpRequest.Builder().headerParam(
+                        h -> h.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.headers#/page");
 
@@ -55,7 +58,8 @@ public class PagePaginationTest {
         final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("page").value(initialPage)));
+                .thenReturn(new HttpRequest.Builder().templateParam(
+                        t -> t.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.path#/page");
 
@@ -75,7 +79,8 @@ public class PagePaginationTest {
         final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(initialPage)));
+                .thenReturn(new HttpRequest.Builder().queryParam(
+                        q -> q.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -93,7 +98,8 @@ public class PagePaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(
-                new HttpRequest.Builder().queryParam(q -> q.key("page").value(new HashMap<String, String>() {
+                new HttpRequest.Builder().queryParam(q -> q.key("page")
+                        .value(new HashMap<String, String>() {
                     private static final long serialVersionUID = 1L;
                     {
                         put("val", "1");
@@ -118,7 +124,8 @@ public class PagePaginationTest {
         final int next = 6;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(current)));
+                .thenReturn(new HttpRequest.Builder().queryParam(
+                        q -> q.key("page").value(current)));
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -172,7 +179,8 @@ public class PagePaginationTest {
         final int current = 5;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(current)));
+                .thenReturn(new HttpRequest.Builder().queryParam(
+                        q -> q.key("page").value(current)));
 
         PagePagination page = new PagePagination(null);
 
