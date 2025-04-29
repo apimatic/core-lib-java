@@ -19,17 +19,30 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.types.pagination.OffsetPagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 
+/**
+ * Unit tests for {@link OffsetPagination}.
+ */
 public class OffsetPaginationTest {
+    private static final int INITIAL_OFFSET = 3;
+    private static final int PAGE_SIZE = 100;
+    private static final int OFFSET_PLUS_PAGE = 103;
+    private static final int OFFSET_VAL_PLUS_ONE = 101;
+    private static final int OFFSET_STRING_PLUS_PAGE = 105;
+    private static final int NUMERIC_OFFSET = 5;
+
+    /**
+     * JUnit rule to initialize Mockito annotations.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Test
-    public void testWithValidOffsetHeader_returnsTrue() {
+    public void testValidOffsetHeaderReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("offset").value(3)));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("offset").value(INITIAL_OFFSET)));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.headers#/offset");
 
@@ -37,18 +50,18 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.headers#/offset", v -> {
-            assertEquals(103, v);
+            assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidOffsetTemplate_returnsTrue() {
+    public void testValidOffsetTemplateReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("offset").value(3)));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("offset").value(INITIAL_OFFSET)));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.path#/offset");
 
@@ -56,18 +69,18 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.path#/offset", v -> {
-            assertEquals(103, v);
+            assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidOffset_returnsTrue() {
+    public void testValidOffsetReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(3)));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(INITIAL_OFFSET)));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
@@ -75,23 +88,23 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.query#/offset", v -> {
-            assertEquals(103, v);
+            assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidOffsetAsInnerField_returnsTrue() {
+    public void testValidOffsetAsInnerFieldReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(
-                new HttpRequest.Builder().queryParam(q -> q.key("offset").value(new HashMap<String, String>() {
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("val", "1");
-                    }
-                })));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            new HttpRequest.Builder().queryParam(q -> q.key("offset").value(new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    put("val", "1");
+                }
+            })));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset/val");
 
@@ -99,18 +112,18 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.query#/offset/val", v -> {
-            assertEquals(101, v);
+            assertEquals(OFFSET_VAL_PLUS_ONE, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidStringOffset_returnsTrue() {
+    public void testValidStringOffsetReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5")));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5")));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
@@ -118,18 +131,18 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.query#/offset", v -> {
-            assertEquals(105, v);
+            assertEquals(OFFSET_STRING_PLUS_PAGE, v);
             return v;
         });
     }
 
     @Test
-    public void testWithInValidStringOffset_returnsFalse() {
+    public void testInvalidStringOffsetReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5a")));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5a")));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
@@ -143,11 +156,11 @@ public class OffsetPaginationTest {
     }
 
     @Test
-    public void testWithMissingOffset_returnsFalse() {
+    public void testMissingOffsetReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
@@ -161,12 +174,12 @@ public class OffsetPaginationTest {
     }
 
     @Test
-    public void testWithNullOffset_returnsFalse() {
+    public void testNullOffsetReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(5)));
-        when(paginatedData.getLastDataSize()).thenReturn(100);
+            .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("offset").value(NUMERIC_OFFSET)));
+        when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination(null);
 
@@ -174,9 +187,8 @@ public class OffsetPaginationTest {
         assertNotNull(offset.getNextRequestBuilder());
 
         offset.getNextRequestBuilder().updateByReference("$request.query#/offset", v -> {
-            assertEquals(5, v);
+            assertEquals(NUMERIC_OFFSET, v);
             return v;
         });
     }
-
 }

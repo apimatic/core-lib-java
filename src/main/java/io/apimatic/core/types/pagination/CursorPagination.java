@@ -8,7 +8,11 @@ public class CursorPagination implements PaginationDataManager {
     private String input;
     private Builder nextReqBuilder;
 
-    public CursorPagination(String output, String input) {
+    /**
+     * @param output JsonPointer of a field received in the response, representing next cursor.
+     * @param input JsonPointer of a field in request, representing cursor.
+     */
+    public CursorPagination(final String output, final String input) {
         this.output = output;
         this.input = input;
     }
@@ -17,14 +21,14 @@ public class CursorPagination implements PaginationDataManager {
     public boolean isValid(PaginatedData<?, ?> paginatedData) {
         nextReqBuilder = paginatedData.getLastRequestBuilder();
 
-        String cursorValue = CoreHelper.resolveResponsePointer(output, paginatedData.getLastResponseBody(),
-                paginatedData.getLastResponseHeaders());
+        String cursorValue = CoreHelper.resolveResponsePointer(output,
+                paginatedData.getLastResponseBody(), paginatedData.getLastResponseHeaders());
 
         if (cursorValue == null) {
             return false;
         }
 
-        final boolean[] isUpdated = { false };
+        final boolean[] isUpdated = {false};
         nextReqBuilder.updateByReference(input, old -> {
             isUpdated[0] = true;
             return cursorValue;

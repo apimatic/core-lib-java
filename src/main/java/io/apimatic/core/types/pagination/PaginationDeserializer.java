@@ -14,7 +14,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public interface PaginationDeserializer {
     /**
      * Apply the deserialization function and returns the ResponseType response.
-     * 
+     *
      * @param config The EndPoint configuration for paginated API Calls.
      * @param globalConfig The EndPoint configuration for paginated API Calls.
      * @param requestBuilder The requestBuilder to re create current API Call.

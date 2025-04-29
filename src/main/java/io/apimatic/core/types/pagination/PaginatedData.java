@@ -35,7 +35,10 @@ public class PaginatedData<T, P> implements Iterator<T> {
     private EndpointConfiguration endpointConfig;
     private GlobalConfiguration globalConfig;
 
-    public PaginatedData(PaginatedData<T, P> paginatedData) {
+    /**
+     * @param paginatedData Existing instance to be cloned.
+     */
+    public PaginatedData(final PaginatedData<T, P> paginatedData) {
         this.pageType = paginatedData.pageType;
         this.converter = paginatedData.converter;
         this.dataManagers = paginatedData.dataManagers;
@@ -50,9 +53,21 @@ public class PaginatedData<T, P> implements Iterator<T> {
         this.pages.addAll(paginatedData.pages);
     }
 
-    public PaginatedData(EndpointConfiguration config, GlobalConfiguration globalConfig,
-            HttpRequest.Builder requestBuilder, Response response, TypeReference<P> pageType,
-            Function<P, List<T>> converter, PaginationDataManager... dataManagers) throws IOException {
+    /**
+     * @param config ApiCall configuration that provided this paginated data.
+     * @param globalConfig Global configuration that provided this paginated data.
+     * @param requestBuilder RequestBuilder that provided this paginated data.
+     * @param response Response corresponding to this paginated data instance.
+     * @param pageType TypeReference of page type P.
+     * @param converter PageType P to list of ItemType T converter
+     * @param dataManagers A list of data managers that provided this paginated data.
+     *
+     * @throws IOException
+     */
+    public PaginatedData(final EndpointConfiguration config, final GlobalConfiguration globalConfig,
+            final HttpRequest.Builder requestBuilder, final Response response,
+            final TypeReference<P> pageType, final Function<P, List<T>> converter,
+            final PaginationDataManager... dataManagers) throws IOException {
         this.pageType = pageType;
         this.converter = converter;
         this.dataManagers = dataManagers;
@@ -76,25 +91,42 @@ public class PaginatedData<T, P> implements Iterator<T> {
         this.pages.add(page);
     }
 
+    /**
+     * @return RequestBuilder that provided the last page
+     */
     public HttpRequest.Builder getLastRequestBuilder() {
         return lastRequestBuilder;
     }
 
+    /**
+     * @return Response body corresponding to the last page
+     */
     public String getLastResponseBody() {
         return lastResponse.getBody();
     }
 
+    /**
+     * @return Response headers corresponding to the last page
+     */
     public String getLastResponseHeaders() {
         return CoreHelper.trySerialize(lastResponse.getHeaders().asSimpleMap());
     }
 
+    /**
+     * @return Size of the last page
+     */
     public int getLastDataSize() {
         return lastDataSize;
     }
 
+    /**
+     * @return Reset this instance and return a clone if its traversed before
+     */
     public PaginatedData<T, P> reset() {
-        if (currentIndex == 0)
+        if (currentIndex == 0) {
             return this;
+        }
+
         return new PaginatedData<T, P>(this);
     }
 
@@ -118,12 +150,18 @@ public class PaginatedData<T, P> implements Iterator<T> {
         throw new NoSuchElementException("No more data available.");
     }
 
+    /**
+     * @return An iterable of items of type T
+     */
     public Iterator<T> iterator() {
         return reset();
     }
 
+    /**
+     * @return An iterable of pages of type P
+     */
     public Iterable<P> pages() {
-        PaginatedData<T, P> data = reset();
+        PaginatedData<T, P> dataCopy = reset();
         return new Iterable<P>() {
             @Override
             public Iterator<P> iterator() {
@@ -132,15 +170,15 @@ public class PaginatedData<T, P> implements Iterator<T> {
 
                     @Override
                     public boolean hasNext() {
-                        if (currentIndex < data.pages.size()) {
+                        if (currentIndex < dataCopy.pages.size()) {
                             return true;
                         }
 
-                        while (data.hasNext()) {
-                            if (currentIndex < data.pages.size()) {
+                        while (dataCopy.hasNext()) {
+                            if (currentIndex < dataCopy.pages.size()) {
                                 return true;
                             }
-                            data.next();
+                            dataCopy.next();
                         }
 
                         return false;
@@ -148,8 +186,8 @@ public class PaginatedData<T, P> implements Iterator<T> {
 
                     @Override
                     public P next() {
-                        if (data.hasNext()) {
-                            return data.pages.get(currentIndex++);
+                        if (dataCopy.hasNext()) {
+                            return dataCopy.pages.get(currentIndex++);
                         }
 
                         throw new NoSuchElementException("No more data available.");
@@ -157,10 +195,6 @@ public class PaginatedData<T, P> implements Iterator<T> {
                 };
             }
         };
-    }
-
-    public Object convert(Function<PaginatedData<T, P>, ?> returnTypeGetter) {
-        return returnTypeGetter.apply(this);
     }
 
     private void fetchMoreData() {
@@ -178,9 +212,10 @@ public class PaginatedData<T, P> implements Iterator<T> {
                         .requestBuilder(manager.getNextRequestBuilder())
                         .responseHandler(res -> res
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
-                                        ErrorCase.setReason(null,
-                                                (reason, context) -> new CoreApiException(reason, context))))
-                                .nullify404(false).paginatedDeserializer(pageType, converter, r -> r, dataManagers))
+                                        ErrorCase.setReason(null, (reason, context) ->
+                                        new CoreApiException(reason, context))))
+                                .nullify404(false)
+                                .paginatedDeserializer(pageType, converter, r -> r, dataManagers))
                         .build().execute();
 
                 updateUsing(result.lastResponse, result.lastRequestBuilder);

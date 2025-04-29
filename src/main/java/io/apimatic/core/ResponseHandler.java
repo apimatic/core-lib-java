@@ -26,7 +26,7 @@ import io.apimatic.coreinterfaces.type.functional.Deserializer;
 /**
  * Handler that encapsulates the process of generating a response object from a
  * Response.
- * 
+ *
  * @param <ResponseType>  The response to process.
  * @param <ExceptionType> in case of a problem.
  */
@@ -92,15 +92,19 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param globalErrorCases         the map of global errors.
      * @param deserializer             the deserializer of json response.
      * @param intermediateDeserializer the api response deserializer.
+     * @param paginationDeserializer   the pagination deserializer.
      * @param responseClassType        the type of response class.
      * @param contextInitializer       the context initializer in response models.
      * @param isNullify404Enabled      on 404 error return null or not?.
      * @param isNullableResponseType   in case of nullable response type.
      */
     private ResponseHandler(final Map<String, ErrorCase<ExceptionType>> localErrorCases,
-            final Map<String, ErrorCase<ExceptionType>> globalErrorCases, final Deserializer<ResponseType> deserializer,
-            final Deserializer<?> intermediateDeserializer, final PaginationDeserializer paginationDeserializer,
-            final ResponseClassType responseClassType, final ContextInitializer<ResponseType> contextInitializer,
+            final Map<String, ErrorCase<ExceptionType>> globalErrorCases,
+            final Deserializer<ResponseType> deserializer,
+            final Deserializer<?> intermediateDeserializer,
+            final PaginationDeserializer paginationDeserializer,
+            final ResponseClassType responseClassType,
+            final ContextInitializer<ResponseType> contextInitializer,
             final boolean isNullify404Enabled, final boolean isNullableResponseType) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
@@ -158,7 +162,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseType applyContextInitializer(Context httpContext, Object result) throws IOException {
+    private ResponseType applyContextInitializer(Context httpContext,
+            Object result) throws IOException {
         if (contextInitializer != null && deserializer != null) {
             result = contextInitializer.apply(httpContext, (ResponseType) result);
         }
@@ -360,8 +365,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
                 Function<PaginatedData<InnerType, Page>, ?> returnTypeGetter,
                 PaginationDataManager... dataManagers) {
             this.paginationDeserializer = (config, globalConfig, reqBuilder, res) ->
-                    new PaginatedData<InnerType, Page>(config, globalConfig, reqBuilder, res,
-                            pageType, converter, dataManagers).convert(returnTypeGetter);
+                returnTypeGetter.apply(new PaginatedData<InnerType, Page>(config, globalConfig,
+                        reqBuilder, res, pageType, converter, dataManagers));
             return this;
         }
 
@@ -371,7 +376,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param responseClassType specify the response class type for result.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> responseClassType(ResponseClassType responseClassType) {
+        public Builder<ResponseType, ExceptionType> responseClassType(
+                ResponseClassType responseClassType) {
             this.responseClassType = responseClassType;
             return this;
         }
@@ -405,7 +411,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @param isNullableResponseType in case of nullable response type.
          * @return {@link ResponseHandler.Builder}.
          */
-        public Builder<ResponseType, ExceptionType> nullableResponseType(boolean isNullableResponseType) {
+        public Builder<ResponseType, ExceptionType> nullableResponseType(
+                boolean isNullableResponseType) {
             this.isNullableResponseType = isNullableResponseType;
             return this;
         }
@@ -416,8 +423,9 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          * @return the instance of {@link ResponseHandler}.
          */
         public ResponseHandler<ResponseType, ExceptionType> build() {
-            return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases, globalErrorCases, deserializer,
-                    intermediateDeserializer, paginationDeserializer, responseClassType, contextInitializer,
+            return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
+                    globalErrorCases, deserializer, intermediateDeserializer,
+                    paginationDeserializer, responseClassType, contextInitializer,
                     isNullify404Enabled, isNullableResponseType);
         }
     }

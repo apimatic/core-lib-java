@@ -328,6 +328,13 @@ public final class HttpRequest {
          */
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
+        /**
+         * Update the request parameters using a setter.
+         *
+         * @param pointer A JSON pointer pointing to any request field.
+         * @param setter A function that takes in an old value and returns a new value.
+         * @return The updated instance of current request builder.
+         */
         public Builder updateByReference(String pointer, Function<Object, Object> setter) {
             if (pointer == null) {
                 return this;
@@ -336,7 +343,7 @@ public final class HttpRequest {
             String[] pointerParts = pointer.split("#");
             String prefix = pointerParts[0];
             String point = pointerParts.length > 1 ? pointerParts[1] : "";
-            
+
             switch (prefix) {
             case "$request.path":
                 updateTemplateParams(setter, point);
@@ -347,9 +354,9 @@ public final class HttpRequest {
             case "$request.headers":
                 updateHeaderParams(setter, point);
                 return this;
+            default:
+                return this;
             }
-            
-            return this;
         }
 
         @SuppressWarnings("unchecked")
@@ -376,7 +383,8 @@ public final class HttpRequest {
 
         private void updateTemplateParams(Function<Object, Object> setter, String point) {
             Map<String, Object> simplifiedPath = new HashMap<>();
-            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry : templateParams.entrySet()) {
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry :
+                templateParams.entrySet()) {
                 simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
             }
             
@@ -387,7 +395,8 @@ public final class HttpRequest {
                 Boolean originalFlag = templateParams.containsKey(entry.getKey())
                     ? templateParams.get(entry.getKey()).getValue()
                     : false;
-                templateParams.put(entry.getKey(), new SimpleEntry<>(entry.getValue(), originalFlag));
+                templateParams.put(entry.getKey(),
+                        new SimpleEntry<>(entry.getValue(), originalFlag));
             }
         }
         
@@ -440,7 +449,6 @@ public final class HttpRequest {
             this.queryParams.putAll(queryParameters);
             return this;
         }
-
 
         /**
          * To configure the query paramater.

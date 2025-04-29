@@ -6,7 +6,10 @@ public class OffsetPagination implements PaginationDataManager {
     private String input;
     private Builder nextReqBuilder;
 
-    public OffsetPagination(String input) {
+    /**
+     * @param input JsonPointer of a field in request, representing offset.
+     */
+    public OffsetPagination(final String input) {
         this.input = input;
     }
 
@@ -18,7 +21,7 @@ public class OffsetPagination implements PaginationDataManager {
             return false;
         }
 
-        final boolean[] isUpdated = { false };
+        final boolean[] isUpdated = {false};
         nextReqBuilder.updateByReference(input, old -> {
             int newValue = Integer.parseInt("" + old) + paginatedData.getLastDataSize();
             isUpdated[0] = true;

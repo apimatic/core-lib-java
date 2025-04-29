@@ -17,187 +17,190 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.types.pagination.LinkPagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 
+/**
+ * Unit tests for the LinkPagination class.
+ */
 public class LinkPaginationTest {
+
+    /**
+     * Silent rule for Mockito initialization.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Test
-    public void testWithValidLink_returnsTrue() {
+    public void testValidLinkReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
 
         LinkPagination link = new LinkPagination("$response.body#/next");
-        
+
         assertTrue(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             assertEquals("2", v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidLinkImpactingOtherParams_returnsTrue() {
+    public void testValidLinkWithAdditionalParamsReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder()
                 .queryParam(q -> q.key("size").value(23))
                 .queryParam(q -> q.key("page").value(1))
                 .headerParam(h -> h.key("page").value(2)));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
+
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
 
         LinkPagination link = new LinkPagination("$response.body#/next");
-        
+
         assertTrue(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             assertEquals("2", v);
             return v;
         });
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/size", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/size", v -> {
             assertEquals(23, v);
             return v;
         });
 
-        link.getNextRequestBuilder().updateByReference("$request.headers#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.headers#/page", v -> {
             assertEquals(2, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidLinkFromResponseHeader_returnsTrue() {
+    public void testValidLinkFromHeaderReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseHeaders()).thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
+        when(paginatedData.getLastResponseHeaders())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
 
         LinkPagination link = new LinkPagination("$response.headers#/next");
-        
+
         assertTrue(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             assertEquals("2", v);
             return v;
         });
     }
 
     @Test
-    public void testWithInValidLinkPointer_returnsFalse() {
+    public void testInvalidPointerReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
 
         LinkPagination link = new LinkPagination("$response.body#/next/href");
-        
+
         assertFalse(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             fail();
             return v;
         });
     }
 
     @Test
-    public void testWithMissingResponse_returnsFalse() {
+    public void testMissingResponseReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getLastResponseBody()).thenReturn(null);
 
         LinkPagination link = new LinkPagination("$response.body#/next/href");
-        
+
         assertFalse(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             fail();
             return v;
         });
     }
 
     @Test
-    public void testWithMissingLinkPointer_returnsFalse() {
+    public void testMissingPointerReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2\"}");
 
         LinkPagination link = new LinkPagination(null);
-        
+
         assertFalse(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             fail();
             return v;
         });
     }
 
     @Test
-    public void testWithMultipleQueryParams_returnsTrue() {
+    public void testMultipleQueryParamsReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page=2&size=5\"}");
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page=2&size=5\"}");
 
         LinkPagination link = new LinkPagination("$response.body#/next");
-        
+
         assertTrue(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
             assertEquals("2", v);
             return v;
         });
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/size", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/size", v -> {
             assertEquals("5", v);
             return v;
         });
     }
 
     @Test
-    public void testWithMultipleEncodedQueryParams_returnsTrue() {
+    public void testEncodedQueryParamsReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next\": \"https://api.example.com?page%20o=2%20a&size%20q=5^%214$#\"}");
+        when(paginatedData.getLastResponseBody())
+                .thenReturn("{\"next\": \"https://api.example.com?page%20o=2%20a&"
+                        + "size%20q=5^%214$#\"}");
 
         LinkPagination link = new LinkPagination("$response.body#/next");
-        
+
         assertTrue(link.isValid(paginatedData));
         assertNotNull(link.getNextRequestBuilder());
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/page o", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/page o", v -> {
             assertEquals("2 a", v);
             return v;
         });
 
-        link.getNextRequestBuilder().updateByReference("$request.query#/size q", v -> 
-        {
+        link.getNextRequestBuilder().updateByReference("$request.query#/size q", v -> {
             assertEquals("5^!4$#", v);
             return v;
         });
     }
-
 }

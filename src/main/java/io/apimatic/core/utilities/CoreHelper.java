@@ -1590,30 +1590,47 @@ public class CoreHelper {
         return queryStringIndex != -1 ? queryUrl.substring(queryStringIndex + 1) : "";
     }
     
+    /**
+     * Extracts query parameters from a given URL into a map.
+     *
+     * @param queryUrl The URL containing query parameters.
+     * @return A map of query parameter keys and values.
+     */
     public static Map<String, Object> getQueryParameters(String queryUrl) {
         return Arrays.stream(getQueryParametersFromUrl(queryUrl).split("&"))
             .map(param -> param.split("="))
             .collect(Collectors.toMap(
-                    pair -> tryUrlDecode(pair[0]),
-                    pair -> tryUrlDecode(pair[1])
+                pair -> tryUrlDecode(pair[0]),
+                pair -> tryUrlDecode(pair[1])
             ));
     }
-    
+
+    /**
+     * Converts a JSON string to a {@link JsonStructure}.
+     *
+     * @param json The JSON string.
+     * @return The parsed {@link JsonStructure}, or null if parsing fails.
+     */
     public static JsonStructure createJsonStructure(String json) {
         JsonReader jsonReader = Json.createReader(new StringReader(json));
         JsonStructure jsonStructure = null;
-        
         try {
             jsonStructure = jsonReader.read();
         } catch (Exception e) {
             // No need to do anything here
         }
-        
         jsonReader.close();
-        
         return jsonStructure;
     }
-    
+
+    /**
+     * Resolves a pointer within a JSON response body or headers.
+     *
+     * @param pointer     The JSON pointer.
+     * @param jsonBody    The response body.
+     * @param jsonHeaders The response headers.
+     * @return The resolved value as a string, or null if not found.
+     */
     public static String resolveResponsePointer(String pointer, String jsonBody, String jsonHeaders) {
         if (pointer == null) {
             return null;
@@ -1622,17 +1639,24 @@ public class CoreHelper {
         String[] pointerParts = pointer.split("#");
         String prefix = pointerParts[0];
         String point = pointerParts.length > 1 ? pointerParts[1] : "";
-        
+
         switch (prefix) {
-        case "$response.body":
-            return CoreHelper.getValueFromJson(point, jsonBody);
-        case "$response.headers":
-            return CoreHelper.getValueFromJson(point, jsonHeaders);
+            case "$response.body":
+                return CoreHelper.getValueFromJson(point, jsonBody);
+            case "$response.headers":
+                return CoreHelper.getValueFromJson(point, jsonHeaders);
+            default:
+                return null;
         }
-        
-        return null;
     }
-    
+
+    /**
+     * Retrieves a value from a JSON string using a JSON pointer.
+     *
+     * @param pointer The pointer path.
+     * @param json    The JSON string.
+     * @return The value as a string, or null if not found or invalid.
+     */
     private static String getValueFromJson(String pointer, String json) {
         if (pointer == null || json == null) {
             return null;
@@ -1644,86 +1668,126 @@ public class CoreHelper {
         try {
             containsValue = jsonPointer.containsValue(jsonStructure);
         } catch (Exception e) {
+            // Ignore
         }
-        
+
         if (jsonStructure == null || !containsValue) {
             return null;
         }
 
         JsonValue value = jsonPointer.getValue(jsonStructure);
 
-        if (value == JsonValue.NULL) { // Explicitly check for JsonValue.NULL
+        if (value == JsonValue.NULL) {
             return null;
         }
-        
-        if (value instanceof JsonString) { // Extract raw string value
+
+        if (value instanceof JsonString) {
             return ((JsonString) value).getString();
         }
 
-        return value.toString(); // Only convert toString() if it's not null
+        return value.toString();
     }
 
+    /**
+     * Updates the value of an object by a JSON pointer using the provided updater function.
+     *
+     * @param <T>      The type of the object.
+     * @param value    The object to update.
+     * @param pointer  The JSON pointer.
+     * @param updater  The function to apply to the value at the pointer.
+     * @return The updated object, or the original if any error occurs.
+     */
     public static <T> T updateValueByPointer(T value, String pointer, Function<Object, Object> updater) {
-        if (value == null || pointer == "" || updater == null) return value;
+        if (value == null || "".equals(pointer) || updater == null) {
+            return value;
+        }
 
         try {
-            // Step 1: Convert input object to JSON string
             String json = serialize(value);
-
-            // Step 2: Parse JSON into JsonStructure
             JsonStructure structure = createJsonStructure(json);
-            if (structure == null) return value;
+            if (structure == null) {
+                return value;
+            }
 
             JsonPointer jsonPointer = Json.createPointer(pointer);
-
             if (!jsonPointer.containsValue(structure)) {
-                return value; // don't change if pointer doesn't exist
+                return value;
             }
 
             JsonValue oldJsonValue = jsonPointer.getValue(structure);
             Object oldValue = toObject(oldJsonValue);
             Object newValueRaw = updater.apply(oldValue);
-            if (newValueRaw == null) return value;
+            if (newValueRaw == null) {
+                return value;
+            }
 
             JsonValue newJsonValue = toJsonValue(newValueRaw);
-            if (newJsonValue == null) return value;
+            if (newJsonValue == null) {
+                return value;
+            }
 
             JsonStructure updated = jsonPointer.replace(structure, newJsonValue);
-
-            // Step 3: Convert updated structure back to JSON string
             StringWriter writer = new StringWriter();
             try (JsonWriter jsonWriter = Json.createWriter(writer)) {
                 jsonWriter.write(updated);
             }
 
             String updatedJson = writer.toString();
-
-            // Step 4: Deserialize back to original type
             return deserialize(updatedJson, new TypeReference<T>() {});
 
         } catch (Exception e) {
-            return value; // fallback on error
+            return value;
         }
     }
 
+    /**
+     * Converts a {@link JsonValue} into a plain Java object.
+     *
+     * @param value The JsonValue.
+     * @return The equivalent Java object.
+     */
     private static Object toObject(JsonValue value) {
         switch (value.getValueType()) {
-            case STRING: return ((JsonString) value).getString();
-            case NUMBER: return ((JsonNumber) value).numberValue();
-            case TRUE: return true;
-            case FALSE: return false;
-            case NULL: return null;
-            default: return value.toString(); // fallback for objects/arrays
+            case STRING:
+                return ((JsonString) value).getString();
+            case NUMBER:
+                return ((JsonNumber) value).numberValue();
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            case NULL:
+                return null;
+            default:
+                return value.toString();
         }
     }
 
+    /**
+     * Converts a plain Java object into a {@link JsonValue}.
+     *
+     * @param obj The object to convert.
+     * @return The corresponding JsonValue or null if unsupported.
+     */
     private static JsonValue toJsonValue(Object obj) {
-        if (obj == null) return null;
-        if (obj instanceof String) return Json.createValue((String) obj);
-        if (obj instanceof Integer) return Json.createValue((Integer) obj);
-        if (obj instanceof Long) return Json.createValue((Long) obj);
-        if (obj instanceof Double) return Json.createValue((Double) obj);
-        if (obj instanceof Boolean) return ((Boolean) obj) ? JsonValue.TRUE : JsonValue.FALSE;
-        return null; // unsupported types (could be extended)
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof String) {
+            return Json.createValue((String) obj);
+        }
+        if (obj instanceof Integer) {
+            return Json.createValue((Integer) obj);
+        }
+        if (obj instanceof Long) {
+            return Json.createValue((Long) obj);
+        }
+        if (obj instanceof Double) {
+            return Json.createValue((Double) obj);
+        }
+        if (obj instanceof Boolean) {
+            return (Boolean) obj ? JsonValue.TRUE : JsonValue.FALSE;
+        }
+        return null;
     }
 }

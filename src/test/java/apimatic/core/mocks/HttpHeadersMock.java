@@ -26,6 +26,11 @@ public class HttpHeadersMock {
     @Mock
     private HttpHeaders httpHeaders;
 
+    /**
+     * Setup the httpHeaders mock instance.
+     *
+     * @throws IOException
+     */
     @Before
     public void setup() throws IOException {
         when(httpHeaders.asSimpleMap()).thenReturn(new HashMap<String, String>());

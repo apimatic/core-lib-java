@@ -4,7 +4,14 @@ import io.apimatic.core.HttpRequest.Builder;
 
 public interface PaginationDataManager {
 
-    public abstract boolean isValid(PaginatedData<?, ?> paginatedData);
+    /**
+     * @param paginatedData Data to be checked for validity
+     * @return True if paginated data is valid to make another request
+     */
+    boolean isValid(PaginatedData<?, ?> paginatedData);
 
-    public abstract Builder getNextRequestBuilder();
+    /**
+     * @return RequestBuilder for the next API Call
+     */
+    Builder getNextRequestBuilder();
 }

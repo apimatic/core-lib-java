@@ -19,16 +19,23 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.types.pagination.PagePagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 
+/** Unit tests for PagePagination. */
 public class PagePaginationTest {
+
+    /**
+     * Mockito rule for initializing mocks.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     @Test
-    public void testWithValidPageHeader_returnsTrue() {
+    public void testWithValidPageHeaderReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int initialPage = 3;
+        final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("page").value(3)));
+                .thenReturn(new HttpRequest.Builder().headerParam(h -> h.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.headers#/page");
 
@@ -36,17 +43,19 @@ public class PagePaginationTest {
         assertNotNull(page.getNextRequestBuilder());
 
         page.getNextRequestBuilder().updateByReference("$request.headers#/page", v -> {
-            assertEquals(4, v);
+            assertEquals(nextPage, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidPageTemplate_returnsTrue() {
+    public void testWithValidPageTemplateReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int initialPage = 3;
+        final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("page").value(3)));
+                .thenReturn(new HttpRequest.Builder().templateParam(t -> t.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.path#/page");
 
@@ -54,17 +63,19 @@ public class PagePaginationTest {
         assertNotNull(page.getNextRequestBuilder());
 
         page.getNextRequestBuilder().updateByReference("$request.path#/page", v -> {
-            assertEquals(4, v);
+            assertEquals(nextPage, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidPage_returnsTrue() {
+    public void testWithValidPageReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int initialPage = 3;
+        final int nextPage = 4;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(3)));
+                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(initialPage)));
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -72,13 +83,13 @@ public class PagePaginationTest {
         assertNotNull(page.getNextRequestBuilder());
 
         page.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
-            assertEquals(4, v);
+            assertEquals(nextPage, v);
             return v;
         });
     }
 
     @Test
-    public void testWithValidPageAsInnerField_returnsTrue() {
+    public void testWithValidPageAsInnerFieldReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(
@@ -101,11 +112,13 @@ public class PagePaginationTest {
     }
 
     @Test
-    public void testWithValidStringPage_returnsTrue() {
+    public void testWithValidStringPageReturnsTrue() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final String current = "5";
+        final int next = 6;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value("5")));
+                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(current)));
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -113,13 +126,13 @@ public class PagePaginationTest {
         assertNotNull(page.getNextRequestBuilder());
 
         page.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
-            assertEquals(6, v);
+            assertEquals(next, v);
             return v;
         });
     }
 
     @Test
-    public void testWithInValidStringPage_returnsFalse() {
+    public void testWithInvalidStringPageReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder())
@@ -137,7 +150,7 @@ public class PagePaginationTest {
     }
 
     @Test
-    public void testWithMissingPage_returnsFalse() {
+    public void testWithMissingPageReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
@@ -154,11 +167,12 @@ public class PagePaginationTest {
     }
 
     @Test
-    public void testWithNullPage_returnsFalse() {
+    public void testWithNullPageReturnsFalse() {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        final int current = 5;
 
         when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(5)));
+                .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(current)));
 
         PagePagination page = new PagePagination(null);
 
@@ -166,9 +180,8 @@ public class PagePaginationTest {
         assertNotNull(page.getNextRequestBuilder());
 
         page.getNextRequestBuilder().updateByReference("$request.query#/page", v -> {
-            assertEquals(5, v);
+            assertEquals(current, v);
             return v;
         });
     }
-
 }

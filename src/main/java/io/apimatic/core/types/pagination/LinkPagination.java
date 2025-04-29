@@ -7,7 +7,10 @@ public class LinkPagination implements PaginationDataManager {
     private String next;
     private Builder nextReqBuilder;
 
-    public LinkPagination(String next) {
+    /**
+     * @param next JsonPointer of a field in response, representing next request queryUrl.
+     */
+    public LinkPagination(final String next) {
         this.next = next;
     }
 
@@ -15,8 +18,8 @@ public class LinkPagination implements PaginationDataManager {
     public boolean isValid(PaginatedData<?, ?> paginatedData) {
         nextReqBuilder = paginatedData.getLastRequestBuilder();
 
-        String linkValue = CoreHelper.resolveResponsePointer(next, paginatedData.getLastResponseBody(),
-                paginatedData.getLastResponseHeaders());
+        String linkValue = CoreHelper.resolveResponsePointer(next,
+                paginatedData.getLastResponseBody(), paginatedData.getLastResponseHeaders());
 
         if (linkValue == null) {
             return false;

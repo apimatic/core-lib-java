@@ -6,7 +6,10 @@ public class PagePagination implements PaginationDataManager {
     private String input;
     private Builder nextReqBuilder;
 
-    public PagePagination(String input) {
+    /**
+     * @param input JsonPointer of a field in request, representing page.
+     */
+    public PagePagination(final String input) {
         this.input = input;
     }
 

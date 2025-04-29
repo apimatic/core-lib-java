@@ -50,9 +50,9 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     /**
      * ApiCall constructor.
      * @param globalConfig the required configuration to built the ApiCall.
+     * @param endpointConfiguration The endPoint configuration.
      * @param requestBuilder Http request builder for the api call.
      * @param responseHandler the handler for the response.
-     * @param coreEndpointConfiguration endPoint configuration.
      */
     private ApiCall(final GlobalConfiguration globalConfig,
             final EndpointConfiguration endpointConfiguration,
@@ -89,11 +89,13 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      */
     public CompletableFuture<ResponseType> executeAsync() {
         return AsyncExecutor.makeHttpCallAsync(() -> requestBuilder.build(globalConfig),
-                request -> globalConfig.getHttpClient().executeAsync(request, endpointConfiguration),
+                request -> globalConfig.getHttpClient()
+                        .executeAsync(request, endpointConfiguration),
                 (request, response) -> {
                     Context context = globalConfig.getCompatibilityFactory()
                             .createHttpContext(request, response);
-                    return responseHandler.handle(context, endpointConfiguration, globalConfig, requestBuilder);
+                    return responseHandler.handle(context, endpointConfiguration, globalConfig,
+                            requestBuilder);
                 }, apiLogger);
     }
 
