@@ -101,12 +101,13 @@ public class OffsetPaginationTest {
         PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
 
         when(paginatedData.getLastRequestBuilder()).thenReturn(
-            new HttpRequest.Builder().queryParam(q -> q.key("offset").value(new HashMap<String, String>() {
-                private static final long serialVersionUID = 1L;
-                {
-                    put("val", "1");
-                }
-            })));
+            new HttpRequest.Builder().queryParam(q -> q.key("offset").value(
+                    new HashMap<String, String>() {
+                        private static final long serialVersionUID = 1L;
+                        {
+                            put("val", "1");
+                        }
+                    })));
         when(paginatedData.getLastDataSize()).thenReturn(PAGE_SIZE);
 
         OffsetPagination offset = new OffsetPagination("$request.query#/offset/val");

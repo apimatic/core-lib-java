@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -1699,7 +1699,7 @@ public class CoreHelper {
      * @return The updated object, or the original if any error occurs.
      */
     public static <T> T updateValueByPointer(T value, String pointer,
-            Function<Object, Object> updater) {
+            UnaryOperator<Object> updater) {
         if (value == null || "".equals(pointer) || updater == null) {
             return value;
         }

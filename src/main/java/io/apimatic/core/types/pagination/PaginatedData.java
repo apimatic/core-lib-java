@@ -221,7 +221,6 @@ public class PaginatedData<T, P> implements Iterator<T> {
                 updateUsing(result.lastResponse, result.lastRequestBuilder);
                 return;
             } catch (Exception e) {
-                continue;
             }
         }
     }

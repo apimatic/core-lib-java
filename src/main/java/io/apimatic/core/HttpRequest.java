@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import io.apimatic.core.authentication.AuthBuilder;
 import io.apimatic.core.exceptions.AuthValidationException;
@@ -335,7 +335,7 @@ public final class HttpRequest {
          * @param setter A function that takes in an old value and returns a new value.
          * @return The updated instance of current request builder.
          */
-        public Builder updateByReference(String pointer, Function<Object, Object> setter) {
+        public Builder updateByReference(String pointer, UnaryOperator<Object> setter) {
             if (pointer == null) {
                 return this;
             }
@@ -360,7 +360,7 @@ public final class HttpRequest {
         }
 
         @SuppressWarnings("unchecked")
-        private void updateHeaderParams(Function<Object, Object> setter, String point) {
+        private void updateHeaderParams(UnaryOperator<Object> setter, String point) {
             Map<String, Object> simplifiedHeaders = new HashMap<>();
             for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
                 if (entry.getValue().size() == 1) {
@@ -381,7 +381,7 @@ public final class HttpRequest {
             }
         }
 
-        private void updateTemplateParams(Function<Object, Object> setter, String point) {
+        private void updateTemplateParams(UnaryOperator<Object> setter, String point) {
             Map<String, Object> simplifiedPath = new HashMap<>();
             for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry
                     : templateParams.entrySet()) {
