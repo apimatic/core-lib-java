@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.apimatic.core.ApiCall;
 import io.apimatic.core.ErrorCase;
+import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.HttpRequest;
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
@@ -26,49 +27,57 @@ public class PaginatedData<T, P> implements Iterator<T> {
     private List<P> pages = new ArrayList<P>();
     private int lastDataSize;
     private Response lastResponse;
-    private EndpointConfiguration lastEndpointConfig;
+    private HttpRequest.Builder lastRequestBuilder;
 
     private TypeReference<P> pageType;
     private Function<P, List<T>> converter;
     private PaginationDataManager[] dataManagers;
+    private EndpointConfiguration endpointConfig;
+    private GlobalConfiguration globalConfig;
 
     public PaginatedData(PaginatedData<T, P> paginatedData) {
         this.pageType = paginatedData.pageType;
         this.converter = paginatedData.converter;
         this.dataManagers = paginatedData.dataManagers;
+        this.endpointConfig = paginatedData.endpointConfig;
+        this.globalConfig = paginatedData.globalConfig;
 
         this.lastDataSize = paginatedData.lastDataSize;
         this.lastResponse = paginatedData.lastResponse;
-        this.lastEndpointConfig = paginatedData.lastEndpointConfig;
+        this.lastRequestBuilder = paginatedData.lastRequestBuilder;
 
         this.data.addAll(paginatedData.data);
         this.pages.addAll(paginatedData.pages);
     }
 
-    public PaginatedData(TypeReference<P> pageType, Function<P, List<T>> converter, Response response,
-            EndpointConfiguration config, PaginationDataManager... dataManagers) throws IOException {
+    public PaginatedData(EndpointConfiguration config, GlobalConfiguration globalConfig,
+            HttpRequest.Builder requestBuilder, Response response, TypeReference<P> pageType,
+            Function<P, List<T>> converter, PaginationDataManager... dataManagers) throws IOException {
         this.pageType = pageType;
         this.converter = converter;
         this.dataManagers = dataManagers;
+        this.endpointConfig = config;
+        this.globalConfig = globalConfig;
 
-        updateUsing(response, config);
+        updateUsing(response, requestBuilder);
     }
 
-    private void updateUsing(Response response, EndpointConfiguration endpointConfig) throws IOException {
+    private void updateUsing(Response response, HttpRequest.Builder requestBuilder)
+            throws IOException {
         String responseBody = response.getBody();
         P page = CoreHelper.deserialize(responseBody, pageType);
         List<T> newData = converter.apply(page);
 
         this.lastDataSize = newData.size();
         this.lastResponse = response;
-        this.lastEndpointConfig = endpointConfig;
+        this.lastRequestBuilder = requestBuilder;
 
         this.data.addAll(newData);
         this.pages.add(page);
     }
 
     public HttpRequest.Builder getLastRequestBuilder() {
-        return lastEndpointConfig.getRequestBuilder();
+        return lastRequestBuilder;
     }
 
     public String getLastResponseBody() {
@@ -162,11 +171,11 @@ public class PaginatedData<T, P> implements Iterator<T> {
             }
 
             try {
-                PaginatedData<T, P> result = new ApiCall.Builder<PaginatedData<T, P>, CoreApiException>()
-                        .endpointConfiguration(lastEndpointConfig).globalConfig(
-                                lastEndpointConfig.getGlobalConfiguration())
-                        .requestBuilder(
-                                manager.getNextRequestBuilder())
+                PaginatedData<T, P> result =
+                        new ApiCall.Builder<PaginatedData<T, P>, CoreApiException>()
+                        .endpointConfiguration(endpointConfig.toBuilder())
+                        .globalConfig(globalConfig)
+                        .requestBuilder(manager.getNextRequestBuilder())
                         .responseHandler(res -> res
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
                                         ErrorCase.setReason(null,
@@ -174,7 +183,7 @@ public class PaginatedData<T, P> implements Iterator<T> {
                                 .nullify404(false).paginatedDeserializer(pageType, converter, r -> r, dataManagers))
                         .build().execute();
 
-                updateUsing(result.lastResponse, result.lastEndpointConfig);
+                updateUsing(result.lastResponse, result.lastRequestBuilder);
                 return;
             } catch (Exception e) {
                 continue;

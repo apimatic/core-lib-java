@@ -12,7 +12,7 @@ public class EndpointConfigurationTest {
     public void testEndpointConfiguration() {
         EndpointConfiguration configuration =
                 new EndpointConfiguration(false, RetryOption.DEFAULT,
-                        ArraySerializationFormat.INDEXED, null, null);
+                        ArraySerializationFormat.INDEXED);
         assertEquals(configuration.getRetryOption(), RetryOption.DEFAULT);
         assertEquals(configuration.hasBinaryResponse(), false);
     }
