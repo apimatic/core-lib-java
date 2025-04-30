@@ -4,8 +4,8 @@ import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
 
 public class CursorPagination implements PaginationDataManager {
-    private String output;
-    private String input;
+    private final String output;
+    private final String input;
     private Builder nextReqBuilder;
 
     /**

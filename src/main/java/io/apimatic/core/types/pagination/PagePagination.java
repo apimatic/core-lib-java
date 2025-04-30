@@ -3,7 +3,7 @@ package io.apimatic.core.types.pagination;
 import io.apimatic.core.HttpRequest.Builder;
 
 public class PagePagination implements PaginationDataManager {
-    private String input;
+    private final String input;
     private Builder nextReqBuilder;
 
     /**

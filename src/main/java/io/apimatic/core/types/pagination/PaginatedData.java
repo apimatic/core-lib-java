@@ -23,17 +23,17 @@ public class PaginatedData<T, P> implements Iterator<T> {
 
     private int currentIndex = 0;
 
-    private List<T> data = new ArrayList<T>();
-    private List<P> pages = new ArrayList<P>();
+    private final List<T> data = new ArrayList<T>();
+    private final List<P> pages = new ArrayList<P>();
     private int lastDataSize;
     private Response lastResponse;
     private HttpRequest.Builder lastRequestBuilder;
 
-    private TypeReference<P> pageType;
-    private Function<P, List<T>> converter;
-    private PaginationDataManager[] dataManagers;
-    private EndpointConfiguration endpointConfig;
-    private GlobalConfiguration globalConfig;
+    private final TypeReference<P> pageType;
+    private final Function<P, List<T>> converter;
+    private final PaginationDataManager[] dataManagers;
+    private final EndpointConfiguration endpointConfig;
+    private final GlobalConfiguration globalConfig;
 
     /**
      * @param paginatedData Existing instance to be cloned.
@@ -212,15 +212,14 @@ public class PaginatedData<T, P> implements Iterator<T> {
                         .requestBuilder(manager.getNextRequestBuilder())
                         .responseHandler(res -> res
                                 .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
-                                        ErrorCase.setReason(null, (reason, context) ->
-                                        new CoreApiException(reason, context))))
+                                        ErrorCase.setReason(null, CoreApiException::new)))
                                 .nullify404(false)
                                 .paginatedDeserializer(pageType, converter, r -> r, dataManagers))
                         .build().execute();
 
                 updateUsing(result.lastResponse, result.lastRequestBuilder);
                 return;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

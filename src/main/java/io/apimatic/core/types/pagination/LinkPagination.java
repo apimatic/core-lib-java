@@ -4,7 +4,7 @@ import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
 
 public class LinkPagination implements PaginationDataManager {
-    private String next;
+    private final String next;
     private Builder nextReqBuilder;
 
     /**
