@@ -2,23 +2,32 @@ package io.apimatic.core;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.types.pagination.PaginatedData;
+import io.apimatic.core.types.pagination.PaginationDeserializer;
+import io.apimatic.core.types.pagination.PaginationDataManager;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
-import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.ResponseClassType;
-import io.apimatic.coreinterfaces.http.request.configuration.CoreEndpointConfiguration;
 import io.apimatic.coreinterfaces.http.response.Response;
 import io.apimatic.coreinterfaces.type.functional.ContextInitializer;
 import io.apimatic.coreinterfaces.type.functional.Deserializer;
 
 /**
- * Handler that encapsulates the process of generating a response object from a Response.
- * @param <ResponseType> The response to process.
+ * Handler that encapsulates the process of generating a response object from a
+ * Response.
+ *
+ * @param <ResponseType>  The response to process.
  * @param <ExceptionType> in case of a problem.
  */
 public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiException> {
@@ -50,12 +59,13 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     /**
      * An instance of {@link Deserializer}.
      */
-    private final Deserializer<ResponseType> deserializer;
+    private final Deserializer<?> deserializer;
 
     /**
-     * An instance of Intermediate {@link Deserializer}.
+     * A functional interface to wrap in pagination types
+     * {@link PaginationDeserializer}.
      */
-    private final Deserializer<?> intermediateDeserializer;
+    private final PaginationDeserializer paginationDeserializer;
 
     /**
      * An instance of {@link ResponseClassType}.
@@ -78,27 +88,28 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     private final boolean isNullableResponseType;
 
     /**
-     * @param localErrorCases the map of local errors.
-     * @param globalErrorCases the map of global errors.
-     * @param deserializer the deserializer of json response.
+     * @param localErrorCases          the map of local errors.
+     * @param globalErrorCases         the map of global errors.
+     * @param deserializer             the deserializer of json response.
      * @param intermediateDeserializer the api response deserializer.
-     * @param responseClassType the type of response class.
-     * @param contextInitializer the context initializer in response models.
-     * @param isNullify404Enabled on 404 error return null or not?.
-     * @param isNullableResponseType in case of nullable response type.
+     * @param paginationDeserializer   the pagination deserializer.
+     * @param responseClassType        the type of response class.
+     * @param contextInitializer       the context initializer in response models.
+     * @param isNullify404Enabled      on 404 error return null or not?.
+     * @param isNullableResponseType   in case of nullable response type.
      */
     private ResponseHandler(final Map<String, ErrorCase<ExceptionType>> localErrorCases,
             final Map<String, ErrorCase<ExceptionType>> globalErrorCases,
             final Deserializer<ResponseType> deserializer,
             final Deserializer<?> intermediateDeserializer,
+            final PaginationDeserializer paginationDeserializer,
             final ResponseClassType responseClassType,
             final ContextInitializer<ResponseType> contextInitializer,
-            final boolean isNullify404Enabled,
-            final boolean isNullableResponseType) {
+            final boolean isNullify404Enabled, final boolean isNullableResponseType) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
-        this.deserializer = deserializer;
-        this.intermediateDeserializer = intermediateDeserializer;
+        this.deserializer = deserializer == null ? intermediateDeserializer : deserializer;
+        this.paginationDeserializer = paginationDeserializer;
         this.responseClassType = responseClassType;
         this.contextInitializer = contextInitializer;
         this.isNullify404Enabled = isNullify404Enabled;
@@ -106,29 +117,29 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     }
 
     /**
-     * Processes an HttpResponse and returns some value corresponding to that response.
-     * @param httpRequest Request which is made for endpoint.
-     * @param httpResponse Response which is received after execution.
-     * @param globalConfiguration the global configuration to store the request global information.
-     * @param endpointConfiguration the endpoint level configuration.
+     * Processes an HttpResponse and returns some value corresponding to that
+     * response.
+     *
+     * @param context Context which is made for endpoint.
+     * @param config All endPoint level configuration.
+     * @param globalConfig All apiCall level configuration.
+     * @param requestBuilder The requestBuilder that can re create current API Call.
+     *
      * @return An object of type ResponseType.
-     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws IOException   Signals that an I/O exception of some sort has
+     *                       occurred.
      * @throws ExceptionType Represents error response from the server.
      */
-    @SuppressWarnings("unchecked")
-    public ResponseType handle(Request httpRequest, Response httpResponse,
-            GlobalConfiguration globalConfiguration,
-            CoreEndpointConfiguration endpointConfiguration) throws IOException, ExceptionType {
-
-        Context httpContext = globalConfiguration.getCompatibilityFactory()
-                .createHttpContext(httpRequest, httpResponse);
-        // invoke the callback after response if its not null
-        if (globalConfiguration.getHttpCallback() != null) {
-            globalConfiguration.getHttpCallback().onAfterResponse(httpContext);
+    public ResponseType handle(Context context, EndpointConfiguration config,
+            GlobalConfiguration globalConfig, HttpRequest.Builder requestBuilder)
+            throws IOException, ExceptionType {
+        if (globalConfig.getHttpCallback() != null) {
+            // invoke the callback after response if its not null
+            globalConfig.getHttpCallback().onAfterResponse(context);
         }
 
         if (isNullify404Enabled) {
-            int responseCode = httpContext.getResponse().getStatusCode();
+            int responseCode = context.getResponse().getStatusCode();
             // return null on 404
             if (responseCode == NOT_FOUND_STATUS_CODE) {
                 return null;
@@ -136,78 +147,71 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         // handle errors defined at the API level
-        validateResponse(httpContext);
+        validateResponse(context);
 
-        ResponseType result = applyDeserializer(deserializer, httpResponse);
+        Object result = convertResponse(context.getResponse(), requestBuilder, config,
+                globalConfig);
 
-        result = applyContextInitializer(contextInitializer, httpContext, result);
-
-        if (endpointConfiguration.hasBinaryResponse()) {
-            result = (ResponseType) httpResponse.getRawBody();
+        if (responseClassType == ResponseClassType.API_RESPONSE
+                || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
+            return createApiResponse(context.getResponse(), globalConfig.getCompatibilityFactory(),
+                    result);
         }
 
-        if (responseClassType != null) {
-            return createResponseClassType(httpResponse, globalConfiguration,
-                    endpointConfiguration.hasBinaryResponse());
-        }
-
-        return result;
+        return applyContextInitializer(context, result);
     }
 
-
-    private ResponseType applyContextInitializer(
-            ContextInitializer<ResponseType> contextInitializer, Context httpContext,
-            ResponseType result) throws IOException {
+    @SuppressWarnings("unchecked")
+    private ResponseType applyContextInitializer(Context httpContext,
+            Object result) throws IOException {
         if (contextInitializer != null && deserializer != null) {
-            result = contextInitializer.apply(httpContext, result);
+            result = contextInitializer.apply(httpContext, (ResponseType) result);
         }
-        return result;
+        return (ResponseType) result;
     }
 
-    private <T> T applyDeserializer(Deserializer<T> deserializer, Response httpResponse)
-            throws IOException {
-        if (this.isNullableResponseType && CoreHelper.isNullOrWhiteSpace(httpResponse.getBody())) {
+    private Object convertResponse(Response response, HttpRequest.Builder requestBuilder,
+            EndpointConfiguration config, GlobalConfiguration globalConfig) throws IOException {
+        if (responseClassType == ResponseClassType.DYNAMIC_RESPONSE
+                || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
+            return createDynamicResponse(response, globalConfig.getCompatibilityFactory());
+        }
+
+        if (config.hasBinaryResponse()) {
+            return response.getRawBody();
+        }
+
+        if (isNullableResponseType && CoreHelper.isNullOrWhiteSpace(response.getBody())) {
             return null;
         }
 
-        T result = null;
         if (deserializer != null) {
-            // extract result from the http response
-            result = deserializer.apply(httpResponse.getBody());
+            return deserializer.apply(response.getBody());
         }
-        return result;
+
+        if (paginationDeserializer != null) {
+            return paginationDeserializer.apply(config, globalConfig, requestBuilder, response);
+        }
+
+        return null;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> ResponseType createResponseClassType(Response httpResponse,
-            GlobalConfiguration coreConfig, boolean hasBinaryResponse) throws IOException {
-        CompatibilityFactory compatibilityFactory = coreConfig.getCompatibilityFactory();
-        switch (responseClassType) {
-            case API_RESPONSE:
-                return (ResponseType) compatibilityFactory.createApiResponse(
-                        httpResponse.getStatusCode(), httpResponse.getHeaders(),
-                        hasBinaryResponse ? httpResponse.getRawBody()
-                                : applyDeserializer(intermediateDeserializer, httpResponse));
-            case DYNAMIC_RESPONSE:
-                return createDynamicResponse(httpResponse, compatibilityFactory);
-            case DYNAMIC_API_RESPONSE:
-                return (ResponseType) compatibilityFactory.createApiResponse(
-                        httpResponse.getStatusCode(), httpResponse.getHeaders(),
-                        createDynamicResponse(httpResponse, compatibilityFactory));
-            default:
-                return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private ResponseType createDynamicResponse(Response httpResponse,
+    private Object createDynamicResponse(Response httpResponse,
             CompatibilityFactory compatibilityFactory) {
-        return (ResponseType) compatibilityFactory.createDynamicResponse(httpResponse);
+        return compatibilityFactory.createDynamicResponse(httpResponse);
+    }
+
+    @SuppressWarnings("unchecked")
+    private ResponseType createApiResponse(Response httpResponse,
+            CompatibilityFactory compatibilityFactory, Object innerValue) {
+        return (ResponseType) compatibilityFactory.createApiResponse(httpResponse.getStatusCode(),
+                httpResponse.getHeaders(), innerValue);
     }
 
     /**
-     * Validate the response and check that response contains the error code and throw the
-     * corresponding exception
+     * Validate the response and check that response contains the error code and
+     * throw the corresponding exception
+     *
      * @param httpContext
      * @throws ExceptionType
      */
@@ -215,7 +219,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         Response response = httpContext.getResponse();
         int statusCode = response.getStatusCode();
         String errorCode = String.valueOf(statusCode);
-
 
         throwConfiguredException(localErrorCases, errorCode, httpContext);
         throwConfiguredException(globalErrorCases, errorCode, httpContext);
@@ -264,6 +267,12 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         private Deserializer<?> intermediateDeserializer;
 
         /**
+         * A functional interface to wrap in pagination types
+         * {@link PaginationDeserializer}.
+         */
+        private PaginationDeserializer paginationDeserializer;
+
+        /**
          * An instance of {@link ResponseClassType}.
          */
         private ResponseClassType responseClassType;
@@ -279,14 +288,16 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         private boolean isNullify404Enabled = true;
 
         /**
-         * A boolean variable to determine if the provided response type is a nullable type.
+         * A boolean variable to determine if the provided response type is a nullable
+         * type.
          */
         private boolean isNullableResponseType = false;
 
         /**
          * Setter for the localErrorCase.
+         *
          * @param statusCode the response status code from the server.
-         * @param errorCase to generate the SDK Exception.
+         * @param errorCase  to generate the SDK Exception.
          * @return {@link ResponseHandler.Builder}.
          */
         public Builder<ResponseType, ExceptionType> localErrorCase(String statusCode,
@@ -301,6 +312,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
         /**
          * Setter for the globalErrorCases.
+         *
          * @param globalErrorCases the global error cases for endpoints.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -312,6 +324,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
         /**
          * Setter for the deserializer.
+         *
          * @param deserializer to deserialize the server response.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -321,9 +334,9 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
             return this;
         }
 
-
         /**
          * Setter for the deserializer.
+         *
          * @param intermediateDeserializer to deserialize the api response.
          * @param <IntermediateResponseType> the intermediate type of api response.
          * @return {@link ResponseHandler.Builder}.
@@ -336,7 +349,30 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         /**
+         * Setter for the deserializer to be used in pagination wrapper.
+         *
+         * @param pageType TypeReference representing the type.
+         * @param converter Converter to convert Page into the list of InnerType.
+         * @param returnTypeGetter Converter to convert PaginatedData into the return type.
+         * @param dataManagers List of pagination data managers.
+         * @param <Page>      the type of the outer page.
+         * @param <InnerType> the type wrapped by PaginatedIterable.
+         *
+         * @return {@link ResponseHandler.Builder}.
+         */
+        public <InnerType, Page> Builder<ResponseType, ExceptionType> paginatedDeserializer(
+                TypeReference<Page> pageType, Function<Page, List<InnerType>> converter,
+                Function<PaginatedData<InnerType, Page>, ?> returnTypeGetter,
+                PaginationDataManager... dataManagers) {
+            this.paginationDeserializer = (config, globalConfig, reqBuilder, res) ->
+                returnTypeGetter.apply(new PaginatedData<InnerType, Page>(config, globalConfig,
+                        reqBuilder, res, pageType, converter, dataManagers));
+            return this;
+        }
+
+        /**
          * Setter for the responseClassType.
+         *
          * @param responseClassType specify the response class type for result.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -348,6 +384,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
         /**
          * Setter for the {@link ContextInitializer}.
+         *
          * @param contextInitializer the context initializer in response models.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -359,6 +396,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
         /**
          * Setter for the nullify404.
+         *
          * @param isNullify404Enabled in case of 404 error return null or not.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -369,6 +407,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
 
         /**
          * Setter for the isNullableResponseType.
+         *
          * @param isNullableResponseType in case of nullable response type.
          * @return {@link ResponseHandler.Builder}.
          */
@@ -379,13 +418,15 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         /**
-         * build the ResponseHandler.
+         * Build the ResponseHandler.
+         *
          * @return the instance of {@link ResponseHandler}.
          */
         public ResponseHandler<ResponseType, ExceptionType> build() {
             return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
-                    globalErrorCases, deserializer, intermediateDeserializer, responseClassType,
-                    contextInitializer, isNullify404Enabled, isNullableResponseType);
+                    globalErrorCases, deserializer, intermediateDeserializer,
+                    paginationDeserializer, responseClassType, contextInitializer,
+                    isNullify404Enabled, isNullableResponseType);
         }
     }
 }

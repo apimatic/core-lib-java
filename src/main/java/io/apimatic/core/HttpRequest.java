@@ -3,13 +3,17 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+
 import io.apimatic.core.authentication.AuthBuilder;
 import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
@@ -84,10 +88,12 @@ public final class HttpRequest {
         // Creating a basic request to provide it to auth instances
         Request request = buildBasicRequest(httpMethod, requestHeaders);
 
-        applyAuthentication(request, authentication);
-        // include auth query parameters in request query params to have them in the query url
-        if (request.getQueryParameters() != null) {
-            queryParams.putAll(request.getQueryParameters());
+        if (request != null) {
+            applyAuthentication(request, authentication);
+            // include auth query parameters in request query params to have them in the query url
+            if (request.getQueryParameters() != null) {
+                queryParams.putAll(request.getQueryParameters());
+            }
         }
 
         queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
@@ -284,7 +290,7 @@ public final class HttpRequest {
         /**
          * A map of header parameters.
          */
-        private Map<String, List<String>> headerParams = new HashMap<>();
+        private Map<String, List<Object>> headerParams = new HashMap<>();
 
         /**
          * A set of {@link Parameter}.
@@ -321,6 +327,78 @@ public final class HttpRequest {
          * An instance of {@link Parameter.Builder}.
          */
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
+
+        /**
+         * Update the request parameters using a setter.
+         *
+         * @param pointer A JSON pointer pointing to any request field.
+         * @param setter A function that takes in an old value and returns a new value.
+         * @return The updated instance of current request builder.
+         */
+        public Builder updateByReference(String pointer, UnaryOperator<Object> setter) {
+            if (pointer == null) {
+                return this;
+            }
+
+            String[] pointerParts = pointer.split("#");
+            String prefix = pointerParts[0];
+            String point = pointerParts.length > 1 ? pointerParts[1] : "";
+
+            switch (prefix) {
+            case "$request.path":
+                updateTemplateParams(setter, point);
+                return this;
+            case "$request.query":
+                queryParams = CoreHelper.updateValueByPointer(queryParams, point, setter);
+                return this;
+            case "$request.headers":
+                updateHeaderParams(setter, point);
+                return this;
+            default:
+                return this;
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private void updateHeaderParams(UnaryOperator<Object> setter, String point) {
+            Map<String, Object> simplifiedHeaders = new HashMap<>();
+            for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                if (entry.getValue().size() == 1) {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue().get(0));
+                } else {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            simplifiedHeaders = CoreHelper.updateValueByPointer(simplifiedHeaders, point, setter);
+
+            for (Map.Entry<String, Object> entry : simplifiedHeaders.entrySet()) {
+                if (entry.getValue() instanceof List<?>) {
+                    headerParams.put(entry.getKey(), (List<Object>) entry.getValue());
+                } else {
+                    headerParams.put(entry.getKey(), Arrays.asList(entry.getValue()));
+                }
+            }
+        }
+
+        private void updateTemplateParams(UnaryOperator<Object> setter, String point) {
+            Map<String, Object> simplifiedPath = new HashMap<>();
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry
+                    : templateParams.entrySet()) {
+                simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
+            }
+
+            simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
+
+            for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
+                // Preserve the original boolean if it exists, otherwise set default (e.g., false)
+                Boolean originalFlag = templateParams.containsKey(entry.getKey())
+                    ? templateParams.get(entry.getKey()).getValue()
+                    : false;
+                templateParams.put(entry.getKey(),
+                        new SimpleEntry<>(entry.getValue(), originalFlag));
+            }
+        }
 
         /**
          * Base uri server address.
@@ -372,7 +450,6 @@ public final class HttpRequest {
             return this;
         }
 
-
         /**
          * To configure the query paramater.
          * @param action the query parameter {@link Consumer}.
@@ -414,30 +491,15 @@ public final class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value = getSerializedHeaderValue(httpHeaderParameter.getValue());
 
             if (headerParams.containsKey(key)) {
-                headerParams.get(key).add(value);
+                headerParams.get(key).add(httpHeaderParameter.getValue());
             } else {
-                List<String> headerValues = new ArrayList<String>();
-                headerValues.add(value);
+                List<Object> headerValues = new ArrayList<Object>();
+                headerValues.add(httpHeaderParameter.getValue());
                 headerParams.put(key, headerValues);
             }
             return this;
-        }
-
-        private static String getSerializedHeaderValue(Object obj) {
-            if (obj == null) {
-                return null;
-            }
-
-            if (CoreHelper.isTypeCombinatorStringCase(obj)
-                    || CoreHelper.isTypeCombinatorDateTimeCase(obj)
-                    || obj instanceof String) {
-                return obj.toString();
-            }
-
-            return CoreHelper.trySerialize(obj);
         }
 
         /**
@@ -505,6 +567,38 @@ public final class HttpRequest {
             return this;
         }
 
+        private Map<String, List<String>> getHeaderParams() {
+            Map<String, List<String>> converted = new HashMap<>();
+
+            for (Map.Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                String key = entry.getKey();
+                List<Object> originalList = entry.getValue();
+
+                List<String> serializedList = new ArrayList<>();
+                for (Object obj : originalList) {
+                    serializedList.add(getSerializedHeaderValue(obj));
+                }
+
+                converted.put(key, serializedList);
+            }
+
+            return converted;
+        }
+
+        private static String getSerializedHeaderValue(Object obj) {
+            if (obj == null) {
+                return null;
+            }
+
+            if (CoreHelper.isTypeCombinatorStringCase(obj)
+                    || CoreHelper.isTypeCombinatorDateTimeCase(obj)
+                    || obj instanceof String) {
+                return obj.toString();
+            }
+
+            return CoreHelper.trySerialize(obj);
+        }
+
         /**
          * Initialise the CoreHttpRequest.
          * @param coreConfig the configuration for the Http request.
@@ -515,8 +609,9 @@ public final class HttpRequest {
             Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
-                            queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat);
+                            queryParams, templateParams, getHeaderParams(), formParams,
+                            formParamaters, body, bodySerializer, bodyParameters,
+                            arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {

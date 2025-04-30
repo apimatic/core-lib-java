@@ -60,6 +60,18 @@ public class EndpointConfiguration implements CoreEndpointConfiguration {
         return arraySerializationFormat;
     }
 
+    /**
+     * Creates a builder initialized with the values from this instance.
+     *
+     * @return a new {@link Builder} pre-populated with this configuration's values.
+     */
+    public Builder toBuilder() {
+        return new Builder()
+                .hasBinaryResponse(this.hasBinaryResponse)
+                .retryOption(this.retryOption)
+                .arraySerializationFormat(this.arraySerializationFormat);
+    }
+
     public static class Builder {
         /**
          * A boolean variable for binary response.
