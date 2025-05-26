@@ -136,4 +136,18 @@ public class AuthBuilder {
 
         return auths;
     }
+
+    public AuthBuilder copy() {
+        AuthBuilder copy = new AuthBuilder();
+        copy.authKeys = new ArrayList<>(this.authKeys);
+        for (Map.Entry<String, List<AuthBuilder>> entry : this.authBuilders.entrySet()) {
+            List<AuthBuilder> copiedList = new ArrayList<>();
+            for (AuthBuilder builder : entry.getValue()) {
+                copiedList.add(builder.copy());
+            }
+            copy.authBuilders.put(entry.getKey(), copiedList);
+        }
+        
+        return copy;
+    }
 }

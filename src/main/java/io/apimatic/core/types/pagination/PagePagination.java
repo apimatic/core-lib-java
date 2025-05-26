@@ -1,10 +1,11 @@
 package io.apimatic.core.types.pagination;
 
 import io.apimatic.core.HttpRequest.Builder;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-public class PagePagination implements PaginationDataManager {
+public class PagePagination implements PaginationStrategy {
     private final String input;
-    private Builder nextReqBuilder;
+    private int currentRequestPageNumber = -1;
 
     /**
      * @param input JsonPointer of a field in request, representing page.
@@ -14,25 +15,32 @@ public class PagePagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
-
-        if (input == null) {
-            return false;
-        }
-
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
         final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
-            int newValue = Integer.parseInt("" + old) + 1;
+
+        reqBuilder.updateByReference(input, old -> {
+            int oldValue = Integer.parseInt("" + old);
+
+            if (response == null) {
+                currentRequestPageNumber = oldValue;
+                isUpdated[0] = true;
+                return old;
+            }
+
+            int newValue = oldValue + 1;
+            currentRequestPageNumber = newValue;
             isUpdated[0] = true;
             return newValue;
         });
 
-        return isUpdated[0];
+        return isUpdated[0] ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?, ?> page) {
+        page.setPageInput(currentRequestPageNumber);
+        currentRequestPageNumber = -1;
     }
 }

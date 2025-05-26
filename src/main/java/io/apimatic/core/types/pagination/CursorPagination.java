@@ -2,11 +2,12 @@ package io.apimatic.core.types.pagination;
 
 import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-public class CursorPagination implements PaginationDataManager {
+public class CursorPagination implements PaginationStrategy {
     private final String output;
     private final String input;
-    private Builder nextReqBuilder;
+    private String currentRequestCursor;
 
     /**
      * @param output JsonPointer of a field received in the response, representing next cursor.
@@ -18,27 +19,36 @@ public class CursorPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
-
-        String cursorValue = CoreHelper.resolveResponsePointer(output,
-                paginatedData.getLastResponseBody(), paginatedData.getLastResponseHeaders());
-
-        if (cursorValue == null) {
-            return false;
-        }
-
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
         final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
+
+        reqBuilder.updateByReference(input, old -> {
+            
+            if (response == null) {
+                currentRequestCursor = (String) old;
+                isUpdated[0] = true;
+                return old;
+            }
+
+            String cursorValue = CoreHelper.resolveResponsePointer(output, response);
+
+            if (cursorValue == null) {
+                return old;
+            }
+
+            currentRequestCursor = cursorValue;
             isUpdated[0] = true;
             return cursorValue;
         });
 
-        return isUpdated[0];
+        return isUpdated[0] ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?, ?> page) {
+        page.setCursorInput(currentRequestCursor);
+        currentRequestCursor = null;
     }
 }

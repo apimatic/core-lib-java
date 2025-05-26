@@ -38,7 +38,7 @@ import io.apimatic.core.types.pagination.LinkPagination;
 import io.apimatic.core.types.pagination.OffsetPagination;
 import io.apimatic.core.types.pagination.PagePagination;
 import io.apimatic.core.types.pagination.PaginatedData;
-import io.apimatic.core.types.pagination.PaginationDataManager;
+import io.apimatic.core.types.pagination.PaginationStrategy;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.Callback;
 import io.apimatic.coreinterfaces.http.Context;
@@ -520,7 +520,7 @@ public class EndToEndTest extends MockCoreConfig {
     }
 
     private ApiCall<PaginatedData<String, RecordPage>, CoreApiException> getPaginatedApiCall(
-            PaginationDataManager... pagination) throws IOException {
+            PaginationStrategy... pagination) throws IOException {
         when(response.getBody()).thenReturn("{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\",\"next_link\":\"https://localhost:3000/path?page=2\"}");
         when(response.getHeaders()).thenReturn(getHttpHeaders());

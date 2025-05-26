@@ -1,10 +1,11 @@
 package io.apimatic.core.types.pagination;
 
 import io.apimatic.core.HttpRequest.Builder;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-public class OffsetPagination implements PaginationDataManager {
+public class OffsetPagination implements PaginationStrategy {
     private final String input;
-    private Builder nextReqBuilder;
+    private int currentRequestOffset = -1;
 
     /**
      * @param input JsonPointer of a field in request, representing offset.
@@ -14,25 +15,32 @@ public class OffsetPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
-
-        if (input == null) {
-            return false;
-        }
-
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
         final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
-            int newValue = Integer.parseInt("" + old) + paginatedData.getLastDataSize();
+        
+        reqBuilder.updateByReference(input, old -> {
+            int oldValue = Integer.parseInt("" + old);
+
+            if (response == null) {
+                currentRequestOffset = oldValue;
+                isUpdated[0] = true;
+                return old;
+            }
+
+            int newValue = oldValue + paginatedData.getLastPageSize();
+            currentRequestOffset = newValue;
             isUpdated[0] = true;
             return newValue;
         });
 
-        return isUpdated[0];
+        return isUpdated[0] ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?, ?> page) {
+        page.setOffsetInput(currentRequestOffset);
+        currentRequestOffset = -1;
     }
 }

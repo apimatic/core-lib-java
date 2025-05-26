@@ -1,13 +1,18 @@
 package io.apimatic.core;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.logger.SdkLoggerFactory;
 import io.apimatic.core.request.async.AsyncExecutor;
 import io.apimatic.core.types.CoreApiException;
+import io.apimatic.core.types.pagination.PageWrapper;
+import io.apimatic.core.types.pagination.PaginatedData;
+import io.apimatic.core.types.pagination.PaginationStrategy;
 import io.apimatic.coreinterfaces.http.Context;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -45,6 +50,8 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * An instance of {@link ApiLogger} for logging.
      */
     private final ApiLogger apiLogger;
+    
+    private Response response;
 
 
     /**
@@ -64,6 +71,24 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.endpointConfiguration = endpointConfiguration;
         this.apiLogger = SdkLoggerFactory.getLogger(globalConfig.getLoggingConfiguration());
     }
+    
+    public <T,I,P> T paginate(
+            Function<PaginatedData<I, P, ResponseType, ExceptionType>, T> converter,
+            Function<PageWrapper<I, ResponseType, ExceptionType>, P> responseToPage,
+            Function<ResponseType, List<I>> responseToItems,
+            PaginationStrategy... dataManagers) {
+        return converter.apply(new PaginatedData<I, P, ResponseType, ExceptionType>(
+                this, responseToPage, responseToItems, dataManagers
+        ));
+    }
+    
+    public Response getResponse() {
+        return response;
+    }
+    
+    public HttpRequest.Builder getRequestBuilder() {
+        return requestBuilder.copy();
+    }
 
     /**
      * Execute the ApiCall and returns the expected response.
@@ -74,7 +99,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
     public ResponseType execute() throws IOException, ExceptionType {
         Request request = requestBuilder.build(globalConfig);
         apiLogger.logRequest(request);
-        Response response = globalConfig.getHttpClient().execute(request, endpointConfiguration);
+        response = globalConfig.getHttpClient().execute(request, endpointConfiguration);
         apiLogger.logResponse(response);
 
         Context context = globalConfig.getCompatibilityFactory()
@@ -92,11 +117,23 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 request -> globalConfig.getHttpClient()
                         .executeAsync(request, endpointConfiguration),
                 (request, response) -> {
+                    this.response = response;
                     Context context = globalConfig.getCompatibilityFactory()
                             .createHttpContext(request, response);
                     return responseHandler.handle(context, endpointConfiguration, globalConfig,
                             requestBuilder);
                 }, apiLogger);
+    }
+    
+    public Builder<ResponseType, ExceptionType> toBuilder() {
+        Builder<ResponseType, ExceptionType> builder = new Builder<ResponseType, ExceptionType>();
+        
+        builder.globalConfig = globalConfig;
+        builder.endpointConfigurationBuilder = endpointConfiguration.toBuilder();
+        builder.responseHandlerBuilder = responseHandler.toBuilder();
+        builder.requestBuilder = requestBuilder.copy();
+        
+        return builder;
     }
 
     /**
@@ -180,21 +217,10 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         }
 
         /**
-         * @param builder endpointConfigurationBuilder {@link EndpointConfiguration.Builder}.
-         * @return {@link ApiCall.Builder}.
-         */
-        public Builder<ResponseType, ExceptionType> endpointConfiguration(
-                EndpointConfiguration.Builder builder) {
-            endpointConfigurationBuilder = builder;
-            return this;
-        }
-
-        /**
          * build the {@link ApiCall}.
          * @return the instance of {@link ApiCall}.
-         * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
-        public ApiCall<ResponseType, ExceptionType> build() throws IOException {
+        public ApiCall<ResponseType, ExceptionType> build() {
             return new ApiCall<ResponseType, ExceptionType>(globalConfig,
                     endpointConfigurationBuilder.build(), requestBuilder,
                     responseHandlerBuilder.build());

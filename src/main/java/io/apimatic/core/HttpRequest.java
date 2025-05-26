@@ -598,6 +598,43 @@ public final class HttpRequest {
 
             return CoreHelper.trySerialize(obj);
         }
+        
+        public String getQueryUrl() {
+            StringBuilder builder = new StringBuilder(path);
+
+            CoreHelper.appendUrlWithQueryParameters(builder, queryParams,
+                    arraySerializationFormat);
+            CoreHelper.appendUrlWithTemplateParameters(builder, templateParams);
+            
+            return builder.toString();
+        }
+
+        public Builder copy() {
+            Builder copy = new Builder();
+            copy.server = this.server;
+            copy.path = this.path;
+            copy.httpMethod = this.httpMethod;
+            copy.authBuilder = this.authBuilder.copy(); // Ensure AuthBuilder has a copy() method.
+            copy.queryParams = new HashMap<>(this.queryParams);
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry : this.templateParams.entrySet()) {
+                copy.templateParams.put(entry.getKey(),
+                    new SimpleEntry<>(entry.getValue().getKey(), entry.getValue().getValue()));
+            }
+            for (Map.Entry<String, List<Object>> entry : this.headerParams.entrySet()) {
+                copy.headerParams.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+            copy.formParams = new HashSet<>(this.formParams);
+            copy.formParamaters = new HashMap<>(this.formParamaters);
+            copy.body = this.body;
+            copy.bodySerializer = this.bodySerializer;
+            if (this.bodyParameters != null) {
+                copy.bodyParameters = new HashMap<>(this.bodyParameters);
+            }
+            copy.arraySerializationFormat = this.arraySerializationFormat;
+            copy.parameterBuilder = new Parameter.Builder();
+
+            return copy;
+        }
 
         /**
          * Initialise the CoreHttpRequest.
