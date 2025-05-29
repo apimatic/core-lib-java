@@ -39,7 +39,7 @@ public class PagePagination implements PaginationStrategy {
     }
 
     @Override
-    public void addMetaData(PageWrapper<?, ?, ?> page) {
+    public void addMetaData(PageWrapper<?, ?> page) {
         page.setPageInput(currentRequestPageNumber);
         currentRequestPageNumber = -1;
     }

@@ -72,13 +72,13 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.apiLogger = SdkLoggerFactory.getLogger(globalConfig.getLoggingConfiguration());
     }
     
-    public <T,I,P> T paginate(
+    public <T, I, P> T paginate(
             Function<PaginatedData<I, P, ResponseType, ExceptionType>, T> converter,
-            Function<PageWrapper<I, ResponseType, ExceptionType>, P> responseToPage,
+            Function<PageWrapper<I, ResponseType>, P> responseToPage,
             Function<ResponseType, List<I>> responseToItems,
-            PaginationStrategy... dataManagers) {
+            PaginationStrategy... strategies) {
         return converter.apply(new PaginatedData<I, P, ResponseType, ExceptionType>(
-                this, responseToPage, responseToItems, dataManagers
+                this, responseToPage, responseToItems, strategies
         ));
     }
     

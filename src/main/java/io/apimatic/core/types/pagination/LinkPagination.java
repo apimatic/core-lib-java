@@ -36,7 +36,7 @@ public class LinkPagination implements PaginationStrategy {
     }
 
     @Override
-    public void addMetaData(PageWrapper<?, ?, ?> page) {
+    public void addMetaData(PageWrapper<?, ?> page) {
         page.setNextLinkInput(currentRequestLink);
         currentRequestLink = null;
     }

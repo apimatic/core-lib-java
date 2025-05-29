@@ -10,5 +10,5 @@ public interface PaginationStrategy {
      */
     HttpRequest.Builder apply(PaginatedData<?, ?, ?, ?> paginatedData);
 
-    void addMetaData(PageWrapper<?, ?, ?> page);
+    void addMetaData(PageWrapper<?, ?> page);
 }

@@ -47,7 +47,7 @@ public class CursorPagination implements PaginationStrategy {
     }
 
     @Override
-    public void addMetaData(PageWrapper<?, ?, ?> page) {
+    public void addMetaData(PageWrapper<?, ?> page) {
         page.setCursorInput(currentRequestCursor);
         currentRequestCursor = null;
     }

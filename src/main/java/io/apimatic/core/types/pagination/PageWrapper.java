@@ -3,53 +3,32 @@ package io.apimatic.core.types.pagination;
 import java.io.IOException;
 import java.util.List;
 
-import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
-public class PageWrapper<I, P, E extends CoreApiException> {
-    
-    @SuppressWarnings("unchecked")
-    public static <I, P, E extends CoreApiException> PageWrapper<I, P, E> CreateError(
-            Exception exception) {
-        if (exception instanceof CoreApiException) {
-            return new PageWrapper<I, P, E>((E) exception);
-        }
+import io.apimatic.coreinterfaces.http.response.ApiResponseType;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-        if (exception instanceof IOException) {
-            return new PageWrapper<I, P, E>((IOException) exception);
-        }
+public class PageWrapper<I, P> implements ApiResponseType<P> {
 
-        return null;
+    public static <I, P> PageWrapper<I, P> Create(
+            Response response, P page, List<I> items) {
+        return new PageWrapper<I, P>(response.getStatusCode(), response.getHeaders(), page, items);
     }
-    
+
     private final int statusCode;
     private final HttpHeaders headers;
-    private P result;
+    private P page;
     private List<I> items;
-    private E apiException = null;
-    private IOException ioException = null;
-    
+
     private String nextLinkInput = null;
     private int offsetInput = -1;
     private int pageInput = -1;
     private String cursorInput = null;
 
-    public PageWrapper(int statusCode, HttpHeaders headers, P result, List<I> items) {
+    private PageWrapper(int statusCode, HttpHeaders headers, P page, List<I> items) {
         this.statusCode = statusCode;
         this.headers = headers;
-        this.result = result;
+        this.page = page;
         this.items = items;
-    }
-
-    private PageWrapper(E apiException) {
-        this.statusCode = apiException.getResponseCode();
-        this.headers = apiException.getHttpContext().getResponse().getHeaders();
-        this.apiException = apiException;
-    }
-
-    private PageWrapper(IOException ioException) {
-        this.statusCode = 0;
-        this.headers = null;
-        this.ioException = ioException;
     }
 
     public void setNextLinkInput(String nextLinkInput) {
@@ -118,37 +97,21 @@ public class PageWrapper<I, P, E extends CoreApiException> {
 
     /**
      * Content of the page.
-     * @return List of items on this page.
-     * @throws E
-     * @throws IOException
-     */
-    public List<I> getItems() throws E, IOException {
-        if (ioException != null) {
-            throw ioException;
-        }
-
-        if (apiException != null) {
-            throw apiException;
-        }
-
-        return items;
-    }
-
-    /**
-     * Content of the page.
      * @return Content
      * @throws E
      * @throws IOException
      */
-    public P getResult() throws E, IOException {
-        if (ioException != null) {
-            throw ioException;
-        }
+    public P getResult() {
+        return page;
+    }
 
-        if (apiException != null) {
-            throw apiException;
-        }
-
-        return result;
+    /**
+     * Content of the page.
+     * @return List of items on this page.
+     * @throws E
+     * @throws IOException
+     */
+    public List<I> getItems() {
+        return items;
     }
 }

@@ -29,7 +29,7 @@ public class OffsetPagination implements PaginationStrategy {
                 return old;
             }
 
-            int newValue = oldValue + paginatedData.getLastPageSize();
+            int newValue = oldValue + paginatedData.getPageSize();
             currentRequestOffset = newValue;
             isUpdated[0] = true;
             return newValue;
@@ -39,7 +39,7 @@ public class OffsetPagination implements PaginationStrategy {
     }
 
     @Override
-    public void addMetaData(PageWrapper<?, ?, ?> page) {
+    public void addMetaData(PageWrapper<?, ?> page) {
         page.setOffsetInput(currentRequestOffset);
         currentRequestOffset = -1;
     }
