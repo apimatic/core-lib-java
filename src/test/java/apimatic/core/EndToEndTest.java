@@ -1,6 +1,7 @@
 package apimatic.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -24,8 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import apimatic.core.exceptions.GlobalTestException;
 import apimatic.core.mocks.MockCoreConfig;
 import apimatic.core.type.pagination.RecordPage;
@@ -37,6 +36,7 @@ import io.apimatic.core.types.pagination.CursorPagination;
 import io.apimatic.core.types.pagination.LinkPagination;
 import io.apimatic.core.types.pagination.OffsetPagination;
 import io.apimatic.core.types.pagination.PagePagination;
+import io.apimatic.core.types.pagination.PageWrapper;
 import io.apimatic.core.types.pagination.PaginatedData;
 import io.apimatic.core.types.pagination.PaginationStrategy;
 import io.apimatic.core.utilities.CoreHelper;
@@ -171,72 +171,48 @@ public class EndToEndTest extends MockCoreConfig {
 
     @Test
     public void testLinkPaginationData() throws IOException, CoreApiException {
-        verifyData(getPaginatedApiCall(new LinkPagination("$response.body#/next_link")).execute());
+        verifyData(getPaginatedApiCall(new LinkPagination("$response.body#/next_link")));
     }
 
     @Test
     public void testCursorPaginationData() throws IOException, CoreApiException {
         verifyData(getPaginatedApiCall(new CursorPagination("$response.body#/page_info",
-                "$request.path#/cursor")).execute());
+                "$request.path#/cursor")));
     }
 
     @Test
     public void testOffsetPaginationData() throws IOException, CoreApiException {
-        verifyData(getPaginatedApiCall(new OffsetPagination("$request.headers#/offset")).execute());
+        verifyData(getPaginatedApiCall(new OffsetPagination("$request.headers#/offset")));
     }
 
     @Test
     public void testPagePaginationData() throws IOException, CoreApiException {
-        verifyData(getPaginatedApiCall(new PagePagination("$request.query#/page")).execute());
-        verifyOnlyPages(getPaginatedApiCall(new PagePagination("$request.query#/page")).execute());
+        verifyData(getPaginatedApiCall(new PagePagination("$request.query#/page")));
     }
 
-    private void verifyOnlyPages(PaginatedData<String, RecordPage> paginatedData) {
-        RecordPage expectedPage1 = new RecordPage();
-        expectedPage1.setData(Arrays.asList("apple", "mango", "orange"));
-        expectedPage1.setPageInfo("fruits");
-        expectedPage1.setNextLink("https://localhost:3000/path?page=2");
-
-        RecordPage expectedPage2 = new RecordPage();
-        expectedPage2.setData(Arrays.asList("potato", "carrot", "tomato"));
-        expectedPage2.setPageInfo("vegitables");
-        expectedPage2.setNextLink(null);
-
-        int pageNum = 0;
-        List<RecordPage> expectedPages = Arrays.asList(expectedPage1, expectedPage2);
-        for (RecordPage p : paginatedData.pages()) {
-            assertEquals(expectedPages.get(pageNum).getData(), p.getData());
-            assertEquals(expectedPages.get(pageNum).getPageInfo(), p.getPageInfo());
-            assertEquals(expectedPages.get(pageNum).getNextLink(), p.getNextLink());
-            pageNum++;
-        }
-
-        Iterator<RecordPage> iterator = paginatedData.pages().iterator();
-        Exception exception = assertThrows(NoSuchElementException.class, () -> {
-            while (iterator.hasNext()) {
-                iterator.next();
-            }
-            iterator.next();
-        });
-        assertEquals("No more data available.", exception.getMessage());
-    }
-
-    private void verifyData(PaginatedData<String, RecordPage> paginatedData) {
+    private void verifyData(PaginatedData<String, PageWrapper<String, RecordPage>, RecordPage, CoreApiException> paginatedData) {
         int index = 0;
         List<String> expectedData = Arrays.asList(
                 "apple", "mango", "orange", "potato", "carrot", "tomato");
 
-        Iterator<String> iterator = paginatedData.iterator();
-        while (iterator.hasNext()) {
-            String d = iterator.next();
+        Iterator<String> itemIterator = paginatedData.items(cs -> {
+            try {
+                return cs.get();
+            } catch (CoreApiException | IOException e) {
+                return null;
+            }
+        });
+        while (itemIterator.hasNext()) {
+            String d = itemIterator.next();
+            assertNotNull(d);
             assertEquals(expectedData.get(index), d);
             index++;
         }
 
         Exception exception = assertThrows(NoSuchElementException.class, () -> {
-            iterator.next();
+            itemIterator.next();
         });
-        assertEquals("No more data available.", exception.getMessage());
+        assertEquals("No more items available.", exception.getMessage());
 
         RecordPage expectedPage1 = new RecordPage();
         expectedPage1.setData(Arrays.asList("apple", "mango", "orange"));
@@ -250,10 +226,19 @@ public class EndToEndTest extends MockCoreConfig {
 
         int pageNum = 0;
         List<RecordPage> expectedPages = Arrays.asList(expectedPage1, expectedPage2);
-        for (RecordPage p : paginatedData.pages()) {
-            assertEquals(expectedPages.get(pageNum).getData(), p.getData());
-            assertEquals(expectedPages.get(pageNum).getPageInfo(), p.getPageInfo());
-            assertEquals(expectedPages.get(pageNum).getNextLink(), p.getNextLink());
+        Iterator<PageWrapper<String, RecordPage>> pagesIterator = paginatedData.pages(cs -> {
+            try {
+                return cs.get();
+            } catch (CoreApiException | IOException e) {
+                return null;
+            }
+        });
+        while (pagesIterator.hasNext()) {
+            PageWrapper<String, RecordPage> p = pagesIterator.next();
+            assertNotNull(p);
+            assertEquals(expectedPages.get(pageNum).getData(), p.getResult().getData());
+            assertEquals(expectedPages.get(pageNum).getPageInfo(), p.getResult().getPageInfo());
+            assertEquals(expectedPages.get(pageNum).getNextLink(), p.getResult().getNextLink());
             pageNum++;
         }
     }
@@ -519,22 +504,27 @@ public class EndToEndTest extends MockCoreConfig {
                 .build();
     }
 
-    private ApiCall<PaginatedData<String, RecordPage>, CoreApiException> getPaginatedApiCall(
+    private PaginatedData<String, PageWrapper<String, RecordPage>, RecordPage, CoreApiException> getPaginatedApiCall(
             PaginationStrategy... pagination) throws IOException {
-        when(response.getBody()).thenReturn("{\"data\":[\"apple\",\"mango\",\"orange\"],\""
-                + "page_info\":\"fruits\",\"next_link\":\"https://localhost:3000/path?page=2\"}");
         when(response.getHeaders()).thenReturn(getHttpHeaders());
         Callback pageCallback = new Callback() {
             private int callNumber = 1;
             @Override
             public void onBeforeRequest(Request request) {
-                if (callNumber > 1) {
+                if (callNumber == 1) {
+                    when(response.getBody()).thenReturn(
+                            "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
+                            + "page_info\":\"fruits\","
+                            + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
+                }
+                else if (callNumber == 2) {
                     when(response.getBody()).thenReturn(
                             "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                             + "\"page_info\":\"vegitables\"}");
                 }
-                if (callNumber > 2) {
-                    throw new NoSuchElementException("No more data available.");
+                else if (callNumber == 3) {
+                    when(response.getBody()).thenReturn(
+                            "{\"data\":[]}");
                 }
                 callNumber++;
             }
@@ -543,7 +533,7 @@ public class EndToEndTest extends MockCoreConfig {
                 // TODO Auto-generated method stub
             }
         };
-        return new ApiCall.Builder<PaginatedData<String, RecordPage>, CoreApiException>()
+        return new ApiCall.Builder<RecordPage, CoreApiException>()
                 .globalConfig(getGlobalConfig(pageCallback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/path/{cursor}")
@@ -555,14 +545,14 @@ public class EndToEndTest extends MockCoreConfig {
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
-                        .paginatedDeserializer(new TypeReference<RecordPage>() {},
-                                t -> t.getData(), r -> r, pagination)
+                        .deserializer(res -> CoreHelper.deserialize(res, RecordPage.class))
                         .nullify404(false)
                         .globalErrorCase(Collections.emptyMap()))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
-                .build();
+                .build()
+                .paginate(p -> p, pw -> pw, r -> r.getData(), pagination);
     }
 
     private ApiCall<String, CoreApiException> getApiCallLocalErrorTemplate(String responseString,

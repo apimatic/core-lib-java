@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -93,6 +94,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
 
             @Override
             public T next() {
+                if (paginatedData.itemIndex == paginatedData.items.size()) {
+                    throw new NoSuchElementException("No more items available.");
+                }
+
                 return itemSupplier.apply(paginatedData.items.get(paginatedData.itemIndex++));
             }
         };
@@ -113,7 +118,13 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
 
             @Override
             public T next() {
-                return pageSupplier.apply(paginatedData.page);
+                if (paginatedData.page == null) {
+                    throw new NoSuchElementException("No more pages available.");
+                }
+
+                T page = pageSupplier.apply(paginatedData.page);
+                paginatedData.page = null;
+                return page;
             }
         };
     }

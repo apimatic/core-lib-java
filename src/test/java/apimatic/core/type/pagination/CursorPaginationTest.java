@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import io.apimatic.core.HttpRequest;
+import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.types.pagination.CursorPagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 
@@ -36,20 +37,20 @@ public class CursorPaginationTest {
      */
     @Test
     public void testWithValidCursorReturnsTrue() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
 
-        when(paginatedData.getLastRequestBuilder())
+        when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getResponse().getBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
 
         CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
                 "$request.query#/cursor");
 
-        assertTrue(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
 
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
+        requestBuilder.updateByReference("$request.query#/cursor", v -> {
             assertEquals("xyz123", v);
             return v;
         });

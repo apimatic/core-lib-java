@@ -1,6 +1,5 @@
 package io.apimatic.core.types.pagination;
 
-import java.io.IOException;
 import java.util.List;
 
 import io.apimatic.coreinterfaces.http.HttpHeaders;
@@ -98,8 +97,6 @@ public class PageWrapper<I, P> implements ApiResponseType<P> {
     /**
      * Content of the page.
      * @return Content
-     * @throws E
-     * @throws IOException
      */
     public P getResult() {
         return page;
@@ -108,8 +105,6 @@ public class PageWrapper<I, P> implements ApiResponseType<P> {
     /**
      * Content of the page.
      * @return List of items on this page.
-     * @throws E
-     * @throws IOException
      */
     public List<I> getItems() {
         return items;
