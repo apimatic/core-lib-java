@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -98,12 +99,12 @@ public class LinkPaginationTest {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         Response response = mock(Response.class);
-        Map<String, List<String>> headers = new HashMap<>();
-        headers.put("next", Arrays.asList("https://api.example.com?page=2"));
+        Map<String, String> headers = new HashMap<>();
+        headers.put("next", "https://api.example.com?page=2");
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
-        when(response.getHeaders()).thenReturn((HttpHeaders) headers);
+        when(response.getHeaders()).thenReturn(createHttpHeaders(headers));
 
         // Test the link pagination
         LinkPagination link = new LinkPagination("$response.headers#/next");
@@ -116,6 +117,83 @@ public class LinkPaginationTest {
             return v;
         });
     }
+
+	private HttpHeaders createHttpHeaders(Map<String, String> headers) {
+		return new HttpHeaders() {
+			
+			@Override
+			public List<String> values(String headerName) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String value(String headerName) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public List<String> remove(String headerName) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Set<String> names() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public boolean has(String headerName) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public Map<String, String> asSimpleMap() {
+				// TODO Auto-generated method stub
+				return headers;
+			}
+			
+			@Override
+			public Map<String, List<String>> asMultimap() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void addAllFromMultiMap(Map<String, List<String>> headers) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void addAllFromMap(Map<String, String> headers) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void addAll(HttpHeaders headers) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void add(String headerName, List<String> values) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void add(String headerName, String value) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+	}
 
     
     @Test
