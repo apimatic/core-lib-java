@@ -2,13 +2,11 @@ package apimatic.core.type.pagination;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,6 +17,7 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.types.pagination.PagePagination;
 import io.apimatic.core.types.pagination.PaginatedData;
+import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
  * Unit tests for PagePagination.
@@ -33,44 +32,40 @@ public class PagePaginationTest {
 
     @Test
     public void testWithValidPageHeaderReturnsTrue() {
-        // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
         final int initialPage = 3;
         final int nextPage = 4;
-        
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .headerParam(h -> h.key("page").value(initialPage));
 
-        // Mock behaviors
-        when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
+        when(paginatedData.getRequestBuilder())
+                .thenReturn(new HttpRequest.Builder().headerParam(
+                        h -> h.key("page").value(initialPage)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + initialPage + "}");
 
-        // Test the page pagination
         PagePagination page = new PagePagination("$request.headers#/page");
-        Builder nextRequestBuilder = page.apply(paginatedData);
-        
-        // Verify results
-        assertNotNull(nextRequestBuilder);
-        
-        // Verify page increment
-        AtomicReference<Object> pageValue = new AtomicReference<>();
-        nextRequestBuilder.updateByReference("$request.headers#/page", v -> {
-            pageValue.set(v);
+
+        Builder requestBuilder = page.apply(paginatedData);
+        assertNotNull(requestBuilder);
+
+        requestBuilder.updateByReference("$request.headers#/page", v -> {
+            assertEquals(nextPage, v);
             return v;
         });
-        
-        assertEquals(nextPage, pageValue.get());
     }
-
 
     @Test
     public void testWithValidPageTemplateReturnsTrue() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
         final int initialPage = 3;
         final int nextPage = 4;
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().templateParam(
                         t -> t.key("page").value(initialPage)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + initialPage + "}");
 
         PagePagination page = new PagePagination("$request.path#/page");
 
@@ -83,16 +78,18 @@ public class PagePaginationTest {
         });
     }
 
-
     @Test
     public void testWithValidPageReturnsTrue() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
         final int initialPage = 3;
         final int nextPage = 4;
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(initialPage)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + initialPage + "}");
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -105,16 +102,21 @@ public class PagePaginationTest {
         });
     }
 
-
     @Test
     public void testWithValidPageAsInnerFieldReturnsTrue() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
-
-        Map<String, String> pageValue = new HashMap<>();
-        pageValue.put("val", "1");
+        Response response = mock(Response.class);
 
         when(paginatedData.getRequestBuilder()).thenReturn(
-                new HttpRequest.Builder().queryParam(q -> q.key("page").value(pageValue)));
+                new HttpRequest.Builder().queryParam(q -> q.key("page")
+                        .value(new HashMap<String, String>() {
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("val", "1");
+                    }
+                })));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": {\"val\": 1}}");
 
         PagePagination page = new PagePagination("$request.query#/page/val");
 
@@ -127,16 +129,18 @@ public class PagePaginationTest {
         });
     }
 
-
     @Test
     public void testWithValidStringPageReturnsTrue() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
         final String current = "5";
         final int next = 6;
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(current)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": \"" + current + "\"}");
 
         PagePagination page = new PagePagination("$request.query#/page");
 
@@ -149,62 +153,52 @@ public class PagePaginationTest {
         });
     }
 
-
     @Test
     public void testWithInvalidStringPageReturnsFalse() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value("5a")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": \"5a\"}");
 
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
-        assertNotNull(requestBuilder);
-
-        requestBuilder.updateByReference("$request.query#/page", v -> {
-            assertEquals("5a", v);
-            return v;
-        });
+        assertNull(requestBuilder);
     }
-
 
     @Test
     public void testWithMissingPageReturnsFalse() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{}");
 
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
-        assertNotNull(requestBuilder);
-
-        requestBuilder.updateByReference("$request.query#/page", v -> {
-            fail("Should not be called because page is missing");
-            return v;
-        });
+        assertNull(requestBuilder);
     }
-
 
     @Test
     public void testWithNullPageReturnsFalse() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
         final int current = 5;
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(current)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + current + "}");
 
         PagePagination page = new PagePagination(null);
 
         Builder requestBuilder = page.apply(paginatedData);
-        assertNotNull(requestBuilder);
-
-        requestBuilder.updateByReference("$request.query#/page", v -> {
-            assertEquals(current, v); // No update expected; should return current value
-            return v;
-        });
+        assertNull(requestBuilder);
     }
-
 }
