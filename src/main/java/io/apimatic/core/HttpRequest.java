@@ -66,9 +66,9 @@ public final class HttpRequest {
      * @param queryParams
      * @param templateParams
      * @param headerParams
-     * @param formParams
-     * @param body
+     * @param multipartFormParams
      * @param formParameters
+     * @param body
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
@@ -78,7 +78,7 @@ public final class HttpRequest {
             final String path, final Method httpMethod, final Authentication authentication,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
-            final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
+            final Map<String, List<String>> headerParams, final Set<Parameter> multipartFormParams,
             final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
@@ -100,7 +100,7 @@ public final class HttpRequest {
         processTemplateParams(templateParams);
         Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
-                generateFormFields(formParams, formParameters, arraySerializationFormat);
+                generateFormFields(multipartFormParams, formParameters, arraySerializationFormat);
         coreHttpRequest =
                 buildRequest(httpMethod, bodyValue, requestHeaders, queryParams,
                         formFields, arraySerializationFormat);
@@ -150,31 +150,27 @@ public final class HttpRequest {
     }
 
     /**
-     * @param formParams
-     * @param optionalFormParamaters
+     * @param multipartFormParams
+     * @param formParameters
      * @param arraySerializationFormat
      * @return list of form parameters
      * @throws IOException
      */
     private List<SimpleEntry<String, Object>> generateFormFields(
-            Set<Parameter> formParams, Map<String, Object> optionalFormParamaters,
+            Set<Parameter> multipartFormParams, Map<String, Object> formParameters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
-        if (formParams.isEmpty() && optionalFormParamaters.isEmpty()) {
+        if (multipartFormParams.isEmpty() && formParameters.isEmpty()) {
             return null;
         }
-        Map<String, Object> formParameters = new HashMap<>();
-        for (Parameter formParameter : formParams) {
-            String key = formParameter.getKey();
-            Object value = formParameter.getValue();
-            if (formParameter.getMultiPartRequest() != null) {
-                value = handleMultiPartRequest(formParameter);
-            }
+        Map<String, Object> formParamsMap = new HashMap<>();
 
-            formParameters.put(key, value);
+        for (Parameter formParameter : multipartFormParams) {
+            Object value = handleMultiPartRequest(formParameter);
+            formParamsMap.put(formParameter.getKey(), value);
         }
 
-        formParameters.putAll(optionalFormParamaters);
-        return CoreHelper.prepareFormFields(formParameters, arraySerializationFormat);
+        formParamsMap.putAll(formParameters);
+        return CoreHelper.prepareFormFields(formParamsMap, arraySerializationFormat);
     }
 
     private StringBuilder getStringBuilder(String server, String path,
@@ -295,7 +291,7 @@ public final class HttpRequest {
         /**
          * A set of {@link Parameter}.
          */
-        private Set<Parameter> formParams = new HashSet<>();
+        private Set<Parameter> multipartFormParams = new HashSet<>();
 
         /**
          * A map of form parameters
@@ -354,9 +350,39 @@ public final class HttpRequest {
             case "$request.headers":
                 updateHeaderParams(setter, point);
                 return this;
+            case "$request.body":
+                updateBodyParams(setter, point);
+                return this;
             default:
                 return this;
             }
+        }
+
+        private void updateBodyParams(UnaryOperator<Object> setter, String point) {
+            if (body != null) {
+                if (body instanceof CoreFileWrapper) {
+                    return;
+                }
+
+                if (bodySerializer != null && point == "") {
+                    bodySerializer = () -> setter.apply(bodySerializer.supply()).toString();
+                    return;
+                }
+
+                if ((body instanceof String && point == "") || point == "") {
+                    body = setter.apply(body);
+                    return;
+                }
+
+                body = CoreHelper.updateValueByPointer(body, point, setter);
+            }
+
+            if (bodyParameters != null) {
+                bodyParameters = CoreHelper.updateValueByPointer(bodyParameters, point, setter);
+                return;
+            }
+
+            formParamaters = CoreHelper.updateValueByPointer(formParamaters, point, setter);
         }
 
         @SuppressWarnings("unchecked")
@@ -391,10 +417,8 @@ public final class HttpRequest {
             simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
 
             for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
-                // Preserve the original boolean if it exists, otherwise set default (e.g., false)
-                Boolean originalFlag = templateParams.containsKey(entry.getKey())
-                    ? templateParams.get(entry.getKey()).getValue()
-                    : false;
+                // Preserve the original boolean encoding flag
+                Boolean originalFlag = templateParams.get(entry.getKey()).getValue();
                 templateParams.put(entry.getKey(),
                         new SimpleEntry<>(entry.getValue(), originalFlag));
             }
@@ -512,7 +536,12 @@ public final class HttpRequest {
             action.accept(parameterBuilder);
             Parameter formParameter = parameterBuilder.build();
             formParameter.validate();
-            this.formParams.add(formParameter);
+            if (formParameter.getMultiPartRequest() != null) {
+                this.multipartFormParams.add(formParameter);
+                return this;
+            }
+            this.formParamaters.put(formParameter.getKey(), formParameter.getValue());
+
             return this;
         }
 
@@ -623,7 +652,7 @@ public final class HttpRequest {
             for (Map.Entry<String, List<Object>> entry : this.headerParams.entrySet()) {
                 copy.headerParams.put(entry.getKey(), new ArrayList<>(entry.getValue()));
             }
-            copy.formParams = new HashSet<>(this.formParams);
+            copy.multipartFormParams = new HashSet<>(this.multipartFormParams);
             copy.formParamaters = new HashMap<>(this.formParamaters);
             copy.body = this.body;
             copy.bodySerializer = this.bodySerializer;
@@ -646,7 +675,7 @@ public final class HttpRequest {
             Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
                     new HttpRequest(coreConfig, server, path, httpMethod, authentication,
-                            queryParams, templateParams, getHeaderParams(), formParams,
+                            queryParams, templateParams, getHeaderParams(), multipartFormParams,
                             formParamaters, body, bodySerializer, bodyParameters,
                             arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();

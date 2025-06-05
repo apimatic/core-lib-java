@@ -42,6 +42,10 @@ public class CursorPagination implements PaginationStrategy {
             isUpdated[0] = true;
             return cursorValue;
         });
+        
+        if (!isUpdated[0] && response == null) {
+            return reqBuilder;
+        }
 
         return isUpdated[0] ? reqBuilder : null;
     }

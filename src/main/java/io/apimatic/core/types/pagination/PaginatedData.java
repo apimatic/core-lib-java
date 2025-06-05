@@ -113,6 +113,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         return new Iterator<T>() {
             @Override
             public boolean hasNext() {
+                if (paginatedData.page != null) {
+                    return true;
+                }
+
                 return paginatedData.fetchNextPage();
             }
 
@@ -177,6 +181,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
     }
 
     private boolean updateWith(ApiCall<Res, ExceptionType> apiCall, Res pageUnWrapped, PaginationStrategy strategy) {
+        itemIndex = 0;
+        this.items.clear();
+        this.page = null;
+        
         if (pageUnWrapped == null) {
             return false;
         }
@@ -186,12 +194,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
             return false;
         }
 
-        itemIndex = 0;
         this.apiCall = apiCall;
         PageWrapper<I, Res> pageWrapper = PageWrapper.Create(apiCall.getResponse(), pageUnWrapped, itemsUnWrapped);
         strategy.addMetaData(pageWrapper);
         this.page = CheckedSupplier.Create(pageCreator.apply(pageWrapper));
-        this.items.clear();
         itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.Create(i)));
 
         return true;

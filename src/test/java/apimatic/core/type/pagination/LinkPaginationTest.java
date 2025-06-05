@@ -1,15 +1,11 @@
 package apimatic.core.type.pagination;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +22,6 @@ import io.apimatic.core.types.pagination.LinkPagination;
 import io.apimatic.core.types.pagination.PaginatedData;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.response.Response;
-import okhttp3.Headers;
 
 /**
  * Unit tests for the LinkPagination class.

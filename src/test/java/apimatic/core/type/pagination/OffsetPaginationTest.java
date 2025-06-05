@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +43,7 @@ public class OffsetPaginationTest {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .headerParam(h -> h.key("offset").value(INITIAL_OFFSET));
+                .headerParam(h -> h.key("offset").value(INITIAL_OFFSET));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -53,7 +52,7 @@ public class OffsetPaginationTest {
         // Test the offset pagination
         OffsetPagination offset = new OffsetPagination("$request.headers#/offset");
         Builder nextRequestBuilder = offset.apply(paginatedData);
-        
+
         // Verify results
         assertNotNull(nextRequestBuilder);
         nextRequestBuilder.updateByReference("$request.headers#/offset", v -> {
@@ -67,7 +66,7 @@ public class OffsetPaginationTest {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .templateParam(t -> t.key("offset").value(INITIAL_OFFSET));
+                .templateParam(t -> t.key("offset").value(INITIAL_OFFSET));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -76,7 +75,7 @@ public class OffsetPaginationTest {
         // Test the offset pagination
         OffsetPagination offset = new OffsetPagination("$request.path#/offset");
         Builder nextRequestBuilder = offset.apply(paginatedData);
-        
+
         // Verify results
         assertNotNull(nextRequestBuilder);
         nextRequestBuilder.updateByReference("$request.path#/offset", v -> {
@@ -90,7 +89,7 @@ public class OffsetPaginationTest {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .queryParam(q -> q.key("offset").value(INITIAL_OFFSET));
+                .queryParam(q -> q.key("offset").value(INITIAL_OFFSET));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -99,7 +98,7 @@ public class OffsetPaginationTest {
         // Test the offset pagination
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
         Builder nextRequestBuilder = offset.apply(paginatedData);
-        
+
         // Verify results
         assertNotNull(nextRequestBuilder);
         nextRequestBuilder.updateByReference("$request.query#/offset", v -> {
@@ -112,12 +111,15 @@ public class OffsetPaginationTest {
     public void testValidOffsetAsInnerFieldReturnsTrue() {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
-        Map<String, String> offsetMap = new HashMap<String, String>() {{
-            put("val", "1");
-        }};
-        
+        Map<String, String> offsetMap = new HashMap<String, String>() {
+            private static final long serialVersionUID = 1L;
+            {
+                put("val", "1");
+            }
+        };
+
         HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .queryParam(q -> q.key("offset").value(offsetMap));
+                .queryParam(q -> q.key("offset").value(offsetMap));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -126,7 +128,7 @@ public class OffsetPaginationTest {
         // Test the offset pagination with nested field
         OffsetPagination offset = new OffsetPagination("$request.query#/offset/val");
         Builder nextRequestBuilder = offset.apply(paginatedData);
-        
+
         // Verify results
         assertNotNull(nextRequestBuilder);
         nextRequestBuilder.updateByReference("$request.query#/offset/val", v -> {
@@ -139,8 +141,7 @@ public class OffsetPaginationTest {
     public void testValidStringOffsetReturnsTrue() {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .queryParam(q -> q.key("offset").value("5"));
+        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5"));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -149,7 +150,7 @@ public class OffsetPaginationTest {
         // Test the offset pagination with string value
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
         Builder nextRequestBuilder = offset.apply(paginatedData);
-        
+
         // Verify results
         assertNotNull(nextRequestBuilder);
         nextRequestBuilder.updateByReference("$request.query#/offset", v -> {
@@ -157,12 +158,12 @@ public class OffsetPaginationTest {
             return v;
         });
     }
+
     @Test
     public void testInvalidStringOffsetReturnsFalse() {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .queryParam(q -> q.key("offset").value("5a"));
+        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().queryParam(q -> q.key("offset").value("5a"));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -170,13 +171,13 @@ public class OffsetPaginationTest {
 
         // Test the offset pagination with invalid string value
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
-        
+
         // Verify the offset remains unchanged for invalid values
         Builder nextRequestBuilder = offset.apply(paginatedData);
         assertNotNull(nextRequestBuilder);
-        
+
         nextRequestBuilder.updateByReference("$request.query#/offset", v -> {
-            assertEquals("5a", v);  // Value should remain unchanged
+            assertEquals("5a", v); // Value should remain unchanged
             return v;
         });
     }
@@ -193,18 +194,18 @@ public class OffsetPaginationTest {
 
         // Test the offset pagination with missing offset
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
-        
+
         // Execute and verify
         Builder nextRequestBuilder = offset.apply(paginatedData);
         assertNotNull("Builder should still be returned even with missing offset", nextRequestBuilder);
-        
+
         // Verify no update is attempted for missing offset
         AtomicBoolean callbackInvoked = new AtomicBoolean(false);
         nextRequestBuilder.updateByReference("$request.query#/offset", v -> {
             callbackInvoked.set(true);
             return v;
         });
-        
+
         assertFalse("Callback should not be invoked for missing offset", callbackInvoked.get());
     }
 
@@ -213,7 +214,7 @@ public class OffsetPaginationTest {
         // Setup mocks
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         HttpRequest.Builder requestBuilder = new HttpRequest.Builder()
-            .queryParam(q -> q.key("offset").value(NUMERIC_OFFSET));
+                .queryParam(q -> q.key("offset").value(NUMERIC_OFFSET));
 
         // Mock behaviors
         when(paginatedData.getRequestBuilder()).thenReturn(requestBuilder);
@@ -221,11 +222,11 @@ public class OffsetPaginationTest {
 
         // Test with null offset configuration
         OffsetPagination offset = new OffsetPagination(null);
-        
+
         // Execute and verify
         Builder nextRequestBuilder = offset.apply(paginatedData);
         assertNotNull("Builder should still be returned even with null offset config", nextRequestBuilder);
-        
+
         // Verify original offset remains unchanged
         AtomicBoolean callbackInvoked = new AtomicBoolean(false);
         nextRequestBuilder.updateByReference("$request.query#/offset", v -> {
@@ -233,7 +234,7 @@ public class OffsetPaginationTest {
             assertEquals("Original offset should remain unchanged", NUMERIC_OFFSET, v);
             return v;
         });
-        
+
         assertTrue("Should still process existing offset values", callbackInvoked.get());
     }
 }

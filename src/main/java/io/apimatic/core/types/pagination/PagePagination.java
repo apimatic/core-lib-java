@@ -34,6 +34,10 @@ public class PagePagination implements PaginationStrategy {
             isUpdated[0] = true;
             return newValue;
         });
+        
+        if (!isUpdated[0] && response == null) {
+            return reqBuilder;
+        }
 
         return isUpdated[0] ? reqBuilder : null;
     }
