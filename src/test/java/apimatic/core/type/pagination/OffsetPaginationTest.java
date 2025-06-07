@@ -2,7 +2,6 @@ package apimatic.core.type.pagination;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -169,7 +168,12 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
         Builder requestBuilder = offset.apply(paginatedData);
-        assertNull(requestBuilder);
+        assertNotNull(requestBuilder);
+
+        requestBuilder.updateByReference("$request.query#/offset", v -> {
+            assertEquals("5a", v);
+            return v;
+        });
     }
 
     @Test
@@ -182,7 +186,7 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.query#/offset");
 
         Builder requestBuilder = offset.apply(paginatedData);
-        assertNull(requestBuilder);
+        assertNotNull(requestBuilder);
     }
 
     @Test
@@ -197,6 +201,11 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination(null);
 
         Builder requestBuilder = offset.apply(paginatedData);
-        assertNull(requestBuilder);
+        assertNotNull(requestBuilder);
+
+        requestBuilder.updateByReference("$request.query#/offset", v -> {
+            assertEquals(NUMERIC_OFFSET, v);
+            return v;
+        });
     }
 }
