@@ -59,9 +59,7 @@ public class PaginatedDataTest extends EndToEndTest {
     @Test
     public void testInvalidPaginationWithFailingResponseAsync()
             throws IOException, InterruptedException, ExecutionException {
-        Runnable call1 = () -> {
-            when(response.getStatusCode()).thenReturn(404);
-        };
+        Runnable call1 = () -> when(response.getStatusCode()).thenReturn(404);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
                 new LinkPagination("$response.body#/next_link"));
