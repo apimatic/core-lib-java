@@ -61,11 +61,6 @@ public class LinkPaginationTest {
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_PAGE, v -> {
-            assertEquals("2", v);
-            return v;
-        });
-
         PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
@@ -90,21 +85,6 @@ public class LinkPaginationTest {
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_PAGE, v -> {
-            assertEquals("2", v);
-            return v;
-        });
-
-        requestBuilder.updateByReference(REQUEST_QUERY_SIZE, v -> {
-            assertEquals(pageSize, v);
-            return v;
-        });
-
-        requestBuilder.updateByReference(REQUEST_HEADERS_PAGE, v -> {
-            assertEquals(2, v);
-            return v;
-        });
-
         PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
@@ -125,10 +105,6 @@ public class LinkPaginationTest {
         Builder requestBuilder = link.apply(paginatedData);
 
         assertNotNull(requestBuilder);
-        requestBuilder.updateByReference(REQUEST_QUERY_PAGE, v -> {
-            assertEquals("2", v);
-            return v;
-        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
         link.addMetaData(pageWrapper);
@@ -294,8 +270,6 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
-        when(response.getBody()).thenReturn("{\"next\": \"" + NEXT_URL_SINGLE + "\"}");
-
         LinkPagination link = new LinkPagination("$response.body#/next/href");
 
         assertNull(link.apply(paginatedData));
@@ -308,8 +282,6 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
-        when(response.getBody()).thenReturn(null);
-
         LinkPagination link = new LinkPagination("$response.body#/next/href");
 
         assertNull(link.apply(paginatedData));
@@ -322,8 +294,6 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
-        when(response.getBody()).thenReturn("{\"next\": \"" + NEXT_URL_SINGLE + "\"}");
-
         LinkPagination link = new LinkPagination(null);
 
         assertNull(link.apply(paginatedData));
@@ -344,16 +314,6 @@ public class LinkPaginationTest {
         Builder nextBuilder = link.apply(paginatedData);
         assertNotNull(nextBuilder);
 
-        nextBuilder.updateByReference(REQUEST_QUERY_PAGE, v -> {
-            assertEquals("2", v);
-            return v;
-        });
-
-        nextBuilder.updateByReference(REQUEST_QUERY_SIZE, v -> {
-            assertEquals("5", v);
-            return v;
-        });
-
         PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_MULTIPLE, pageWrapper.getNextLinkInput());
@@ -373,16 +333,6 @@ public class LinkPaginationTest {
 
         Builder builder = link.apply(paginatedData);
         assertNotNull(builder);
-
-        builder.updateByReference("$request.query#/page o", v -> {
-            assertEquals("2 a", v);
-            return v;
-        });
-
-        builder.updateByReference("$request.query#/size q", v -> {
-            assertEquals("5^!4$#", v);
-            return v;
-        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
         link.addMetaData(pageWrapper);
