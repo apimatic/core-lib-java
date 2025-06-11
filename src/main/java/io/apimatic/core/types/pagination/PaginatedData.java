@@ -23,6 +23,8 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
     private int itemIndex = 0;
     private final List<CheckedSupplier<I, ExceptionType>> items = new ArrayList<>();
     private CheckedSupplier<P, ExceptionType> page = null;
+    private PaginationStrategy lockedStrategy;
+    private boolean canLockStrategy = false;
     private ApiCall<Res, ExceptionType> apiCall;
     private boolean dataClosed = false;
 
@@ -140,7 +142,7 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
             return CompletableFuture.completedFuture(false);
         }
 
-        for (PaginationStrategy strategy : strategies) {
+        for (PaginationStrategy strategy : getStrategies()) {
             HttpRequest.Builder requestBuilder = strategy.apply(this);
             if (requestBuilder == null) continue;
 
@@ -161,7 +163,7 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
             return false;
         }
 
-        for (PaginationStrategy strategy : strategies) {
+        for (PaginationStrategy strategy : getStrategies()) {
 
             HttpRequest.Builder requestBuilder = strategy.apply(this);
             if (requestBuilder == null) {
@@ -180,6 +182,14 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         }
 
         return false;
+    }
+
+    private PaginationStrategy[] getStrategies() {
+        if (lockedStrategy == null) {
+            return strategies;
+        }
+
+        return new PaginationStrategy[] { lockedStrategy };
     }
 
     private boolean updateWith(ApiCall<Res, ExceptionType> apiCall, Res pageUnWrapped, PaginationStrategy strategy) {
@@ -201,6 +211,12 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         strategy.addMetaData(pageWrapper);
         this.page = CheckedSupplier.Create(pageCreator.apply(pageWrapper));
         itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.Create(i)));
+
+        if (canLockStrategy) {
+            lockedStrategy = strategy;
+        } else {
+            canLockStrategy = true;
+        }
 
         return true;
     }
