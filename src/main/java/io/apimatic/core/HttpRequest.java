@@ -365,7 +365,13 @@ public final class HttpRequest {
                 }
 
                 if (bodySerializer != null && point == "") {
-                    bodySerializer = () -> setter.apply(bodySerializer.supply()).toString();
+                	try {
+                        String serializedBody = bodySerializer.supply();
+                        String newSerializedBody = setter.apply(serializedBody).toString();
+                        bodySerializer = () -> newSerializedBody;
+                    } catch (IOException e) {
+                        // Empty block
+                    }
                     return;
                 }
 

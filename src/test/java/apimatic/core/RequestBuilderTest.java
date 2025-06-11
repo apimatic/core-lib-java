@@ -155,6 +155,21 @@ public class RequestBuilderTest extends MockCoreConfig {
         // verify
         assertEquals(coreHttpRequest.getBody(), "bodyValue");
     }
+    
+    @Test
+    public void testCloneBodyParam() throws IOException {
+        // when
+        Request coreHttpRequest =
+                new HttpRequest.Builder().httpMethod(Method.PATCH)
+                        .bodyParam(param -> param.key("body").value("bodyValue")).copy()
+                        .build(getMockGlobalConfig());
+
+        when(coreHttpRequest.getBody()).thenReturn("bodyValue");
+
+        // verify
+        assertEquals(coreHttpRequest.getBody(), "bodyValue");
+    }
+
 
     @Test
     public void testBodyParamKey1() throws IOException {
