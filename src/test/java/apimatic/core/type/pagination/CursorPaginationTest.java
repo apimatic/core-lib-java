@@ -59,7 +59,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_POINTER, v -> {
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("xyz123", v);
             return v;
         });
@@ -87,7 +87,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_POINTER, v -> {
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });
@@ -116,7 +116,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_POINTER, v -> {
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });
@@ -162,7 +162,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference(REQUEST_QUERY_POINTER, v -> {
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });

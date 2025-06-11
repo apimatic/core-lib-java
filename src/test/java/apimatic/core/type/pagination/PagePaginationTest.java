@@ -56,7 +56,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.headers#/page", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.headers#/page", v -> {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
@@ -81,7 +81,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.path#/page", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.path#/page", v -> {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
@@ -106,7 +106,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/page", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
@@ -136,7 +136,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/page/val", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page/val", v -> {
             assertEquals(INNER_FIELD_NEXT_PAGE, v);
             return v;
         });
@@ -162,7 +162,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/page", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
             assertEquals(NEXT_PAGE_FROM_STRING, v);
             return v;
         });

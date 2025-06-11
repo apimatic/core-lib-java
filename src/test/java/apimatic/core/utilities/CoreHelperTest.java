@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import apimatic.core.constants.DateTimeConstants;
 import apimatic.core.mocks.TestDateTimeHelper;
+import apimatic.core.models.Atom;
 import apimatic.core.models.AtomCase;
 import apimatic.core.models.AttributesAndElements;
 import apimatic.core.models.CarCase;
@@ -1827,6 +1828,42 @@ public class CoreHelperTest {
 
         // Assert
         assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testUpdateValueByPointerWithInvalidInput() {
+        String actualValue = "a214";
+
+        String result = CoreHelper.updateValueByPointer(actualValue, "", v -> "n214");
+        assertEquals(actualValue, result); // empty pointer
+
+        result = CoreHelper.updateValueByPointer(actualValue, null, v -> "n214");
+        assertEquals(actualValue, result); // null pointer
+
+        result = CoreHelper.updateValueByPointer(actualValue, "/alpha/beta", null);
+        assertEquals(actualValue, result); // null updater
+
+        result = CoreHelper.updateValueByPointer(null, "/alpha/beta", v -> "n214");
+        assertEquals(null, result); // null input
+
+        result = CoreHelper.updateValueByPointer(actualValue, "/alpha/beta", v -> "n214");
+        assertEquals(actualValue, result); // invalid JSON
+    }
+
+    @Test
+    public void testUpdateValueByPointerInvalidCases() {
+        Map<String, Atom> atoms = new HashMap<>();
+        atoms.put("atom", new Atom(14, 26));
+        atoms.put("nucleas", new Atom(14, null));
+
+        Map<String, Atom> result = CoreHelper.updateValueByPointer(atoms, "/atom/NumberOfProtons", v -> null);
+        assertEquals(atoms, result); // update by null not allowed
+        
+        result = CoreHelper.updateValueByPointer(atoms, "/nucleas/NumberOfProtons", v -> 26);
+        assertEquals(atoms, result); // updating null values not allowed
+
+        result = CoreHelper.updateValueByPointer(atoms, "/atom", v -> new Atom(23, 23));
+        assertEquals(atoms, result); // update full object not allowed
     }
 
     private Map<String, ComplexType> getComplexType() throws IOException {

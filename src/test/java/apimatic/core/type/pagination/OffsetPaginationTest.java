@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +62,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.headers#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.headers#/offset", v -> {
             assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
@@ -76,27 +75,14 @@ public class OffsetPaginationTest {
     public void testBodyWithTypeCoreFileWrapper() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         Response response = mock(Response.class);
-        // Initial body to be serialized
-        CoreFileWrapper initialBody = new CoreFileWrapper(){
-
-			@Override
-			public File getFile() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getContentType() {
-				// TODO Auto-generated method stub
-				return null;
-			}};
-        // Build request with bodySerializer instead of bodyParam
+        CoreFileWrapper initialBody = mock(CoreFileWrapper.class);
         HttpRequest.Builder builder = new HttpRequest.Builder()
             .bodyParam(b -> b.value(initialBody));
+
         when(paginatedData.getRequestBuilder()).thenReturn(builder);
         when(paginatedData.getResponse()).thenReturn(response);
         when(paginatedData.getPageSize()).thenReturn(PAGE_SIZE);
-        // OffsetPagination that will hit the bodySerializer branch (point == "")
+
         OffsetPagination offset = new OffsetPagination("$request.body");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNull(requestBuilder);
@@ -263,7 +249,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.path#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.path#/offset", v -> {
             assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
@@ -288,7 +274,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/offset", v -> {
             assertEquals(OFFSET_PLUS_PAGE, v);
             return v;
         });
@@ -318,7 +304,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/offset/val", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/offset/val", v -> {
             assertEquals(OFFSET_VAL_PLUS_ONE, v);
             return v;
         });
@@ -343,7 +329,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/offset", v -> {
             assertEquals(OFFSET_STRING_PLUS_PAGE, v);
             return v;
         });
@@ -367,7 +353,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/offset", v -> {
             assertEquals(INVALID_OFFSET_STRING, v);
             return v;
         });
@@ -407,7 +393,7 @@ public class OffsetPaginationTest {
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        requestBuilder.updateByReference("$request.query#/offset", v -> {
+        requestBuilder.updateParameterByJsonPointer("$request.query#/offset", v -> {
             assertEquals(NUMERIC_OFFSET, v);
             return v;
         });

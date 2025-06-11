@@ -258,7 +258,7 @@ public class PaginatedDataTest extends EndToEndTest {
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
-                new LinkPagination("$response.body#/INVALID"),
+                new LinkPagination("$response.INVALID#/next_link"),
                 // invalid next link pointer so 2nd call will be made using page pagination
                 new PagePagination("$request.body#/limit")));
     }

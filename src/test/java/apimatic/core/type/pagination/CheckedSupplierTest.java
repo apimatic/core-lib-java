@@ -14,20 +14,22 @@ public class CheckedSupplierTest {
     public void testCreateErrorWithIOException() throws Exception {
         IOException ioException = new IOException("Test IO Exception");
         CheckedSupplier<String, CoreApiException> supplier = CheckedSupplier.CreateError(ioException);
-        supplier.get(); // Should throw IOException
+        @SuppressWarnings("unused")
+        String value = supplier.get();
     }
 
     @Test(expected = CoreApiException.class)
     public void testCreateErrorWithCoreApiException() throws Exception {
         CoreApiException apiException = new CoreApiException("Test API Exception");
         CheckedSupplier<String, CoreApiException> supplier = CheckedSupplier.CreateError(apiException);
-        supplier.get(); // Should throw CoreApiException
+        @SuppressWarnings("unused")
+        String value = supplier.get();
     }
 
     @Test
     public void testCreateErrorWithUnsupportedException() {
         RuntimeException runtimeException = new RuntimeException("Test Exception");
         CheckedSupplier<String, CoreApiException> supplier = CheckedSupplier.CreateError(runtimeException);
-        assertNull(supplier); // Should return null
+        assertNull(supplier);
     }
 }
