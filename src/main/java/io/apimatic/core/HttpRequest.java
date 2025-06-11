@@ -325,13 +325,13 @@ public final class HttpRequest {
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
         /**
-         * Update the request parameters using a setter.
+         * Update the request parameters using a setter thats called via a JSON pointer.
          *
          * @param pointer A JSON pointer pointing to any request field.
          * @param setter A function that takes in an old value and returns a new value.
          * @return The updated instance of current request builder.
          */
-        public Builder updateByReference(String pointer, UnaryOperator<Object> setter) {
+        public Builder updateParameterByJsonPointer(String pointer, UnaryOperator<Object> setter) {
             if (pointer == null) {
                 return this;
             }
@@ -369,7 +369,7 @@ public final class HttpRequest {
                         String serializedBody = bodySerializer.supply();
                         String newSerializedBody = setter.apply(serializedBody).toString();
                         bodySerializer = () -> newSerializedBody;
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         // Empty block
                     }
                     return;

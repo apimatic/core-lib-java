@@ -3,28 +3,21 @@ package apimatic.core.type.pagination;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.HttpRequest;
 import io.apimatic.core.HttpRequest.Builder;
-import io.apimatic.core.types.OptionalNullable.Serializer;
 import io.apimatic.core.types.pagination.OffsetPagination;
 import io.apimatic.core.types.pagination.PageWrapper;
 import io.apimatic.core.types.pagination.PaginatedData;

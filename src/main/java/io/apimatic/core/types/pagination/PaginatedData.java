@@ -79,8 +79,7 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
      * @return An Iterator of items of type T
      */
     public <T> Iterator<T> items(Function<CheckedSupplier<I, ExceptionType>, T> itemSupplier) {
-        PaginatedData<I, P, Res, ExceptionType> paginatedData = new PaginatedData<>(
-                firstApiCall, pageCreator, itemsCreator, strategies);
+        PaginatedData<I, P, Res, ExceptionType> paginatedData = copy();
 
         return new Iterator<T>() {
             @Override
@@ -107,8 +106,7 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
      * @return An Iterator of pages of type T
      */
     public <T> Iterator<T> pages(Function<CheckedSupplier<P, ExceptionType>, T> pageSupplier) {
-        PaginatedData<I, P, Res, ExceptionType> paginatedData = new PaginatedData<>(
-                firstApiCall, pageCreator, itemsCreator, strategies);
+        PaginatedData<I, P, Res, ExceptionType> paginatedData = copy();
 
         return new Iterator<T>() {
             @Override
@@ -131,6 +129,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
                 return page;
             }
         };
+    }
+    
+    public PaginatedData<I, P, Res, ExceptionType> copy() {
+        return new PaginatedData<>(firstApiCall, pageCreator, itemsCreator, strategies);
     }
 
     public CompletableFuture<Boolean> fetchNextPageAsync() {
