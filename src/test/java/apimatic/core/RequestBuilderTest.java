@@ -173,10 +173,10 @@ public class RequestBuilderTest extends MockCoreConfig {
 
     @Test
     public void testUpdateComplexQueryParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .queryParam(param -> param.key("que").value(new Atom(12, 12)));
 
-        updateAndVerify(requestBuilder, "$request.query#/que/NumberOfElectrons", 12, 14);
+        updateAndVerify(localRequestBuilder, "$request.query#/que/NumberOfElectrons", 12, 14);
     }
 
     @Test
