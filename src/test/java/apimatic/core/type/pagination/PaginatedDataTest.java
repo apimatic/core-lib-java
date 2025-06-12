@@ -97,7 +97,7 @@ public class PaginatedDataTest extends EndToEndTest {
     }
 
     @Test
-    public void testInvalidPagination() throws IOException, CoreApiException {
+    public void testInvalidPagination() throws IOException {
         Runnable call1 = () -> when(response.getBody()).thenReturn(responseBody);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
@@ -451,6 +451,7 @@ public class PaginatedDataTest extends EndToEndTest {
             }
             @Override
             public void onAfterResponse(Context context) {
+            	// Does nothing
             }
         };
         return new ApiCall.Builder<RecordPage, CoreApiException>()

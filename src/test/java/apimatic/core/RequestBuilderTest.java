@@ -131,43 +131,44 @@ public class RequestBuilderTest extends MockCoreConfig {
 
     @Test
     public void testUpdatePathParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .templateParam(param -> param.key("temp").value(false));
 
-        updateAndVerify(requestBuilder, "$request.path#/temp", false, true);
+        updateAndVerify(localRequestBuilder, "$request.path#/temp", false, true);
     }
+
 
     @Test
     public void testUpdatePathParamArray() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .templateParam(param -> param.key("temp")
                         .value(new String[] { "apple", "banana", "cherry" }));
 
-        updateAndVerify(requestBuilder, "$request.path#/temp/1", "banana", "mango");
+        updateAndVerify(localRequestBuilder, "$request.path#/temp/1", "banana", "mango");
     }
 
     @Test
     public void testUpdateSimpleFormParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("form").value(true));
 
-        updateAndVerify(requestBuilder, "$request.body#/form", true, false);
+        updateAndVerify(localRequestBuilder, "$request.body#/form", true, false);
     }
 
     @Test
     public void testUpdateComplexFormParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .formParam(param -> param.key("form").value(new Atom(12, 12)));
 
-        updateAndVerify(requestBuilder, "$request.body#/form/NumberOfElectrons", 12, 14);
+        updateAndVerify(localRequestBuilder, "$request.body#/form/NumberOfElectrons", 12, 14);
     }
 
     @Test
     public void testUpdateSimpleQueryParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .queryParam(param -> param.key("que").value(234L));
 
-        updateAndVerify(requestBuilder, "$request.query#/que", 234L, 254L);
+        updateAndVerify(localRequestBuilder, "$request.query#/que", 234L, 254L);
     }
 
     @Test
@@ -180,52 +181,52 @@ public class RequestBuilderTest extends MockCoreConfig {
 
     @Test
     public void testUpdateSimpleHeaderParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .headerParam(param -> param.key("head").value(2.14));
 
-        updateAndVerify(requestBuilder, "$request.headers#/head", 2.14, 19.95);
+        updateAndVerify(localRequestBuilder, "$request.headers#/head", 2.14, 19.95);
     }
 
     @Test
     public void testUpdateComplexHeaderParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
                 .headerParam(param -> param.key("head").value(new Atom(12, 12)));
 
-        updateAndVerify(requestBuilder, "$request.headers#/head/NumberOfElectrons", 12, 14);
+        updateAndVerify(localRequestBuilder, "$request.headers#/head/NumberOfElectrons", 12, 14);
     }
 
     @Test
     public void testUpdateMultipleBodyParams() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.key("bodyA").value("bodyValue"))
                 .bodyParam(param -> param.key("bodyB").value("bodyValue"));
 
-        updateAndVerify(requestBuilder, "$request.body#/bodyB", "bodyValue", "ValueB");
+        updateAndVerify(localRequestBuilder, "$request.body#/bodyB", "bodyValue", "ValueB");
     }
 
     @Test
     public void testUpdateComplexBodyParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.value(new Atom(23, 24)));
 
-        updateAndVerify(requestBuilder, "$request.body#/NumberOfElectrons", 23, 24);
+        updateAndVerify(localRequestBuilder, "$request.body#/NumberOfElectrons", 23, 24);
     }
 
     @Test
     public void testUpdateMultipleComplexBodyParams() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.key("bodyA").value(new Atom(2, 4)))
                 .bodyParam(param -> param.key("bodyB").value(new Atom(4, 2)));
 
-        updateAndVerify(requestBuilder, "$request.body#/bodyB/NumberOfElectrons", 4, 8);
+        updateAndVerify(localRequestBuilder, "$request.body#/bodyB/NumberOfElectrons", 4, 8);
     }
 
     @Test
     public void testUpdateSimpleBodyParam() throws IOException {
-        HttpRequest.Builder requestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.value("BodyValue"));
 
-        updateAndVerify(requestBuilder, "$request.body", "BodyValue", "new Value");
+        updateAndVerify(localRequestBuilder, "$request.body", "BodyValue", "new Value");
     }
 
     private void updateAndVerify(HttpRequest.Builder requestBuilder, String pointer, Object oldValue, Object newValue) {
