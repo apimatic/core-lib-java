@@ -100,8 +100,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
      * @return An Iterator of all items of type T.
      */
     public <T> Iterator<T> items(Function<CheckedSupplier<I, E>, T> itemSupplier) {
-        PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
-                firstApiCall, pageCreator, itemsCreator, strategies);
+        PaginatedData<I, P, R, E> paginatedData = copy();
 
         return new Iterator<T>() {
             @Override
@@ -130,8 +129,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
      * @return An Iterator of all pages of type T.
      */
     public <T> Iterator<T> pages(Function<CheckedSupplier<P, E>, T> pageSupplier) {
-        PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
-                firstApiCall, pageCreator, itemsCreator, strategies);
+        PaginatedData<I, P, R, E> paginatedData = copy();
 
         return new Iterator<T>() {
             @Override
