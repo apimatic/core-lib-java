@@ -123,10 +123,23 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Mock
     private Response response;
+    /**
+     * Base test class for end-to-end tests.
+     * <p>
+     * Subclasses can override this method to provide a custom response retrieval mechanism.
+     * If overridden, ensure thread-safety and proper response management.
+     */
     protected Response getResponse() {
         return response;
     }
 
+    /**
+     * Allows subclasses to customize how the response is set.
+     * <p>
+     * If overridden, ensure that the response is correctly handled and does not introduce memory leaks.
+     *
+     * @param response The response to set.
+     */
     protected void setResponse(Response response) {
         this.response = response;
     }
@@ -506,7 +519,7 @@ public class EndToEndTest extends MockCoreConfig {
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
                 .build();
     }
-    
+
     /**
      * Creates a global configuration instance with the provided callback.
      * This method is designed for extension by subclasses to customize global configuration.

@@ -60,19 +60,19 @@ import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 public class RequestBuilderTest extends MockCoreConfig {
 
-	private static final int ELECTRONS_DEFAULT = 12;
-	private static final int ELECTRONS_UPDATED = 14;
-	private static final long QUERY_DEFAULT = 234L;
-	private static final long QUERY_UPDATED = 254L;
-	private static final double HEADER_DEFAULT = 2.14;
-	private static final double HEADER_UPDATED = 19.95;
-	private static final int ATOM_NUMBER = 23;
-	private static final int ATOM_MASS = 24;
-	private static final int BODY_A_ELECTRONS = 2;
-	private static final int BODY_A_MASS = 4;
-	private static final int BODY_B_ELECTRONS = 4;
-	private static final int BODY_B_MASS = 2;
-	private static final int BODY_B_UPDATED = 8;
+    private static final int ELECTRONS_DEFAULT = 12;
+    private static final int ELECTRONS_UPDATED = 14;
+    private static final long QUERY_DEFAULT = 234L;
+    private static final long QUERY_UPDATED = 254L;
+    private static final double HEADER_DEFAULT = 2.14;
+    private static final double HEADER_UPDATED = 19.95;
+    private static final int ATOM_NUMBER = 23;
+    private static final int ATOM_MASS = 24;
+    private static final int BODY_A_ELECTRONS = 2;
+    private static final int BODY_A_MASS = 4;
+    private static final int BODY_B_ELECTRONS = 4;
+    private static final int BODY_B_MASS = 2;
+    private static final int BODY_B_UPDATED = 8;
 
 
     /**
@@ -173,9 +173,11 @@ public class RequestBuilderTest extends MockCoreConfig {
     @Test
     public void testUpdateComplexFormParam() throws IOException {
         HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
-                .formParam(param -> param.key("form").value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+                .formParam(param -> param.key("form")
+                		.value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
 
-        updateAndVerify(localRequestBuilder, "$request.body#/form/NumberOfElectrons", ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+        updateAndVerify(localRequestBuilder, "$request.body#/form/NumberOfElectrons",
+        		ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
     }
 
     @Test
@@ -189,9 +191,11 @@ public class RequestBuilderTest extends MockCoreConfig {
     @Test
     public void testUpdateComplexQueryParam() throws IOException {
         HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
-                .queryParam(param -> param.key("que").value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+                .queryParam(param -> param.key("que")
+                		.value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
 
-        updateAndVerify(localRequestBuilder, "$request.query#/que/NumberOfElectrons", ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+        updateAndVerify(localRequestBuilder, "$request.query#/que/NumberOfElectrons",
+        		ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
     }
 
     @Test
@@ -205,9 +209,11 @@ public class RequestBuilderTest extends MockCoreConfig {
     @Test
     public void testUpdateComplexHeaderParam() throws IOException {
         HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
-                .headerParam(param -> param.key("head").value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+                .headerParam(param -> param.key("head")
+                		.value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
 
-        updateAndVerify(localRequestBuilder, "$request.headers#/head/NumberOfElectrons", ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+        updateAndVerify(localRequestBuilder, "$request.headers#/head/NumberOfElectrons",
+        		ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
     }
 
     @Test
@@ -224,16 +230,20 @@ public class RequestBuilderTest extends MockCoreConfig {
         HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
                 .bodyParam(param -> param.value(new Atom(ATOM_NUMBER, ATOM_MASS)));
 
-        updateAndVerify(localRequestBuilder, "$request.body#/NumberOfElectrons", ATOM_NUMBER, ATOM_MASS);
+        updateAndVerify(localRequestBuilder, "$request.body#/NumberOfElectrons",
+        		ATOM_NUMBER, ATOM_MASS);
     }
 
     @Test
     public void testUpdateMultipleComplexBodyParams() throws IOException {
         HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
-                .bodyParam(param -> param.key("bodyA").value(new Atom(BODY_A_ELECTRONS, BODY_A_MASS)))
-                .bodyParam(param -> param.key("bodyB").value(new Atom(BODY_B_ELECTRONS, BODY_B_MASS)));
+                .bodyParam(param -> param.key("bodyA")
+        		.value(new Atom(BODY_A_ELECTRONS, BODY_A_MASS)))
+                .bodyParam(param -> param.key("bodyB")
+        		.value(new Atom(BODY_B_ELECTRONS, BODY_B_MASS)));
 
-        updateAndVerify(localRequestBuilder, "$request.body#/bodyB/NumberOfElectrons", BODY_B_ELECTRONS, BODY_B_UPDATED);
+        updateAndVerify(localRequestBuilder, "$request.body#/bodyB/NumberOfElectrons",
+        		BODY_B_ELECTRONS, BODY_B_UPDATED);
     }
 
     @Test
@@ -244,7 +254,8 @@ public class RequestBuilderTest extends MockCoreConfig {
         updateAndVerify(localRequestBuilder, "$request.body", "BodyValue", "new Value");
     }
 
-    private void updateAndVerify(HttpRequest.Builder requestBuilder, String pointer, Object oldValue, Object newValue) {
+    private void updateAndVerify(HttpRequest.Builder requestBuilder,
+    		String pointer, Object oldValue, Object newValue) {
         requestBuilder.updateParameterByJsonPointer(pointer, old -> {
             assertEquals(oldValue.toString(), old.toString());
             return newValue;
@@ -289,7 +300,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         // verify
         assertEquals(coreHttpRequest.getBody(), "bodyValue");
     }
-    
+
     @Test
     public void testClonedBodyParam() throws IOException {
         // when

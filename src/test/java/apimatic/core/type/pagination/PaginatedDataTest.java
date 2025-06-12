@@ -73,7 +73,8 @@ public class PaginatedDataTest extends EndToEndTest {
     @Test
     public void testInvalidPaginationWithFailingResponseAsync()
             throws IOException, InterruptedException, ExecutionException {
-        Runnable call1 = () -> when(getResponse().getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
+        Runnable call1 = () -> when(getResponse()
+        		.getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
                 new LinkPagination("$response.body#/next_link"));
@@ -88,17 +89,27 @@ public class PaginatedDataTest extends EndToEndTest {
         assertFalse(hasNext);
     }
 
+    /**
+     * Provides invalid pagination test cases to verify handling of edge cases and null responses.
+     *
+     * @return A list of invalid pagination test cases, each represented as an object array.
+     */
     @Parameters
     public static List<Object[]> invalidPaginationTestCases() {
         return Arrays.asList(new Object[][] {
-            { "{\"data\":[],\"next_link\":\"https://localhost:3000/path?page=2\"}" },
-            { "{\"data\":null,\"next_link\":\"https://localhost:3000/path?page=2\"}" },
-            { null }
+            {"{\"data\":[],\"next_link\":\"https://localhost:3000/path?page=2\"}"},
+            {"{\"data\":null,\"next_link\":\"https://localhost:3000/path?page=2\"}"},
+            {null}
         });
     }
 
     private final String responseBody;
 
+    /**
+     * Constructs a PaginatedDataTest with the given response body.
+     *
+     * @param responseBody the response body string to be used in the test
+     */
     public PaginatedDataTest(final String responseBody) {
         this.responseBody = responseBody;
     }
@@ -412,7 +423,7 @@ public class PaginatedDataTest extends EndToEndTest {
             assertEquals(expectedNextLink, p.getResult().getNextLink());
             assertEquals(expectedData, p.getResult().getData());
             assertEquals(expectedData, p.getItems());
-            assertEquals(200, p.getStatusCode());
+            assertEquals(SUCCESS_STATUS_CODE, p.getStatusCode());
             assertEquals(getHttpHeaders(), p.getHeaders());
             if (p.getCursorInput() != null && pageOffset > 0) {
                 assertEquals(expectedPages.get(pageOffset - 1).getPageInfo(), p.getCursorInput());
@@ -427,7 +438,7 @@ public class PaginatedDataTest extends EndToEndTest {
             }
 
             if (p.getOffsetInput() != -1) {
-                assertEquals(pageOffset * 3, p.getOffsetInput());
+                assertEquals(pageOffset * PAGE_SIZE, p.getOffsetInput());
             }
             pageOffset++;
         }
@@ -437,31 +448,30 @@ public class PaginatedDataTest extends EndToEndTest {
     }
 
     private PaginatedData<String, PageWrapper<String, RecordPage>,
-        RecordPage, CoreApiException> getPaginatedData(Runnable call1, Runnable call2,
-                Runnable call3,
-                PaginationStrategy... pagination) throws IOException {
-        when(getResponse().getHeaders()).thenReturn(getHttpHeaders());
-        Callback pageCallback = new Callback() {
-            private int callNumber = 1;
-            @Override
-            public void onBeforeRequest(Request request) {
-                if (callNumber == 1) {
-                    call1.run();
-                }
-                else if (callNumber == 2) {
-                    call2.run();
-                }
-                else if (callNumber == 3) {
-                    call3.run();
-                    callNumber = 0;
-                }
-                callNumber++;
+    RecordPage, CoreApiException> getPaginatedData(Runnable call1, Runnable call2,
+            Runnable call3,
+            PaginationStrategy... pagination) throws IOException {
+    when(getResponse().getHeaders()).thenReturn(getHttpHeaders());
+    Callback pageCallback = new Callback() {
+        private int callNumber = 1;
+        @Override
+        public void onBeforeRequest(Request request) {
+            if (callNumber == 1) {
+                call1.run();
+            } else if (callNumber == 2) {
+                call2.run();
+            } else if (callNumber == PAGE_SIZE) {
+                call3.run();
+                callNumber = 0;
             }
-            @Override
-            public void onAfterResponse(Context context) {
-            	// Does nothing
-            }
-        };
+            callNumber++;
+        }
+        @Override
+        public void onAfterResponse(Context context) {
+            // Does nothing
+        }
+    };
+
         return new ApiCall.Builder<RecordPage, CoreApiException>()
                 .globalConfig(getGlobalConfig(pageCallback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
@@ -472,7 +482,7 @@ public class PaginatedDataTest extends EndToEndTest {
                         .formParam(param -> param.key("limit").value(1).isRequired(false))
                         .queryParam(param -> param.key("page").value(1).isRequired(false))
                         .headerParam(param -> param.key("size").value(2).isRequired(false))
-                        .headerParam(param -> param.key("size").value(3).isRequired(false))
+                        .headerParam(param -> param.key("size").value(PAGE_SIZE).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
                         .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler

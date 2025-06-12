@@ -32,7 +32,7 @@ public class OffsetPaginationTest {
     private static final int PAGE_SIZE = 100;
     private static final int OFFSET_PLUS_PAGE = INITIAL_OFFSET + PAGE_SIZE;
     private static final int OFFSET_VAL = 1;
-    private static final int OFFSET_VAL_PLUS_ONE = OFFSET_VAL + PAGE_SIZE;  
+    private static final int OFFSET_VAL_PLUS_ONE = OFFSET_VAL + PAGE_SIZE;
     private static final int OFFSET_STRING = 5;
     private static final int OFFSET_STRING_PLUS_PAGE = OFFSET_STRING + PAGE_SIZE;
     private static final int NUMERIC_OFFSET = 5;
