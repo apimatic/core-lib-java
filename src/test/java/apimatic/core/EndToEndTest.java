@@ -129,6 +129,12 @@ public class EndToEndTest extends MockCoreConfig {
      * Subclasses can override this method to provide a custom response retrieval mechanism.
      * If overridden, ensure thread-safety and proper response management.
      */
+
+    /**
+     * Returns the current Response object.
+     *
+     * @return the response instance
+     */
     protected Response getResponse() {
         return response;
     }
@@ -136,7 +142,7 @@ public class EndToEndTest extends MockCoreConfig {
     /**
      * Allows subclasses to customize how the response is set.
      * <p>
-     * If overridden, ensure that the response is correctly handled and does not introduce memory leaks.
+     * Ensure that the response is correctly handled and does not introduce memory leaks.
      *
      * @param response The response to set.
      */

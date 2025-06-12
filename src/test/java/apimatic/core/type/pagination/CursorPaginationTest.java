@@ -20,6 +20,10 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class CursorPaginationTest {
 
+    /**
+     * Initializes Mockito rule to enable Mockito annotations and 
+     * silently handle unnecessary stubbings during tests.
+     */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
@@ -43,7 +47,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_QUERY_POINTER);
+                REQUEST_QUERY_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
@@ -67,7 +71,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_QUERY_POINTER);
+                REQUEST_QUERY_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
@@ -92,7 +96,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_QUERY_POINTER);
+                REQUEST_QUERY_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
@@ -115,7 +119,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_QUERY_POINTER);
+                REQUEST_QUERY_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNull(requestBuilder);
@@ -132,7 +136,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_QUERY_POINTER);
+                REQUEST_QUERY_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
@@ -156,7 +160,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_INVALID,
-        		REQUEST_HEADER_POINTER);
+                REQUEST_HEADER_POINTER);
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNull(requestBuilder);
@@ -189,7 +193,7 @@ public class CursorPaginationTest {
         when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
         CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
-        		REQUEST_POINTER_INVALID);
+                REQUEST_POINTER_INVALID);
 
         assertNull(cursor.apply(paginatedData));
     }

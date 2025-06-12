@@ -174,8 +174,8 @@ public class PagePaginationTest {
 
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder()
-                		.queryParam(q -> q.key("page")
-                		.value(INVALID_PAGE_STRING)));
+                        .queryParam(q -> q.key("page")
+                        .value(INVALID_PAGE_STRING)));
         when(paginatedData.getResponse()).thenReturn(response);
         when(response.getBody()).thenReturn("{\"page\": \"" + INVALID_PAGE_STRING + "\"}");
 
