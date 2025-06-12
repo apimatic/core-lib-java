@@ -9,7 +9,7 @@ public interface CheckedSupplier<T, E extends CoreApiException> {
     /**
      * @param <T> Represents type of stored value.
      * @param <E> Represents type of stored exception.
-     * @param value Create an instance with stored exception of type E.
+     * @param exception Create an instance with stored exception of type E.
      * @return created CheckedSupplier object.
      */
     @SuppressWarnings("unchecked")
@@ -52,10 +52,10 @@ public interface CheckedSupplier<T, E extends CoreApiException> {
     }
 
     /**
-     * Get the stored instance or throw an exception.
+     * Get the stored instance or throw a stored exception.
      * @return The stored instance of type T.
-     * @throws E
-     * @throws IOException
+     * @throws E The stored CoreApiException.
+     * @throws IOException The stored IOException.
      */
     T get() throws E, IOException;
 }

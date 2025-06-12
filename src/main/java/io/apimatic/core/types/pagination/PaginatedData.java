@@ -68,13 +68,13 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
     /**
      * Get the items in current page converted to type T.
      * @param <T> Represents the type of items in list.
-     * @param pageSupplier A converter to convert the CheckedSupplier of items to type T.
+     * @param itemSupplier A converter to convert the CheckedSupplier of items to type T.
      * @return All items in current page converted via itemSupplier.
      */
-    public <T> List<T> getItems(Function<CheckedSupplier<I, E>, T> itemCreator) {
+    public <T> List<T> getItems(Function<CheckedSupplier<I, E>, T> itemSupplier) {
         List<T> convertedItems = new ArrayList<>();
         for (CheckedSupplier<I, E> i : this.items) {
-            convertedItems.add(itemCreator.apply(i));
+            convertedItems.add(itemSupplier.apply(i));
         }
 
         return convertedItems;
