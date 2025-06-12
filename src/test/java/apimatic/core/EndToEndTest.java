@@ -123,12 +123,6 @@ public class EndToEndTest extends MockCoreConfig {
      */
     @Mock
     private Response response;
-    /**
-     * Base test class for end-to-end tests.
-     * <p>
-     * Subclasses can override this method to provide a custom response retrieval mechanism.
-     * If overridden, ensure thread-safety and proper response management.
-     */
 
     /**
      * Returns the current Response object.

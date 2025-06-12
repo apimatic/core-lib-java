@@ -21,7 +21,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 public class CursorPaginationTest {
 
     /**
-     * Initializes Mockito rule to enable Mockito annotations and 
+     * Initializes Mockito rule to enable Mockito annotations and
      * silently handle unnecessary stubbings during tests.
      */
     @Rule

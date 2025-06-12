@@ -1860,17 +1860,17 @@ public class CoreHelperTest {
         atoms.put("nucleas", new Atom(NUMBER_OF_PROTONS, null));
 
         Map<String, Atom> result = CoreHelper
-        		.updateValueByPointer(atoms, "/atom/NumberOfProtons", v -> null);
+                .updateValueByPointer(atoms, "/atom/NumberOfProtons", v -> null);
         assertEquals(atoms, result);
 
         result = CoreHelper
-        		.updateValueByPointer(atoms, "/nucleas/NumberOfProtons",
-        				v -> NUMBER_OF_NEUTRONS);
+                .updateValueByPointer(atoms, "/nucleas/NumberOfProtons",
+                        v -> NUMBER_OF_NEUTRONS);
         assertEquals(atoms, result);
 
         result = CoreHelper
-        		.updateValueByPointer(atoms, "/atom",
-        				v -> new Atom(UPDATED_VALUE, UPDATED_VALUE));
+                .updateValueByPointer(atoms, "/atom",
+                        v -> new Atom(UPDATED_VALUE, UPDATED_VALUE));
         assertEquals(atoms, result);
     }
 
