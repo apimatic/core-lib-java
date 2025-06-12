@@ -67,7 +67,6 @@ public class OffsetPaginationTest {
             return v;
         });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }   
@@ -130,8 +129,8 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.body");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
 
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }
@@ -151,8 +150,8 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.body");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
 
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }
@@ -172,8 +171,8 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.body");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
 
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }
@@ -195,8 +194,8 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.body#/offset");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
 
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }
@@ -218,8 +217,8 @@ public class OffsetPaginationTest {
         OffsetPagination offset = new OffsetPagination("$request.body#/offset");
         HttpRequest.Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
 
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         offset.addMetaData(pageWrapper);
         assertEquals(OFFSET_PLUS_PAGE, pageWrapper.getOffsetInput());
     }

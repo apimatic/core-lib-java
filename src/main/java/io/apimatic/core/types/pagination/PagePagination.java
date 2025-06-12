@@ -36,7 +36,7 @@ public class PagePagination implements PaginationStrategy {
             isUpdated.set(true);
             return newValue;
         });
-        
+
         if (!isUpdated.get() && response == null) {
             return reqBuilder;
         }

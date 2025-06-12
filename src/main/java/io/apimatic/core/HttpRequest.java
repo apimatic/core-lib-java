@@ -365,7 +365,7 @@ public final class HttpRequest {
                 }
 
                 if (bodySerializer != null && "".equals(point)) {
-                	try {
+                    try {
                         String serializedBody = bodySerializer.supply();
                         String newSerializedBody = setter.apply(serializedBody).toString();
                         bodySerializer = () -> newSerializedBody;
@@ -633,39 +633,45 @@ public final class HttpRequest {
 
             return CoreHelper.trySerialize(obj);
         }
-        
+
+        /**
+         * @return A query URL combining the path, query and template parameters.
+         */
         public String getQueryUrl() {
             StringBuilder builder = new StringBuilder(path);
 
             CoreHelper.appendUrlWithQueryParameters(builder, queryParams,
                     arraySerializationFormat);
             CoreHelper.appendUrlWithTemplateParameters(builder, templateParams);
-            
+
             return builder.toString();
         }
 
+        /**
+         * @return A copy of this request builder instance.
+         */
         public Builder copy() {
             Builder copy = new Builder();
-            copy.server = this.server;
-            copy.path = this.path;
-            copy.httpMethod = this.httpMethod;
-            copy.authBuilder = this.authBuilder.copy(); // Ensure AuthBuilder has a copy() method.
-            copy.queryParams = new HashMap<>(this.queryParams);
-            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry : this.templateParams.entrySet()) {
+            copy.server = server;
+            copy.path = path;
+            copy.httpMethod = httpMethod;
+            copy.authBuilder = authBuilder.copy();
+            copy.queryParams = new HashMap<>(queryParams);
+            for (Entry<String, SimpleEntry<Object, Boolean>> entry : templateParams.entrySet()) {
                 copy.templateParams.put(entry.getKey(),
                     new SimpleEntry<>(entry.getValue().getKey(), entry.getValue().getValue()));
             }
-            for (Map.Entry<String, List<Object>> entry : this.headerParams.entrySet()) {
+            for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
                 copy.headerParams.put(entry.getKey(), new ArrayList<>(entry.getValue()));
             }
-            copy.multipartFormParams = new HashSet<>(this.multipartFormParams);
-            copy.formParamaters = new HashMap<>(this.formParamaters);
-            copy.body = this.body;
-            copy.bodySerializer = this.bodySerializer;
-            if (this.bodyParameters != null) {
-                copy.bodyParameters = new HashMap<>(this.bodyParameters);
+            copy.multipartFormParams = new HashSet<>(multipartFormParams);
+            copy.formParamaters = new HashMap<>(formParamaters);
+            copy.body = body;
+            copy.bodySerializer = bodySerializer;
+            if (bodyParameters != null) {
+                copy.bodyParameters = new HashMap<>(bodyParameters);
             }
-            copy.arraySerializationFormat = this.arraySerializationFormat;
+            copy.arraySerializationFormat = arraySerializationFormat;
             copy.parameterBuilder = new Parameter.Builder();
 
             return copy;

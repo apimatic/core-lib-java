@@ -84,7 +84,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param globalErrorCases         the map of global errors.
      * @param deserializer             the deserializer of json response.
      * @param intermediateDeserializer the api response deserializer.
-     * @param paginationDeserializer   the pagination deserializer.
      * @param responseClassType        the type of response class.
      * @param contextInitializer       the context initializer in response models.
      * @param isNullify404Enabled      on 404 error return null or not?.
@@ -233,18 +232,22 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
     }
 
+    /**
+     * Converts this ResponseHandler to its builder.
+     * @return ResponseHandler.Builder that can create a copy of this instance.
+     */
     public Builder<ResponseType, ExceptionType> toBuilder() {
         Builder<ResponseType, ExceptionType> builder =  new Builder<ResponseType, ExceptionType>()
-                .globalErrorCase(this.globalErrorCases != null ? new HashMap<>(this.globalErrorCases) : null)
-                .deserializer(this.deserializer)
-                .apiResponseDeserializer(this.intermediateDeserializer)
-                .responseClassType(this.responseClassType)
-                .contextInitializer(this.contextInitializer)
-                .nullify404(this.isNullify404Enabled)
-                .nullableResponseType(this.isNullableResponseType);
-        
+                .globalErrorCase(globalErrorCases != null ? new HashMap<>(globalErrorCases) : null)
+                .deserializer(deserializer)
+                .apiResponseDeserializer(intermediateDeserializer)
+                .responseClassType(responseClassType)
+                .contextInitializer(contextInitializer)
+                .nullify404(isNullify404Enabled)
+                .nullableResponseType(isNullableResponseType);
+
         builder.localErrorCases = localErrorCases;
-        
+
         return builder;
     }
 

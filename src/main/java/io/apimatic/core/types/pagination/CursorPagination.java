@@ -27,7 +27,7 @@ public class CursorPagination implements PaginationStrategy {
         AtomicBoolean isUpdated = new AtomicBoolean(false);
 
         reqBuilder.updateParameterByJsonPointer(input, old -> {
-            
+
             if (response == null) {
                 currentRequestCursor = (String) old;
                 isUpdated.set(true);
@@ -44,7 +44,7 @@ public class CursorPagination implements PaginationStrategy {
             isUpdated.set(true);
             return cursorValue;
         });
-        
+
         if (!isUpdated.get() && response == null) {
             return reqBuilder;
         }

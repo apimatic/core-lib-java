@@ -137,6 +137,9 @@ public class AuthBuilder {
         return auths;
     }
 
+    /**
+     * @return A copy of this AuthBuilder instance.
+     */
     public AuthBuilder copy() {
         AuthBuilder copy = new AuthBuilder();
         copy.authKeys = new ArrayList<>(this.authKeys);
@@ -147,7 +150,7 @@ public class AuthBuilder {
             }
             copy.authBuilders.put(entry.getKey(), copiedList);
         }
-        
+
         return copy;
     }
 }

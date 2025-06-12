@@ -6,10 +6,18 @@ import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.response.ApiResponseType;
 import io.apimatic.coreinterfaces.http.response.Response;
 
-public class PageWrapper<I, P> implements ApiResponseType<P> {
+public final class PageWrapper<I, P> implements ApiResponseType<P> {
 
-    public static <I, P> PageWrapper<I, P> create(
-            Response response, P page, List<I> items) {
+    /**
+     * Create an instance of PageWrapper with provided page and meta data.
+     * @param <I> Represent type of items in the page.
+     * @param <P> Represent type of page.
+     * @param response Response from API call.
+     * @param page Page to be wrapped.
+     * @param items Extracted items from the page.
+     * @return An new instance of PageWrapper.
+     */
+    public static <I, P> PageWrapper<I, P> create(Response response, P page, List<I> items) {
         return new PageWrapper<I, P>(response.getStatusCode(), response.getHeaders(), page, items);
     }
 
@@ -23,7 +31,8 @@ public class PageWrapper<I, P> implements ApiResponseType<P> {
     private int pageInput = -1;
     private String cursorInput = null;
 
-    private PageWrapper(int statusCode, HttpHeaders headers, P page, List<I> items) {
+    private PageWrapper(int statusCode, final HttpHeaders headers, final P page,
+            final List<I> items) {
         this.statusCode = statusCode;
         this.headers = headers;
         this.page = page;

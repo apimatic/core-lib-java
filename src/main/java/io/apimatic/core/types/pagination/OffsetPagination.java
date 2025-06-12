@@ -21,7 +21,7 @@ public class OffsetPagination implements PaginationStrategy {
         Response response = paginatedData.getResponse();
         Builder reqBuilder = paginatedData.getRequestBuilder();
         AtomicBoolean isUpdated = new AtomicBoolean(false);
-        
+
         reqBuilder.updateParameterByJsonPointer(input, old -> {
             int oldValue = Integer.parseInt("" + old);
 
@@ -36,7 +36,7 @@ public class OffsetPagination implements PaginationStrategy {
             isUpdated.set(true);
             return newValue;
         });
-        
+
         if (!isUpdated.get() && response == null) {
             return reqBuilder;
         }

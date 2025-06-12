@@ -50,7 +50,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
      * An instance of {@link ApiLogger} for logging.
      */
     private final ApiLogger apiLogger;
-    
+
     private Response response;
 
 
@@ -71,7 +71,18 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         this.endpointConfiguration = endpointConfiguration;
         this.apiLogger = SdkLoggerFactory.getLogger(globalConfig.getLoggingConfiguration());
     }
-    
+
+    /**
+     * Prepare this ApiCall for pagination.
+     * @param <T> Return type for the paginated data.
+     * @param <I> Type of items in pages.
+     * @param <P> Type of pages.
+     * @param converter Converts the PaginatedData into the instance of type T.
+     * @param responseToPage Converts the PageWrapper into the instance of type P.
+     * @param responseToItems Extract list of items of type I from response.
+     * @param strategies List of applicable pagination strategies.
+     * @return Converted paginated data into type T
+     */
     public <T, I, P> T paginate(
             Function<PaginatedData<I, P, ResponseType, ExceptionType>, T> converter,
             Function<PageWrapper<I, ResponseType>, P> responseToPage,
@@ -81,11 +92,11 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                 this, responseToPage, responseToItems, strategies
         ));
     }
-    
+
     public Response getResponse() {
         return response;
     }
-    
+
     public HttpRequest.Builder getRequestBuilder() {
         return requestBuilder.copy();
     }
@@ -123,15 +134,19 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
                     return responseHandler.handle(context, endpointConfiguration, globalConfig);
                 }, apiLogger);
     }
-    
+
+    /**
+     * Converts this ApiCall instance to its builder.
+     * @return ApiCall.Builder that can create a copy of this instance.
+     */
     public Builder<ResponseType, ExceptionType> toBuilder() {
         Builder<ResponseType, ExceptionType> builder = new Builder<ResponseType, ExceptionType>();
-        
+
         builder.globalConfig = globalConfig;
         builder.endpointConfigurationBuilder = endpointConfiguration.toBuilder();
         builder.responseHandlerBuilder = responseHandler.toBuilder();
         builder.requestBuilder = requestBuilder.copy();
-        
+
         return builder;
     }
 
