@@ -43,11 +43,17 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class PaginatedDataTest extends EndToEndTest {
+    private static final int NOT_FOUND_STATUS_CODE = 404;
+    private static final int SUCCESS_STATUS_CODE = 200;
+    private static final int PAGE_SIZE = 3;
 
+    /**
+     * Tests pagination with failing response (404 status code)
+     */
     @Test
     public void testInvalidPaginationWithFailingResponse() throws IOException {
         Runnable call1 = () -> {
-            when(response.getStatusCode()).thenReturn(404);
+            when(getResponse().getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
         };
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
@@ -55,16 +61,19 @@ public class PaginatedDataTest extends EndToEndTest {
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pages =
                 paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         Exception exception = assertThrows(CoreApiException.class, pages.next()::get);
         assertEquals("Not found", exception.getMessage());
         assertFalse(pages.hasNext());
     }
 
+    /**
+     * Tests async pagination with failing response (404 status code)
+     */
     @Test
     public void testInvalidPaginationWithFailingResponseAsync()
             throws IOException, InterruptedException, ExecutionException {
-        Runnable call1 = () -> when(response.getStatusCode()).thenReturn(404);
+        Runnable call1 = () -> when(getResponse().getStatusCode()).thenReturn(NOT_FOUND_STATUS_CODE);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
                 new LinkPagination("$response.body#/next_link"));
@@ -78,27 +87,28 @@ public class PaginatedDataTest extends EndToEndTest {
         hasNext = paginatedData.fetchNextPageAsync().get();
         assertFalse(hasNext);
     }
+
     @Parameters
     public static List<Object[]> invalidPaginationTestCases() {
         return Arrays.asList(new Object[][] {
-            // Test case 1: Empty items
             { "{\"data\":[],\"next_link\":\"https://localhost:3000/path?page=2\"}" },
-            // Test case 2: Null items
             { "{\"data\":null,\"next_link\":\"https://localhost:3000/path?page=2\"}" },
-            // Test case 3: Null page
             { null }
         });
     }
 
     private final String responseBody;
 
-    public PaginatedDataTest(String responseBody) {
+    public PaginatedDataTest(final String responseBody) {
         this.responseBody = responseBody;
     }
 
+    /**
+     * Tests invalid pagination scenarios
+     */
     @Test
     public void testInvalidPagination() throws IOException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(responseBody);
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(responseBody);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
                 new LinkPagination("$response.body#/next_link"));
@@ -107,15 +117,15 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testLinkPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
@@ -124,7 +134,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testInvalidLinkPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -133,22 +143,22 @@ public class PaginatedDataTest extends EndToEndTest {
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pages =
                 paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         assertEquals(Arrays.asList("apple", "mango", "orange"), pages.next().get().getItems());
         assertFalse(pages.hasNext());
     }
 
     @Test
     public void testCursorPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
@@ -158,7 +168,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testInvalidCursorPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -167,7 +177,7 @@ public class PaginatedDataTest extends EndToEndTest {
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pages =
                 paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         assertEquals(Arrays.asList("apple", "mango", "orange"), pages.next().get().getItems());
         assertFalse(pages.hasNext());
 
@@ -175,22 +185,22 @@ public class PaginatedDataTest extends EndToEndTest {
                     new CursorPagination("$response.body#/page_info", ""));
         pages = paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         assertEquals(Arrays.asList("apple", "mango", "orange"), pages.next().get().getItems());
         assertFalse(pages.hasNext());
     }
 
     @Test
     public void testOffsetPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
@@ -199,7 +209,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testInvalidOffsetPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -208,22 +218,22 @@ public class PaginatedDataTest extends EndToEndTest {
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pages =
                 paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         assertEquals(Arrays.asList("apple", "mango", "orange"), pages.next().get().getItems());
         assertFalse(pages.hasNext());
     }
 
     @Test
     public void testPagePaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
@@ -232,7 +242,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testInvalidPagePaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -241,34 +251,33 @@ public class PaginatedDataTest extends EndToEndTest {
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pages =
                 paginatedData.pages(cs -> cs);
         assertTrue(pages.hasNext());
-        assertTrue(pages.hasNext()); // checking hasNext twice should have the same affect
+        assertTrue(pages.hasNext());
         assertEquals(Arrays.asList("apple", "mango", "orange"), pages.next().get().getItems());
         assertFalse(pages.hasNext());
     }
 
     @Test
     public void testMultiPaginationData() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
                 + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
                 new LinkPagination("$response.INVALID#/next_link"),
-                // invalid next link pointer so 2nd call will be made using page pagination
                 new PagePagination("$request.body#/limit")));
     }
 
     @Test
     public void testInvalidPaginationDataAsync()
             throws IOException, CoreApiException, InterruptedException, ExecutionException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -287,15 +296,14 @@ public class PaginatedDataTest extends EndToEndTest {
     @Test
     public void testMultiPaginationDataAsync()
             throws IOException, InterruptedException, ExecutionException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
+        Runnable call1 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\"}");
-        // doesn't have next_link to force making the next calls using page pagination
-        Runnable call2 = () -> when(response.getBody()).thenReturn(
+        Runnable call2 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
                 + "\"next_link\":\"https://localhost:3000/path?page=3\"}");
-        Runnable call3 = () -> when(response.getBody()).thenReturn(
+        Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -330,10 +338,10 @@ public class PaginatedDataTest extends EndToEndTest {
 
         PageWrapper<String, RecordPage> page = paginatedData.getPage(pageCreator);
         assertNull(page);
-        assertEquals(0, paginatedData.getItems(itemCreator).size());  // Changed here
+        assertEquals(0, paginatedData.getItems(itemCreator).size());
 
         boolean hasNext = paginatedData.fetchNextPageAsync().get();
-        assertEquals(true, hasNext);  // Changed here
+        assertEquals(true, hasNext);
         assertEquals(expectedPage1.getData(), paginatedData.getItems(itemCreator));
         page = paginatedData.getPage(pageCreator);
         assertEquals(expectedPage1.getData(), page.getResult().getData());
@@ -343,7 +351,7 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals(-1, page.getPageInput());
 
         hasNext = paginatedData.fetchNextPageAsync().get();
-        assertEquals(true, hasNext);  // Changed here
+        assertEquals(true, hasNext);
         assertEquals(expectedPage2.getData(), paginatedData.getItems(itemCreator));
         page = paginatedData.getPage(pageCreator);
         assertEquals(expectedPage2.getData(), page.getResult().getData());
@@ -353,10 +361,10 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals(2, page.getPageInput());
 
         hasNext = paginatedData.fetchNextPageAsync().get();
-        assertEquals(false, hasNext);  // Changed here
+        assertEquals(false, hasNext);
         page = paginatedData.getPage(pageCreator);
         assertNull(page);
-        assertEquals(0, paginatedData.getItems(itemCreator).size());  // Changed here
+        assertEquals(0, paginatedData.getItems(itemCreator).size());
     }
 
     private void verifyData(PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -432,7 +440,7 @@ public class PaginatedDataTest extends EndToEndTest {
         RecordPage, CoreApiException> getPaginatedData(Runnable call1, Runnable call2,
                 Runnable call3,
                 PaginationStrategy... pagination) throws IOException {
-        when(response.getHeaders()).thenReturn(getHttpHeaders());
+        when(getResponse().getHeaders()).thenReturn(getHttpHeaders());
         Callback pageCallback = new Callback() {
             private int callNumber = 1;
             @Override

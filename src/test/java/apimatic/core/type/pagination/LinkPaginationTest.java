@@ -27,17 +27,19 @@ import io.apimatic.coreinterfaces.http.response.Response;
  */
 public class LinkPaginationTest {
 
-    private static final String RESPONSE_BODY_POINTER = "$response.body#/next";
-    private static final String RESPONSE_HEADERS_POINTER = "$response.headers#/next";
-    private static final String REQUEST_QUERY_PAGE = "$request.query#/page";
-    private static final String REQUEST_QUERY_SIZE = "$request.query#/size";
-    private static final String REQUEST_HEADERS_PAGE = "$request.headers#/page";
-    private static final String NEXT_URL_SINGLE = "https://api.example.com?page=2";
-    private static final String NEXT_URL_MULTIPLE = "https://api.example.com?page=2&size=5";
-    private static final String NEXT_URL_ENCODED = "https://api.example.com?page%20o=2%20a&size%20q=5^%214$#";
-    private static final String PAGE = "page";
-    private static final String SIZE = "size";
-    private static final String NEXT = "next";
+	private static final String RESPONSE_BODY_POINTER = "$response.body#/next";
+	private static final String RESPONSE_HEADERS_POINTER = "$response.headers#/next";
+	private static final String REQUEST_QUERY_PAGE = "$request.query#/page";
+	private static final String REQUEST_QUERY_SIZE = "$request.query#/size";
+	private static final String REQUEST_HEADERS_PAGE = "$request.headers#/page";
+	private static final String NEXT_URL_SINGLE = "https://api.example.com?page=2";
+	private static final String NEXT_URL_MULTIPLE = "https://api.example.com?page=2&size=5";
+	private static final String NEXT_URL_ENCODED =
+	        "https://api.example.com?page%20o=2%20a&size%20q=5^%214$#";
+	private static final String PAGE = "page";
+	private static final String SIZE = "size";
+	private static final String NEXT = "next";
+
 
     /**
      * Silent rule for Mockito initialization.

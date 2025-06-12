@@ -165,8 +165,8 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
     }
 
     /**
-     * Start fetching the next page asynchronously. 
-     * @return A CompletableFuture of boolean instance suggesting if there is a next page or not. 
+     * Start fetching the next page asynchronously.
+     * @return A CompletableFuture of boolean instance suggesting if there is a next page or not.
      */
     public CompletableFuture<Boolean> fetchNextPageAsync() {
         if (dataClosed) {

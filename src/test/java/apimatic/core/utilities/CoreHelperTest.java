@@ -75,6 +75,9 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 
 public class CoreHelperTest {
 
+	private static final int NUMBER_OF_PROTONS = 14;
+	private static final int NUMBER_OF_NEUTRONS = 26;
+	private static final int UPDATED_VALUE = 23;
     private static final int YEAR2010 = 2010;
     private static final double PRECISION_NUMBER = 1.2;
     private static final int YEAR3 = 2020;
@@ -1853,17 +1856,17 @@ public class CoreHelperTest {
     @Test
     public void testUpdateValueByPointerInvalidCases() {
         Map<String, Atom> atoms = new HashMap<>();
-        atoms.put("atom", new Atom(14, 26));
-        atoms.put("nucleas", new Atom(14, null));
+        atoms.put("atom", new Atom(NUMBER_OF_PROTONS, NUMBER_OF_NEUTRONS));
+        atoms.put("nucleas", new Atom(NUMBER_OF_PROTONS, null));
 
         Map<String, Atom> result = CoreHelper.updateValueByPointer(atoms, "/atom/NumberOfProtons", v -> null);
-        assertEquals(atoms, result); // update by null not allowed
-        
-        result = CoreHelper.updateValueByPointer(atoms, "/nucleas/NumberOfProtons", v -> 26);
-        assertEquals(atoms, result); // updating null values not allowed
+        assertEquals(atoms, result);
 
-        result = CoreHelper.updateValueByPointer(atoms, "/atom", v -> new Atom(23, 23));
-        assertEquals(atoms, result); // update full object not allowed
+        result = CoreHelper.updateValueByPointer(atoms, "/nucleas/NumberOfProtons", v -> NUMBER_OF_NEUTRONS);
+        assertEquals(atoms, result);
+
+        result = CoreHelper.updateValueByPointer(atoms, "/atom", v -> new Atom(UPDATED_VALUE, UPDATED_VALUE));
+        assertEquals(atoms, result);
     }
 
     private Map<String, ComplexType> getComplexType() throws IOException {

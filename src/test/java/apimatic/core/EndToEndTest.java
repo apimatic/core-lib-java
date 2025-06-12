@@ -122,8 +122,14 @@ public class EndToEndTest extends MockCoreConfig {
      * Mock of {@link Response}.
      */
     @Mock
-    protected Response response;
+    private Response response;
+    protected Response getResponse() {
+        return response;
+    }
 
+    protected void setResponse(Response response) {
+        this.response = response;
+    }
 
     /**
      * Mock of {@link Request}.
@@ -500,7 +506,16 @@ public class EndToEndTest extends MockCoreConfig {
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
                 .build();
     }
-
+    
+    /**
+     * Creates a global configuration instance with the provided callback.
+     * This method is designed for extension by subclasses to customize global configuration.
+     * Subclasses should override this method and call super.getGlobalConfig(callback)
+     * to maintain base functionality while adding custom configurations.
+     *
+     * @param callback The callback instance to use in the configuration
+     * @return A fully configured GlobalConfiguration instance
+     */
     protected GlobalConfiguration getGlobalConfig(Callback callback) {
         String userAgent = "APIMATIC 3.0";
         GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
