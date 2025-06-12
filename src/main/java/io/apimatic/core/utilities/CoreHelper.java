@@ -1678,10 +1678,6 @@ public class CoreHelper {
 
         JsonValue value = jsonPointer.getValue(jsonStructure);
 
-        if (value == JsonValue.NULL) {
-            return null;
-        }
-
         if (value instanceof JsonString) {
             return ((JsonString) value).getString();
         }
@@ -1758,8 +1754,6 @@ public class CoreHelper {
                 return true;
             case FALSE:
                 return false;
-            case NULL:
-                return null;
             default:
                 return value.toString();
         }
@@ -1772,9 +1766,6 @@ public class CoreHelper {
      * @return The corresponding JsonValue or null if unsupported.
      */
     private static JsonValue toJsonValue(Object obj) {
-        if (obj == null) {
-            return null;
-        }
         if (obj instanceof String) {
             return Json.createValue((String) obj);
         }

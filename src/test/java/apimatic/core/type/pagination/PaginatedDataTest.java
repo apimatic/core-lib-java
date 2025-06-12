@@ -260,7 +260,7 @@ public class PaginatedDataTest extends EndToEndTest {
                 "{\"data\":[]}");
 
         verifyData(getPaginatedData(call1, call2, call3,
-                new LinkPagination("$response.body#/INVALID"),
+                new LinkPagination("$response.INVALID#/next_link"),
                 // invalid next link pointer so 2nd call will be made using page pagination
                 new PagePagination("$request.body#/limit")));
     }
@@ -289,8 +289,8 @@ public class PaginatedDataTest extends EndToEndTest {
             throws IOException, InterruptedException, ExecutionException {
         Runnable call1 = () -> when(response.getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
-                + "page_info\":\"fruits\","
-                + "\"next_link\":\"https://localhost:3000/path?page=2\"}");
+                + "page_info\":\"fruits\"}");
+        // doesn't have next_link to force making the next calls using page pagination
         Runnable call2 = () -> when(response.getBody()).thenReturn(
                 "{\"data\":[\"potato\",\"carrot\",\"tomato\"],"
                 + "\"page_info\":\"vegitables\","
@@ -300,8 +300,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, call2, call3,
-                new LinkPagination("$response.body#/INVALID"),
-                // invalid next link pointer so 2nd call will be made using page pagination
+                new LinkPagination("$response.body#/next_link"),
                 new PagePagination("$request.body#/limit"));
 
         Function<CheckedSupplier<String, CoreApiException>, String> itemCreator = cs -> {
@@ -323,7 +322,6 @@ public class PaginatedDataTest extends EndToEndTest {
         RecordPage expectedPage1 = new RecordPage();
         expectedPage1.setData(Arrays.asList("apple", "mango", "orange"));
         expectedPage1.setPageInfo("fruits");
-        expectedPage1.setNextLink("https://localhost:3000/path?page=2");
 
         RecordPage expectedPage2 = new RecordPage();
         expectedPage2.setData(Arrays.asList("potato", "carrot", "tomato"));

@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import io.apimatic.core.types.CoreApiException;
 
-public interface CheckedSupplier<T, ExceptionType extends CoreApiException> {
+public interface CheckedSupplier<T, E extends CoreApiException> {
     
     @SuppressWarnings("unchecked")
-    public static <T, E extends CoreApiException> CheckedSupplier<T, E> CreateError(
+    public static <T, E extends CoreApiException> CheckedSupplier<T, E> createError(
             Throwable exception) {
         if (exception instanceof IOException) {
             return new CheckedSupplier<T, E>()
@@ -33,7 +33,7 @@ public interface CheckedSupplier<T, ExceptionType extends CoreApiException> {
         
     }
 
-    public static <T, E extends CoreApiException> CheckedSupplier<T, E> Create(T item) {
+    public static <T, E extends CoreApiException> CheckedSupplier<T, E> create(T item) {
         return new CheckedSupplier<T, E>()
         {
             @Override
@@ -43,5 +43,5 @@ public interface CheckedSupplier<T, ExceptionType extends CoreApiException> {
         };
     }
 
-    T get() throws ExceptionType, IOException;
+    T get() throws E, IOException;
 }

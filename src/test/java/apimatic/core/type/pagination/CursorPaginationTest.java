@@ -30,6 +30,7 @@ public class CursorPaginationTest {
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
+    // Constants
     private static final String CURSOR_KEY = "cursor";
     private static final String RESPONSE_POINTER_VALID = "$response.body#/next_cursor";
     private static final String RESPONSE_POINTER_INVALID = "$response.body#/next";
@@ -57,7 +58,10 @@ public class CursorPaginationTest {
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
+            assertEquals("xyz123", v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("xyz123", pageWrapper.getCursorInput());
@@ -81,7 +85,10 @@ public class CursorPaginationTest {
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
+            assertEquals("123", v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());
@@ -106,7 +113,10 @@ public class CursorPaginationTest {
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
+            assertEquals("123", v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());
@@ -148,7 +158,10 @@ public class CursorPaginationTest {
 
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
+            assertEquals("123", v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());

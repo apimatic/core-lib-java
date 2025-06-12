@@ -105,7 +105,7 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         Context context = globalConfig.getCompatibilityFactory()
                 .createHttpContext(request, response);
 
-        return responseHandler.handle(context, endpointConfiguration, globalConfig, requestBuilder);
+        return responseHandler.handle(context, endpointConfiguration, globalConfig);
     }
 
     /**
@@ -116,12 +116,11 @@ public final class ApiCall<ResponseType, ExceptionType extends CoreApiException>
         return AsyncExecutor.makeHttpCallAsync(() -> requestBuilder.build(globalConfig),
                 request -> globalConfig.getHttpClient()
                         .executeAsync(request, endpointConfiguration),
-                (request, response) -> {
-                    this.response = response;
+                (req, res) -> {
+                    this.response = res;
                     Context context = globalConfig.getCompatibilityFactory()
-                            .createHttpContext(request, response);
-                    return responseHandler.handle(context, endpointConfiguration, globalConfig,
-                            requestBuilder);
+                            .createHttpContext(req, res);
+                    return responseHandler.handle(context, endpointConfiguration, globalConfig);
                 }, apiLogger);
     }
     

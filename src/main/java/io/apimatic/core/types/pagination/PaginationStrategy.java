@@ -5,10 +5,13 @@ import io.apimatic.core.HttpRequest;
 public interface PaginationStrategy {
 
     /**
-     * @param paginatedData Data to be checked for validity
-     * @return True if paginated data is valid to make another request
+     * @param paginatedData Data to be processed for validity.
+     * @return HttpRequest.Builder if paginated data is valid to make another request.
      */
     HttpRequest.Builder apply(PaginatedData<?, ?, ?, ?> paginatedData);
 
+    /**
+     * @param page A pageWrapper instance that will be updated with meta data.
+     */
     void addMetaData(PageWrapper<?, ?> page);
 }

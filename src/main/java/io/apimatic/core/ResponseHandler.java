@@ -114,7 +114,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param context Context which is made for endpoint.
      * @param config All endPoint level configuration.
      * @param globalConfig All apiCall level configuration.
-     * @param requestBuilder The requestBuilder that can re create current API Call.
      *
      * @return An object of type ResponseType.
      * @throws IOException   Signals that an I/O exception of some sort has
@@ -122,8 +121,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType handle(Context context, EndpointConfiguration config,
-            GlobalConfiguration globalConfig, HttpRequest.Builder requestBuilder)
-            throws IOException, ExceptionType {
+            GlobalConfiguration globalConfig) throws IOException, ExceptionType {
         if (globalConfig.getHttpCallback() != null) {
             // invoke the callback after response if its not null
             globalConfig.getHttpCallback().onAfterResponse(context);
@@ -140,8 +138,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         // handle errors defined at the API level
         validateResponse(context);
 
-        Object result = convertResponse(context.getResponse(), requestBuilder, config,
-                globalConfig);
+        Object result = convertResponse(context.getResponse(), config, globalConfig);
 
         if (responseClassType == ResponseClassType.API_RESPONSE
                 || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
@@ -161,8 +158,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         return (ResponseType) result;
     }
 
-    private Object convertResponse(Response response, HttpRequest.Builder requestBuilder,
-            EndpointConfiguration config, GlobalConfiguration globalConfig) throws IOException {
+    private Object convertResponse(Response response, EndpointConfiguration config,
+            GlobalConfiguration globalConfig) throws IOException {
         if (responseClassType == ResponseClassType.DYNAMIC_RESPONSE
                 || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
             return createDynamicResponse(response, globalConfig.getCompatibilityFactory());

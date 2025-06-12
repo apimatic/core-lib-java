@@ -24,6 +24,8 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
     private final List<CheckedSupplier<I, E>> items = new ArrayList<>();
     private CheckedSupplier<P, E> page = null;
     private ApiCall<R, E> apiCall;
+    private PaginationStrategy lockedStrategy;
+    private boolean canLockStrategy = false;
     private boolean dataClosed = false;
 
     public PaginatedData(final ApiCall<R, E> apiCall,
@@ -79,6 +81,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
     /**
      * @return An Iterator of items of type T
      */
+    
     public <T> Iterator<T> items(Function<CheckedSupplier<I, E>, T> itemSupplier) {
         PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
                 firstApiCall, pageCreator, itemsCreator, strategies);
@@ -107,6 +110,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
     /**
      * @return An Iterator of pages of type T
      */
+
     public <T> Iterator<T> pages(Function<CheckedSupplier<P, E>, T> pageSupplier) {
         PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
                 firstApiCall, pageCreator, itemsCreator, strategies);
@@ -134,13 +138,17 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
 
         };
     }
+    
+    public PaginatedData<I, P, R, E> copy() {
+        return new PaginatedData<>(firstApiCall, pageCreator, itemsCreator, strategies);
+    }
 
     public CompletableFuture<Boolean> fetchNextPageAsync() {
         if (dataClosed) {
             return CompletableFuture.completedFuture(false);
         }
 
-        for (PaginationStrategy strategy : strategies) {
+        for (PaginationStrategy strategy : getStrategies()) {
             HttpRequest.Builder requestBuilder = strategy.apply(this);
             if (requestBuilder == null) continue;
 
@@ -161,7 +169,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
             return false;
         }
 
-        for (PaginationStrategy strategy : strategies) {
+        for (PaginationStrategy strategy : getStrategies()) {
 
             HttpRequest.Builder requestBuilder = strategy.apply(this);
             if (requestBuilder == null) {
@@ -182,7 +190,16 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
         return false;
     }
 
+    private PaginationStrategy[] getStrategies() {
+        if (lockedStrategy == null) {
+            return strategies;
+        }
+
+        return new PaginationStrategy[] { lockedStrategy };
+    }
+
     private boolean updateWith(ApiCall<R, E> apiCall, R pageUnWrapped, PaginationStrategy strategy) {
+
         itemIndex = 0;
         this.items.clear();
         this.page = null;
@@ -199,17 +216,23 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
         this.apiCall = apiCall;
         PageWrapper<I, R> pageWrapper = PageWrapper.create(apiCall.getResponse(), pageUnWrapped, itemsUnWrapped);
         strategy.addMetaData(pageWrapper);
-        this.page = CheckedSupplier.Create(pageCreator.apply(pageWrapper));
-        itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.Create(i)));
+        this.page = CheckedSupplier.create(pageCreator.apply(pageWrapper));
+        itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.create(i)));
+
+        if (canLockStrategy) {
+            lockedStrategy = strategy;
+        } else {
+            canLockStrategy = true;
+        }
 
         return true;
     }
 
     private boolean updateAsFailed(Throwable exp) {
-        page = CheckedSupplier.CreateError(exp);
+        page = CheckedSupplier.createError(exp);
         itemIndex = 0;
         items.clear();
-        items.add(CheckedSupplier.CreateError(exp));
+        items.add(CheckedSupplier.createError(exp));
         dataClosed = true;
         
         return true;

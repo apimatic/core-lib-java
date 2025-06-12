@@ -49,11 +49,16 @@ public class PagePaginationTest {
                 .thenReturn(new HttpRequest.Builder().headerParam(
                         h -> h.key("page").value(INITIAL_PAGE)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + INITIAL_PAGE + "}");
+
         PagePagination page = new PagePagination("$request.headers#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer("$request.headers#/page", v -> {
+            assertEquals(NEXT_PAGE, v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
@@ -68,11 +73,16 @@ public class PagePaginationTest {
                 .thenReturn(new HttpRequest.Builder().templateParam(
                         t -> t.key("page").value(INITIAL_PAGE)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + INITIAL_PAGE + "}");
+
         PagePagination page = new PagePagination("$request.path#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer("$request.path#/page", v -> {
+            assertEquals(NEXT_PAGE, v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
@@ -87,11 +97,16 @@ public class PagePaginationTest {
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(INITIAL_PAGE)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + INITIAL_PAGE + "}");
+
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
+            assertEquals(NEXT_PAGE, v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
@@ -111,11 +126,16 @@ public class PagePaginationTest {
                     }
                 })));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": {\"val\": " + INNER_FIELD_PAGE + "}}");
+
         PagePagination page = new PagePagination("$request.query#/page/val");
 
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page/val", v -> {
+            assertEquals(INNER_FIELD_NEXT_PAGE, v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
 
@@ -131,11 +151,16 @@ public class PagePaginationTest {
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(CURRENT_PAGE_STRING)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": \"" + CURRENT_PAGE_STRING + "\"}");
+
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
-
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
+            assertEquals(NEXT_PAGE_FROM_STRING, v);
+            return v;
+        });
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
 
@@ -150,6 +175,8 @@ public class PagePaginationTest {
         when(paginatedData.getRequestBuilder())
                 .thenReturn(new HttpRequest.Builder().queryParam(q -> q.key("page").value(INVALID_PAGE_STRING)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": \"" + INVALID_PAGE_STRING + "\"}");
+
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
@@ -163,6 +190,8 @@ public class PagePaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{}");
+
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
@@ -178,6 +207,8 @@ public class PagePaginationTest {
                 .thenReturn(new HttpRequest.Builder().queryParam(
                         q -> q.key("page").value(CURRENT_PAGE_INT)));
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"page\": " + CURRENT_PAGE_INT + "}");
+
         PagePagination page = new PagePagination(null);
 
         Builder requestBuilder = page.apply(paginatedData);

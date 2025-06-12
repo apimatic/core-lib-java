@@ -1,5 +1,7 @@
 package io.apimatic.core.types.pagination;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -22,13 +24,13 @@ public class CursorPagination implements PaginationStrategy {
     public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
         Response response = paginatedData.getResponse();
         Builder reqBuilder = paginatedData.getRequestBuilder();
-        final boolean[] isUpdated = {false};
+        AtomicBoolean isUpdated = new AtomicBoolean(false);
 
-        reqBuilder.updateByReference(input, old -> {
+        reqBuilder.updateParameterByJsonPointer(input, old -> {
             
             if (response == null) {
                 currentRequestCursor = (String) old;
-                isUpdated[0] = true;
+                isUpdated.set(true);
                 return old;
             }
 
@@ -39,15 +41,15 @@ public class CursorPagination implements PaginationStrategy {
             }
 
             currentRequestCursor = cursorValue;
-            isUpdated[0] = true;
+            isUpdated.set(true);
             return cursorValue;
         });
         
-        if (!isUpdated[0] && response == null) {
+        if (!isUpdated.get() && response == null) {
             return reqBuilder;
         }
 
-        return isUpdated[0] ? reqBuilder : null;
+        return isUpdated.get() ? reqBuilder : null;
     }
 
     @Override

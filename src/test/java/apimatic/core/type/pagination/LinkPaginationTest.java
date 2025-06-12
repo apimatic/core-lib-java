@@ -7,9 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,6 +58,10 @@ public class LinkPaginationTest {
 
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_PAGE, v -> {
+            assertEquals("2", v);
+            return v;
+        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
@@ -84,6 +86,20 @@ public class LinkPaginationTest {
 
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_PAGE, v -> {
+            assertEquals("2", v);
+            return v;
+        });
+
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_SIZE, v -> {
+            assertEquals(pageSize, v);
+            return v;
+        });
+
+        requestBuilder.updateParameterByJsonPointer(REQUEST_HEADERS_PAGE, v -> {
+            assertEquals(2, v);
+            return v;
+        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
@@ -96,172 +112,26 @@ public class LinkPaginationTest {
         Response response = mock(Response.class);
         Map<String, String> headers = new HashMap<>();
         headers.put(NEXT, NEXT_URL_SINGLE);
+        HttpHeaders httpHeaders = mock(HttpHeaders.class);
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
-        when(response.getHeaders()).thenReturn(createHttpHeaders(headers));
+        when(httpHeaders.asSimpleMap()).thenReturn(headers);
+        when(response.getHeaders()).thenReturn(httpHeaders);
 
         LinkPagination link = new LinkPagination(RESPONSE_HEADERS_POINTER);
         Builder requestBuilder = link.apply(paginatedData);
 
         assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_PAGE, v -> {
+            assertEquals("2", v);
+            return v;
+        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
-
-	private HttpHeaders createHttpHeaders(Map<String, String> headers) {
-
-		return new HttpHeaders() {
-
-			
-
-			@Override
-
-			public List<String> values(String headerName) {
-
-				// TODO Auto-generated method stub
-
-				return null;
-
-			}
-
-			
-
-			@Override
-
-			public String value(String headerName) {
-
-				// TODO Auto-generated method stub
-
-				return null;
-
-			}
-
-			
-
-			@Override
-
-			public List<String> remove(String headerName) {
-
-				// TODO Auto-generated method stub
-
-				return null;
-
-			}
-
-			
-
-			@Override
-
-			public Set<String> names() {
-
-				// TODO Auto-generated method stub
-
-				return null;
-
-			}
-
-			
-
-			@Override
-
-			public boolean has(String headerName) {
-
-				// TODO Auto-generated method stub
-
-				return false;
-
-			}
-
-			
-
-			@Override
-
-			public Map<String, String> asSimpleMap() {
-
-				// TODO Auto-generated method stub
-
-				return headers;
-
-			}
-
-			
-
-			@Override
-
-			public Map<String, List<String>> asMultimap() {
-
-				// TODO Auto-generated method stub
-
-				return null;
-
-			}
-
-			
-
-			@Override
-
-			public void addAllFromMultiMap(Map<String, List<String>> headers) {
-
-				// TODO Auto-generated method stub
-
-				
-
-			}
-
-			
-
-			@Override
-
-			public void addAllFromMap(Map<String, String> headers) {
-
-				// TODO Auto-generated method stub
-
-				
-
-			}
-
-			
-
-			@Override
-
-			public void addAll(HttpHeaders headers) {
-
-				// TODO Auto-generated method stub
-
-				
-
-			}
-
-			
-
-			@Override
-
-			public void add(String headerName, List<String> values) {
-
-				// TODO Auto-generated method stub
-
-				
-
-			}
-
-			
-
-			@Override
-
-			public void add(String headerName, String value) {
-
-				// TODO Auto-generated method stub
-
-				
-
-			}
-
-		};
-
-	}
 
     @Test
     public void testInvalidPointer() {
@@ -270,6 +140,8 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"next\": \"" + NEXT_URL_SINGLE + "\"}");
+
         LinkPagination link = new LinkPagination("$response.body#/next/href");
 
         assertNull(link.apply(paginatedData));
@@ -282,6 +154,8 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(null);
+
         LinkPagination link = new LinkPagination("$response.body#/next/href");
 
         assertNull(link.apply(paginatedData));
@@ -294,6 +168,8 @@ public class LinkPaginationTest {
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn("{\"next\": \"" + NEXT_URL_SINGLE + "\"}");
+
         LinkPagination link = new LinkPagination(null);
 
         assertNull(link.apply(paginatedData));
@@ -313,6 +189,15 @@ public class LinkPaginationTest {
 
         Builder nextBuilder = link.apply(paginatedData);
         assertNotNull(nextBuilder);
+        nextBuilder.updateParameterByJsonPointer(REQUEST_QUERY_PAGE, v -> {
+            assertEquals("2", v);
+            return v;
+        });
+
+        nextBuilder.updateParameterByJsonPointer(REQUEST_QUERY_SIZE, v -> {
+            assertEquals("5", v);
+            return v;
+        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
@@ -333,6 +218,15 @@ public class LinkPaginationTest {
 
         Builder builder = link.apply(paginatedData);
         assertNotNull(builder);
+        builder.updateParameterByJsonPointer("$request.query#/page o", v -> {
+            assertEquals("2 a", v);
+            return v;
+        });
+
+        builder.updateParameterByJsonPointer("$request.query#/size q", v -> {
+            assertEquals("5^!4$#", v);
+            return v;
+        });
 
         PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
