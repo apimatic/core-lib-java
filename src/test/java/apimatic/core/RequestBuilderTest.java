@@ -167,7 +167,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
 
         // verify
-        assertEquals(coreHttpRequest.getBody(), "bodyValue");
+        assertEquals("bodyValue", coreHttpRequest.getBody());
     }
 
 

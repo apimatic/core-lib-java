@@ -61,7 +61,7 @@ public class LinkPaginationTest {
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
@@ -85,7 +85,7 @@ public class LinkPaginationTest {
         Builder requestBuilder = link.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
@@ -106,7 +106,7 @@ public class LinkPaginationTest {
 
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
@@ -314,7 +314,7 @@ public class LinkPaginationTest {
         Builder nextBuilder = link.apply(paginatedData);
         assertNotNull(nextBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_MULTIPLE, pageWrapper.getNextLinkInput());
     }
@@ -334,7 +334,7 @@ public class LinkPaginationTest {
         Builder builder = link.apply(paginatedData);
         assertNotNull(builder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         link.addMetaData(pageWrapper);
         assertEquals(NEXT_URL_ENCODED, pageWrapper.getNextLinkInput());
     }

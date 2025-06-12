@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import apimatic.core.EndToEndTest;
 import io.apimatic.core.ApiCall;
@@ -37,6 +38,10 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.request.configuration.RetryOption;
 
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+@RunWith(Parameterized.class)
 public class PaginatedDataTest extends EndToEndTest {
 
     @Test
@@ -73,30 +78,27 @@ public class PaginatedDataTest extends EndToEndTest {
         hasNext = paginatedData.fetchNextPageAsync().get();
         assertFalse(hasNext);
     }
+    @Parameters
+    public static List<Object[]> invalidPaginationTestCases() {
+        return Arrays.asList(new Object[][] {
+            // Test case 1: Empty items
+            { "{\"data\":[],\"next_link\":\"https://localhost:3000/path?page=2\"}" },
+            // Test case 2: Null items
+            { "{\"data\":null,\"next_link\":\"https://localhost:3000/path?page=2\"}" },
+            // Test case 3: Null page
+            { null }
+        });
+    }
 
-    @Test
-    public void testInvalidPaginationWithEmptyItems() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
-                "{\"data\":[],\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        PaginatedData<String, PageWrapper<String, RecordPage>,
-            RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
-                new LinkPagination("$response.body#/next_link"));
-        assertFalse(paginatedData.pages(cs -> cs).hasNext());
+    private final String responseBody;
+
+    public PaginatedDataTest(String responseBody) {
+        this.responseBody = responseBody;
     }
 
     @Test
-    public void testInvalidPaginationNullItems() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(
-                "{\"data\":null,\"next_link\":\"https://localhost:3000/path?page=2\"}");
-        PaginatedData<String, PageWrapper<String, RecordPage>,
-            RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
-                new LinkPagination("$response.body#/next_link"));
-        assertFalse(paginatedData.pages(cs -> cs).hasNext());
-    }
-
-    @Test
-    public void testInvalidPaginationNullPage() throws IOException, CoreApiException {
-        Runnable call1 = () -> when(response.getBody()).thenReturn(null);
+    public void testInvalidPagination() throws IOException, CoreApiException {
+        Runnable call1 = () -> when(response.getBody()).thenReturn(responseBody);
         PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData = getPaginatedData(call1, null, null,
                 new LinkPagination("$response.body#/next_link"));
@@ -284,7 +286,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
     @Test
     public void testMultiPaginationDataAsync()
-            throws IOException, CoreApiException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException {
         Runnable call1 = () -> when(response.getBody()).thenReturn(
                 "{\"data\":[\"apple\",\"mango\",\"orange\"],\""
                 + "page_info\":\"fruits\","
@@ -330,10 +332,10 @@ public class PaginatedDataTest extends EndToEndTest {
 
         PageWrapper<String, RecordPage> page = paginatedData.getPage(pageCreator);
         assertNull(page);
-        assertTrue(paginatedData.getItems(itemCreator).size() == 0);
+        assertEquals(0, paginatedData.getItems(itemCreator).size());  // Changed here
 
         boolean hasNext = paginatedData.fetchNextPageAsync().get();
-        assertTrue(hasNext);
+        assertEquals(true, hasNext);  // Changed here
         assertEquals(expectedPage1.getData(), paginatedData.getItems(itemCreator));
         page = paginatedData.getPage(pageCreator);
         assertEquals(expectedPage1.getData(), page.getResult().getData());
@@ -343,7 +345,7 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals(-1, page.getPageInput());
 
         hasNext = paginatedData.fetchNextPageAsync().get();
-        assertTrue(hasNext);
+        assertEquals(true, hasNext);  // Changed here
         assertEquals(expectedPage2.getData(), paginatedData.getItems(itemCreator));
         page = paginatedData.getPage(pageCreator);
         assertEquals(expectedPage2.getData(), page.getResult().getData());
@@ -353,10 +355,10 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals(2, page.getPageInput());
 
         hasNext = paginatedData.fetchNextPageAsync().get();
-        assertFalse(hasNext);
+        assertEquals(false, hasNext);  // Changed here
         page = paginatedData.getPage(pageCreator);
         assertNull(page);
-        assertTrue(paginatedData.getItems(itemCreator).size() == 0);
+        assertEquals(0, paginatedData.getItems(itemCreator).size());  // Changed here
     }
 
     private void verifyData(PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -451,7 +453,6 @@ public class PaginatedDataTest extends EndToEndTest {
             }
             @Override
             public void onAfterResponse(Context context) {
-                // TODO Auto-generated method stub
             }
         };
         return new ApiCall.Builder<RecordPage, CoreApiException>()

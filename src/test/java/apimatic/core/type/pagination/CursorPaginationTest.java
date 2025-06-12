@@ -58,7 +58,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("xyz123", pageWrapper.getCursorInput());
     }
@@ -82,7 +82,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());
     }
@@ -107,7 +107,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());
     }
@@ -149,7 +149,7 @@ public class CursorPaginationTest {
         Builder requestBuilder = cursor.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         cursor.addMetaData(pageWrapper);
         assertEquals("123", pageWrapper.getCursorInput());
     }

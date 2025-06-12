@@ -54,7 +54,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
@@ -73,7 +73,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
@@ -92,7 +92,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
@@ -116,7 +116,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
 
         assertEquals(INNER_FIELD_NEXT_PAGE, pageWrapper.getPageInput());
@@ -136,7 +136,7 @@ public class PagePaginationTest {
         Builder requestBuilder = page.apply(paginatedData);
         assertNotNull(requestBuilder);
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.Create(response, null, null);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
         page.addMetaData(pageWrapper);
 
         assertEquals(NEXT_PAGE_FROM_STRING, pageWrapper.getPageInput());

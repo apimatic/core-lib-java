@@ -8,7 +8,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class PageWrapper<I, P> implements ApiResponseType<P> {
 
-    public static <I, P> PageWrapper<I, P> Create(
+    public static <I, P> PageWrapper<I, P> create(
             Response response, P page, List<I> items) {
         return new PageWrapper<I, P>(response.getStatusCode(), response.getHeaders(), page, items);
     }

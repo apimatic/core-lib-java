@@ -13,22 +13,22 @@ import io.apimatic.core.HttpRequest;
 import io.apimatic.core.types.CoreApiException;
 import io.apimatic.coreinterfaces.http.response.Response;
 
-public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
+public class PaginatedData<I, P, R, E extends CoreApiException> {
 
-    private final ApiCall<Res, ExceptionType> firstApiCall;
-    private final Function<PageWrapper<I, Res>, P> pageCreator;
-    private final Function<Res, List<I>> itemsCreator;
+    private final ApiCall<R, E> firstApiCall;
+    private final Function<PageWrapper<I, R>, P> pageCreator;
+    private final Function<R, List<I>> itemsCreator;
     private final PaginationStrategy[] strategies;
     
     private int itemIndex = 0;
-    private final List<CheckedSupplier<I, ExceptionType>> items = new ArrayList<>();
-    private CheckedSupplier<P, ExceptionType> page = null;
-    private ApiCall<Res, ExceptionType> apiCall;
+    private final List<CheckedSupplier<I, E>> items = new ArrayList<>();
+    private CheckedSupplier<P, E> page = null;
+    private ApiCall<R, E> apiCall;
     private boolean dataClosed = false;
 
-    public PaginatedData(final ApiCall<Res, ExceptionType> apiCall,
-            final Function<PageWrapper<I, Res>, P> pageCreator,
-            final Function<Res, List<I>> itemsCreator,
+    public PaginatedData(final ApiCall<R, E> apiCall,
+            final Function<PageWrapper<I, R>, P> pageCreator,
+            final Function<R, List<I>> itemsCreator,
             final PaginationStrategy... strategies) {
         this.firstApiCall = apiCall;
         this.pageCreator = pageCreator;
@@ -58,16 +58,17 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         return items.size();
     }
 
-    public <T> List<T> getItems(Function<CheckedSupplier<I, ExceptionType>, T> itemCreator) {
-        List<T> items = new ArrayList<>();
-        for (CheckedSupplier<I,ExceptionType> i : this.items) {
-            items.add(itemCreator.apply(i));
+    public <T> List<T> getItems(Function<CheckedSupplier<I, E>, T> itemCreator) {
+        List<T> createdItems = new ArrayList<>();
+        for (CheckedSupplier<I, E> i : this.items) {
+            createdItems.add(itemCreator.apply(i));
         }
-        
-        return items;
+
+        return createdItems;
     }
 
-    public <T> T getPage(Function<CheckedSupplier<P, ExceptionType>, T> pageSupplier) {
+
+    public <T> T getPage(Function<CheckedSupplier<P, E>, T> pageSupplier) {
         if (page == null) {
             return null;
         }
@@ -78,8 +79,8 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
     /**
      * @return An Iterator of items of type T
      */
-    public <T> Iterator<T> items(Function<CheckedSupplier<I, ExceptionType>, T> itemSupplier) {
-        PaginatedData<I, P, Res, ExceptionType> paginatedData = new PaginatedData<>(
+    public <T> Iterator<T> items(Function<CheckedSupplier<I, E>, T> itemSupplier) {
+        PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
                 firstApiCall, pageCreator, itemsCreator, strategies);
 
         return new Iterator<T>() {
@@ -106,8 +107,8 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
     /**
      * @return An Iterator of pages of type T
      */
-    public <T> Iterator<T> pages(Function<CheckedSupplier<P, ExceptionType>, T> pageSupplier) {
-        PaginatedData<I, P, Res, ExceptionType> paginatedData = new PaginatedData<>(
+    public <T> Iterator<T> pages(Function<CheckedSupplier<P, E>, T> pageSupplier) {
+        PaginatedData<I, P, R, E> paginatedData = new PaginatedData<>(
                 firstApiCall, pageCreator, itemsCreator, strategies);
 
         return new Iterator<T>() {
@@ -126,10 +127,11 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
                     throw new NoSuchElementException("No more pages available.");
                 }
 
-                T page = pageSupplier.apply(paginatedData.page);
+                T currentPage = pageSupplier.apply(paginatedData.page);
                 paginatedData.page = null;
-                return page;
+                return currentPage;
             }
+
         };
     }
 
@@ -142,7 +144,7 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
             HttpRequest.Builder requestBuilder = strategy.apply(this);
             if (requestBuilder == null) continue;
 
-            ApiCall<Res, ExceptionType> newApiCall = this.apiCall.toBuilder()
+            ApiCall<R, E> newApiCall = this.apiCall.toBuilder()
                     .requestBuilder(requestBuilder)
                     .build();
 
@@ -167,11 +169,11 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
             }
 
             try {
-                ApiCall<Res, ExceptionType> apiCall = this.apiCall.toBuilder()
+                ApiCall<R, E> nextApiCall = this.apiCall.toBuilder()
                     .requestBuilder(requestBuilder).build();
-                Res pageUnWrapped = apiCall.execute();
+                R pageUnWrapped = nextApiCall.execute();
 
-                return updateWith(apiCall, pageUnWrapped, strategy);
+                return updateWith(nextApiCall, pageUnWrapped, strategy);
             } catch (IOException | CoreApiException exp) {
                 return updateAsFailed(exp);
             }
@@ -180,22 +182,22 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         return false;
     }
 
-    private boolean updateWith(ApiCall<Res, ExceptionType> apiCall, Res pageUnWrapped, PaginationStrategy strategy) {
+    private boolean updateWith(ApiCall<R, E> apiCall, R pageUnWrapped, PaginationStrategy strategy) {
         itemIndex = 0;
         this.items.clear();
         this.page = null;
-        
+
         if (pageUnWrapped == null) {
             return false;
         }
 
         List<I> itemsUnWrapped = itemsCreator.apply(pageUnWrapped);
-        if (itemsUnWrapped == null || itemsUnWrapped.size() == 0) {
+        if (itemsUnWrapped == null || itemsUnWrapped.isEmpty()) { // 🔥 Fixed here
             return false;
         }
 
         this.apiCall = apiCall;
-        PageWrapper<I, Res> pageWrapper = PageWrapper.Create(apiCall.getResponse(), pageUnWrapped, itemsUnWrapped);
+        PageWrapper<I, R> pageWrapper = PageWrapper.create(apiCall.getResponse(), pageUnWrapped, itemsUnWrapped);
         strategy.addMetaData(pageWrapper);
         this.page = CheckedSupplier.Create(pageCreator.apply(pageWrapper));
         itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.Create(i)));

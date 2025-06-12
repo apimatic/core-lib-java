@@ -1788,8 +1788,9 @@ public class CoreHelper {
             return Json.createValue((Double) obj);
         }
         if (obj instanceof Boolean) {
-            return (Boolean) obj ? JsonValue.TRUE : JsonValue.FALSE;
+            return Boolean.TRUE.equals(obj) ? JsonValue.TRUE : JsonValue.FALSE; // ✅ Safe & compliant
         }
         return null;
     }
+
 }
