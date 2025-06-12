@@ -209,8 +209,8 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
         this.apiCall = apiCall;
         PageWrapper<I, Res> pageWrapper = PageWrapper.Create(apiCall.getResponse(), pageUnWrapped, itemsUnWrapped);
         strategy.addMetaData(pageWrapper);
-        this.page = CheckedSupplier.Create(pageCreator.apply(pageWrapper));
-        itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.Create(i)));
+        this.page = CheckedSupplier.create(pageCreator.apply(pageWrapper));
+        itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.create(i)));
 
         if (canLockStrategy) {
             lockedStrategy = strategy;
@@ -222,10 +222,10 @@ public class PaginatedData<I, P, Res, ExceptionType extends CoreApiException> {
     }
 
     private boolean updateAsFailed(Throwable exp) {
-        page = CheckedSupplier.CreateError(exp);
+        page = CheckedSupplier.createError(exp);
         itemIndex = 0;
         items.clear();
-        items.add(CheckedSupplier.CreateError(exp));
+        items.add(CheckedSupplier.createError(exp));
         dataClosed = true;
         
         return true;

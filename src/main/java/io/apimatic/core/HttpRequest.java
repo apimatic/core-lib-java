@@ -364,7 +364,7 @@ public final class HttpRequest {
                     return;
                 }
 
-                if (bodySerializer != null && point == "") {
+                if (bodySerializer != null && "".equals(point)) {
                 	try {
                         String serializedBody = bodySerializer.supply();
                         String newSerializedBody = setter.apply(serializedBody).toString();
@@ -375,7 +375,7 @@ public final class HttpRequest {
                     return;
                 }
 
-                if ((body instanceof String && point == "") || point == "") {
+                if ((body instanceof String && "".equals(point)) || "".equals(point)) {
                     body = setter.apply(body);
                     return;
                 }
