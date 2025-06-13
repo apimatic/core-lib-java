@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import apimatic.core.constants.DateTimeConstants;
 import apimatic.core.mocks.TestDateTimeHelper;
+import apimatic.core.models.Atom;
 import apimatic.core.models.AtomCase;
 import apimatic.core.models.AttributesAndElements;
 import apimatic.core.models.CarCase;
@@ -74,6 +75,9 @@ import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 
 public class CoreHelperTest {
 
+    private static final int NUMBER_OF_PROTONS = 14;
+    private static final int NUMBER_OF_NEUTRONS = 26;
+    private static final int UPDATED_VALUE = 23;
     private static final int YEAR2010 = 2010;
     private static final double PRECISION_NUMBER = 1.2;
     private static final int YEAR3 = 2020;
@@ -1827,6 +1831,42 @@ public class CoreHelperTest {
 
         // Assert
         assertEquals(expectedQueryString, result);
+    }
+
+    @Test
+    public void testUpdateValueByPointerWithInvalidInput() {
+        String actualValue = "a214";
+
+        String result = CoreHelper.updateValueByPointer(actualValue, "", v -> "n214");
+        assertEquals(actualValue, result); // empty pointer
+
+        result = CoreHelper.updateValueByPointer(actualValue, null, v -> "n214");
+        assertEquals(actualValue, result); // null pointer
+
+        result = CoreHelper.updateValueByPointer(actualValue, "/alpha/beta", null);
+        assertEquals(actualValue, result); // null updater
+
+        result = CoreHelper.updateValueByPointer(null, "/alpha/beta", v -> "n214");
+        assertEquals(null, result); // null input
+
+        result = CoreHelper.updateValueByPointer(actualValue, "/alpha/beta", v -> "n214");
+        assertEquals(actualValue, result); // invalid JSON
+    }
+
+    @Test
+    public void testUpdateValueByPointerInvalidCases() {
+        Map<String, Atom> atoms = new HashMap<>();
+        atoms.put("atom", new Atom(NUMBER_OF_PROTONS, NUMBER_OF_NEUTRONS));
+        atoms.put("nucleas", new Atom(NUMBER_OF_PROTONS, null));
+
+        Map<String, Atom> result = CoreHelper
+                .updateValueByPointer(atoms, "/atom/NumberOfProtons", v -> null);
+        assertEquals(atoms, result);
+
+        result = CoreHelper
+                .updateValueByPointer(atoms, "/atom",
+                        v -> new Atom(UPDATED_VALUE, UPDATED_VALUE));
+        assertEquals(atoms, result);
     }
 
     private Map<String, ComplexType> getComplexType() throws IOException {

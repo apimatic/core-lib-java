@@ -1,10 +1,13 @@
 package io.apimatic.core.types.pagination;
 
-import io.apimatic.core.HttpRequest.Builder;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class OffsetPagination implements PaginationDataManager {
+import io.apimatic.core.HttpRequest.Builder;
+import io.apimatic.coreinterfaces.http.response.Response;
+
+public class OffsetPagination implements PaginationStrategy {
     private final String input;
-    private Builder nextReqBuilder;
+    private int currentRequestOffset;
 
     /**
      * @param input JsonPointer of a field in request, representing offset.
@@ -14,25 +17,36 @@ public class OffsetPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
+        AtomicBoolean isUpdated = new AtomicBoolean(false);
+        currentRequestOffset = 0;
 
-        if (input == null) {
-            return false;
-        }
+        reqBuilder.updateParameterByJsonPointer(input, old -> {
+            int oldValue = old == null ? 0 : Integer.parseInt("" + old);
 
-        final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
-            int newValue = Integer.parseInt("" + old) + paginatedData.getLastDataSize();
-            isUpdated[0] = true;
+            if (response == null) {
+                currentRequestOffset = oldValue;
+                isUpdated.set(true);
+                return old;
+            }
+
+            int newValue = oldValue + paginatedData.getPageSize();
+            currentRequestOffset = newValue;
+            isUpdated.set(true);
             return newValue;
         });
 
-        return isUpdated[0];
+        if (!isUpdated.get() && response == null) {
+            return reqBuilder;
+        }
+
+        return isUpdated.get() ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?> page) {
+        page.setOffsetInput(currentRequestOffset);
     }
 }

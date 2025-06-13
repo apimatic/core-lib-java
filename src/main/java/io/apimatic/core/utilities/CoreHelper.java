@@ -75,6 +75,7 @@ import io.apimatic.core.types.OneOfValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
+import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
  * This is a Helper class with commonly used utilities for the SDK.
@@ -1627,12 +1628,10 @@ public class CoreHelper {
      * Resolves a pointer within a JSON response body or headers.
      *
      * @param pointer     The JSON pointer.
-     * @param jsonBody    The response body.
-     * @param jsonHeaders The response headers.
+     * @param response    The response.
      * @return The resolved value as a string, or null if not found.
      */
-    public static String resolveResponsePointer(String pointer, String jsonBody,
-            String jsonHeaders) {
+    public static String resolveResponsePointer(String pointer, Response response) {
         if (pointer == null) {
             return null;
         }
@@ -1643,9 +1642,10 @@ public class CoreHelper {
 
         switch (prefix) {
             case "$response.body":
-                return CoreHelper.getValueFromJson(point, jsonBody);
+                return CoreHelper.getValueFromJson(point, response.getBody());
             case "$response.headers":
-                return CoreHelper.getValueFromJson(point, jsonHeaders);
+                return CoreHelper.getValueFromJson(point,
+                        trySerialize(response.getHeaders().asSimpleMap()));
             default:
                 return null;
         }
@@ -1678,10 +1678,6 @@ public class CoreHelper {
 
         JsonValue value = jsonPointer.getValue(jsonStructure);
 
-        if (value == JsonValue.NULL) {
-            return null;
-        }
-
         if (value instanceof JsonString) {
             return ((JsonString) value).getString();
         }
@@ -1712,10 +1708,10 @@ public class CoreHelper {
             }
 
             JsonPointer jsonPointer = Json.createPointer(pointer);
-            if (!jsonPointer.containsValue(structure)) {
-                return value;
-            }
 
+            if (!jsonPointer.containsValue(structure)) {
+                structure = jsonPointer.add(structure, JsonValue.NULL);
+            }
             JsonValue oldJsonValue = jsonPointer.getValue(structure);
             Object oldValue = toObject(oldJsonValue);
             Object newValueRaw = updater.apply(oldValue);
@@ -1758,10 +1754,8 @@ public class CoreHelper {
                 return true;
             case FALSE:
                 return false;
-            case NULL:
-                return null;
             default:
-                return value.toString();
+                return null;
         }
     }
 
@@ -1772,9 +1766,6 @@ public class CoreHelper {
      * @return The corresponding JsonValue or null if unsupported.
      */
     private static JsonValue toJsonValue(Object obj) {
-        if (obj == null) {
-            return null;
-        }
         if (obj instanceof String) {
             return Json.createValue((String) obj);
         }
@@ -1788,8 +1779,9 @@ public class CoreHelper {
             return Json.createValue((Double) obj);
         }
         if (obj instanceof Boolean) {
-            return (Boolean) obj ? JsonValue.TRUE : JsonValue.FALSE;
+            return Boolean.TRUE.equals(obj) ? JsonValue.TRUE : JsonValue.FALSE;
         }
         return null;
     }
+
 }

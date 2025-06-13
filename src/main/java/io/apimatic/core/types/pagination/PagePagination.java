@@ -1,10 +1,13 @@
 package io.apimatic.core.types.pagination;
 
-import io.apimatic.core.HttpRequest.Builder;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class PagePagination implements PaginationDataManager {
+import io.apimatic.core.HttpRequest.Builder;
+import io.apimatic.coreinterfaces.http.response.Response;
+
+public class PagePagination implements PaginationStrategy {
     private final String input;
-    private Builder nextReqBuilder;
+    private int currentRequestPageNumber;
 
     /**
      * @param input JsonPointer of a field in request, representing page.
@@ -14,25 +17,36 @@ public class PagePagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
+        AtomicBoolean isUpdated = new AtomicBoolean(false);
+        currentRequestPageNumber = 0;
 
-        if (input == null) {
-            return false;
-        }
+        reqBuilder.updateParameterByJsonPointer(input, old -> {
+            int oldValue = old == null ? 1 : Integer.parseInt("" + old);
 
-        final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
-            int newValue = Integer.parseInt("" + old) + 1;
-            isUpdated[0] = true;
+            if (response == null) {
+                currentRequestPageNumber = oldValue;
+                isUpdated.set(true);
+                return old;
+            }
+
+            int newValue = oldValue + 1;
+            currentRequestPageNumber = newValue;
+            isUpdated.set(true);
             return newValue;
         });
 
-        return isUpdated[0];
+        if (!isUpdated.get() && response == null) {
+            return reqBuilder;
+        }
+
+        return isUpdated.get() ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?> page) {
+        page.setPageInput(currentRequestPageNumber);
     }
 }
