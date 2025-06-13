@@ -240,8 +240,7 @@ public class PaginatedData<I, P, R, E extends CoreApiException> {
 
         this.apiCall = apiCall;
         PageWrapper<I, R> pageWrapper = PageWrapper.create(apiCall.getResponse(), pageUnWrapped,
-                itemsUnWrapped);
-        strategy.addMetaData(pageWrapper);
+                itemsUnWrapped, strategy);
         this.page = CheckedSupplier.create(pageCreator.apply(pageWrapper));
         itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.create(i)));
 

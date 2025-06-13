@@ -3,6 +3,7 @@ package apimatic.core.type.pagination;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +41,6 @@ public class LinkPaginationTest {
     private static final String SIZE = "size";
     private static final String NEXT = "next";
 
-
     /**
      * Silent rule for Mockito initialization.
      */
@@ -65,8 +65,8 @@ public class LinkPaginationTest {
             return v;
         });
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        link.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, link);
+        assertTrue(pageWrapper.isLinkPagination());
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
 
@@ -103,8 +103,8 @@ public class LinkPaginationTest {
             return v;
         });
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        link.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, link);
+        assertTrue(pageWrapper.isLinkPagination());
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
 
@@ -130,8 +130,8 @@ public class LinkPaginationTest {
             return v;
         });
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        link.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, link);
+        assertTrue(pageWrapper.isLinkPagination());
         assertEquals(NEXT_URL_SINGLE, pageWrapper.getNextLinkInput());
     }
 
@@ -201,8 +201,8 @@ public class LinkPaginationTest {
             return v;
         });
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        link.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, link);
+        assertTrue(pageWrapper.isLinkPagination());
         assertEquals(NEXT_URL_MULTIPLE, pageWrapper.getNextLinkInput());
     }
 
@@ -230,8 +230,8 @@ public class LinkPaginationTest {
             return v;
         });
 
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        link.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, link);
+        assertTrue(pageWrapper.isLinkPagination());
         assertEquals(NEXT_URL_ENCODED, pageWrapper.getNextLinkInput());
     }
 }

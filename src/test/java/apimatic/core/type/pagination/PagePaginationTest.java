@@ -3,6 +3,7 @@ package apimatic.core.type.pagination;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,8 +60,8 @@ public class PagePaginationTest {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        page.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
 
@@ -83,8 +84,8 @@ public class PagePaginationTest {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        page.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
 
@@ -107,8 +108,8 @@ public class PagePaginationTest {
             assertEquals(NEXT_PAGE, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        page.addMetaData(pageWrapper);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
         assertEquals(NEXT_PAGE, pageWrapper.getPageInput());
     }
 
@@ -136,9 +137,8 @@ public class PagePaginationTest {
             assertEquals(INNER_FIELD_NEXT_PAGE, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        page.addMetaData(pageWrapper);
-
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
         assertEquals(INNER_FIELD_NEXT_PAGE, pageWrapper.getPageInput());
     }
 
@@ -161,9 +161,8 @@ public class PagePaginationTest {
             assertEquals(NEXT_PAGE_FROM_STRING, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null);
-        page.addMetaData(pageWrapper);
-
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
         assertEquals(NEXT_PAGE_FROM_STRING, pageWrapper.getPageInput());
     }
 
@@ -186,6 +185,27 @@ public class PagePaginationTest {
     }
 
     @Test
+    public void testWithMissingPageFirstCall() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
+
+        when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
+        when(paginatedData.getResponse()).thenReturn(null);
+
+        PagePagination page = new PagePagination("$request.query#/page");
+
+        Builder requestBuilder = page.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
+            assertEquals(null, v);
+            return v;
+        });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
+        assertEquals(INNER_FIELD_PAGE, pageWrapper.getPageInput());
+    }
+
+    @Test
     public void testWithMissingPage() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         Response response = mock(Response.class);
@@ -197,7 +217,14 @@ public class PagePaginationTest {
         PagePagination page = new PagePagination("$request.query#/page");
 
         Builder requestBuilder = page.apply(paginatedData);
-        assertNull(requestBuilder);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer("$request.query#/page", v -> {
+            assertEquals(INNER_FIELD_NEXT_PAGE, v);
+            return v;
+        });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, page);
+        assertTrue(pageWrapper.isNumberPagination());
+        assertEquals(INNER_FIELD_NEXT_PAGE, pageWrapper.getPageInput());
     }
 
     @Test

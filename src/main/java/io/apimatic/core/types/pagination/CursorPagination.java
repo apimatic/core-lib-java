@@ -25,9 +25,9 @@ public class CursorPagination implements PaginationStrategy {
         Response response = paginatedData.getResponse();
         Builder reqBuilder = paginatedData.getRequestBuilder();
         AtomicBoolean isUpdated = new AtomicBoolean(false);
+        currentRequestCursor = null;
 
         reqBuilder.updateParameterByJsonPointer(input, old -> {
-
             if (response == null) {
                 currentRequestCursor = (String) old;
                 isUpdated.set(true);
@@ -55,6 +55,5 @@ public class CursorPagination implements PaginationStrategy {
     @Override
     public void addMetaData(PageWrapper<?, ?> page) {
         page.setCursorInput(currentRequestCursor);
-        currentRequestCursor = null;
     }
 }

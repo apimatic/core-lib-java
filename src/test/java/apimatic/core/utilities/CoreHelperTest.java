@@ -1864,11 +1864,6 @@ public class CoreHelperTest {
         assertEquals(atoms, result);
 
         result = CoreHelper
-                .updateValueByPointer(atoms, "/nucleas/NumberOfProtons",
-                        v -> NUMBER_OF_NEUTRONS);
-        assertEquals(atoms, result);
-
-        result = CoreHelper
                 .updateValueByPointer(atoms, "/atom",
                         v -> new Atom(UPDATED_VALUE, UPDATED_VALUE));
         assertEquals(atoms, result);

@@ -18,9 +18,9 @@ public class LinkPagination implements PaginationStrategy {
     @Override
     public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
         Response response = paginatedData.getResponse();
+        currentRequestLink = null;
 
         if (response == null) {
-            currentRequestLink = paginatedData.getRequestBuilder().getQueryUrl();
             return paginatedData.getRequestBuilder();
         }
 
@@ -38,6 +38,5 @@ public class LinkPagination implements PaginationStrategy {
     @Override
     public void addMetaData(PageWrapper<?, ?> page) {
         page.setNextLinkInput(currentRequestLink);
-        currentRequestLink = null;
     }
 }

@@ -381,6 +381,7 @@ public final class HttpRequest {
                 }
 
                 body = CoreHelper.updateValueByPointer(body, point, setter);
+                return;
             }
 
             if (bodyParameters != null) {
@@ -632,19 +633,6 @@ public final class HttpRequest {
             }
 
             return CoreHelper.trySerialize(obj);
-        }
-
-        /**
-         * @return A query URL combining the path, query and template parameters.
-         */
-        public String getQueryUrl() {
-            StringBuilder builder = new StringBuilder(path);
-
-            CoreHelper.appendUrlWithQueryParameters(builder, queryParams,
-                    arraySerializationFormat);
-            CoreHelper.appendUrlWithTemplateParameters(builder, templateParams);
-
-            return builder.toString();
         }
 
         /**

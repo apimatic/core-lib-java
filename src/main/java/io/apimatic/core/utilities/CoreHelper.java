@@ -1708,10 +1708,10 @@ public class CoreHelper {
             }
 
             JsonPointer jsonPointer = Json.createPointer(pointer);
-            if (!jsonPointer.containsValue(structure)) {
-                return value;
-            }
 
+            if (!jsonPointer.containsValue(structure)) {
+                structure = jsonPointer.add(structure, JsonValue.NULL);
+            }
             JsonValue oldJsonValue = jsonPointer.getValue(structure);
             Object oldValue = toObject(oldJsonValue);
             Object newValueRaw = updater.apply(oldValue);
@@ -1755,7 +1755,7 @@ public class CoreHelper {
             case FALSE:
                 return false;
             default:
-                return value.toString();
+                return null;
         }
     }
 

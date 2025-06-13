@@ -7,7 +7,7 @@ import io.apimatic.coreinterfaces.http.response.Response;
 
 public class PagePagination implements PaginationStrategy {
     private final String input;
-    private int currentRequestPageNumber = -1;
+    private int currentRequestPageNumber;
 
     /**
      * @param input JsonPointer of a field in request, representing page.
@@ -21,9 +21,10 @@ public class PagePagination implements PaginationStrategy {
         Response response = paginatedData.getResponse();
         Builder reqBuilder = paginatedData.getRequestBuilder();
         AtomicBoolean isUpdated = new AtomicBoolean(false);
+        currentRequestPageNumber = 0;
 
         reqBuilder.updateParameterByJsonPointer(input, old -> {
-            int oldValue = Integer.parseInt("" + old);
+            int oldValue = old == null ? 1 : Integer.parseInt("" + old);
 
             if (response == null) {
                 currentRequestPageNumber = oldValue;
@@ -47,6 +48,5 @@ public class PagePagination implements PaginationStrategy {
     @Override
     public void addMetaData(PageWrapper<?, ?> page) {
         page.setPageInput(currentRequestPageNumber);
-        currentRequestPageNumber = -1;
     }
 }
