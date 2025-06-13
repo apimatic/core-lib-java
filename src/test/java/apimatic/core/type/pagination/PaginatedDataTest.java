@@ -101,7 +101,7 @@ public class PaginatedDataTest extends EndToEndTest {
     public void testInvalidPaginationWithNullPage() throws IOException {
         assertInvalidPaginatedData(null);
     }
-    
+
     private void assertInvalidPaginatedData(String responseBody) throws IOException {
         Runnable call1 = () -> when(getResponse().getBody()).thenReturn(responseBody);
         PaginatedData<String, PageWrapper<String, RecordPage>,
@@ -161,8 +161,8 @@ public class PaginatedDataTest extends EndToEndTest {
         Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
-        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2, call3,
-                new CursorPagination("$response.body#/page_info",
+        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2,
+                call3, new CursorPagination("$response.body#/page_info",
                 "$request.path#/cursor")));
 
         assertTrue(pages.get(0).isCursorPagination());
@@ -208,13 +208,13 @@ public class PaginatedDataTest extends EndToEndTest {
         Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
-        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2, call3,
-                new OffsetPagination("$request.headers#/offset")));
+        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2,
+                call3, new OffsetPagination("$request.headers#/offset")));
 
         assertTrue(pages.get(0).isOffsetPagination());
         assertEquals(0, pages.get(0).getOffsetInput());
         assertTrue(pages.get(1).isOffsetPagination());
-        assertEquals(3, pages.get(1).getOffsetInput());
+        assertEquals(PAGE_SIZE, pages.get(1).getOffsetInput());
     }
 
     @Test
@@ -246,8 +246,8 @@ public class PaginatedDataTest extends EndToEndTest {
         Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
-        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2, call3,
-                new PagePagination("$request.query#/page")));
+        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2,
+                call3, new PagePagination("$request.query#/page")));
 
         assertTrue(pages.get(0).isNumberPagination());
         assertEquals(1, pages.get(0).getPageInput());
@@ -284,8 +284,8 @@ public class PaginatedDataTest extends EndToEndTest {
         Runnable call3 = () -> when(getResponse().getBody()).thenReturn(
                 "{\"data\":[]}");
 
-        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2, call3,
-                new LinkPagination("$response.INVALID#/next_link"),
+        List<PageWrapper<String, RecordPage>> pages = verifyData(getPaginatedData(call1, call2,
+                call3, new LinkPagination("$response.INVALID#/next_link"),
                 new PagePagination("$request.body#/limit")));
 
         assertTrue(pages.get(0).isLinkPagination());
@@ -384,7 +384,8 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals(0, paginatedData.getItems(itemCreator).size());
     }
 
-    private List<PageWrapper<String, RecordPage>> verifyData(PaginatedData<String, PageWrapper<String, RecordPage>,
+    private List<PageWrapper<String, RecordPage>> verifyData(
+            PaginatedData<String, PageWrapper<String, RecordPage>,
             RecordPage, CoreApiException> paginatedData) throws CoreApiException, IOException {
         Iterator<CheckedSupplier<String, CoreApiException>> itemIterator =
                 paginatedData.items(cs -> cs);
@@ -407,7 +408,7 @@ public class PaginatedDataTest extends EndToEndTest {
         assertEquals("No more items available.", exception.getMessage());
 
         List<PageWrapper<String, RecordPage>> pages = new ArrayList<>();
-                
+
         Iterator<CheckedSupplier<PageWrapper<String, RecordPage>, CoreApiException>> pagesIterator =
                 paginatedData.pages(cs -> cs);
 
@@ -437,7 +438,7 @@ public class PaginatedDataTest extends EndToEndTest {
 
         exception = assertThrows(NoSuchElementException.class, pagesIterator::next);
         assertEquals("No more pages available.", exception.getMessage());
-        
+
         return pages;
     }
 

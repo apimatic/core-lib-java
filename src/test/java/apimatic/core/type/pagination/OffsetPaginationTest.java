@@ -330,6 +330,7 @@ public class OffsetPaginationTest {
     @Test
     public void testInvalidStringOffset() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
         when(paginatedData.getRequestBuilder())
             .thenReturn(new HttpRequest.Builder().queryParam(
@@ -344,7 +345,7 @@ public class OffsetPaginationTest {
             assertEquals(INVALID_OFFSET_STRING, v);
             return v;
         });
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(mock(Response.class), null, null, offset);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, offset);
         assertTrue(pageWrapper.isOffsetPagination());
         assertEquals(INVALID_OFFSET_RESULT, pageWrapper.getOffsetInput());
     }
@@ -352,6 +353,7 @@ public class OffsetPaginationTest {
     @Test
     public void testMissingOffset() {
         PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
         when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
         when(paginatedData.getPageSize()).thenReturn(PAGE_SIZE);
@@ -360,7 +362,7 @@ public class OffsetPaginationTest {
 
         Builder requestBuilder = offset.apply(paginatedData);
         assertNotNull(requestBuilder);
-        PageWrapper<?, ?> pageWrapper = PageWrapper.create(mock(Response.class), null, null, offset);
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, offset);
         assertTrue(pageWrapper.isOffsetPagination());
         assertEquals(INVALID_OFFSET_RESULT, pageWrapper.getOffsetInput());
     }
