@@ -2,10 +2,11 @@ package io.apimatic.core.types.pagination;
 
 import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-public class LinkPagination implements PaginationDataManager {
+public class LinkPagination implements PaginationStrategy {
     private final String next;
-    private Builder nextReqBuilder;
+    private String currentRequestLink;
 
     /**
      * @param next JsonPointer of a field in response, representing next request queryUrl.
@@ -15,23 +16,27 @@ public class LinkPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        currentRequestLink = null;
 
-        String linkValue = CoreHelper.resolveResponsePointer(next,
-                paginatedData.getLastResponseBody(), paginatedData.getLastResponseHeaders());
-
-        if (linkValue == null) {
-            return false;
+        if (response == null) {
+            return paginatedData.getRequestBuilder();
         }
 
-        nextReqBuilder.queryParam(CoreHelper.getQueryParameters(linkValue));
+        String linkValue = CoreHelper.resolveResponsePointer(next, response);
 
-        return true;
+        if (linkValue == null) {
+            return null;
+        }
+        currentRequestLink = linkValue;
+
+        return paginatedData.getRequestBuilder()
+                .queryParam(CoreHelper.getQueryParameters(linkValue));
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?> page) {
+        page.setNextLinkInput(currentRequestLink);
     }
 }

@@ -2,19 +2,12 @@ package io.apimatic.core;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
-import io.apimatic.core.types.pagination.PaginatedData;
-import io.apimatic.core.types.pagination.PaginationDeserializer;
-import io.apimatic.core.types.pagination.PaginationDataManager;
 import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.compatibility.CompatibilityFactory;
 import io.apimatic.coreinterfaces.http.Context;
@@ -59,13 +52,12 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
     /**
      * An instance of {@link Deserializer}.
      */
-    private final Deserializer<?> deserializer;
+    private final Deserializer<ResponseType> deserializer;
 
     /**
-     * A functional interface to wrap in pagination types
-     * {@link PaginationDeserializer}.
+     * An instance of {@link Deserializer}.
      */
-    private final PaginationDeserializer paginationDeserializer;
+    private final Deserializer<?> intermediateDeserializer;
 
     /**
      * An instance of {@link ResponseClassType}.
@@ -92,7 +84,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param globalErrorCases         the map of global errors.
      * @param deserializer             the deserializer of json response.
      * @param intermediateDeserializer the api response deserializer.
-     * @param paginationDeserializer   the pagination deserializer.
      * @param responseClassType        the type of response class.
      * @param contextInitializer       the context initializer in response models.
      * @param isNullify404Enabled      on 404 error return null or not?.
@@ -102,14 +93,13 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
             final Map<String, ErrorCase<ExceptionType>> globalErrorCases,
             final Deserializer<ResponseType> deserializer,
             final Deserializer<?> intermediateDeserializer,
-            final PaginationDeserializer paginationDeserializer,
             final ResponseClassType responseClassType,
             final ContextInitializer<ResponseType> contextInitializer,
             final boolean isNullify404Enabled, final boolean isNullableResponseType) {
         this.localErrorCases = localErrorCases;
         this.globalErrorCases = globalErrorCases;
-        this.deserializer = deserializer == null ? intermediateDeserializer : deserializer;
-        this.paginationDeserializer = paginationDeserializer;
+        this.deserializer = deserializer;
+        this.intermediateDeserializer = intermediateDeserializer;
         this.responseClassType = responseClassType;
         this.contextInitializer = contextInitializer;
         this.isNullify404Enabled = isNullify404Enabled;
@@ -123,7 +113,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @param context Context which is made for endpoint.
      * @param config All endPoint level configuration.
      * @param globalConfig All apiCall level configuration.
-     * @param requestBuilder The requestBuilder that can re create current API Call.
      *
      * @return An object of type ResponseType.
      * @throws IOException   Signals that an I/O exception of some sort has
@@ -131,8 +120,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
      * @throws ExceptionType Represents error response from the server.
      */
     public ResponseType handle(Context context, EndpointConfiguration config,
-            GlobalConfiguration globalConfig, HttpRequest.Builder requestBuilder)
-            throws IOException, ExceptionType {
+            GlobalConfiguration globalConfig) throws IOException, ExceptionType {
         if (globalConfig.getHttpCallback() != null) {
             // invoke the callback after response if its not null
             globalConfig.getHttpCallback().onAfterResponse(context);
@@ -149,8 +137,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         // handle errors defined at the API level
         validateResponse(context);
 
-        Object result = convertResponse(context.getResponse(), requestBuilder, config,
-                globalConfig);
+        Object result = convertResponse(context.getResponse(), config, globalConfig);
 
         if (responseClassType == ResponseClassType.API_RESPONSE
                 || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
@@ -170,8 +157,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         return (ResponseType) result;
     }
 
-    private Object convertResponse(Response response, HttpRequest.Builder requestBuilder,
-            EndpointConfiguration config, GlobalConfiguration globalConfig) throws IOException {
+    private Object convertResponse(Response response, EndpointConfiguration config,
+            GlobalConfiguration globalConfig) throws IOException {
         if (responseClassType == ResponseClassType.DYNAMIC_RESPONSE
                 || responseClassType == ResponseClassType.DYNAMIC_API_RESPONSE) {
             return createDynamicResponse(response, globalConfig.getCompatibilityFactory());
@@ -189,8 +176,8 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
             return deserializer.apply(response.getBody());
         }
 
-        if (paginationDeserializer != null) {
-            return paginationDeserializer.apply(config, globalConfig, requestBuilder, response);
+        if (intermediateDeserializer != null) {
+            return intermediateDeserializer.apply(response.getBody());
         }
 
         return null;
@@ -245,6 +232,25 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
     }
 
+    /**
+     * Converts this ResponseHandler to its builder.
+     * @return ResponseHandler.Builder that can create a copy of this instance.
+     */
+    public Builder<ResponseType, ExceptionType> toBuilder() {
+        Builder<ResponseType, ExceptionType> builder =  new Builder<ResponseType, ExceptionType>()
+                .globalErrorCase(globalErrorCases != null ? new HashMap<>(globalErrorCases) : null)
+                .deserializer(deserializer)
+                .apiResponseDeserializer(intermediateDeserializer)
+                .responseClassType(responseClassType)
+                .contextInitializer(contextInitializer)
+                .nullify404(isNullify404Enabled)
+                .nullableResponseType(isNullableResponseType);
+
+        builder.localErrorCases = localErrorCases;
+
+        return builder;
+    }
+
     public static class Builder<ResponseType, ExceptionType extends CoreApiException> {
         /**
          * A map of end point level errors.
@@ -266,11 +272,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
          */
         private Deserializer<?> intermediateDeserializer;
 
-        /**
-         * A functional interface to wrap in pagination types
-         * {@link PaginationDeserializer}.
-         */
-        private PaginationDeserializer paginationDeserializer;
 
         /**
          * An instance of {@link ResponseClassType}.
@@ -349,28 +350,6 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         }
 
         /**
-         * Setter for the deserializer to be used in pagination wrapper.
-         *
-         * @param pageType TypeReference representing the type.
-         * @param converter Converter to convert Page into the list of InnerType.
-         * @param returnTypeGetter Converter to convert PaginatedData into the return type.
-         * @param dataManagers List of pagination data managers.
-         * @param <Page>      the type of the outer page.
-         * @param <InnerType> the type wrapped by PaginatedIterable.
-         *
-         * @return {@link ResponseHandler.Builder}.
-         */
-        public <InnerType, Page> Builder<ResponseType, ExceptionType> paginatedDeserializer(
-                TypeReference<Page> pageType, Function<Page, List<InnerType>> converter,
-                Function<PaginatedData<InnerType, Page>, ?> returnTypeGetter,
-                PaginationDataManager... dataManagers) {
-            this.paginationDeserializer = (config, globalConfig, reqBuilder, res) ->
-                returnTypeGetter.apply(new PaginatedData<InnerType, Page>(config, globalConfig,
-                        reqBuilder, res, pageType, converter, dataManagers));
-            return this;
-        }
-
-        /**
          * Setter for the responseClassType.
          *
          * @param responseClassType specify the response class type for result.
@@ -425,7 +404,7 @@ public final class ResponseHandler<ResponseType, ExceptionType extends CoreApiEx
         public ResponseHandler<ResponseType, ExceptionType> build() {
             return new ResponseHandler<ResponseType, ExceptionType>(localErrorCases,
                     globalErrorCases, deserializer, intermediateDeserializer,
-                    paginationDeserializer, responseClassType, contextInitializer,
+                    responseClassType, contextInitializer,
                     isNullify404Enabled, isNullableResponseType);
         }
     }

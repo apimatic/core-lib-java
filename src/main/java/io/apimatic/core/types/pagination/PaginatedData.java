@@ -2,225 +2,264 @@ package io.apimatic.core.types.pagination;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.apimatic.core.ApiCall;
-import io.apimatic.core.ErrorCase;
-import io.apimatic.core.GlobalConfiguration;
 import io.apimatic.core.HttpRequest;
-import io.apimatic.core.configurations.http.request.EndpointConfiguration;
 import io.apimatic.core.types.CoreApiException;
-import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.response.Response;
 
-public class PaginatedData<T, P> implements Iterator<T> {
+public class PaginatedData<I, P, R, E extends CoreApiException> {
+    private final ApiCall<R, E> firstApiCall;
+    private final Function<PageWrapper<I, R>, P> pageCreator;
+    private final Function<R, List<I>> itemsCreator;
+    private final PaginationStrategy[] strategies;
 
-    private int currentIndex = 0;
-
-    private final List<T> data = new ArrayList<T>();
-    private final List<P> pages = new ArrayList<P>();
-    private int lastDataSize;
-    private Response lastResponse;
-    private HttpRequest.Builder lastRequestBuilder;
-
-    private final TypeReference<P> pageType;
-    private final Function<P, List<T>> converter;
-    private final PaginationDataManager[] dataManagers;
-    private final EndpointConfiguration endpointConfig;
-    private final GlobalConfiguration globalConfig;
+    private int itemIndex = 0;
+    private final List<CheckedSupplier<I, E>> items = new ArrayList<>();
+    private CheckedSupplier<P, E> page = null;
+    private ApiCall<R, E> apiCall;
+    private PaginationStrategy lockedStrategy;
+    private boolean canLockStrategy = false;
+    private boolean dataClosed = false;
 
     /**
-     * @param paginatedData Existing instance to be cloned.
+     * @param apiCall ApiCall instance to be paginated.
+     * @param pageCreator Converts the PageWrapper into the instance of type P.
+     * @param itemsCreator Extract list of items of type I from response.
+     * @param strategies List of applicable pagination strategies.
      */
-    public PaginatedData(final PaginatedData<T, P> paginatedData) {
-        this.pageType = paginatedData.pageType;
-        this.converter = paginatedData.converter;
-        this.dataManagers = paginatedData.dataManagers;
-        this.endpointConfig = paginatedData.endpointConfig;
-        this.globalConfig = paginatedData.globalConfig;
-
-        this.lastDataSize = paginatedData.lastDataSize;
-        this.lastResponse = paginatedData.lastResponse;
-        this.lastRequestBuilder = paginatedData.lastRequestBuilder;
-
-        this.data.addAll(paginatedData.data);
-        this.pages.addAll(paginatedData.pages);
+    public PaginatedData(final ApiCall<R, E> apiCall,
+            final Function<PageWrapper<I, R>, P> pageCreator,
+            final Function<R, List<I>> itemsCreator,
+            final PaginationStrategy... strategies) {
+        this.firstApiCall = apiCall;
+        this.pageCreator = pageCreator;
+        this.itemsCreator = itemsCreator;
+        this.strategies = strategies;
+        this.apiCall = apiCall;
     }
 
     /**
-     * @param config ApiCall configuration that provided this paginated data.
-     * @param globalConfig Global configuration that provided this paginated data.
-     * @param requestBuilder RequestBuilder that provided this paginated data.
-     * @param response Response corresponding to this paginated data instance.
-     * @param pageType TypeReference of page type P.
-     * @param converter PageType P to list of ItemType T converter
-     * @param dataManagers A list of data managers that provided this paginated data.
-     *
-     * @throws IOException
+     * @return RequestBuilder that provided this page
      */
-    public PaginatedData(final EndpointConfiguration config, final GlobalConfiguration globalConfig,
-            final HttpRequest.Builder requestBuilder, final Response response,
-            final TypeReference<P> pageType, final Function<P, List<T>> converter,
-            final PaginationDataManager... dataManagers) throws IOException {
-        this.pageType = pageType;
-        this.converter = converter;
-        this.dataManagers = dataManagers;
-        this.endpointConfig = config;
-        this.globalConfig = globalConfig;
-
-        updateUsing(response, requestBuilder);
-    }
-
-    private void updateUsing(Response response, HttpRequest.Builder requestBuilder)
-            throws IOException {
-        String responseBody = response.getBody();
-        P page = CoreHelper.deserialize(responseBody, pageType);
-        List<T> newData = converter.apply(page);
-
-        this.lastDataSize = newData.size();
-        this.lastResponse = response;
-        this.lastRequestBuilder = requestBuilder;
-
-        this.data.addAll(newData);
-        this.pages.add(page);
+    public HttpRequest.Builder getRequestBuilder() {
+        return apiCall.getRequestBuilder();
     }
 
     /**
-     * @return RequestBuilder that provided the last page
+     * @return Response corresponding to this page
      */
-    public HttpRequest.Builder getLastRequestBuilder() {
-        return lastRequestBuilder;
+    public Response getResponse() {
+        return apiCall.getResponse();
     }
 
     /**
-     * @return Response body corresponding to the last page
+     * @return Size of this page
      */
-    public String getLastResponseBody() {
-        return lastResponse.getBody();
+    public int getPageSize() {
+        return items.size();
     }
 
     /**
-     * @return Response headers corresponding to the last page
+     * Get the items in current page converted to type T.
+     * @param <T> Represents the type of items in list.
+     * @param itemSupplier A converter to convert the CheckedSupplier of items to type T.
+     * @return All items in current page converted via itemSupplier.
      */
-    public String getLastResponseHeaders() {
-        return CoreHelper.trySerialize(lastResponse.getHeaders().asSimpleMap());
-    }
-
-    /**
-     * @return Size of the last page
-     */
-    public int getLastDataSize() {
-        return lastDataSize;
-    }
-
-    /**
-     * @return Reset this instance and return a clone if its traversed before
-     */
-    public PaginatedData<T, P> reset() {
-        if (currentIndex == 0) {
-            return this;
+    public <T> List<T> getItems(Function<CheckedSupplier<I, E>, T> itemSupplier) {
+        List<T> convertedItems = new ArrayList<>();
+        for (CheckedSupplier<I, E> i : this.items) {
+            convertedItems.add(itemSupplier.apply(i));
         }
 
-        return new PaginatedData<T, P>(this);
-    }
-
-    @Override
-    public boolean hasNext() {
-        if (currentIndex < data.size()) {
-            return true;
-        }
-
-        fetchMoreData();
-
-        return currentIndex < data.size();
-    }
-
-    @Override
-    public T next() {
-        if (hasNext()) {
-            return data.get(currentIndex++);
-        }
-
-        throw new NoSuchElementException("No more data available.");
+        return convertedItems;
     }
 
     /**
-     * @return An iterable of items of type T
+     * Get the current page converted to type T.
+     * @param <T> Represents the return type.
+     * @param pageSupplier A converter to convert the CheckedSupplier of page to type T.
+     * @return Current page converted via pageSupplier.
      */
-    public Iterator<T> iterator() {
-        return reset();
+    public <T> T getPage(Function<CheckedSupplier<P, E>, T> pageSupplier) {
+        if (page == null) {
+            return null;
+        }
+
+        return pageSupplier.apply(page);
     }
 
     /**
-     * @return An iterable of pages of type P
+     * @param <T> Represents the type of items in iterator.
+     * @param itemSupplier A converter to convert the CheckedSupplier of items to type T.
+     * @return An Iterator of all items of type T.
      */
-    public Iterable<P> pages() {
-        PaginatedData<T, P> dataCopy = reset();
-        return new Iterable<P>() {
+    public <T> Iterator<T> items(Function<CheckedSupplier<I, E>, T> itemSupplier) {
+        PaginatedData<I, P, R, E> paginatedData = copy();
+
+        return new Iterator<T>() {
             @Override
-            public Iterator<P> iterator() {
-                return new Iterator<P>() {
-                    private int currentIndex = 0;
+            public boolean hasNext() {
+                if (paginatedData.itemIndex < paginatedData.items.size()) {
+                    return true;
+                }
 
-                    @Override
-                    public boolean hasNext() {
-                        if (currentIndex < dataCopy.pages.size()) {
-                            return true;
-                        }
+                return paginatedData.fetchNextPage();
+            }
 
-                        while (dataCopy.hasNext()) {
-                            if (currentIndex < dataCopy.pages.size()) {
-                                return true;
-                            }
-                            dataCopy.next();
-                        }
+            @Override
+            public T next() {
+                if (paginatedData.itemIndex == paginatedData.items.size()) {
+                    throw new NoSuchElementException("No more items available.");
+                }
 
-                        return false;
-                    }
-
-                    @Override
-                    public P next() {
-                        if (dataCopy.hasNext()) {
-                            return dataCopy.pages.get(currentIndex++);
-                        }
-
-                        throw new NoSuchElementException("No more data available.");
-                    }
-                };
+                return itemSupplier.apply(paginatedData.items.get(paginatedData.itemIndex++));
             }
         };
     }
 
-    private void fetchMoreData() {
-        for (PaginationDataManager manager : dataManagers) {
+    /**
+     * @param <T> Represents the type of pages in iterator.
+     * @param pageSupplier A converter to convert the CheckedSupplier of page to type T.
+     * @return An Iterator of all pages of type T.
+     */
+    public <T> Iterator<T> pages(Function<CheckedSupplier<P, E>, T> pageSupplier) {
+        PaginatedData<I, P, R, E> paginatedData = copy();
 
-            if (!manager.isValid(this)) {
+        return new Iterator<T>() {
+            @Override
+            public boolean hasNext() {
+                if (paginatedData.page != null) {
+                    return true;
+                }
+
+                return paginatedData.fetchNextPage();
+            }
+
+            @Override
+            public T next() {
+                if (paginatedData.page == null) {
+                    throw new NoSuchElementException("No more pages available.");
+                }
+
+                T convertedPage = pageSupplier.apply(paginatedData.page);
+                paginatedData.page = null;
+                return convertedPage;
+            }
+
+        };
+    }
+
+    /**
+     * @return A copy of this instance of PaginatedData.
+     */
+    public PaginatedData<I, P, R, E> copy() {
+        return new PaginatedData<>(firstApiCall, pageCreator, itemsCreator, strategies);
+    }
+
+    /**
+     * Start fetching the next page asynchronously.
+     * @return A CompletableFuture of boolean instance suggesting if there is a next page or not.
+     */
+    public CompletableFuture<Boolean> fetchNextPageAsync() {
+        if (dataClosed) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        for (PaginationStrategy strategy : getStrategies()) {
+            HttpRequest.Builder requestBuilder = strategy.apply(this);
+            if (requestBuilder == null) {
+                continue;
+            }
+
+            ApiCall<R, E> newApiCall = this.apiCall.toBuilder()
+                    .requestBuilder(requestBuilder)
+                    .build();
+
+            return newApiCall.executeAsync()
+                    .thenApply(result -> updateWith(newApiCall, result, strategy))
+                    .exceptionally(ex -> updateAsFailed(ex.getCause()));
+        }
+
+        return CompletableFuture.completedFuture(false);
+    }
+
+    private boolean fetchNextPage() {
+        if (dataClosed) {
+            return false;
+        }
+
+        for (PaginationStrategy strategy : getStrategies()) {
+
+            HttpRequest.Builder requestBuilder = strategy.apply(this);
+            if (requestBuilder == null) {
                 continue;
             }
 
             try {
-                PaginatedData<T, P> result =
-                        new ApiCall.Builder<PaginatedData<T, P>, CoreApiException>()
-                        .endpointConfiguration(endpointConfig.toBuilder())
-                        .globalConfig(globalConfig)
-                        .requestBuilder(manager.getNextRequestBuilder())
-                        .responseHandler(res -> res
-                                .globalErrorCase(Collections.singletonMap(ErrorCase.DEFAULT,
-                                        ErrorCase.setReason(null, CoreApiException::new)))
-                                .nullify404(false)
-                                .paginatedDeserializer(pageType, converter, r -> r, dataManagers))
-                        .build().execute();
+                ApiCall<R, E> newApiCall = apiCall.toBuilder()
+                    .requestBuilder(requestBuilder).build();
+                R pageUnWrapped = newApiCall.execute();
 
-                updateUsing(result.lastResponse, result.lastRequestBuilder);
-                return;
-            } catch (Exception ignored) {
+                return updateWith(newApiCall, pageUnWrapped, strategy);
+            } catch (IOException | CoreApiException exp) {
+                return updateAsFailed(exp);
             }
         }
+
+        return false;
+    }
+
+    private PaginationStrategy[] getStrategies() {
+        if (lockedStrategy == null) {
+            return strategies;
+        }
+
+        return new PaginationStrategy[] {lockedStrategy};
+    }
+
+    private boolean updateWith(ApiCall<R, E> apiCall, R pageUnWrapped,
+            PaginationStrategy strategy) {
+        itemIndex = 0;
+        this.items.clear();
+        this.page = null;
+
+        if (pageUnWrapped == null) {
+            return false;
+        }
+
+        List<I> itemsUnWrapped = itemsCreator.apply(pageUnWrapped);
+        if (itemsUnWrapped == null || itemsUnWrapped.isEmpty()) {
+            return false;
+        }
+
+        this.apiCall = apiCall;
+        PageWrapper<I, R> pageWrapper = PageWrapper.create(apiCall.getResponse(), pageUnWrapped,
+                itemsUnWrapped, strategy);
+        this.page = CheckedSupplier.create(pageCreator.apply(pageWrapper));
+        itemsUnWrapped.forEach(i -> items.add(CheckedSupplier.create(i)));
+
+        if (canLockStrategy) {
+            lockedStrategy = strategy;
+        } else {
+            canLockStrategy = true;
+        }
+
+        return true;
+    }
+
+    private boolean updateAsFailed(Throwable exp) {
+        page = CheckedSupplier.createError(exp);
+        itemIndex = 0;
+        items.clear();
+        items.add(CheckedSupplier.createError(exp));
+        dataClosed = true;
+
+        return true;
     }
 }

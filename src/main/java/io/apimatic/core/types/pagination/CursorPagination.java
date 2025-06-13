@@ -1,12 +1,15 @@
 package io.apimatic.core.types.pagination;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.utilities.CoreHelper;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-public class CursorPagination implements PaginationDataManager {
+public class CursorPagination implements PaginationStrategy {
     private final String output;
     private final String input;
-    private Builder nextReqBuilder;
+    private String currentRequestCursor;
 
     /**
      * @param output JsonPointer of a field received in the response, representing next cursor.
@@ -18,27 +21,39 @@ public class CursorPagination implements PaginationDataManager {
     }
 
     @Override
-    public boolean isValid(PaginatedData<?, ?> paginatedData) {
-        nextReqBuilder = paginatedData.getLastRequestBuilder();
+    public Builder apply(PaginatedData<?, ?, ?, ?> paginatedData) {
+        Response response = paginatedData.getResponse();
+        Builder reqBuilder = paginatedData.getRequestBuilder();
+        AtomicBoolean isUpdated = new AtomicBoolean(false);
+        currentRequestCursor = null;
 
-        String cursorValue = CoreHelper.resolveResponsePointer(output,
-                paginatedData.getLastResponseBody(), paginatedData.getLastResponseHeaders());
+        reqBuilder.updateParameterByJsonPointer(input, old -> {
+            if (response == null) {
+                currentRequestCursor = (String) old;
+                isUpdated.set(true);
+                return old;
+            }
 
-        if (cursorValue == null) {
-            return false;
-        }
+            String cursorValue = CoreHelper.resolveResponsePointer(output, response);
 
-        final boolean[] isUpdated = {false};
-        nextReqBuilder.updateByReference(input, old -> {
-            isUpdated[0] = true;
+            if (cursorValue == null) {
+                return old;
+            }
+
+            currentRequestCursor = cursorValue;
+            isUpdated.set(true);
             return cursorValue;
         });
 
-        return isUpdated[0];
+        if (!isUpdated.get() && response == null) {
+            return reqBuilder;
+        }
+
+        return isUpdated.get() ? reqBuilder : null;
     }
 
     @Override
-    public Builder getNextRequestBuilder() {
-        return nextReqBuilder;
+    public void addMetaData(PageWrapper<?, ?> page) {
+        page.setCursorInput(currentRequestCursor);
     }
 }

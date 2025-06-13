@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import org.junit.Before;
@@ -36,6 +37,7 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import apimatic.core.mocks.MockCoreConfig;
+import apimatic.core.models.Atom;
 import apimatic.core.models.Car;
 import apimatic.core.models.Employee;
 import apimatic.core.models.Rfc1123Date;
@@ -57,6 +59,21 @@ import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.type.CoreFileWrapper;
 
 public class RequestBuilderTest extends MockCoreConfig {
+
+    private static final int ELECTRONS_DEFAULT = 12;
+    private static final int ELECTRONS_UPDATED = 14;
+    private static final long QUERY_DEFAULT = 234L;
+    private static final long QUERY_UPDATED = 254L;
+    private static final double HEADER_DEFAULT = 2.14;
+    private static final double HEADER_UPDATED = 19.95;
+    private static final int ATOM_NUMBER = 23;
+    private static final int ATOM_MASS = 24;
+    private static final int BODY_A_ELECTRONS = 2;
+    private static final int BODY_A_MASS = 4;
+    private static final int BODY_B_ELECTRONS = 4;
+    private static final int BODY_B_MASS = 2;
+    private static final int BODY_B_UPDATED = 8;
+
 
     /**
      * Initializes mocks annotated with Mock.
@@ -127,20 +144,148 @@ public class RequestBuilderTest extends MockCoreConfig {
         setExpectations();
     }
 
+    @Test
+    public void testUpdatePathParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .templateParam(param -> param.key("temp").value(false));
+
+        updateAndVerify(localRequestBuilder, "$request.path#/temp", false, true);
+    }
+
+
+    @Test
+    public void testUpdatePathParamArray() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .templateParam(param -> param.key("temp")
+                        .value(new String[] {"apple", "banana", "cherry" }));
+
+        updateAndVerify(localRequestBuilder, "$request.path#/temp/1", "banana", "mango");
+    }
+
+    @Test
+    public void testUpdateSimpleFormParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParam(param -> param.key("form").value(true));
+
+        updateAndVerify(localRequestBuilder, "$request.body#/form", true, false);
+    }
+
+    @Test
+    public void testUpdateComplexFormParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .formParam(param -> param.key("form")
+                        .value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+
+        updateAndVerify(localRequestBuilder, "$request.body#/form/NumberOfElectrons",
+                ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+    }
+
+    @Test
+    public void testUpdateSimpleQueryParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .queryParam(param -> param.key("que").value(QUERY_DEFAULT));
+
+        updateAndVerify(localRequestBuilder, "$request.query#/que", QUERY_DEFAULT, QUERY_UPDATED);
+    }
+
+    @Test
+    public void testUpdateComplexQueryParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .queryParam(param -> param.key("que")
+                        .value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+
+        updateAndVerify(localRequestBuilder, "$request.query#/que/NumberOfElectrons",
+                ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+    }
+
+    @Test
+    public void testUpdateSimpleHeaderParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .headerParam(param -> param.key("head").value(HEADER_DEFAULT));
+
+        updateAndVerify(localRequestBuilder, "$request.headers#/head",
+                HEADER_DEFAULT, HEADER_UPDATED);
+    }
+
+    @Test
+    public void testUpdateComplexHeaderParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.GET)
+                .headerParam(param -> param.key("head")
+                        .value(new Atom(ELECTRONS_DEFAULT, ELECTRONS_DEFAULT)));
+
+        updateAndVerify(localRequestBuilder, "$request.headers#/head/NumberOfElectrons",
+                ELECTRONS_DEFAULT, ELECTRONS_UPDATED);
+    }
+
+    @Test
+    public void testUpdateMultipleBodyParams() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+                .bodyParam(param -> param.key("bodyA").value("bodyValue"))
+                .bodyParam(param -> param.key("bodyB").value("bodyValue"));
+
+        updateAndVerify(localRequestBuilder, "$request.body#/bodyB", "bodyValue", "ValueB");
+    }
+
+    @Test
+    public void testUpdateComplexBodyParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+                .bodyParam(param -> param.value(new Atom(ATOM_NUMBER, ATOM_MASS)));
+
+        updateAndVerify(localRequestBuilder, "$request.body#/NumberOfElectrons",
+                ATOM_NUMBER, ATOM_MASS);
+    }
+
+    @Test
+    public void testUpdateMultipleComplexBodyParams() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+                .bodyParam(param -> param.key("bodyA")
+                .value(new Atom(BODY_A_ELECTRONS, BODY_A_MASS)))
+                .bodyParam(param -> param.key("bodyB")
+                .value(new Atom(BODY_B_ELECTRONS, BODY_B_MASS)));
+
+        updateAndVerify(localRequestBuilder, "$request.body#/bodyB/NumberOfElectrons",
+                BODY_B_ELECTRONS, BODY_B_UPDATED);
+    }
+
+    @Test
+    public void testUpdateSimpleBodyParam() throws IOException {
+        HttpRequest.Builder localRequestBuilder = new HttpRequest.Builder().httpMethod(Method.POST)
+                .bodyParam(param -> param.value("BodyValue"));
+
+        updateAndVerify(localRequestBuilder, "$request.body", "BodyValue", "new Value");
+    }
+
+    private void updateAndVerify(HttpRequest.Builder requestBuilder,
+            String pointer, Object oldValue, Object newValue) {
+        requestBuilder.updateParameterByJsonPointer(pointer, old -> {
+            assertEquals(oldValue.toString(), old.toString());
+            return newValue;
+        });
+        AtomicBoolean asserted = new AtomicBoolean(false);
+        requestBuilder.updateParameterByJsonPointer(pointer, newV -> {
+            assertEquals(newValue.toString(), newV.toString());
+            asserted.set(true);
+            return newV;
+        });
+        assertTrue(asserted.get());
+    }
+
     @Test(expected = NullPointerException.class)
     public void testBodyParamValidation() throws IOException {
         // when
-        new HttpRequest.Builder().httpMethod(Method.POST).bodyParam(param -> param.value(null))
+        new HttpRequest.Builder()
+                .httpMethod(Method.POST)
+                .bodyParam(param -> param.value(null))
                 .build(getMockGlobalConfig());
-
     }
 
     @Test(expected = NullPointerException.class)
     public void testBodyParamValidation1() throws IOException {
         // when
-        new HttpRequest.Builder().httpMethod(Method.POST).bodyParam(param -> param.value(null))
+        new HttpRequest.Builder()
+                .httpMethod(Method.POST)
+                .bodyParam(param -> param.value(null))
                 .build(getMockGlobalConfig());
-
     }
 
     @Test
@@ -148,12 +293,27 @@ public class RequestBuilderTest extends MockCoreConfig {
         // when
         Request coreHttpRequest =
                 new HttpRequest.Builder().httpMethod(Method.PATCH)
-                        .bodyParam(param -> param.value("bodyValue")).build(getMockGlobalConfig());
+                        .bodyParam(param -> param.value("bodyValue"))
+                        .build(getMockGlobalConfig());
 
         when(coreHttpRequest.getBody()).thenReturn("bodyValue");
 
         // verify
         assertEquals(coreHttpRequest.getBody(), "bodyValue");
+    }
+
+    @Test
+    public void testClonedBodyParam() throws IOException {
+        // when
+        Request coreHttpRequest =
+                new HttpRequest.Builder().httpMethod(Method.PATCH)
+                        .bodyParam(param -> param.key("body").value("bodyValue")).copy()
+                        .build(getMockGlobalConfig());
+
+        when(coreHttpRequest.getBody()).thenReturn("bodyValue");
+
+        // verify
+        assertEquals("bodyValue", coreHttpRequest.getBody());
     }
 
     @Test
@@ -719,6 +879,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         when(authentications.get("global"))
                 .thenReturn(new HeaderAuth(Collections.singletonMap(null, null)));
 
+        @SuppressWarnings("unused")
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
@@ -733,6 +894,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         when(authentications.get("global"))
                 .thenReturn(new HeaderAuth(Collections.singletonMap("authorization", null)));
 
+        @SuppressWarnings("unused")
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
@@ -769,6 +931,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         authParams.put(null, null);
         authParams.put("api-key", "apikey");
         when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        @SuppressWarnings("unused")
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
@@ -783,6 +946,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         authParams.put(null, "api-token");
         authParams.put("api-key", "apikey");
         when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        @SuppressWarnings("unused")
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))
@@ -797,6 +961,7 @@ public class RequestBuilderTest extends MockCoreConfig {
         authParams.put("token", null);
         authParams.put("api-key", "apikey");
         when(authentications.get("global")).thenReturn(new QueryAuth(authParams));
+        @SuppressWarnings("unused")
         Request coreHttpRequest =
                 new HttpRequest.Builder().server("https:\\localhost:3000").path("/auth/basic")
                         .formParam(param -> param.key("key").value("string"))

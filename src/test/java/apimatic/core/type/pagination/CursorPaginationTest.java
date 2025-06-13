@@ -1,10 +1,9 @@
 package apimatic.core.type.pagination;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,227 +13,240 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import io.apimatic.core.HttpRequest;
+import io.apimatic.core.HttpRequest.Builder;
 import io.apimatic.core.types.pagination.CursorPagination;
+import io.apimatic.core.types.pagination.PageWrapper;
 import io.apimatic.core.types.pagination.PaginatedData;
+import io.apimatic.coreinterfaces.http.response.Response;
 
-/**
- * Unit tests for the {@link CursorPagination} class.
- * This class tests the behavior of cursor pagination logic.
- */
 public class CursorPaginationTest {
 
     /**
-     * Silent rule for Mockito initialization.
+     * Initializes Mockito rule to enable Mockito annotations and
+     * silently handle unnecessary stubbings during tests.
      */
     @Rule
     public MockitoRule initRule = MockitoJUnit.rule().silent();
 
     private static final String CURSOR_KEY = "cursor";
+    private static final String RESPONSE_POINTER_VALID = "$response.body#/next_cursor";
+    private static final String RESPONSE_POINTER_INVALID = "$response.body#/next";
+    private static final String REQUEST_QUERY_POINTER = "$request.query#/cursor";
+    private static final String REQUEST_HEADER_POINTER = "$request.headers#/cursor";
+    private static final String REQUEST_POINTER_INVALID = "$request.headers#/next_cursor";
+    private static final String NEXT_CURSOR_JSON_STRING = "{\"next_cursor\": \"xyz123\"}";
+    private static final String NEXT_CURSOR_JSON_INT = "{\"next_cursor\": 123}";
 
-    /**
-     * Test with a valid cursor value.
-     */
     @Test
-    public void testWithValidCursorReturnsTrue() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithValidCursor() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(
-                        q -> q.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().queryParam(q -> q.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
 
-        assertTrue(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("xyz123", v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("xyz123", pageWrapper.getCursorInput());
     }
 
-    /**
-     * Test with a valid cursor but different response type (integer).
-     */
     @Test
-    public void testWithValidCursorAndDifferentTypeReturnsTrueA() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithValidCursorAndDifferentTypeA() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(
-                        q -> q.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": 123}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().queryParam(q -> q.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
 
-        assertTrue(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("123", pageWrapper.getCursorInput());
     }
 
     @Test
-    public void testWithValidCursorAndDifferentTypeReturnsTrueB() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithValidCursorAndDifferentType() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
         final int current = 456;
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(
-                        q -> q.key("cursor").value(current)));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": 123}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().queryParam(q -> q.key(CURSOR_KEY).value(current)));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
 
-        assertTrue(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("123", pageWrapper.getCursorInput());
     }
 
     @Test
-    public void testWithValidCursorButMissingInFirstRequestReturnsFalse() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithValidCursorButMissingInFirstRequest() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder()).thenReturn(new HttpRequest.Builder());
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
 
-        assertFalse(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
-            fail();
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(RESPONSE_POINTER_VALID, v -> {
+            assertEquals(null, v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("xyz123", pageWrapper.getCursorInput());
     }
 
-    /**
-     * Test with valid cursor from a response body and different type.
-     */
     @Test
-    public void testWithValidCursorFromResponseBodyReturnsTrue() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithMissingCursorFirstRequest() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().queryParam(
-                        q -> q.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": 123}");
+        when(paginatedData.getRequestBuilder()).thenReturn(new HttpRequest.Builder());
+        when(paginatedData.getResponse()).thenReturn(null);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.query#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
 
-        assertTrue(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(RESPONSE_POINTER_VALID, v -> {
+            assertEquals(null, v);
+            return v;
+        });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals(null, pageWrapper.getCursorInput());
+    }
 
-        cursor.getNextRequestBuilder().updateByReference("$request.query#/cursor", v -> {
+    @Test
+    public void testWithValidCursorFromResponseBody() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
+
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().queryParam(q -> q.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_INT);
+
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_QUERY_POINTER);
+
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_QUERY_POINTER, v -> {
             assertEquals("123", v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("123", pageWrapper.getCursorInput());
     }
 
-    /**
-     * Test case where the response pointer is invalid.
-     */
     @Test
-    public void testWithInvalidResponsePointerReturnsFalse() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithInvalidResponsePointer() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(
-                        h -> h.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().headerParam(h -> h.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next",
-                "$request.headers#/cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_INVALID,
+                REQUEST_HEADER_POINTER);
 
-        assertFalse(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.headers#/cursor", v -> {
-            assertEquals("abc", v);
-            return v;
-        });
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNull(requestBuilder);
     }
 
-    /**
-     * Test with missing response pointer.
-     */
     @Test
-    public void testWithMissingResponsePointerReturnsFalse() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithMissingResponsePointer() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(
-                        h -> h.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().headerParam(h -> h.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination(null, "$request.headers#/cursor");
+        CursorPagination cursor = new CursorPagination(null, REQUEST_HEADER_POINTER);
 
-        assertFalse(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.headers#/cursor", v -> {
-            assertEquals("abc", v);
-            return v;
-        });
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNull(requestBuilder);
     }
 
-    /**
-     * Test case with invalid request pointer.
-     */
     @Test
-    public void testWithInvalidRequestPointerReturnsFalse() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithInvalidRequestPointer() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(
-                        h -> h.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().headerParam(h -> h.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor",
-                "$request.headers#/next_cursor");
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID,
+                REQUEST_POINTER_INVALID);
 
-        assertFalse(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.headers#/cursor", v -> {
-            assertEquals("abc", v);
+        Builder requestBuilder = cursor.apply(paginatedData);
+        assertNotNull(requestBuilder);
+        requestBuilder.updateParameterByJsonPointer(REQUEST_POINTER_INVALID, v -> {
+            assertEquals("xyz123", v);
             return v;
         });
+        PageWrapper<?, ?> pageWrapper = PageWrapper.create(response, null, null, cursor);
+        assertTrue(pageWrapper.isCursorPagination());
+        assertEquals("xyz123", pageWrapper.getCursorInput());
     }
 
-    /**
-     * Test with missing request pointer.
-     */
     @Test
-    public void testWithMissingRequestPointerReturnsFalse() {
-        PaginatedData<?, ?> paginatedData = mock(PaginatedData.class);
+    public void testWithMissingRequest() {
+        PaginatedData<?, ?, ?, ?> paginatedData = mock(PaginatedData.class);
+        Response response = mock(Response.class);
 
-        when(paginatedData.getLastRequestBuilder())
-                .thenReturn(new HttpRequest.Builder().headerParam(
-                        h -> h.key(CURSOR_KEY).value("abc")));
-        when(paginatedData.getLastResponseBody()).thenReturn("{\"next_cursor\": \"xyz123\"}");
+        when(paginatedData.getRequestBuilder()).thenReturn(
+                new HttpRequest.Builder().headerParam(h -> h.key(CURSOR_KEY).value("abc")));
+        when(paginatedData.getResponse()).thenReturn(response);
+        when(response.getBody()).thenReturn(NEXT_CURSOR_JSON_STRING);
 
-        CursorPagination cursor = new CursorPagination("$response.body#/next_cursor", null);
-
-        assertFalse(cursor.isValid(paginatedData));
-        assertNotNull(cursor.getNextRequestBuilder());
-
-        cursor.getNextRequestBuilder().updateByReference("$request.headers#/cursor", v -> {
-            assertEquals("abc", v);
-            return v;
-        });
+        CursorPagination cursor = new CursorPagination(RESPONSE_POINTER_VALID, null);
+        assertNull(cursor.apply(paginatedData));
     }
 }
