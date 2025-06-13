@@ -75,7 +75,7 @@ public final class PageWrapper<I, P> implements ApiResponseType<P> {
 
     /**
      * Sets the next link input
-     * @param strategy value of next link input
+     * @param nextLinkInput value of next link input
      */
     public void setNextLinkInput(String nextLinkInput) {
         this.nextLinkInput = nextLinkInput;
@@ -91,7 +91,7 @@ public final class PageWrapper<I, P> implements ApiResponseType<P> {
 
     /**
      * Sets the cursor input
-     * @param strategy value of cursor input
+     * @param cursorInput value of cursor input
      */
     public void setCursorInput(String cursorInput) {
         this.cursorInput = cursorInput;
@@ -107,7 +107,7 @@ public final class PageWrapper<I, P> implements ApiResponseType<P> {
 
     /**
      * Sets the offset input
-     * @param strategy value of offset input
+     * @param offsetInput value of offset input
      */
     public void setOffsetInput(int offsetInput) {
         this.offsetInput = offsetInput;
@@ -123,7 +123,7 @@ public final class PageWrapper<I, P> implements ApiResponseType<P> {
 
     /**
      * Sets the page input
-     * @param strategy value of page input
+     * @param pageInput value of page input
      */
     public void setPageInput(int pageInput) {
         this.pageInput = pageInput;
