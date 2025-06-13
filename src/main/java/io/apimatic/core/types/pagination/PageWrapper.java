@@ -15,6 +15,7 @@ public final class PageWrapper<I, P> implements ApiResponseType<P> {
      * @param response Response from API call.
      * @param page Page to be wrapped.
      * @param items Extracted items from the page.
+     * @param strategy Pagination strategy to be applied.
      * @return An new instance of PageWrapper.
      */
     public static <I, P> PageWrapper<I, P> create(Response response, P page,
