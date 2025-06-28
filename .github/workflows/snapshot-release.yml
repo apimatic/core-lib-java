@@ -1,0 +1,36 @@
+name: Snapshot Release To Maven Central
+run-name: Publishing Snapshot Package Version ${{ github.event.inputs.Version }}-SNAPSHOT
+
+on:
+   workflow_dispatch:
+    inputs:
+      Version:
+        description: "This input field requires version in format: x.y.z, where x => major version, y => minor version and z => patch version. Do not include -SNAPSHOT; it will be appended automatically by the workflow for snapshot releases."
+        required: true
+
+jobs:
+  publish:
+    name: Publish the Maven package
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Install Java and Maven setup
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+          
+      - name: Update version in POM
+        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.Version }}-SNAPSHOT -DgenerateBackupPoms=false
+      - name: Release to Maven Central
+        id: release
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY  }}
+          gpg_passphrase: ${{ secrets.OSSRH_GPG_PASSPHRASE  }}
+          nexus_username: ${{ secrets.OSSRH_USERNAME  }}
+          nexus_password: ${{ secrets.OSSRH_PASSWORD }}
