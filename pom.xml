@@ -200,6 +200,7 @@
 			              	<tokenAuth>true</tokenAuth>
 			              	<autoPublish>true</autoPublish>
 			              	<waitUntil>published</waitUntil>
+							<deploymentName>APIMatic Core Library</deploymentName>
 				</configuration>
 		        </plugin>
 			<plugin>
