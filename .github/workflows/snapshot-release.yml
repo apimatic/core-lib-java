@@ -12,7 +12,7 @@ jobs:
   publish:
     name: Publish the Maven package
     runs-on: ubuntu-latest
-    environment: Production
+    environment: Sandbox
     steps:
       - name: Check out git repository
         uses: actions/checkout@v2
