@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.10</version>
+			<version>0.8.13</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -144,7 +144,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
+				<version>0.8.13</version>
 				<executions>
 					<execution>
 						<goals>
