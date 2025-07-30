@@ -3,7 +3,9 @@
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
 [![Lint Code][lint-badge]][lint-url]
-[![Test Coverage][test-coverage-url]][code-climate-url]
+[![Test Coverage][coverage-badge]][coverage-url]
+[![Maintainability Rating][maintainability-badge]][maintainability-url]
+[![Vulnerabilities][vulnerabilities-badge]][vulnerabilities-url]
 [![Licence][license-badge]][license-url]
 
 ## Introduction
@@ -100,11 +102,17 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
 
-[code-climate-url]: https://codeclimate.com/github/apimatic/core-lib-java
+[coverage-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=coverage
 
-[maintainability-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/maintainability
+[coverage-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
 
-[test-coverage-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/test_coverage
+[maintainability-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=sqale_rating
+
+[maintainability-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
+
+[vulnerabilities-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=vulnerabilities
+
+[vulnerabilities-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
 
 [lint-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml/badge.svg
 
