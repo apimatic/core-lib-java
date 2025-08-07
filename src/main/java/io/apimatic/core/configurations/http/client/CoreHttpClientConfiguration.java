@@ -1,5 +1,6 @@
 package io.apimatic.core.configurations.http.client;
 
+import io.apimatic.coreinterfaces.http.proxy.ProxyConfiguration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -123,6 +124,12 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     private final boolean skipSslCertVerification;
 
     /**
+     * The proxy configuration used to route network requests through a proxy server.
+     * Contains details such as address, port, and optional authentication credentials.
+     */
+    private final ProxyConfiguration proxyConfiguration;
+
+    /**
      * @param timeout
      * @param numberOfRetries
      * @param backOffFactor
@@ -140,7 +147,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
             final boolean skipSslCertVerification, final Set<Integer> httpStatusCodesToRetry,
             final Set<Method> httpMethodsToRetry, final long maximumRetryWaitTime,
             final boolean shouldRetryOnTimeout, final okhttp3.OkHttpClient httpClientInstance,
-            final boolean overrideHttpClientConfigurations) {
+            final boolean overrideHttpClientConfigurations, final ProxyConfiguration proxyConfiguration) {
         this.timeout = timeout;
         this.numberOfRetries = numberOfRetries;
         this.backOffFactor = backOffFactor;
@@ -152,6 +159,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
         this.httpClientInstance = httpClientInstance;
         this.overrideHttpClientConfigurations = overrideHttpClientConfigurations;
         this.skipSslCertVerification = skipSslCertVerification;
+        this.proxyConfiguration = proxyConfiguration;
     }
 
     /**
@@ -244,6 +252,14 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     }
 
     /**
+     * Returns the proxy configuration used to route requests through a proxy server.
+     * This includes the proxy address, port, and any authentication credentials.
+     *
+     * @return the {@link ProxyConfiguration}, or {@code null} if no proxy is configured
+     */
+    public ProxyConfiguration getProxyConfiguration() { return proxyConfiguration; }
+
+    /**
      * Converts this HttpClientConfiguration into string format.
      * @return String representation of this class.
      */
@@ -255,7 +271,8 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
                 + ", httpMethodsToRetry=" + httpMethodsToRetry + ", maximumRetryWaitTime="
                 + maximumRetryWaitTime + ", shouldRetryOnTimeout=" + shouldRetryOnTimeout
                 + ", httpClientInstance=" + httpClientInstance
-                + ", overrideHttpClientConfigurations=" + overrideHttpClientConfigurations + "]";
+                + ", overrideHttpClientConfigurations=" + overrideHttpClientConfigurations
+                + ", proxy=" + proxyConfiguration + "]";
     }
 
     /**
@@ -269,7 +286,8 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
                 .httpStatusCodesToRetry(httpStatusCodesToRetry)
                 .httpMethodsToRetry(httpMethodsToRetry).maximumRetryWaitTime(maximumRetryWaitTime)
                 .shouldRetryOnTimeout(shouldRetryOnTimeout)
-                .httpClientInstance(httpClientInstance, overrideHttpClientConfigurations);
+                .httpClientInstance(httpClientInstance, overrideHttpClientConfigurations)
+                .proxyConfiguration(proxyConfiguration);
     }
 
     /**
@@ -322,6 +340,11 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
          * Skip Ssl certification.
          */
         private boolean skipSslCertVerification;
+        /**
+         * The proxy configuration used to route network requests through a proxy server.
+         * Contains details such as address, port, and optional authentication credentials.
+         */
+        private ProxyConfiguration proxyConfiguration;
 
         /**
          * Default Constructor to initiate builder with default properties.
@@ -464,6 +487,17 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
         }
 
         /**
+         * Sets the proxy configuration to be used for routing requests through a proxy server.
+         *
+         * @param proxyConfiguration the {@link ProxyConfiguration} instance to use
+         * @return the builder instance
+         */
+        public Builder proxyConfiguration(ProxyConfiguration proxyConfiguration) {
+            this.proxyConfiguration = proxyConfiguration;
+            return this;
+        }
+
+        /**
          * Builds a new HttpClientConfiguration object using the set fields.
          * @return {@link CoreHttpClientConfiguration}.
          */
@@ -471,7 +505,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
             return new CoreHttpClientConfiguration(timeout, numberOfRetries, backOffFactor,
                     retryInterval, skipSslCertVerification, httpStatusCodesToRetry,
                     httpMethodsToRetry, maximumRetryWaitTime, shouldRetryOnTimeout,
-                    httpClientInstance, overrideHttpClientConfigurations);
+                    httpClientInstance, overrideHttpClientConfigurations, proxyConfiguration);
         }
     }
 }
