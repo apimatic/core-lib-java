@@ -69,9 +69,7 @@ public class CoreProxyConfiguration implements ProxyConfiguration {
      * @return a new {@link Builder} instance
      */
     public Builder newBuilder() {
-        return new Builder()
-          .address(this.address)
-          .port(this.port)
+        return new Builder(this.address, this.port)
           .username(this.username)
           .password(this.password);
     }
@@ -95,29 +93,14 @@ public class CoreProxyConfiguration implements ProxyConfiguration {
      */
     public static class Builder {
 
-        private String address;
-        private int port;
+        private final String address;
+        private final int port;
         private String username;
         private String password;
 
-        /**
-         * Sets the proxy server address.
-         * @param address the address to set
-         * @return the builder instance
-         */
-        public Builder address(String address) {
+        public Builder(String address, int port) {
             this.address = address;
-            return this;
-        }
-
-        /**
-         * Sets the proxy server port.
-         * @param port the port to set
-         * @return the builder instance
-         */
-        public Builder port(int port) {
             this.port = port;
-            return this;
         }
 
         /**
