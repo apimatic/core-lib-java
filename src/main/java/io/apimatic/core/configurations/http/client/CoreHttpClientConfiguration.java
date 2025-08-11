@@ -141,13 +141,15 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
      * @param shouldRetryOnTimeout
      * @param httpClientInstance
      * @param overrideHttpClientConfigurations
+     * @param proxyConfiguration
      */
     private CoreHttpClientConfiguration(final long timeout, final int numberOfRetries,
             final int backOffFactor, final long retryInterval,
             final boolean skipSslCertVerification, final Set<Integer> httpStatusCodesToRetry,
             final Set<Method> httpMethodsToRetry, final long maximumRetryWaitTime,
             final boolean shouldRetryOnTimeout, final okhttp3.OkHttpClient httpClientInstance,
-            final boolean overrideHttpClientConfigurations, final ProxyConfiguration proxyConfiguration) {
+            final boolean overrideHttpClientConfigurations,
+            final ProxyConfiguration proxyConfiguration) {
         this.timeout = timeout;
         this.numberOfRetries = numberOfRetries;
         this.backOffFactor = backOffFactor;
@@ -254,8 +256,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
     /**
      * Returns the proxy configuration used to route requests through a proxy server.
      * This includes the proxy address, port, and any authentication credentials.
-     *
-     * @return the {@link ProxyConfiguration}, or {@code null} if no proxy is configured
+     * @return the {@link ProxyConfiguration}
      */
     public ProxyConfiguration getProxyConfiguration() { return proxyConfiguration; }
 

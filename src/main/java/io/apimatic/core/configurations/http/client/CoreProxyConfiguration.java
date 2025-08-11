@@ -6,7 +6,7 @@ import io.apimatic.coreinterfaces.http.proxy.ProxyConfiguration;
  * Represents a proxy configuration with address, port, and optional authentication credentials.
  * This class is an implementation of the {@link ProxyConfiguration} interface.
  */
-public class CoreProxyConfiguration implements ProxyConfiguration {
+public final class CoreProxyConfiguration implements ProxyConfiguration {
 
     /**
      * The proxy server address (e.g., IP or domain name).
@@ -37,7 +37,8 @@ public class CoreProxyConfiguration implements ProxyConfiguration {
      * @param username The username for proxy authentication (can be {@code null}).
      * @param password The password for proxy authentication (can be {@code null}).
      */
-    private CoreProxyConfiguration(String address, int port, String username, String password) {
+    private CoreProxyConfiguration(final String address, final int port,
+      final String username, final String password) {
         this.address = address;
         this.port = port;
         this.username = username;
@@ -80,12 +81,12 @@ public class CoreProxyConfiguration implements ProxyConfiguration {
      */
     @Override
     public String toString() {
-        return "CoreProxyConfiguration [" +
-          "address=" + address +
-          ", port=" + port +
-          ", username=" + (username != null ? username : "null") +
-          ", password=" + (password != null ? password : "null") +
-          "]";
+        return "CoreProxyConfiguration ["
+          + "address=" + address
+          + ", port=" + port
+          + ", username=" + username
+          + ", password=" + password
+          + "]";
     }
 
     /**
@@ -98,7 +99,13 @@ public class CoreProxyConfiguration implements ProxyConfiguration {
         private String username;
         private String password;
 
-        public Builder(String address, int port) {
+        /**
+         * Creates a new {@code Builder} instance with the specified proxy server details.
+         *
+         * @param address the hostname or IP address of the proxy server
+         * @param port    the port number of the proxy server
+         */
+        public Builder(final String address, final int port) {
             this.address = address;
             this.port = port;
         }
