@@ -258,7 +258,9 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
      * This includes the proxy address, port, and any authentication credentials.
      * @return the {@link ProxyConfiguration}
      */
-    public ProxyConfiguration getProxyConfiguration() { return proxyConfiguration; }
+    public ProxyConfiguration getProxyConfiguration() {
+        return proxyConfiguration;
+    }
 
     /**
      * Converts this HttpClientConfiguration into string format.
