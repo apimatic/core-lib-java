@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>io.apimatic</groupId>
 			<artifactId>core-interfaces</artifactId>
-			<version>[0.3, 0.4)</version>
+			<version>0.3.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -277,4 +277,19 @@
 			<url>https://github.com/apimatic/core-lib-java/blob/main/LICENSE</url>
 		</license>
 	</licenses>
+
+	<repositories>
+		<repository>
+			<id>central-portal-snapshots</id>
+			<name>Central Portal Snapshots</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 </project>
