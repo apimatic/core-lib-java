@@ -275,7 +275,7 @@ public final class CoreHttpClientConfiguration implements ClientConfiguration {
                 + maximumRetryWaitTime + ", shouldRetryOnTimeout=" + shouldRetryOnTimeout
                 + ", httpClientInstance=" + httpClientInstance
                 + ", overrideHttpClientConfigurations=" + overrideHttpClientConfigurations
-                + ", proxy=" + proxyConfiguration + "]";
+                + ", proxyConfiguration=" + proxyConfiguration + "]";
     }
 
     /**
