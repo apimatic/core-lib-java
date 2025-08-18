@@ -1673,13 +1673,13 @@ public class CoreHelper {
      * @param updater  The function to apply to the value at the pointer.
      * @return The updated object, or the original if any error occurs.
      */
-    public static <T> T updateValueByPointer(T value, String pointer, UnaryOperator<Object> updater) {
+    public static <T> T updateValueByPointer(T value, String pointer,
+            UnaryOperator<Object> updater) {
         if (value == null || pointer == null || pointer.isEmpty() || updater == null) {
             return value;
         }
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.valueToTree(value);
 
             // Split pointer into parent path and last segment
@@ -1694,9 +1694,9 @@ public class CoreHelper {
 
             boolean updated = false;
             if (parentNode.isObject()) {
-                updated = updateObjectField((ObjectNode) parentNode, fieldName, updater, mapper);
+                updated = updateObjectField((ObjectNode) parentNode, fieldName, updater);
             } else if (parentNode.isArray()) {
-                updated = updateArrayIndex((ArrayNode) parentNode, fieldName, updater, mapper);
+                updated = updateArrayIndex((ArrayNode) parentNode, fieldName, updater);
             }
 
             return updated ? mapper.convertValue(root, new TypeReference<T>() {}) : value;
@@ -1704,70 +1704,87 @@ public class CoreHelper {
             return value;
         }
     }
-    
-    private static boolean updateObjectField(
-        ObjectNode objectNode,
-        String fieldName,
-        UnaryOperator<Object> updater,
-        ObjectMapper mapper
-    ) {
+
+    private static boolean updateObjectField( ObjectNode objectNode, String fieldName,
+            UnaryOperator<Object> updater) {
         JsonNode oldNode = objectNode.get(fieldName);
         Object oldValue = toObject(oldNode);
         Object newValueRaw = updater.apply(oldValue);
 
-        if (newValueRaw == null) return false;
-        JsonNode newJsonNode = toJsonNode(newValueRaw, mapper);
-        if (newJsonNode == null) return false;
+        if (newValueRaw == null) {
+            return false;
+        }
+        JsonNode newJsonNode = toJsonNode(newValueRaw);
+        if (newJsonNode == null) {
+            return false;
+        }
 
         objectNode.set(fieldName, newJsonNode);
         return true;
     }
 
-    private static boolean updateArrayIndex(
-        ArrayNode arrayNode,
-        String indexStr,
-        UnaryOperator<Object> updater,
-        ObjectMapper mapper
-    ) {
+    private static boolean updateArrayIndex(ArrayNode arrayNode, String indexStr,
+            UnaryOperator<Object> updater) {
+        int index = -1;
+
         try {
-            int index = Integer.parseInt(indexStr);
-            if (index < 0 || index >= arrayNode.size()) {
-                return false; // invalid index
-            }
-
-            JsonNode oldNode = arrayNode.get(index);
-            Object oldValue = toObject(oldNode);
-            Object newValueRaw = updater.apply(oldValue);
-
-            if (newValueRaw == null) return false;
-            JsonNode newJsonNode = toJsonNode(newValueRaw, mapper);
-            if (newJsonNode == null) return false;
-
-            arrayNode.set(index, newJsonNode);
-            return true;
+            index = Integer.parseInt(indexStr);
         } catch (NumberFormatException e) {
             return false;
         }
+
+        if (index < 0 || index >= arrayNode.size()) {
+            return false; // invalid index
+        }
+
+        JsonNode oldNode = arrayNode.get(index);
+        Object oldValue = toObject(oldNode);
+        Object newValueRaw = updater.apply(oldValue);
+
+        if (newValueRaw == null) {
+            return false;
+        }
+
+        JsonNode newJsonNode = toJsonNode(newValueRaw);
+        if (newJsonNode == null) {
+            return false;
+        }
+
+        arrayNode.set(index, newJsonNode);
+        return true;
     }
 
     private static Object toObject(JsonNode node) {
-        if (node == null || node.isNull()) return null;
-        if (node.isTextual()) return node.asText();
-        if (node.isNumber()) return node.numberValue();
-        if (node.isBoolean()) return node.booleanValue();
+        if (node == null || node.isNull()) {
+            return null;
+        }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+
+        if (node.isBoolean()) {
+            return node.booleanValue();
+        }
 
         return null;
     }
 
-    private static JsonNode toJsonNode(Object obj, ObjectMapper mapper) {
-        if (obj == null) return NullNode.getInstance();
+    private static JsonNode toJsonNode(Object obj) {
+        if (obj == null) {
+            return NullNode.getInstance();
+        }
 
-        if (obj instanceof String ||
-            obj instanceof Integer ||
-            obj instanceof Long ||
-            obj instanceof Double ||
-            obj instanceof Float ||
-            obj instanceof Boolean) {
+        if (obj instanceof String
+                || obj instanceof Integer
+                || obj instanceof Long
+                || obj instanceof Double
+                || obj instanceof Float
+                || obj instanceof Boolean) {
             return mapper.valueToTree(obj);
         }
 
