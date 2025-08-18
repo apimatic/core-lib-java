@@ -1642,7 +1642,6 @@ public class CoreHelper {
         }
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(json);
 
             // Jackson's .at() supports JSON Pointer syntax
@@ -1705,7 +1704,7 @@ public class CoreHelper {
         }
     }
 
-    private static boolean updateObjectField( ObjectNode objectNode, String fieldName,
+    private static boolean updateObjectField(ObjectNode objectNode, String fieldName,
             UnaryOperator<Object> updater) {
         JsonNode oldNode = objectNode.get(fieldName);
         Object oldValue = toObject(oldNode);
