@@ -31,14 +31,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonPointer;
-import javax.json.JsonReader;
-import javax.json.JsonString;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -67,6 +59,10 @@ import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.apimatic.core.annotations.TypeCombinator.FormSerialize;
 import io.apimatic.core.annotations.TypeCombinator.TypeCombinatorCase;
 import io.apimatic.core.annotations.TypeCombinator.TypeCombinatorStringCase;
@@ -1607,24 +1603,6 @@ public class CoreHelper {
     }
 
     /**
-     * Converts a JSON string to a {@link JsonStructure}.
-     *
-     * @param json The JSON string.
-     * @return The parsed {@link JsonStructure}, or null if parsing fails.
-     */
-    public static JsonStructure createJsonStructure(String json) {
-        JsonReader jsonReader = Json.createReader(new StringReader(json));
-        JsonStructure jsonStructure = null;
-        try {
-            jsonStructure = jsonReader.read();
-        } catch (Exception e) {
-            // No need to do anything here
-        }
-        jsonReader.close();
-        return jsonStructure;
-    }
-
-    /**
      * Resolves a pointer within a JSON response body or headers.
      *
      * @param pointer     The JSON pointer.
@@ -1658,31 +1636,31 @@ public class CoreHelper {
      * @param json    The JSON string.
      * @return The value as a string, or null if not found or invalid.
      */
-    private static String getValueFromJson(String pointer, String json) {
+    public static String getValueFromJson(String pointer, String json) {
         if (pointer == null || json == null) {
             return null;
         }
 
-        JsonStructure jsonStructure = CoreHelper.createJsonStructure(json);
-        JsonPointer jsonPointer = Json.createPointer(pointer);
-        boolean containsValue = false;
         try {
-            containsValue = jsonPointer.containsValue(jsonStructure);
-        } catch (Exception e) {
-            // Ignore
-        }
+            JsonNode root = mapper.readTree(json);
 
-        if (jsonStructure == null || !containsValue) {
+            // Jackson's .at() supports JSON Pointer syntax
+            JsonNode valueNode = root.at(pointer);
+
+            if (valueNode.isMissingNode() || valueNode.isNull()) {
+                return null;
+            }
+
+            if (valueNode.isTextual()) {
+                return valueNode.asText();
+            }
+
+            // Return JSON representation for non-text values
+            return valueNode.toString();
+        } catch (Exception e) {
+            // Ignore or log as needed
             return null;
         }
-
-        JsonValue value = jsonPointer.getValue(jsonStructure);
-
-        if (value instanceof JsonString) {
-            return ((JsonString) value).getString();
-        }
-
-        return value.toString();
     }
 
     /**
@@ -1696,91 +1674,120 @@ public class CoreHelper {
      */
     public static <T> T updateValueByPointer(T value, String pointer,
             UnaryOperator<Object> updater) {
-        if (value == null || "".equals(pointer) || updater == null) {
+        if (value == null || pointer == null || pointer.isEmpty() || updater == null) {
             return value;
         }
 
         try {
-            String json = serialize(value);
-            JsonStructure structure = createJsonStructure(json);
-            if (structure == null) {
-                return value;
+            JsonNode root = mapper.valueToTree(value);
+
+            // Split pointer into parent path and last segment
+            int lastSlash = pointer.lastIndexOf('/');
+            String parentPointer = (lastSlash > 0) ? pointer.substring(0, lastSlash) : "";
+            String fieldName = pointer.substring(lastSlash + 1);
+
+            JsonNode parentNode = parentPointer.isEmpty() ? root : root.at(parentPointer);
+            if (parentNode.isMissingNode() || parentNode.isNull()) {
+                return value; // invalid parent path
             }
 
-            JsonPointer jsonPointer = Json.createPointer(pointer);
-
-            if (!jsonPointer.containsValue(structure)) {
-                structure = jsonPointer.add(structure, JsonValue.NULL);
-            }
-            JsonValue oldJsonValue = jsonPointer.getValue(structure);
-            Object oldValue = toObject(oldJsonValue);
-            Object newValueRaw = updater.apply(oldValue);
-            if (newValueRaw == null) {
-                return value;
+            boolean updated = false;
+            if (parentNode.isObject()) {
+                updated = updateObjectField((ObjectNode) parentNode, fieldName, updater);
+            } else if (parentNode.isArray()) {
+                updated = updateArrayIndex((ArrayNode) parentNode, fieldName, updater);
             }
 
-            JsonValue newJsonValue = toJsonValue(newValueRaw);
-            if (newJsonValue == null) {
-                return value;
-            }
-
-            JsonStructure updated = jsonPointer.replace(structure, newJsonValue);
-            StringWriter writer = new StringWriter();
-            try (JsonWriter jsonWriter = Json.createWriter(writer)) {
-                jsonWriter.write(updated);
-            }
-
-            String updatedJson = writer.toString();
-            return deserialize(updatedJson, new TypeReference<T>() {});
-
+            return updated ? mapper.convertValue(root, new TypeReference<T>() {}) : value;
         } catch (Exception e) {
             return value;
         }
     }
 
-    /**
-     * Converts a {@link JsonValue} into a plain Java object.
-     *
-     * @param value The JsonValue.
-     * @return The equivalent Java object.
-     */
-    private static Object toObject(JsonValue value) {
-        switch (value.getValueType()) {
-            case STRING:
-                return ((JsonString) value).getString();
-            case NUMBER:
-                return ((JsonNumber) value).numberValue();
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                return null;
+    private static boolean updateObjectField(ObjectNode objectNode, String fieldName,
+            UnaryOperator<Object> updater) {
+        JsonNode oldNode = objectNode.get(fieldName);
+        Object oldValue = toObject(oldNode);
+        Object newValueRaw = updater.apply(oldValue);
+
+        if (newValueRaw == null) {
+            return false;
         }
+        JsonNode newJsonNode = toJsonNode(newValueRaw);
+        if (newJsonNode == null) {
+            return false;
+        }
+
+        objectNode.set(fieldName, newJsonNode);
+        return true;
     }
 
-    /**
-     * Converts a plain Java object into a {@link JsonValue}.
-     *
-     * @param obj The object to convert.
-     * @return The corresponding JsonValue or null if unsupported.
-     */
-    private static JsonValue toJsonValue(Object obj) {
-        if (obj instanceof String) {
-            return Json.createValue((String) obj);
+    private static boolean updateArrayIndex(ArrayNode arrayNode, String indexStr,
+            UnaryOperator<Object> updater) {
+        int index = -1;
+
+        try {
+            index = Integer.parseInt(indexStr);
+        } catch (NumberFormatException e) {
+            return false;
         }
-        if (obj instanceof Integer) {
-            return Json.createValue((Integer) obj);
+
+        if (index < 0 || index >= arrayNode.size()) {
+            return false; // invalid index
         }
-        if (obj instanceof Long) {
-            return Json.createValue((Long) obj);
+
+        JsonNode oldNode = arrayNode.get(index);
+        Object oldValue = toObject(oldNode);
+        Object newValueRaw = updater.apply(oldValue);
+
+        if (newValueRaw == null) {
+            return false;
         }
-        if (obj instanceof Double) {
-            return Json.createValue((Double) obj);
+
+        JsonNode newJsonNode = toJsonNode(newValueRaw);
+        if (newJsonNode == null) {
+            return false;
         }
-        if (obj instanceof Boolean) {
-            return Boolean.TRUE.equals(obj) ? JsonValue.TRUE : JsonValue.FALSE;
+
+        arrayNode.set(index, newJsonNode);
+        return true;
+    }
+
+    private static Object toObject(JsonNode node) {
+        if (node == null || node.isNull()) {
+            return null;
         }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+
+        if (node.isBoolean()) {
+            return node.booleanValue();
+        }
+
+        return null;
+    }
+
+    private static JsonNode toJsonNode(Object obj) {
+        if (obj == null) {
+            return NullNode.getInstance();
+        }
+
+        if (obj instanceof String
+                || obj instanceof Integer
+                || obj instanceof Long
+                || obj instanceof Double
+                || obj instanceof Float
+                || obj instanceof Boolean) {
+            return mapper.valueToTree(obj);
+        }
+
+        // Reject collections, maps, and arbitrary objects
         return null;
     }
 
