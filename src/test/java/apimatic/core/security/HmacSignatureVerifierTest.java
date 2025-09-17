@@ -301,6 +301,8 @@ public class HmacSignatureVerifierTest {
         Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
     }
 
+    // Request signature template resolver tests
+
     @Test
     public void testVerifyAsync_SuccessRequestSignatureTemplateResolver_Body() throws Exception {
         DigestCodec codec = DigestCodecFactory.base64();
