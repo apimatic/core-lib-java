@@ -3,7 +3,9 @@ package apimatic.core.security;
 import io.apimatic.core.security.DigestCodec;
 import io.apimatic.core.security.DigestCodecFactory;
 import io.apimatic.core.security.HmacSignatureVerifier;
+import io.apimatic.core.utilities.CoreHelper;
 import io.apimatic.coreinterfaces.http.HttpHeaders;
+import io.apimatic.coreinterfaces.http.Method;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.security.VerificationResult;
 import org.junit.Assert;
@@ -14,8 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+
+import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HmacSignatureVerifierTest {
@@ -32,6 +38,7 @@ public class HmacSignatureVerifierTest {
         HttpHeaders httpHeaders = Mockito.mock(HttpHeaders.class);
         Mockito.when(httpHeaders.asSimpleMap()).thenReturn(headers);
         Mockito.when(request.getHeaders()).thenReturn(httpHeaders);
+        Mockito.when(request.getHttpMethod()).thenReturn(Method.POST);
         Mockito.when(request.getBody()).thenReturn(body);
         return request;
     }
@@ -292,6 +299,113 @@ public class HmacSignatureVerifierTest {
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
         Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+    }
+
+    @Test
+    public void testVerifyAsync_SuccessRequestSignatureTemplateResolver_Body() throws Exception {
+        DigestCodec codec = DigestCodecFactory.base64();
+        Map<String, String> headers = new HashMap<>();
+        String signature = computeSignature(SECRET_KEY,
+                "session=abc123:2025-09-17T12:34:56Z:POST:payment:{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
+                HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        headers.put(SIGNATURE_HEADER, signature);
+        headers.put("Cookie", "session=abc123");
+        headers.put("X-Timestamp", "2025-09-17T12:34:56Z");
+        Request req = mockRequest(headers, "{\"id\":123,\"type\":\"payment\",\"amount\":100.5}");
+
+        Function<Request, byte[]> requestSignatureTemplateResolver =
+                (request) -> {
+                    if (request == null) {
+                        throw new IllegalArgumentException("request cannot be null");
+                    }
+
+                    // {request.Headers.Cookie}:{request.Headers.X-Timestamp}:{request.Method}:{$request.body#/type}:{$request.body}
+                    String cookie = request.getHeaders().asSimpleMap().get("Cookie");
+                    String timestamp = request.getHeaders().asSimpleMap().get("X-Timestamp");
+                    String resolvedBody = CoreHelper.resolveRequestPointer("$request.body#/type", request);
+
+                    return String.join(":",
+                            cookie,
+                            timestamp,
+                            request.getHttpMethod().toString(),
+                            resolvedBody == null ? "" : resolvedBody,
+                            request.getBody().toString()
+                    ).getBytes(StandardCharsets.UTF_8);
+                };
+
+
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(
+                SECRET_KEY,
+                SIGNATURE_HEADER,
+                codec,
+                requestSignatureTemplateResolver,
+                HmacSignatureVerifier.DEFAULT_ALGORITHM,
+                HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+
+        VerificationResult result = verifier.verifyAsync(req).get();
+        Assert.assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testVerifyAsync_SuccessRequestSignatureTemplateResolver_Headers() throws Exception {
+        DigestCodec codec = DigestCodecFactory.base64();
+        Map<String, String> headers = new HashMap<>();
+        String signature = computeSignature(SECRET_KEY,
+                "session=abc123:2025-09-17T12:34:56Z:POST:x-signature-header-value:{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
+                HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        headers.put(SIGNATURE_HEADER, signature);
+        headers.put("Cookie", "session=abc123");
+        headers.put("x-signature", "x-signature-header-value");
+        headers.put("X-Timestamp", "2025-09-17T12:34:56Z");
+        Request req = mockRequest(headers, "{\"id\":123,\"type\":\"payment\",\"amount\":100.5}");
+
+        Function<Request, byte[]> requestSignatureTemplateResolver =
+                (request) -> {
+                    if (request == null) {
+                        throw new IllegalArgumentException("request cannot be null");
+                    }
+
+                    // {request.Headers.Cookie}:{request.Headers.X-Timestamp}:{request.Method}:{$request.headers#/x-signature}:{$request.body}
+                    String cookie = request.getHeaders().asSimpleMap().get("Cookie");
+                    String timestamp = request.getHeaders().asSimpleMap().get("X-Timestamp");
+                    String resolvedBody = CoreHelper.resolveRequestPointer("$request.headers#/x-signature", request);
+
+                    return String.join(":",
+                            cookie,
+                            timestamp,
+                            request.getHttpMethod().toString(),
+                            resolvedBody == null ? "" : resolvedBody,
+                            request.getBody().toString()
+                    ).getBytes(StandardCharsets.UTF_8);
+                };
+
+
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(
+                SECRET_KEY,
+                SIGNATURE_HEADER,
+                codec,
+                requestSignatureTemplateResolver,
+                HmacSignatureVerifier.DEFAULT_ALGORITHM,
+                HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+
+        VerificationResult result = verifier.verifyAsync(req).get();
+        Assert.assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testResolveRequestPointer_NullPointer() {
+        Map<String, String> headers = new HashMap<>();
+        Request request = mockRequest(headers, BODY);
+        String value = CoreHelper.resolveRequestPointer(null, request);
+        assertNull(value);
+    }
+
+    @Test
+    public void testResolveRequestPointer_InvalidPointer() {
+        Map<String, String> headers = new HashMap<>();
+        Request request = mockRequest(headers, BODY);
+        String value = CoreHelper.resolveRequestPointer("$request.method#", request);
+        assertNull(value);
     }
 }
 
