@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,6 +71,7 @@ import io.apimatic.core.types.AnyOfValidationException;
 import io.apimatic.core.types.OneOfValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
+import io.apimatic.coreinterfaces.http.HttpHeaders;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
 import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
@@ -1611,10 +1613,10 @@ public class CoreHelper {
      * @return The resolved value as a string, or null if not found.
      */
     public static String resolveResponsePointer(String pointer, Response response) {
-        return resolveJsonPointer(pointer, response.getBody(), response.getHeaders().asSimpleMap());
+        return resolveJsonPointer(pointer, response::getBody, response::getHeaders);
     }
 
-    private static String resolveJsonPointer(String pointer, String jsonBody, Map<String, String> headers) {
+    private static String resolveJsonPointer(String pointer, Supplier<String> jsonBody, Supplier<HttpHeaders> headers) {
         if (pointer == null) {
             return null;
         }
@@ -1625,10 +1627,10 @@ public class CoreHelper {
 
         switch (prefix) {
             case "$response.body":
-                return CoreHelper.getValueFromJson(point, jsonBody);
+                return CoreHelper.getValueFromJson(point, jsonBody.get());
             case "$response.headers":
                 return CoreHelper.getValueFromJson(point,
-                        trySerialize(headers));
+                        trySerialize(headers.get().asSimpleMap()));
             default:
                 return null;
         }
@@ -1642,7 +1644,7 @@ public class CoreHelper {
      * @return The resolved value as a string, or null if not found.
      */
     public static String resolveRequestPointer(String pointer, Request request) {
-        return resolveJsonPointer(pointer, request.getBody().toString(), request.getHeaders().asSimpleMap());
+        return resolveJsonPointer(pointer, () -> request.getBody().toString(), request::getHeaders);
     }
 
     /**
