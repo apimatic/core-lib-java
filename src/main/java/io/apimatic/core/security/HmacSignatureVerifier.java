@@ -8,9 +8,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -18,6 +15,11 @@ import java.util.function.Function;
  * HMAC-based signature verifier for HTTP requests.
  */
 public class HmacSignatureVerifier implements SignatureVerifier {
+
+    public static final String DEFAULT_ALGORITHM = "HmacSHA256";
+    public static final String SIGNATURE_VALUE_TEMPLATE = "{digest}";
+    public static final Function<Request, byte[]> SIGNATURE_TEMPLATE_RESOLVER =
+            req -> req.getBody().toString().getBytes(StandardCharsets.UTF_8);
 
     /** Name of the header carrying the provided signature (case-insensitive lookup). */
     private final String signatureHeader;
@@ -67,9 +69,9 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             secretKey,
             signatureHeader,
             digestCodec,
-            req -> req.getBody().toString().getBytes(StandardCharsets.UTF_8),
-            "HmacSHA256",
-            "{digest}"
+            SIGNATURE_TEMPLATE_RESOLVER,
+            DEFAULT_ALGORITHM,
+            SIGNATURE_VALUE_TEMPLATE
         );
     }
 
@@ -128,29 +130,26 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     @Override
     public CompletableFuture<VerificationResult> verifyAsync(Request request) {
         return CompletableFuture.supplyAsync(() -> {
-            Optional<Map.Entry<String, List<String>>> headerEntry = request.getHeaders().asMultimap().entrySet().stream()
-                    .filter(h -> h.getKey().equalsIgnoreCase(signatureHeader))
-                    .findFirst();
-
-            if (!headerEntry.isPresent()) {
-                return VerificationResult.failure("Signature header '" + signatureHeader + "' is missing.");
-            }
-
-            byte[] providedSignature = extractSignature(headerEntry.get().getValue());
-
-            if (providedSignature == null) {
-                return VerificationResult.failure("Malformed signature header '" + signatureHeader + "' value.");
-            }
-
             try {
+                String signatureValue = request.getHeaders()
+                        .asSimpleMap()
+                        .get(signatureHeader);
+
+                if (signatureValue == null) {
+                    return VerificationResult.failure("Signature header '" + signatureHeader + "' is missing.");
+                }
+
+                byte[] providedSignature = extractSignature(signatureValue);
+                if (providedSignature == null) {
+                    return VerificationResult.failure("Malformed signature header '" + signatureHeader + "' value.");
+                }
+
                 byte[] resolvedTemplateBytes = requestSignatureTemplateResolver.apply(request);
                 byte[] computedHash = signatureAlgorithm.doFinal(resolvedTemplateBytes);
 
-                if (Arrays.equals(providedSignature, computedHash)) {
-                    return VerificationResult.success();
-                } else {
-                    return VerificationResult.failure("Signature verification failed.");
-                }
+                return Arrays.equals(providedSignature, computedHash)
+                        ? VerificationResult.success()
+                        : VerificationResult.failure("Signature verification failed.");
             } catch (Exception ex) {
                 return VerificationResult.failure("Exception: " + ex.getMessage());
             }
@@ -158,47 +157,25 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     }
 
     /**
-     * Extract and decode the signature from the header values.
+     * Extracts the digest value from the signature header according to the template.
+     * And decode the signature from the header value.
      */
-    private byte[] extractSignature(List<String> signatureValues) {
-
-        String digest = extractDigestFromTemplate(signatureValues);
-        if (digest == null || digest.isEmpty()) {
-            return null;
-        }
+    private byte[] extractSignature(String signatureValue) {
         try {
+            int index = signatureValueTemplate.indexOf(SIGNATURE_VALUE_TEMPLATE);
+            if (index < 0) return null;
+
+            String prefix = signatureValueTemplate.substring(0, index);
+            String suffix = signatureValueTemplate.substring(index + 8);
+
+            if (!signatureValue.startsWith(prefix) || !signatureValue.endsWith(suffix)) return null;
+
+            String digest = signatureValue.substring(prefix.length(), signatureValue.length() - suffix.length());
+            if (digest.isEmpty()) return null;
+
             return digestCodec.decode(digest);
         } catch (Exception e) {
             return null;
         }
-    }
-
-    /**
-     * Extracts the digest value from the signature header according to the template.
-     */
-    private String extractDigestFromTemplate(List<String> signatureValues) {
-        if (signatureValues == null || signatureValues.isEmpty()) {
-            return "";
-        }
-
-        String signatureValue = signatureValues.get(0);
-
-        if ("{digest}".equals(signatureValueTemplate)) {
-            return signatureValue;
-        }
-
-        int digestIndex = signatureValueTemplate.indexOf("{digest}");
-        if (digestIndex == -1) {
-            return "";
-        }
-
-        String prefix = signatureValueTemplate.substring(0, digestIndex);
-        String suffix = signatureValueTemplate.substring(digestIndex + 8);
-
-        if (!signatureValue.startsWith(prefix) || !signatureValue.endsWith(suffix)) {
-            return "";
-        }
-
-        return signatureValue.substring(prefix.length(), signatureValue.length() - suffix.length());
     }
 }
