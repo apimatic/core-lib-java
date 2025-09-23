@@ -11,6 +11,7 @@ public final class DigestCodecFactory {
 
     /**
      * Creates a Hex codec.
+     * @return a DigestCodec for Hex encoding/decoding
      */
     public static DigestCodec hex() {
         return new HexDigestCodec();
@@ -18,6 +19,7 @@ public final class DigestCodecFactory {
 
     /**
      * Creates a Base64 codec.
+     * @return a DigestCodec for Base64 encoding/decoding
      */
     public static DigestCodec base64() {
         return new Base64DigestCodec();
@@ -25,10 +27,16 @@ public final class DigestCodecFactory {
 
     /**
      * Creates a Base64Url codec.
+     * @return a DigestCodec for Base64Url encoding/decoding
      */
     public static DigestCodec base64Url() {
         return new Base64UrlDigestCodec();
     }
+
+    private static final int HEX_RADIX = 16;
+    private static final int HEX_BYTE_MASK = 0xff;
+    private static final int HEX_BYTE_LENGTH = 2;
+    private static final int HEX_SHIFT = 4;
 
     /**
      * Codec for Hex encoding/decoding.
@@ -38,7 +46,7 @@ public final class DigestCodecFactory {
         public String encode(byte[] bytes) {
             StringBuilder sb = new StringBuilder();
             for (byte b : bytes) {
-                sb.append(String.format("%02x", b & 0xff));
+                sb.append(String.format("%02x", b & HEX_BYTE_MASK));
             }
             return sb.toString();
         }
@@ -46,13 +54,13 @@ public final class DigestCodecFactory {
         @Override
         public byte[] decode(String encoded) {
             int len = encoded.length();
-            if (len % 2 != 0) {
+            if (len % HEX_BYTE_LENGTH != 0) {
                 throw new IllegalArgumentException("Invalid hex string length.");
             }
-            byte[] result = new byte[len / 2];
-            for (int i = 0; i < len; i += 2) {
-                result[i / 2] = (byte) ((Character.digit(encoded.charAt(i), 16) << 4)
-                        + Character.digit(encoded.charAt(i + 1), 16));
+            byte[] result = new byte[len / HEX_BYTE_LENGTH];
+            for (int i = 0; i < len; i += HEX_BYTE_LENGTH) {
+                result[i / HEX_BYTE_LENGTH] = (byte) ((Character.digit(encoded.charAt(i), HEX_RADIX) << HEX_SHIFT)
+                        + Character.digit(encoded.charAt(i + 1), HEX_RADIX));
             }
             return result;
         }

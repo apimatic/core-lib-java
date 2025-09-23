@@ -14,13 +14,31 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class DigestCodecFactoryTest {
 
+    /** Rule for expecting exceptions in tests. */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    private static final byte HEX_BYTE_1 = 0x0A;
+    private static final byte HEX_BYTE_2 = 0x1B;
+    private static final byte HEX_BYTE_3 = (byte) 0xFF;
+
+    private static final byte[] BASE64_INPUT = {1, 2, 3, 4, 5};
+    private static final byte BASE64_BYTE_1 = 1;
+    private static final byte BASE64_BYTE_2 = 2;
+    private static final byte BASE64_BYTE_3 = 3;
+    private static final byte BASE64_BYTE_4 = 4;
+    private static final byte BASE64_BYTE_5 = 5;
+
+    private static final byte BASE64URL_BYTE_1 = 10;
+    private static final byte BASE64URL_BYTE_2 = 20;
+    private static final byte BASE64URL_BYTE_3 = 30;
+    private static final byte BASE64URL_BYTE_4 = 40;
+    private static final byte BASE64URL_BYTE_5 = 50;
 
     @Test
     public void testHexEncodeDecode() {
         DigestCodec codec = DigestCodecFactory.hex();
-        byte[] input = {0x0A, 0x1B, (byte)0xFF};
+        byte[] input = {HEX_BYTE_1, HEX_BYTE_2, HEX_BYTE_3};
         String encoded = codec.encode(input);
         assertEquals("0a1bff", encoded);
         assertArrayEquals(input, codec.decode(encoded));
@@ -52,7 +70,7 @@ public class DigestCodecFactoryTest {
     @Test
     public void testBase64EncodeDecode() {
         DigestCodec codec = DigestCodecFactory.base64();
-        byte[] input = {1, 2, 3, 4, 5};
+        byte[] input = {BASE64_BYTE_1, BASE64_BYTE_2, BASE64_BYTE_3, BASE64_BYTE_4, BASE64_BYTE_5};
         String encoded = codec.encode(input);
         assertEquals("AQIDBAU=", encoded);
         assertArrayEquals(input, codec.decode(encoded));
@@ -77,7 +95,7 @@ public class DigestCodecFactoryTest {
     @Test
     public void testBase64UrlEncodeDecode() {
         DigestCodec codec = DigestCodecFactory.base64Url();
-        byte[] input = {10, 20, 30, 40, 50};
+        byte[] input = {BASE64URL_BYTE_1, BASE64URL_BYTE_2, BASE64URL_BYTE_3, BASE64URL_BYTE_4, BASE64URL_BYTE_5};
         String encoded = codec.encode(input);
         assertEquals("ChQeKDI", encoded); // without padding
         assertArrayEquals(input, codec.decode(encoded));

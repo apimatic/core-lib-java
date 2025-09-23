@@ -55,12 +55,12 @@ public class HmacSignatureVerifier implements SignatureVerifier {
      * @param signatureValueTemplate Template for signature format.
      */
     public HmacSignatureVerifier(
-            String secretKey,
-            String signatureHeaderName,
-            DigestCodec digestCodec,
-            Function<Request, byte[]> requestBytesResolver,
-            String algorithm,
-            String signatureValueTemplate
+            final String secretKey,
+            final String signatureHeaderName,
+            final DigestCodec digestCodec,
+            final Function<Request, byte[]> requestBytesResolver,
+            final String algorithm,
+            final String signatureValueTemplate
     ) {
 
         if (secretKey == null || secretKey.trim().isEmpty()) {
@@ -73,7 +73,8 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             throw new IllegalArgumentException("Signature value template cannot be null or Empty.");
         }
         if (requestBytesResolver == null) {
-            throw new IllegalArgumentException("Request signature template resolver function cannot be null.");
+            throw new IllegalArgumentException(
+                    "Request signature template resolver function cannot be null.");
         }
         if (digestCodec == null) {
             throw new IllegalArgumentException("Digest encoding cannot be null.");
@@ -92,22 +93,30 @@ public class HmacSignatureVerifier implements SignatureVerifier {
 
     /**
      * Verifies the HMAC signature of the specified HTTP request.
+     *
+     * @param request The HTTP request to verify.
+     * @return A CompletableFuture containing the verification result.
      */
     @Override
-    public CompletableFuture<VerificationResult> verifyAsync(Request request) {
+    public CompletableFuture<VerificationResult> verifyAsync(final Request request) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String headerValue = request.getHeaders().asSimpleMap().entrySet().stream()
-                        .filter(e -> e.getKey() != null && e.getKey().equalsIgnoreCase(signatureHeaderName))
-                        .map(Map.Entry::getValue).findFirst().orElse(null);
+                        .filter(e -> e.getKey() != null
+                                && e.getKey().equalsIgnoreCase(signatureHeaderName))
+                        .map(Map.Entry::getValue)
+                        .findFirst()
+                        .orElse(null);
 
                 if (headerValue == null) {
-                    return VerificationResult.failure("Signature header '" + signatureHeaderName + "' is missing.");
+                    return VerificationResult.failure(
+                            "Signature header '" + signatureHeaderName + "' is missing.");
                 }
 
                 byte[] provided = extractSignature(headerValue);
                 if (provided == null) {
-                    return VerificationResult.failure("Malformed signature header '" + signatureHeaderName + "'.");
+                    return VerificationResult.failure(
+                            "Malformed signature header '" + signatureHeaderName + "'.");
                 }
 
                 byte[] message = requestBytesResolver.apply(request);
@@ -126,20 +135,24 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     }
 
     /**
-     * Extracts the digest value from the signature header according to the template.
-     * And decode the signature from the header value.
+     * Extracts the digest value from the signature header according to the template
+     * and decodes the signature from the header value.
+     *
+     * @param headerValue The value of the signature header.
+     * @return The decoded signature as a byte array, or null if extraction fails.
      */
-    private byte[] extractSignature(String headerValue) {
+    private byte[] extractSignature(final String headerValue) {
         try {
             int index = signatureValueTemplate.indexOf(SIGNATURE_VALUE_PLACEHOLDER);
-            if (index < 0) return null;
+            if (index < 0) { return null; }
 
             String prefix = signatureValueTemplate.substring(0, index);
-            String suffix = signatureValueTemplate.substring(index + SIGNATURE_VALUE_PLACEHOLDER.length());
+            String suffix = signatureValueTemplate.substring(
+                    index + SIGNATURE_VALUE_PLACEHOLDER.length());
 
             // find prefix anywhere (case-insensitive)
             int prefixAt = indexOfIgnoreCase(headerValue, prefix, 0);
-            if (prefixAt < 0) return null;
+            if (prefixAt < 0) { return null; }
 
             int digestStart = prefixAt + prefix.length();
 
@@ -149,14 +162,15 @@ public class HmacSignatureVerifier implements SignatureVerifier {
                 digestEnd = headerValue.length();
             } else {
                 digestEnd = indexOfIgnoreCase(headerValue, suffix, digestStart);
-                if (digestEnd < 0) return null;
+                if (digestEnd < 0) { return null; }
             }
 
-            if (digestEnd < digestStart) return null;
+            if (digestEnd < digestStart) { return null; }
 
             String digest = headerValue.substring(digestStart, digestEnd).trim();
             // strip Optional Quotes
-            if (digest.length() >= 2 && digest.charAt(0) == '"' && digest.charAt(digest.length() - 1) == '"') {
+            if (digest.length() >= 2 && digest.charAt(0) == '"'
+                    && digest.charAt(digest.length() - 1) == '"') {
                 digest = digest.substring(1, digest.length() - 1);
             }
 
@@ -168,13 +182,25 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     }
 
     /**
-     * Finds the index of the first case-insensitive occurrence of {@code needle} in {@code haystack} starting from {@code fromIndex}, or -1 if not found.
+     * Finds the index of the first case-insensitive occurrence of {@code needle} in {@code haystack}
+     * starting from {@code fromIndex}, or -1 if not found.
+     *
+     * @param haystack The string to search in.
+     * @param needle The substring to search for.
+     * @param fromIndex The index to start searching from.
+     * @return The index of the first occurrence, or -1 if not found.
      */
-    private static int indexOfIgnoreCase(String haystack, String needle, int fromIndex) {
-        if (needle.isEmpty()) return fromIndex;
+    private static int indexOfIgnoreCase(
+            final String haystack,
+            final String needle,
+            final int fromIndex
+    ) {
+        if (needle.isEmpty()) { return fromIndex; }
         int max = haystack.length() - needle.length();
         for (int i = Math.max(0, fromIndex); i <= max; i++) {
-            if (haystack.regionMatches(true, i, needle, 0, needle.length())) return i;
+            if (haystack.regionMatches(true, i, needle, 0, needle.length())) {
+                return i;
+            }
         }
         return -1;
     }
