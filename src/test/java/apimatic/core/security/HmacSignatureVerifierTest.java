@@ -414,8 +414,8 @@ public class HmacSignatureVerifierTest {
         Map<String, String> headers = new HashMap<>();
         String signature = computeSignature(
                 SECRET_KEY,
-                "session=abc123:2025-09-17T12:34:56Z:POST:payment" +
-                        ":{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
+                "session=abc123:2025-09-17T12:34:56Z:POST:payment"
+                        + ":{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
                 DEFAULT_ALGORITHM, codec
         );
         headers.put(SIGNATURE_HEADER, signature);
@@ -456,8 +456,8 @@ public class HmacSignatureVerifierTest {
         Map<String, String> headers = new HashMap<>();
         String signature = computeSignature(
                 SECRET_KEY,
-                "session=abc123:2025-09-17T12:34:56Z:POST:x-signature-header-value" +
-                        ":{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
+                "session=abc123:2025-09-17T12:34:56Z:POST:x-signature-header-value"
+                        + ":{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
                 DEFAULT_ALGORITHM, codec
         );
         headers.put(SIGNATURE_HEADER, signature);
