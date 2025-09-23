@@ -29,6 +29,12 @@ public class HmacSignatureVerifierTest {
     private static final String SECRET_KEY = "testSecret";
     private static final String SIGNATURE_HEADER = "X-Signature";
     private static final String BODY = "payload";
+    public static final DigestCodec DEFAULT_DIGEST_CODEC = DigestCodecFactory.hex();
+    public static final String DEFAULT_ALGORITHM = "HmacSHA256";
+    public static final String SIGNATURE_VALUE_TEMPLATE = "{digest}";
+    public static final Function<Request, byte[]> SIGNATURE_TEMPLATE_RESOLVER =
+            req -> req.getBody().toString().getBytes(StandardCharsets.UTF_8);
+
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -56,89 +62,83 @@ public class HmacSignatureVerifierTest {
     public void testNullSecretKey() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Secret key cannot be null or Empty.");
-        new HmacSignatureVerifier(null, SIGNATURE_HEADER);
+        new HmacSignatureVerifier(null, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testEmptySecretKey() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Secret key cannot be null or Empty.");
-        new HmacSignatureVerifier("   ", SIGNATURE_HEADER);
+        new HmacSignatureVerifier("   ", SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testNullSignatureHeader() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Signature header cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, null);
+        new HmacSignatureVerifier(SECRET_KEY, null, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testEmptySignatureHeader() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Signature header cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, "   ");
+        new HmacSignatureVerifier(SECRET_KEY, "   ", DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testNullDigestCodec() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Digest encoding cannot be null.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, null);
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, null, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testNullRequestSignatureTemplateResolver() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Request signature template resolver function cannot be null.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec, null, HmacSignatureVerifier.DEFAULT_ALGORITHM, HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, null, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testNullAlgorithm() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Algorithm cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec, HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, null, HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, null, SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testEmptyAlgorithm() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Algorithm cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec, HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, "   ", HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, "   ", SIGNATURE_VALUE_TEMPLATE);
     }
 
     @Test
     public void testNullSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Signature value template cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec, HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, null);
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, null);
     }
 
     @Test
     public void testEmptySignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Signature value template cannot be null or Empty.");
-        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec, HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "   ");
+        new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "   ");
     }
 
     // Behaviour tests
 
     @Test
     public void testVerifyAsync_Success() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
 
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature);
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec);
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertTrue(result.isSuccess());
@@ -146,10 +146,9 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_MissingHeader() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         Map<String, String> headers = new HashMap<>();
         Request request = mockRequest(headers, BODY);
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec);
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
@@ -158,25 +157,23 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_MalformedSignature() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, "not-a-hex-signature");
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec);
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
-        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "'.", result.getErrors().get(0));
     }
 
     @Test
     public void testVerifyAsync_WrongSignature() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, "deadbeef");
         Request request = mockRequest(headers, BODY);
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec);
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC, SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
@@ -185,8 +182,7 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_ExceptionInResolver() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
 
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature);
@@ -195,10 +191,10 @@ public class HmacSignatureVerifierTest {
         HmacSignatureVerifier verifier = new HmacSignatureVerifier(
                 SECRET_KEY,
                 SIGNATURE_HEADER,
-                codec,
+                DEFAULT_DIGEST_CODEC,
                 req -> { throw new RuntimeException("Request signature template resolver error"); },
-                HmacSignatureVerifier.DEFAULT_ALGORITHM,
-                HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE
+                DEFAULT_ALGORITHM,
+                SIGNATURE_VALUE_TEMPLATE
         );
 
         VerificationResult result = verifier.verifyAsync(request).get();
@@ -210,30 +206,28 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_WrongSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature);
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "{diet}");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "{diet}");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
-        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "'.", result.getErrors().get(0));
     }
 
     @Test
     public void testVerifyAsync_SuccessPrefixSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, "sha256=" + signature);
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "sha256={digest}");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "sha256={digest}");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertTrue(result.isSuccess());
@@ -241,30 +235,28 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_WrongPrefixSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature);
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "sha256={digest}");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "sha256={digest}");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
-        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "'.", result.getErrors().get(0));
     }
 
     @Test
     public void testVerifyAsync_SuccessSuffixSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature + "complex");
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "{digest}complex");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "{digest}complex");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertTrue(result.isSuccess());
@@ -272,33 +264,31 @@ public class HmacSignatureVerifierTest {
 
     @Test
     public void testVerifyAsync_WrongSuffixSignatureValueTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
-        String signature = computeSignature(SECRET_KEY, BODY, HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+        String signature = computeSignature(SECRET_KEY, BODY, DEFAULT_ALGORITHM, DEFAULT_DIGEST_CODEC);
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, signature);
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "{digest}complex");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "{digest}complex");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
-        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "'.", result.getErrors().get(0));
     }
 
     @Test
     public void testVerifyAsync_WrongSignatureValueForTemplate() throws Exception {
-        DigestCodec codec = DigestCodecFactory.hex();
         Map<String, String> headers = new HashMap<>();
         headers.put(SIGNATURE_HEADER, "v0=complex");
         Request request = mockRequest(headers, BODY);
 
-        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, codec,
-                HmacSignatureVerifier.SIGNATURE_TEMPLATE_RESOLVER, HmacSignatureVerifier.DEFAULT_ALGORITHM, "v0={digest}complex");
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "v0={digest}complex");
 
         VerificationResult result = verifier.verifyAsync(request).get();
         Assert.assertFalse(result.isSuccess());
-        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "' value.", result.getErrors().get(0));
+        Assert.assertEquals("Malformed signature header '" + SIGNATURE_HEADER + "'.", result.getErrors().get(0));
     }
 
     // Request signature template resolver tests
@@ -309,7 +299,7 @@ public class HmacSignatureVerifierTest {
         Map<String, String> headers = new HashMap<>();
         String signature = computeSignature(SECRET_KEY,
                 "session=abc123:2025-09-17T12:34:56Z:POST:payment:{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
-                HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+                DEFAULT_ALGORITHM, codec);
         headers.put(SIGNATURE_HEADER, signature);
         headers.put("Cookie", "session=abc123");
         headers.put("X-Timestamp", "2025-09-17T12:34:56Z");
@@ -341,8 +331,8 @@ public class HmacSignatureVerifierTest {
                 SIGNATURE_HEADER,
                 codec,
                 requestSignatureTemplateResolver,
-                HmacSignatureVerifier.DEFAULT_ALGORITHM,
-                HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+                DEFAULT_ALGORITHM,
+                SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(req).get();
         Assert.assertTrue(result.isSuccess());
@@ -354,7 +344,7 @@ public class HmacSignatureVerifierTest {
         Map<String, String> headers = new HashMap<>();
         String signature = computeSignature(SECRET_KEY,
                 "session=abc123:2025-09-17T12:34:56Z:POST:x-signature-header-value:{\"id\":123,\"type\":\"payment\",\"amount\":100.5}",
-                HmacSignatureVerifier.DEFAULT_ALGORITHM, codec);
+                DEFAULT_ALGORITHM, codec);
         headers.put(SIGNATURE_HEADER, signature);
         headers.put("Cookie", "session=abc123");
         headers.put("x-signature", "x-signature-header-value");
@@ -387,8 +377,8 @@ public class HmacSignatureVerifierTest {
                 SIGNATURE_HEADER,
                 codec,
                 requestSignatureTemplateResolver,
-                HmacSignatureVerifier.DEFAULT_ALGORITHM,
-                HmacSignatureVerifier.SIGNATURE_VALUE_TEMPLATE);
+                DEFAULT_ALGORITHM,
+                SIGNATURE_VALUE_TEMPLATE);
 
         VerificationResult result = verifier.verifyAsync(req).get();
         Assert.assertTrue(result.isSuccess());
