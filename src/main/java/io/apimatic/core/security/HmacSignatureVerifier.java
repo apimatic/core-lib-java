@@ -144,7 +144,9 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     private byte[] extractSignature(final String headerValue) {
         try {
             int index = signatureValueTemplate.indexOf(SIGNATURE_VALUE_PLACEHOLDER);
-            if (index < 0) { return null; }
+            if (index < 0) {
+                return null;
+            }
 
             String prefix = signatureValueTemplate.substring(0, index);
             String suffix = signatureValueTemplate.substring(
@@ -152,7 +154,9 @@ public class HmacSignatureVerifier implements SignatureVerifier {
 
             // find prefix anywhere (case-insensitive)
             int prefixAt = indexOfIgnoreCase(headerValue, prefix, 0);
-            if (prefixAt < 0) { return null; }
+            if (prefixAt < 0) {
+                return null;
+            }
 
             int digestStart = prefixAt + prefix.length();
 
@@ -162,10 +166,14 @@ public class HmacSignatureVerifier implements SignatureVerifier {
                 digestEnd = headerValue.length();
             } else {
                 digestEnd = indexOfIgnoreCase(headerValue, suffix, digestStart);
-                if (digestEnd < 0) { return null; }
+                if (digestEnd < 0) {
+                    return null;
+                }
             }
 
-            if (digestEnd < digestStart) { return null; }
+            if (digestEnd < digestStart) {
+                return null;
+            }
 
             String digest = headerValue.substring(digestStart, digestEnd).trim();
             // strip Optional Quotes
@@ -182,7 +190,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
     }
 
     /**
-     * Finds the index of the first case-insensitive occurrence of {@code needle} in {@code haystack}
+     * Finds the index of the first case-insensitive {@code needle} in {@code haystack}
      * starting from {@code fromIndex}, or -1 if not found.
      *
      * @param haystack The string to search in.
@@ -195,7 +203,9 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             final String needle,
             final int fromIndex
     ) {
-        if (needle.isEmpty()) { return fromIndex; }
+        if (needle.isEmpty()) {
+            return fromIndex;
+        }
         int max = haystack.length() - needle.length();
         for (int i = Math.max(0, fromIndex); i <= max; i++) {
             if (haystack.regionMatches(true, i, needle, 0, needle.length())) {

@@ -95,7 +95,8 @@ public class DigestCodecFactoryTest {
     @Test
     public void testBase64UrlEncodeDecode() {
         DigestCodec codec = DigestCodecFactory.base64Url();
-        byte[] input = {BASE64URL_BYTE_1, BASE64URL_BYTE_2, BASE64URL_BYTE_3, BASE64URL_BYTE_4, BASE64URL_BYTE_5};
+        byte[] input = {BASE64URL_BYTE_1, BASE64URL_BYTE_2,
+                BASE64URL_BYTE_3, BASE64URL_BYTE_4, BASE64URL_BYTE_5};
         String encoded = codec.encode(input);
         assertEquals("ChQeKDI", encoded); // without padding
         assertArrayEquals(input, codec.decode(encoded));

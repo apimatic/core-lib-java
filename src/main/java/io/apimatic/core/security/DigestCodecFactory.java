@@ -59,7 +59,8 @@ public final class DigestCodecFactory {
             }
             byte[] result = new byte[len / HEX_BYTE_LENGTH];
             for (int i = 0; i < len; i += HEX_BYTE_LENGTH) {
-                result[i / HEX_BYTE_LENGTH] = (byte) ((Character.digit(encoded.charAt(i), HEX_RADIX) << HEX_SHIFT)
+                result[i / HEX_BYTE_LENGTH] = (byte) (
+                        (Character.digit(encoded.charAt(i), HEX_RADIX) << HEX_SHIFT)
                         + Character.digit(encoded.charAt(i + 1), HEX_RADIX));
             }
             return result;
