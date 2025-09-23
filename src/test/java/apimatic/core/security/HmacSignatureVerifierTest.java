@@ -429,7 +429,8 @@ public class HmacSignatureVerifierTest {
             }
             String cookie = request.getHeaders().asSimpleMap().get("Cookie");
             String timestamp = request.getHeaders().asSimpleMap().get("X-Timestamp");
-            String resolvedBody = CoreHelper.resolveRequestPointer("$request.body#/type", request);
+            String resolvedBody = CoreHelper.getValueFromJson(
+                    "/type", request.getBody().toString());
 
             return String.join(
                     ":",
@@ -472,8 +473,7 @@ public class HmacSignatureVerifierTest {
             }
             String cookie = request.getHeaders().asSimpleMap().get("Cookie");
             String timestamp = request.getHeaders().asSimpleMap().get("X-Timestamp");
-            String resolvedBody = CoreHelper.resolveRequestPointer(
-                    "$request.headers#/x-signature", request);
+            String resolvedBody = request.getHeaders().asSimpleMap().get("x-signature");
 
             return String.join(
                     ":",
@@ -498,7 +498,7 @@ public class HmacSignatureVerifierTest {
     public void resolveRequestPointerNullPointer() {
         Map<String, String> headers = new HashMap<>();
         Request request = mockRequest(headers, BODY);
-        String value = CoreHelper.resolveRequestPointer(null, request);
+        String value = CoreHelper.getValueFromJson(null, request.getBody().toString());
         assertNull(value);
     }
 
@@ -506,7 +506,8 @@ public class HmacSignatureVerifierTest {
     public void resolveRequestPointerInvalidPointer() {
         Map<String, String> headers = new HashMap<>();
         Request request = mockRequest(headers, BODY);
-        String value = CoreHelper.resolveRequestPointer("$request.method#", request);
+        String value = CoreHelper.getValueFromJson(
+                "$request.method#", request.getBody().toString());
         assertNull(value);
     }
 }

@@ -71,7 +71,6 @@ import io.apimatic.core.types.OneOfValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.coreinterfaces.http.request.ArraySerializationFormat;
-import io.apimatic.coreinterfaces.http.request.Request;
 import io.apimatic.coreinterfaces.http.response.Response;
 
 /**
@@ -1625,33 +1624,6 @@ public class CoreHelper {
             case "$response.headers":
                 return CoreHelper.getValueFromJson(point,
                         trySerialize(response.getHeaders().asSimpleMap()));
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Resolves a pointer within a JSON request body or headers.
-     *
-     * @param pointer     The JSON pointer.
-     * @param request    The request.
-     * @return The resolved value as a string, or null if not found.
-     */
-    public static String resolveRequestPointer(String pointer, Request request) {
-        if (pointer == null) {
-            return null;
-        }
-
-        String[] pointerParts = pointer.split("#");
-        String prefix = pointerParts[0];
-        String point = pointerParts.length > 1 ? pointerParts[1] : "";
-
-        switch (prefix) {
-            case "$request.body":
-                return CoreHelper.getValueFromJson(point, request.getBody().toString());
-            case "$request.headers":
-                return CoreHelper.getValueFromJson(point,
-                        trySerialize(request.getHeaders().asSimpleMap()));
             default:
                 return null;
         }
