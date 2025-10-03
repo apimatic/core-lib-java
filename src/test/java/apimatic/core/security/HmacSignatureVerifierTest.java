@@ -442,7 +442,7 @@ public class HmacSignatureVerifierTest {
         headers.put("X-Timestamp", "2025-09-17T12:34:56Z");
         Request req = mockRequest(headers, "{\"id\":123,\"type\":\"payment\",\"amount\":100.5}");
 
-        Function<Request, byte[]> requestSignatureTemplateResolver = (request) -> {
+        Function<Request, byte[]> requestSignatureTemplateResolver = request -> {
             if (request == null) {
                 throw new IllegalArgumentException("request cannot be null");
             }
@@ -486,7 +486,7 @@ public class HmacSignatureVerifierTest {
         headers.put("X-Timestamp", "2025-09-17T12:34:56Z");
         Request req = mockRequest(headers, "{\"id\":123,\"type\":\"payment\",\"amount\":100.5}");
 
-        Function<Request, byte[]> requestSignatureTemplateResolver = (request) -> {
+        Function<Request, byte[]> requestSignatureTemplateResolver = request -> {
             if (request == null) {
                 throw new IllegalArgumentException("request cannot be null");
             }

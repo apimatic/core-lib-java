@@ -114,7 +114,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
                 }
 
                 byte[] provided = extractSignature(headerValue);
-                if (provided == null) {
+                if (provided == null || provided.length == 0) {
                     return VerificationResult.failure(
                             "Malformed signature header '" + signatureHeaderName + "'.");
                 }
@@ -145,7 +145,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
         try {
             int index = signatureValueTemplate.indexOf(SIGNATURE_VALUE_PLACEHOLDER);
             if (index < 0) {
-                return null;
+                return new byte[0];
             }
 
             String prefix = signatureValueTemplate.substring(0, index);
@@ -155,7 +155,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             // find prefix anywhere (case-insensitive)
             int prefixAt = indexOfIgnoreCase(headerValue, prefix, 0);
             if (prefixAt < 0) {
-                return null;
+                return new byte[0];
             }
 
             int digestStart = prefixAt + prefix.length();
@@ -167,12 +167,12 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             } else {
                 digestEnd = indexOfIgnoreCase(headerValue, suffix, digestStart);
                 if (digestEnd < 0) {
-                    return null;
+                    return new byte[0];
                 }
             }
 
             if (digestEnd < digestStart) {
-                return null;
+                return new byte[0];
             }
 
             String digest = headerValue.substring(digestStart, digestEnd).trim();
@@ -185,7 +185,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             byte[] decoded = digestCodec.decode(digest);
             return (decoded == null || decoded.length == 0) ? null : decoded;
         } catch (Exception e) {
-            return null;
+            return new byte[0];
         }
     }
 
