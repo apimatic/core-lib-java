@@ -2,27 +2,21 @@ package apimatic.core.security;
 
 import io.apimatic.core.security.DigestCodec;
 import io.apimatic.core.security.DigestCodecFactory;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DigestCodecFactoryTest {
-
-    /** Rule for expecting exceptions in tests. */
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private static final byte HEX_BYTE_1 = 0x0A;
     private static final byte HEX_BYTE_2 = 0x1B;
     private static final byte HEX_BYTE_3 = (byte) 0xFF;
 
-    private static final byte[] BASE64_INPUT = {1, 2, 3, 4, 5};
     private static final byte BASE64_BYTE_1 = 1;
     private static final byte BASE64_BYTE_2 = 2;
     private static final byte BASE64_BYTE_3 = 3;
@@ -56,15 +50,17 @@ public class DigestCodecFactoryTest {
     @Test
     public void testHexDecodeInvalidLength() {
         DigestCodec codec = DigestCodecFactory.hex();
-        thrown.expect(IllegalArgumentException.class);
-        codec.decode("abc");
+        assertThrows(IllegalArgumentException.class, () -> {
+            codec.decode("abc");
+        });
     }
 
     @Test
     public void testHexDecodeInvalidCharacter() {
         DigestCodec codec = DigestCodecFactory.hex();
-        thrown.expect(IllegalArgumentException.class);
-        codec.decode("zzzzz");
+        assertThrows(IllegalArgumentException.class, () -> {
+            codec.decode("zzzzz");
+        });
     }
 
     @Test
@@ -88,8 +84,9 @@ public class DigestCodecFactoryTest {
     @Test
     public void testBase64DecodeInvalid() {
         DigestCodec codec = DigestCodecFactory.base64();
-        thrown.expect(IllegalArgumentException.class);
-        codec.decode("!@#$");
+        assertThrows(IllegalArgumentException.class, () -> {
+            codec.decode("!@#$");
+        });
     }
 
     @Test
@@ -114,7 +111,8 @@ public class DigestCodecFactoryTest {
     @Test
     public void testBase64UrlDecodeInvalid() {
         DigestCodec codec = DigestCodecFactory.base64Url();
-        thrown.expect(IllegalArgumentException.class);
-        codec.decode("!@#$");
+        assertThrows(IllegalArgumentException.class, () -> {
+            codec.decode("!@#$");
+        });
     }
 }

@@ -406,6 +406,25 @@ public class HmacSignatureVerifierTest {
         );
     }
 
+    @Test
+    public void verifyAsyncWrongSignatureValueWithQuotesForTemplate() throws Exception {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(SIGNATURE_HEADER, "v0=\"a\"complex");
+        Request request = mockRequest(headers, BODY);
+
+        HmacSignatureVerifier verifier = new HmacSignatureVerifier(
+                SECRET_KEY, SIGNATURE_HEADER, DEFAULT_DIGEST_CODEC,
+                SIGNATURE_TEMPLATE_RESOLVER, DEFAULT_ALGORITHM, "v0={digest}complex"
+        );
+
+        VerificationResult result = verifier.verifyAsync(request).get();
+        Assert.assertFalse(result.isSuccess());
+        Assert.assertEquals(
+                "Malformed signature header '" + SIGNATURE_HEADER + "'.",
+                result.getErrors().get(0)
+        );
+    }
+
     // Request signature template resolver tests
 
     @Test
