@@ -176,7 +176,7 @@ public class HmacSignatureVerifier implements SignatureVerifier {
             }
 
             String digest = headerValue.substring(digestStart, digestEnd).trim();
-            // strip Optional Quotes
+            // strip optional quotes
             if (digest.length() >= 2 && digest.charAt(0) == '"'
                     && digest.charAt(digest.length() - 1) == '"') {
                 digest = digest.substring(1, digest.length() - 1);
