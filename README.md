@@ -75,6 +75,8 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`TestHelper`](./src/main/java/io/apimatic/core/utilities/TestHelper.java)                                                       | Contains utility methods for comparing objects, arrays and files                                                                                                                                                                                      |
 | [`AdditionalProperties`](./src/main/java/io/apimatic/core/types/AdditionalProperties.java)                                       | A generic class for managing additional properties in a model.                                                                                                                                                                                        |
 | [`ConversionHelper`](./src/main/java/io/apimatic/core/utilities/ConversionHelper.java)                                           | A Helper class for the coversion of type (provided as function) for all structures (array, map, array of map, n-dimensional arrays etc) supported in the SDK.                                                                                         |
+| [`HmacSignatureVerifier`](./src/main/java/io/apimatic/core/security/HmacSignatureVerifier.java)                                  | HMAC-based signature verifier for HTTP requests.                                                                                         |
+| [`DigestCodecFactory`](./src/main/java/io/apimatic/core/security/DigestCodecFactory.java)                                        | Factory class for creating digest codecs based on encoding type (Hex, Base64, Base64Url).                                                                                                                                                             |
 
 ## Interfaces
 
@@ -85,6 +87,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`RequestSupplier`](./src/main/java/io/apimatic/core/request/async/RequestSupplier.java)           | A Request Supplier that supplies the request                                     |
 | [`TypeCombinator`](./src/main/java/io/apimatic/core/annotations/TypeCombinator.java)               | This is a container of annotations for oneOf/anyOf cases                         |
 | [`PaginationStrategy`](./src/main/java/io/apimatic/core/types/pagination/PaginationStrategy.java)  | Provides the functionality to apply pagination parameters and return new request |
+| [`DigestCodec`](./src/main/java/io/apimatic/core/security/DigestCodec.java)                        | Interface for encoding and decoding digest values                                |
 
 ## Links
 
