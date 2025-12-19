@@ -3,7 +3,9 @@
 [![Maven Central][maven-badge]][maven-url]
 [![Tests][test-badge]][test-url]
 [![Lint Code][lint-badge]][lint-url]
-[![Test Coverage][test-coverage-url]][code-climate-url]
+[![Test Coverage][coverage-badge]][coverage-url]
+[![Maintainability Rating][maintainability-badge]][maintainability-url]
+[![Vulnerabilities][vulnerabilities-badge]][vulnerabilities-url]
 [![Licence][license-badge]][license-url]
 
 ## Introduction
@@ -47,6 +49,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`Or`](./src/main/java/io/apimatic/core/authentication/multiple/Or.java)                                                         | A class to hold the algorithm for `Or` combination of auth schemes                                                                                                                                                                                    |
 | [`Single`](./src/main/java/io/apimatic/core/authentication/multiple/Single.java)                                                 | A class to hold the logic for single auth scheme, it is used as leaf node for auth combination or it could be used directly to apply one auth only to the http request                                                                                |
 | [`CoreHttpClientConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/CoreHttpClientConfiguration.java)    | To hold HTTP Client Configuration                                                                                                                                                                                                                     |
+| [`CoreProxyConfiguration`](./src/main/java/io/apimatic/core/configurations/http/client/CoreProxyConfiguration.java)    | To hold the Proxy configuration for the underlying HTTP client instance.                                                                                                                                                                              |
 | [`EndpointConfiguration`](./src/main/java/io/apimatic/core/configurations/http/request/EndpointConfiguration.java)               | The configuration for an endpoint                                                                                                                                                                                                                     |
 | [`AsyncExecutor`](./src/main/java/io/apimatic/core/request/async/AsyncExecutor.java)                                             | Executor service for asynchronous HTTP endpoint call                                                                                                                                                                                                  |
 | [`OptionalNullable`](./src/main/java/io/apimatic/core/types/OptionalNullable.java)                                               | Class to encapsulate fields which are Optional as well as Nullable                                                                                                                                                                                    |
@@ -54,12 +57,12 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`CoreApiException`](./src/main/java/io/apimatic/core/types/CoreApiException.java)                                               | This is the base class for all exceptions that represent an error response from the server                                                                                                                                                            |
 | [`MultipartFileWrapper`](./src/main/java/io/apimatic/core/types/http/request/MultipartFileWrapper.java)                          | To wrap file and headers to be sent as part of a multipart request                                                                                                                                                                                    |
 | [`MultipartWrapper`](./src/main/java/io/apimatic/core/types/http/request/MultipartWrapper.java)                                  | To wrap byteArray and headers to be sent as part of a multipart request                                                                                                                                                                               |
-| [`PaginatedData`](./src/main/java/io/apimatic/core/types/pagination/PaginatedData.java)                                          | To provide pagination functionality for both synchronous and asynchronous pagination types                                                                                                                                                                   |
-| [`PageWrapper`](./src/main/java/io/apimatic/core/types/pagination/PageWrapper.java)                                          | To wrap a single page along with its items and meta-data in the paginated data                                                                                                                                                                   |
-| [`CursorPagination`](./src/main/java/io/apimatic/core/types/pagination/CursorPagination.java)                                          | Provides cursor based pagination strategy                                                                                                                                                                 |
-| [`LinkPagination`](./src/main/java/io/apimatic/core/types/pagination/LinkPagination.java)                                          | Provides link based pagination strategy                                                                                                                                                                 |
-| [`OffsetPagination`](./src/main/java/io/apimatic/core/types/pagination/OffsetPagination.java)                                          | Provides offset based pagination strategy                                                                                                                                                                 |
-| [`PagePagination`](./src/main/java/io/apimatic/core/types/pagination/PagePagination.java)                                          | Provides page based pagination strategy                                                                                                                                                                 |
+| [`PaginatedData`](./src/main/java/io/apimatic/core/types/pagination/PaginatedData.java)                                          | To provide pagination functionality for both synchronous and asynchronous pagination types                                                                                                                                                            |
+| [`PageWrapper`](./src/main/java/io/apimatic/core/types/pagination/PageWrapper.java)                                          | To wrap a single page along with its items and meta-data in the paginated data                                                                                                                                                                        |
+| [`CursorPagination`](./src/main/java/io/apimatic/core/types/pagination/CursorPagination.java)                                          | Provides cursor based pagination strategy                                                                                                                                                                                                             |
+| [`LinkPagination`](./src/main/java/io/apimatic/core/types/pagination/LinkPagination.java)                                          | Provides link based pagination strategy                                                                                                                                                                                                               |
+| [`OffsetPagination`](./src/main/java/io/apimatic/core/types/pagination/OffsetPagination.java)                                          | Provides offset based pagination strategy                                                                                                                                                                                                             |
+| [`PagePagination`](./src/main/java/io/apimatic/core/types/pagination/PagePagination.java)                                          | Provides page based pagination strategy                                                                                                                                                                                                               |
 | [`CoreHelper`](./src/main/java/io/apimatic/core/utilities/CoreHelper.java)                                                       | This is a Helper class with commonly used utilities for the SDK                                                                                                                                                                                       |
 | [`DateHelper`](./src/main/java/io/apimatic/core/utilities/DateHelper.java)                                                       | This is a utility class for LocalDate operations                                                                                                                                                                                                      |
 | [`LocalDateTimeHelper`](./src/main/java/io/apimatic/core/utilities/LocalDateTimeHelper.java)                                     | This is a utility class for LocalDateTime operations                                                                                                                                                                                                  |
@@ -70,8 +73,10 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`CoreJsonObject`](./src/main/java/io/apimatic/core/utilities/CoreJsonObject.java)                                               | Wrapper class for JSON object                                                                                                                                                                                                                         |
 | [`CoreJsonValue`](./src/main/java/io/apimatic/core/utilities/CoreJsonValue.java)                                                 | Wrapper class for JSON value                                                                                                                                                                                                                          |
 | [`TestHelper`](./src/main/java/io/apimatic/core/utilities/TestHelper.java)                                                       | Contains utility methods for comparing objects, arrays and files                                                                                                                                                                                      |
-| [`AdditionalProperties`](./src/main/java/io/apimatic/core/types/AdditionalProperties.java)                                       | A generic class for managing additional properties in a model.                                                                                         |
+| [`AdditionalProperties`](./src/main/java/io/apimatic/core/types/AdditionalProperties.java)                                       | A generic class for managing additional properties in a model.                                                                                                                                                                                        |
 | [`ConversionHelper`](./src/main/java/io/apimatic/core/utilities/ConversionHelper.java)                                           | A Helper class for the coversion of type (provided as function) for all structures (array, map, array of map, n-dimensional arrays etc) supported in the SDK.                                                                                         |
+| [`HmacSignatureVerifier`](./src/main/java/io/apimatic/core/security/HmacSignatureVerifier.java)                                  | HMAC-based signature verifier for HTTP requests.                                                                                         |
+| [`DigestCodecFactory`](./src/main/java/io/apimatic/core/security/DigestCodecFactory.java)                                        | Factory class for creating digest codecs based on encoding type (Hex, Base64, Base64Url).                                                                                                                                                             |
 
 ## Interfaces
 
@@ -82,6 +87,7 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 | [`RequestSupplier`](./src/main/java/io/apimatic/core/request/async/RequestSupplier.java)           | A Request Supplier that supplies the request                                     |
 | [`TypeCombinator`](./src/main/java/io/apimatic/core/annotations/TypeCombinator.java)               | This is a container of annotations for oneOf/anyOf cases                         |
 | [`PaginationStrategy`](./src/main/java/io/apimatic/core/types/pagination/PaginationStrategy.java)  | Provides the functionality to apply pagination parameters and return new request |
+| [`DigestCodec`](./src/main/java/io/apimatic/core/security/DigestCodec.java)                        | Interface for encoding and decoding digest values                                |
 
 ## Links
 
@@ -100,11 +106,17 @@ Core lib's Maven group ID is `io.apimatic`, and its artifact ID is `core`.
 
 [test-url]: https://github.com/apimatic/core-lib-java/actions/workflows/build-and-test.yml
 
-[code-climate-url]: https://codeclimate.com/github/apimatic/core-lib-java
+[coverage-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=coverage
 
-[maintainability-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/maintainability
+[coverage-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
 
-[test-coverage-url]: https://api.codeclimate.com/v1/badges/74e497222508f9e858d6/test_coverage
+[maintainability-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=sqale_rating
+
+[maintainability-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
+
+[vulnerabilities-badge]: https://sonarcloud.io/api/project_badges/measure?project=apimatic_core-lib-java&metric=vulnerabilities
+
+[vulnerabilities-url]: https://sonarcloud.io/summary/new_code?id=apimatic_core-lib-java
 
 [lint-badge]: https://github.com/apimatic/core-lib-java/actions/workflows/linter.yml/badge.svg
 
